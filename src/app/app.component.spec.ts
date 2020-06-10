@@ -30,6 +30,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('protokol-manager app is running!');
+    expect(compiled.textContent).toContain('Hello world protokol-manager');
   });
 });
