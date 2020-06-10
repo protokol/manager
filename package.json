@@ -1,69 +1,97 @@
 {
-  "name": "protokol-manager",
-  "version": "0.0.0",
-  "scripts": {
-    "postinstall": "electron-builder install-app-deps",
-    "ng": "ng",
-    "start": "npm-run-all -p electron:serve ng:serve",
-    "build": "npm run electron:serve-tsc && ng build --base-href ./",
-    "build:dev": "npm run build",
-    "build:prod": "npm run build -- -c production",
-    "ng:serve": "ng serve",
-    "electron:serve-tsc": "tsc -p tsconfig-serve.json",
-    "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
-    "electron:local": "npm run build:prod && electron .",
-    "electron:linux": "npm run build:prod && electron-builder build --linux",
-    "electron:windows": "npm run build:prod && electron-builder build --windows",
-    "electron:mac": "npm run build:prod && electron-builder build --mac",
-    "test": "ng test --watch=false",
-    "test:watch": "ng test",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
-  },
-  "main": "main.js",
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "~9.1.9",
-    "@angular/common": "~9.1.9",
-    "@angular/compiler": "~9.1.9",
-    "@angular/core": "~9.1.9",
-    "@angular/forms": "~9.1.9",
-    "@angular/platform-browser": "~9.1.9",
-    "@angular/platform-browser-dynamic": "~9.1.9",
-    "@angular/router": "~9.1.9",
-    "rxjs": "~6.5.4",
-    "tslib": "^1.10.0",
-    "zone.js": "~0.10.2"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.7",
-    "@angular/cli": "~9.1.7",
-    "@angular/compiler-cli": "~9.1.9",
-    "@types/jasmine": "~3.5.0",
-    "@types/jasminewd2": "~2.0.3",
-    "@types/node": "^12.11.1",
-    "codelyzer": "^5.1.2",
-    "conventional-changelog-cli": "^2.0.34",
-    "devtron": "^1.4.0",
-    "electron": "^9.0.3",
-    "electron-builder": "^22.7.0",
-    "electron-reload": "^1.5.0",
-    "jasmine-core": "~3.5.0",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~5.0.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage-istanbul-reporter": "~2.1.0",
-    "karma-jasmine": "~3.0.1",
-    "karma-jasmine-html-reporter": "^1.4.2",
-    "npm-run-all": "^4.1.5",
-    "protractor": "~7.0.0",
-    "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
-    "typescript": "~3.8.3",
-    "wait-on": "^5.0.1"
-  },
-  "engines": {
-    "node": ">=10.13.0"
-  }
+	"name": "protokol-manager",
+	"version": "0.0.0",
+	"scripts": {
+		"postinstall": "electron-builder install-app-deps && npm run prettier -s",
+		"ng": "ng",
+		"start": "npm-run-all -p electron:serve ng:serve",
+		"build": "npm run electron:serve-tsc && ng build --base-href ./",
+		"build:dev": "npm run build",
+		"build:prod": "npm run build -- -c production",
+		"ng:serve": "ng serve",
+		"electron:serve-tsc": "tsc -p tsconfig-serve.json",
+		"electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
+		"electron:local": "npm run build:prod && electron .",
+		"electron:linux": "npm run build:prod && electron-builder build --linux",
+		"electron:windows": "npm run build:prod && electron-builder build --windows",
+		"electron:mac": "npm run build:prod && electron-builder build --mac",
+		"test": "ng test --watch=false",
+		"test:watch": "ng test",
+		"changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+		"lint": "ng lint && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
+		"prettier": "prettier --write \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
+		"prettier:check": "prettier --list-different \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
+		"format-staged": "pretty-quick --staged",
+		"e2e": "ng e2e"
+	},
+	"main": "main.js",
+	"private": true,
+	"dependencies": {
+		"@angular/animations": "~9.1.9",
+		"@angular/common": "~9.1.9",
+		"@angular/compiler": "~9.1.9",
+		"@angular/core": "~9.1.9",
+		"@angular/forms": "~9.1.9",
+		"@angular/platform-browser": "~9.1.9",
+		"@angular/platform-browser-dynamic": "~9.1.9",
+		"@angular/router": "~9.1.9",
+		"rxjs": "~6.5.4",
+		"tslib": "^1.10.0",
+		"zone.js": "~0.10.2"
+	},
+	"devDependencies": {
+		"@angular-devkit/build-angular": "~0.901.7",
+		"@angular/cli": "~9.1.7",
+		"@angular/compiler-cli": "~9.1.9",
+		"@types/jasmine": "~3.5.0",
+		"@types/jasminewd2": "~2.0.3",
+		"@types/node": "^12.11.1",
+		"codelyzer": "^5.1.2",
+		"conventional-changelog-cli": "^2.0.34",
+		"devtron": "^1.4.0",
+		"electron": "^9.0.3",
+		"electron-builder": "^22.7.0",
+		"electron-reload": "^1.5.0",
+		"husky": "^4.2.5",
+		"jasmine-core": "~3.5.0",
+		"jasmine-spec-reporter": "~4.2.1",
+		"karma": "~5.0.0",
+		"karma-chrome-launcher": "~3.1.0",
+		"karma-coverage-istanbul-reporter": "~2.1.0",
+		"karma-jasmine": "~3.0.1",
+		"karma-jasmine-html-reporter": "^1.4.2",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.0.5",
+		"pretty-quick": "^2.0.1",
+		"protractor": "~7.0.0",
+		"stylelint": "^13.6.0",
+		"stylelint-config-prettier": "^8.0.1",
+		"stylelint-config-recommended-scss": "^4.2.0",
+		"stylelint-config-standard": "^20.0.0",
+		"stylelint-scss": "^3.17.2",
+		"ts-node": "~8.3.0",
+		"tslint": "~6.1.0",
+		"tslint-config-prettier": "^1.18.0",
+		"typescript": "~3.8.3",
+		"wait-on": "^5.0.1"
+	},
+	"engines": {
+		"node": ">=10.13.0"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"overrides": [
+			{
+				"files": "*.scss",
+				"options": {
+					"singleQuote": false
+				}
+			}
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run format-staged"
+		}
+	}
 }
