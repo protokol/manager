@@ -17,7 +17,6 @@ module.exports = {
 						'normal-color': '#E3E3E3',
 						white: '#FFF',
 						black: '#000',
-						'component-background': '#E3E3E3',
 						'body-background': '#FFF',
 						'layout-header-background': '#E3E3E3',
 						'layout-body-background': '#E3E3E3',

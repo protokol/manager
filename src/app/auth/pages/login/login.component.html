@@ -1,0 +1,63 @@
+<div class="login-container">
+	<div class="login-box">
+		<form nz-form (ngSubmit)="addProfile()" [formGroup]="profileForm" novalidate>
+			<div class="top-logo">
+				<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
+				<h1>Protokol Manager</h1>
+			</div>
+			<nz-form-item>
+				<nz-form-control
+					[nzErrorTip]="profileNameErrorTpl"
+					nzHasFeedback
+					nzValidatingTip="Validating..."
+				>
+					<nz-input-group nzPrefixIcon="user">
+						<input
+							type="text"
+							nz-input
+							formControlName="profileName"
+							placeholder="Profile Name"
+						/>
+						<ng-template #profileNameErrorTpl let-control>
+							<ng-container *ngIf="control.hasError('required')">
+								<span nz-typography nzType="danger"
+									>Please input your profile name!</span
+								>
+							</ng-container>
+							<ng-container *ngIf="control.hasError('duplicated')">
+								<span nz-typography nzType="danger">Profile name is already used!</span>
+							</ng-container>
+						</ng-template>
+					</nz-input-group>
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-control nzErrorTip="Please input your passphrase!">
+					<nz-input-group nzPrefixIcon="lock">
+						<input
+							type="text"
+							nz-input
+							formControlName="passphrase"
+							placeholder="Passphrase"
+						/>
+					</nz-input-group>
+				</nz-form-control>
+			</nz-form-item>
+
+			<div nz-row [nzGutter]="[24, 12]">
+				<div nz-col [nzSpan]="24">
+					<button
+						nz-button
+						class="login-form-button login-form-margin"
+						nzType="primary"
+						[nzLoading]="isLoading"
+						[disabled]="isLoading || (isFormDirty && !profileForm.valid)"
+					>
+						Add Profile
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
