@@ -1,0 +1,21 @@
+$open-sans-regular: "assets/fonts/OpenSans-Regular.ttf";
+$open-sans-body: "assets/fonts/OpenSans-Bold.ttf";
+$open-sans-italic: "assets/fonts/OpenSans-Italic.ttf";
+
+@font-face {
+	font-family: "Open Sans";
+	src: url($open-sans-regular) format("truetype");
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Open Sans";
+	src: url($open-sans-body) format("truetype");
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: "DejaVu Sans";
+	src: url($open-sans-italic) format("truetype");
+	font-style: italic;
+}
