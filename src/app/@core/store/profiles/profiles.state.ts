@@ -1,15 +1,19 @@
-import { Logger } from '@core/services/logger.service';
+import {Logger} from '@core/services/logger.service';
 import {
 	AddProfileAction,
 	PROFILES_TYPE_NAME,
 	RemoveProfileAction,
 } from './profiles.actions';
-import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { Injectable } from '@angular/core';
+import {State, Selector, Action, StateContext, Store} from '@ngxs/store';
+import {Injectable} from '@angular/core';
+import {WalletService} from '@core/services/wallet.service';
+import {NetworksState} from '@core/store/network/networks.state';
+import {tap} from 'rxjs/operators';
+import {AddPinAction} from '@core/store/pins/pins.actions';
 
 export interface Profile {
 	profileName: string;
-	passphrase: string;
+	encodedPassphrase: string;
 }
 
 export interface ProfilesStateModel {
@@ -24,21 +28,23 @@ const PROFILES_DEFAULT_STATE: ProfilesStateModel = {
 
 @State<ProfilesStateModel>({
 	name: PROFILES_TYPE_NAME,
-	defaults: { ...PROFILES_DEFAULT_STATE },
+	defaults: {...PROFILES_DEFAULT_STATE},
 })
 @Injectable()
 export class ProfilesState {
 	readonly log = new Logger(this.constructor.name);
 
-	constructor() {}
-
-	@Selector()
-	static getProfileState(state: ProfilesStateModel) {
-		return { ...state };
+	constructor(private walletService: WalletService,
+													private store: Store) {
 	}
 
 	@Selector()
-	static getProfiles({ profiles }: ProfilesStateModel) {
+	static getProfileState(state: ProfilesStateModel) {
+		return {...state};
+	}
+
+	@Selector()
+	static getProfiles({profiles}: ProfilesStateModel) {
 		return Object.keys(profiles).reduce(
 			(acc, curr) => [...acc, profiles[curr]],
 			[]
@@ -46,7 +52,7 @@ export class ProfilesState {
 	}
 
 	@Selector()
-	static getProfileById({ profiles }: ProfilesStateModel) {
+	static getProfileById({profiles}: ProfilesStateModel) {
 		return (profileId: string) => {
 			return Object.keys(profiles).find((pId) => pId === profileId);
 		};
@@ -54,44 +60,51 @@ export class ProfilesState {
 
 	@Selector()
 	static getSelectedProfile({
-		profiles,
-		selectedProfileId,
-	}: ProfilesStateModel) {
+																												profiles,
+																												selectedProfileId,
+																											}: ProfilesStateModel) {
 		return Object.keys(profiles).find((pId) => pId === selectedProfileId);
 	}
 
 	@Action(AddProfileAction)
 	addProfile(
-		{ getState, patchState }: StateContext<ProfilesStateModel>,
+		{getState, patchState, dispatch}: StateContext<ProfilesStateModel>,
 		{
-			profile: { profileName, passphrase },
+			profile: {profileName, passphrase},
+			pin,
 			profileId,
 			markAsDefault,
-		}: AddProfileAction,
-		{}
+		}: AddProfileAction
 	) {
-		patchState(
-			Object.assign(
-				{
-					profiles: {
-						...getState().profiles,
-						[profileId]: {
-							profileName,
-							passphrase,
-						},
-					},
-				},
-				markAsDefault ? { selectedProfileId: profileId } : {}
-			)
-		);
+		this.store.selectOnce(NetworksState.getNodeCryptoConfig)
+			.pipe(tap(nodeCryptoConfig => {
+					const encodedPassphrase = this.walletService.encrypt(passphrase, pin, nodeCryptoConfig.network);
+					// const decodedPassphrase = this.walletService.dencrypt(encodedPassphrase, pin, nodeCryptoConfig.network);
+					patchState(
+						Object.assign(
+							{
+								profiles: {
+									...getState().profiles,
+									[profileId]: {
+										profileName,
+										encodedPassphrase,
+									},
+								},
+							},
+							markAsDefault ? {selectedProfileId: profileId} : {}
+						)
+					);
+				}),
+				tap(() => dispatch(new AddPinAction(profileId, pin)))
+			).subscribe();
 	}
 
 	@Action(RemoveProfileAction)
 	removeProfile(
-		{ getState, patchState }: StateContext<ProfilesStateModel>,
-		{ profileId }: RemoveProfileAction
+		{getState, patchState}: StateContext<ProfilesStateModel>,
+		{profileId}: RemoveProfileAction
 	) {
-		const { profiles } = getState();
+		const {profiles} = getState();
 
 		if (profiles.hasOwnProperty(profileId)) {
 			delete profiles[profileId];

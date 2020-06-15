@@ -1,5 +1,6 @@
 <div class="login-container">
 	<div class="login-box">
+		<h1>Login</h1>
 		<form nz-form (ngSubmit)="addProfile()" [formGroup]="profileForm" novalidate>
 			<div class="top-logo">
 				<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
@@ -46,15 +47,20 @@
 			</nz-form-item>
 
 			<div nz-row [nzGutter]="[24, 12]">
-				<div nz-col [nzSpan]="24">
+				<div nz-col [nzSpan]="24" [nzFlex]="1" class="button-wrapper">
 					<button
 						nz-button
-						class="login-form-button login-form-margin"
+						class="login-form-button"
 						nzType="primary"
 						[nzLoading]="isLoading"
 						[disabled]="isLoading || (isFormDirty && !profileForm.valid)"
 					>
-						Add Profile
+						Log In
+					</button>
+					<button nz-button nzType="default" [nzLoading]="isLoading">
+						<a routerLink="/auth/register">
+							Register
+						</a>
 					</button>
 				</div>
 			</div>

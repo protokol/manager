@@ -4,20 +4,28 @@ import { IconsProviderModule } from './icons-provider.module';
 import { NgxsModule } from '@ngxs/store';
 import { ProfilesState } from './store/profiles/profiles.state';
 import { environment } from '@env/environment';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
+import { WalletService } from './services/wallet.service';
+import { NodeClientService } from './services/node-client.service';
+import { NetworksState } from '@core/store/network/networks.state';
 
 @NgModule({
 	declarations: [],
 	imports: [
-		CommonModule,
-		IconsProviderModule,
-		NgxsModule.forRoot([ProfilesState], {
+		NgxsModule.forRoot([ProfilesState, NetworksState], {
 			developmentMode: !environment.production,
 		}),
 		NgxsStoragePluginModule.forRoot({
-			key: [ProfilesState],
+			key: [ProfilesState, NetworksState],
 		}),
+		NgxsStoragePluginModule.forRoot({
+			key: [ProfilesState],
+			storage: StorageOption.SessionStorage
+		}),
+		CommonModule,
+		IconsProviderModule,
 	],
+	providers: [NodeClientService, WalletService],
 })
 export class CoreModule {
 	constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

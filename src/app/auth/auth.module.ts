@@ -4,24 +4,28 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './pages/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-	NzButtonModule,
-	NzCheckboxModule,
-	NzFormModule,
-	NzInputModule,
-	NzTypographyModule,
+    NzAlertModule,
+    NzButtonModule,
+    NzCheckboxModule,
+    NzFormModule,
+    NzInputModule, NzSpinModule,
+    NzTypographyModule,
 } from 'ng-zorro-antd';
+import { RegisterComponent } from '@app/auth/pages/register/register.component';
 
 @NgModule({
-	declarations: [LoginComponent],
-	imports: [
-		CommonModule,
-		AuthRoutingModule,
-		ReactiveFormsModule,
-		NzFormModule,
-		NzInputModule,
-		NzButtonModule,
-		NzCheckboxModule,
-		NzTypographyModule,
-	],
+	declarations: [LoginComponent, RegisterComponent],
+    imports: [
+        CommonModule,
+        AuthRoutingModule,
+        ReactiveFormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzCheckboxModule,
+        NzTypographyModule,
+        NzAlertModule,
+        NzSpinModule,
+    ],
 })
 export class AuthModule {}

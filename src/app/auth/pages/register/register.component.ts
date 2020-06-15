@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import {
-	FormGroup,
+	AbstractControl,
 	FormBuilder,
-	Validators,
 	FormControl,
+	FormGroup,
 	ValidationErrors,
+	Validators,
 } from '@angular/forms';
 import { Profile, ProfilesState } from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
@@ -14,24 +15,32 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { AddProfileAction } from '@core/store/profiles/profiles.actions';
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
+import {
+	MnemonicGenerateLanguage,
+	WalletService,
+} from '@core/services/wallet.service';
+import {NetworksState} from '@core/store/network/networks.state';
+import {NodeCryptoConfiguration} from '@arkecosystem/client/dist/resourcesTypes/node';
 
 @Component({
-	selector: 'app-login',
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss'],
+	selector: 'app-register',
+	templateUrl: './register.component.html',
+	styleUrls: ['./register.component.scss'],
 })
-export class LoginComponent implements OnDestroy {
+export class RegisterComponent implements OnDestroy {
 	profileForm!: FormGroup;
 	error?: string;
 	isLoading: boolean;
 	isFormDirty = false;
 
 	@Select(ProfilesState.getProfiles) profiles$: Observable<Profile[]>;
+	@Select(NetworksState.getNodeCryptoConfig) cryptoConfig$: Observable<NodeCryptoConfiguration | null>;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
-		private store: Store
+		private store: Store,
+		private walletService: WalletService
 	) {
 		this.createForm();
 	}
@@ -46,7 +55,7 @@ export class LoginComponent implements OnDestroy {
 		}
 
 		const profileId = uuid();
-		const { profileName, passphrase } = this.profileForm.value;
+		const { profileName, passphrase, pin } = this.profileForm.value;
 
 		this.store
 			.select(ProfilesState.getProfileById)
@@ -64,8 +73,9 @@ export class LoginComponent implements OnDestroy {
 			new AddProfileAction(
 				{
 					profileName,
-					encodedPassphrase: passphrase,
+					passphrase,
 				},
+				pin,
 				true,
 				profileId
 			)
@@ -91,12 +101,40 @@ export class LoginComponent implements OnDestroy {
 			})
 		);
 
+	pinValidator = (control: FormControl): ValidationErrors | null => {
+		if (!control.value) {
+			return { required: true };
+		} else if (control.value !== this.c('pin').value) {
+			return { confirm: true, error: true };
+		}
+		return null;
+	};
+
 	private createForm() {
 		this.profileForm = this.formBuilder.group({
 			profileName: ['', [Validators.required], [this.profileNameAsyncValidator]],
 			passphrase: ['', Validators.required],
+			address: [{ value: '', disabled: true }, Validators.required],
+			pin: ['', Validators.required],
+			pinConfirm: ['', [Validators.required, this.pinValidator]],
+			agree: [false, Validators.required],
 		});
 	}
 
+	c(controlName: string): AbstractControl {
+		return this.profileForm.controls[controlName];
+	}
+
 	ngOnDestroy() {}
+
+	onGenerateClick(event: MouseEvent, publicKeyHash: any) {
+		event.preventDefault();
+		const { passphrase, address } = this.walletService.generate(
+			publicKeyHash,
+			MnemonicGenerateLanguage.ENGLISH
+		);
+
+		this.c('passphrase').setValue(passphrase);
+		this.c('address').setValue(address);
+	}
 }
