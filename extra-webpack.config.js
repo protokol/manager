@@ -1,4 +1,10 @@
+const webpack = require('webpack');
+
 module.exports = {
+	plugins: [
+		// Remove all non english word list, to optimize the bundle size
+		new webpack.IgnorePlugin(/^\.\/wordlists\/(?!english)/, /bip39\/src$/),
+	],
 	module: {
 		rules: [
 			{

@@ -1,15 +1,17 @@
 @import "src/theme/theme-variables";
 
-.login-container {
+$register-form-width: 650px;
+
+.register-container {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	min-width: 450px;
+	min-width: $register-form-width;
 }
 
-.login-box {
+.register-box {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -19,7 +21,7 @@
 	background-color: $bg-color-primary;
 
 	form {
-		min-width: 450px;
+		min-width: $register-form-width;
 		padding: 36px;
 		background-color: $info-color;
 	}
