@@ -46,6 +46,19 @@
 						[nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
 					></i>
 				</span>
+				<ng-container *ngIf="selectedProfile$ | async as selectedProfile">
+					<nz-avatar
+						nz-dropdown
+						nzPlacement="bottomRight"
+						[nzDropdownMenu]="menu"
+						[nzText]="selectedProfile.profileName.charAt(0)"
+					></nz-avatar>
+					<nz-dropdown-menu #menu="nzDropdownMenu">
+						<ul nz-menu>
+							<li nz-menu-item (click)="onSignOut($event)">Sign out</li>
+						</ul>
+					</nz-dropdown-menu>
+				</ng-container>
 			</div>
 		</nz-header>
 		<nz-content>

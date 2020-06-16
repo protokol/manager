@@ -1,19 +1,17 @@
 import { Component, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
-	FormGroup,
-	FormBuilder,
-	Validators,
-	FormControl,
-	ValidationErrors,
-} from '@angular/forms';
-import { Profile, ProfilesState } from '@core/store/profiles/profiles.state';
+	ProfilesState,
+	ProfileWithId,
+} from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { finalize, first, map } from 'rxjs/operators';
-import { untilDestroyed } from '@core/until-destroyed';
-import { AddProfileAction } from '@core/store/profiles/profiles.actions';
-import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
+import { StoreUtilsService } from '@app/@core/store/store-utils.service';
+import { NetworksState } from '@core/store/network/networks.state';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { tap } from 'rxjs/operators';
+import { AddPinAction } from '@core/store/pins/pins.actions';
 
 @Component({
 	selector: 'app-login',
@@ -25,18 +23,22 @@ export class LoginComponent implements OnDestroy {
 	error?: string;
 	isLoading: boolean;
 	isFormDirty = false;
+	isPinInvalid = false;
 
-	@Select(ProfilesState.getProfiles) profiles$: Observable<Profile[]>;
+	@Select(ProfilesState.getProfiles) profiles$: Observable<ProfileWithId[]>;
+	@Select(NetworksState.getNodeCryptoConfig)
+	cryptoConfig$: Observable<NodeCryptoConfiguration | null>;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
-		private store: Store
+		private store: Store,
+		private storeUtilsService: StoreUtilsService
 	) {
 		this.createForm();
 	}
 
-	addProfile() {
+	addProfile(cryptoConfig: NodeCryptoConfiguration) {
 		this.isFormDirty = false;
 
 		if (!this.profileForm.valid) {
@@ -45,56 +47,33 @@ export class LoginComponent implements OnDestroy {
 			return;
 		}
 
-		const profileId = uuid();
-		const { profileName, passphrase } = this.profileForm.value;
+		this.isLoading = true;
+		this.profileForm.disable();
 
-		this.store
-			.select(ProfilesState.getProfileById)
+		const { profileId, pin } = this.profileForm.value;
+
+		this.storeUtilsService
+			.isPinForProfileValid(profileId, pin, cryptoConfig.network)
 			.pipe(
-				untilDestroyed(this),
-				map((getProfileById) => getProfileById(profileId)),
-				first((profile) => !!profile),
-				finalize(() => {
-					this.router.navigate(['/dashboard']);
+				tap((isValidPin) => {
+					this.isLoading = false;
+					this.profileForm.enable();
+
+					if (isValidPin) {
+						this.store.dispatch(new AddPinAction(profileId, pin));
+						this.router.navigate(['/dashboard']);
+					} else {
+						this.isPinInvalid = true;
+					}
 				})
 			)
 			.subscribe();
-
-		this.store.dispatch(
-			new AddProfileAction(
-				{
-					profileName,
-					encodedPassphrase: passphrase,
-				},
-				true,
-				profileId
-			)
-		);
 	}
-
-	profileNameAsyncValidator = (
-		control: FormControl
-	): Observable<ValidationErrors | null> =>
-		this.profiles$.pipe(
-			untilDestroyed(this),
-			first(),
-			map((profiles) =>
-				profiles.length
-					? profiles.some((p) => p.profileName === control.value)
-					: false
-			),
-			map((isProfileNameDuplicated) => {
-				if (isProfileNameDuplicated) {
-					return { error: true, duplicated: true };
-				}
-				return null;
-			})
-		);
 
 	private createForm() {
 		this.profileForm = this.formBuilder.group({
-			profileName: ['', [Validators.required], [this.profileNameAsyncValidator]],
-			passphrase: ['', Validators.required],
+			profileId: ['', Validators.required],
+			pin: ['', Validators.required],
 		});
 	}
 

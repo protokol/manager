@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Connection } from '@arkecosystem/client';
 import { from, Observable, of } from 'rxjs';
-import {NodeConfiguration, NodeCryptoConfiguration} from '@arkecosystem/client/dist/resourcesTypes/node';
+import {
+	NodeConfiguration,
+	NodeCryptoConfiguration,
+} from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 
