@@ -7,7 +7,7 @@ export class AddProfileAction {
 	static type = `[${PROFILES_TYPE_NAME}] AddProfile`;
 
 	constructor(
-		public profile: Omit<Profile, 'encodedPassphrase'> & {passphrase: string},
+		public profile: Omit<Profile, 'encodedPassphrase'> & { passphrase: string },
 		public pin: string,
 		public markAsDefault: boolean = false,
 		public profileId: string = uuid()

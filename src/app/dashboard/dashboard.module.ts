@@ -5,7 +5,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NzIconModule } from 'ng-zorro-antd';
+import { NzAvatarModule, NzDropDownModule, NzIconModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -20,6 +20,8 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 		NzIconModule,
 		RouterModule,
 		DashboardRoutingModule,
+		NzAvatarModule,
+		NzDropDownModule,
 	],
 })
 export class DashboardModule {}

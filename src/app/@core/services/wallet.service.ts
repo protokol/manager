@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {NodeCryptoConfiguration} from '@arkecosystem/client/dist/resourcesTypes/node';
-import {Logger} from '@core/services/logger.service';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { Logger } from '@core/services/logger.service';
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
 import * as bip38Type from 'bip38';
@@ -51,19 +51,27 @@ export class WalletService {
 		};
 	}
 
-	encrypt(passphrase: string, pin: string, network: NodeCryptoConfiguration['network']) {
+	encrypt(
+		passphrase: string,
+		pin: string,
+		network: NodeCryptoConfiguration['network']
+	) {
 		const key = this.arkCrypto.Identities.WIF.fromPassphrase(passphrase, network);
 		const decoded = this.wif.decode(key);
 
-		return this.bip38.encrypt(
-			decoded.privateKey,
-			decoded.compressed,
-			pin
-		);
+		return this.bip38.encrypt(decoded.privateKey, decoded.compressed, pin);
 	}
 
-	dencrypt(encodedPassphrase: string, pin: string, network: NodeCryptoConfiguration['network']) {
+	dencrypt(
+		encodedPassphrase: string,
+		pin: string,
+		network: NodeCryptoConfiguration['network']
+	) {
 		const decryptedKey = this.bip38.decrypt(encodedPassphrase, pin);
-		return this.wif.encode(network.wif, decryptedKey.privateKey, decryptedKey.compressed);
+		return this.wif.encode(
+			network.wif,
+			decryptedKey.privateKey,
+			decryptedKey.compressed
+		);
 	}
 }

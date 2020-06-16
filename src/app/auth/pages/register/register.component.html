@@ -4,7 +4,7 @@
 			<h1>Register</h1>
 			<form nz-form (ngSubmit)="addProfile()" [formGroup]="profileForm" novalidate>
 				<div class="top-logo">
-					<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo"/>
+					<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
 					<h1>Protokol Manager</h1>
 				</div>
 				<nz-form-item>
@@ -23,12 +23,14 @@
 							/>
 							<ng-template #profileNameErrorTpl let-control>
 								<ng-container *ngIf="control.hasError('required')">
-								<span nz-typography nzType="danger"
-								>Please input your profile name!</span
-								>
+									<span nz-typography nzType="danger"
+										>Please input your profile name!</span
+									>
 								</ng-container>
 								<ng-container *ngIf="control.hasError('duplicated')">
-									<span nz-typography nzType="danger">Profile name is already used!</span>
+									<span nz-typography nzType="danger"
+										>Profile name is already used!</span
+									>
 								</ng-container>
 							</ng-template>
 						</nz-input-group>
@@ -37,7 +39,7 @@
 
 				<nz-form-item [nzGutter]="[24, 0]">
 					<nz-form-control
-						nzErrorTip="Please input your passphrase or generate one!"
+						nzErrorTip="Please enter your passphrase or generate one!"
 						nzSpan="20"
 					>
 						<nz-input-group nzPrefixIcon="dash">
@@ -61,7 +63,7 @@
 				</nz-form-item>
 
 				<nz-form-item>
-					<nz-form-control nzErrorTip="Please input your passphrase!" nzSpan="20">
+					<nz-form-control nzErrorTip="Please enter your passphrase!" nzSpan="20">
 						<nz-input-group nzPrefixIcon="wallet">
 							<input
 								type="text"
@@ -74,9 +76,14 @@
 				</nz-form-item>
 
 				<nz-form-item>
-					<nz-form-control nzErrorTip="Please input your pin!" nzSpan="10">
+					<nz-form-control nzErrorTip="Please enter your pin!" nzSpan="10">
 						<nz-input-group nzPrefixIcon="lock">
-							<input type="password" nz-input formControlName="pin" placeholder="PIN"/>
+							<input
+								type="password"
+								nz-input
+								formControlName="pin"
+								placeholder="PIN"
+							/>
 						</nz-input-group>
 					</nz-form-control>
 				</nz-form-item>
@@ -117,9 +124,9 @@
 								nzErrorTip="You must agree to terms of use and privacy policy!"
 							>
 								<label nz-checkbox formControlName="agree">
-								<span nz-typography class="text-white"
-								>I agree to the <a>Terms of use</a> and <a>Privacy policy</a></span
-								>
+									<span nz-typography class="text-white"
+										>I agree to the <a>Terms of use</a> and <a>Privacy policy</a></span
+									>
 								</label>
 							</nz-form-control>
 						</nz-form-item>

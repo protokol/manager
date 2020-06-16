@@ -7,7 +7,10 @@ import {
 	ValidationErrors,
 	Validators,
 } from '@angular/forms';
-import { Profile, ProfilesState } from '@core/store/profiles/profiles.state';
+import {
+	ProfilesState,
+	ProfileWithId,
+} from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { finalize, first, map } from 'rxjs/operators';
@@ -19,8 +22,9 @@ import {
 	MnemonicGenerateLanguage,
 	WalletService,
 } from '@core/services/wallet.service';
-import {NetworksState} from '@core/store/network/networks.state';
-import {NodeCryptoConfiguration} from '@arkecosystem/client/dist/resourcesTypes/node';
+import { NetworksState } from '@core/store/network/networks.state';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { PinsState } from '@core/store/pins/pins.state';
 
 @Component({
 	selector: 'app-register',
@@ -33,8 +37,9 @@ export class RegisterComponent implements OnDestroy {
 	isLoading: boolean;
 	isFormDirty = false;
 
-	@Select(ProfilesState.getProfiles) profiles$: Observable<Profile[]>;
-	@Select(NetworksState.getNodeCryptoConfig) cryptoConfig$: Observable<NodeCryptoConfiguration | null>;
+	@Select(ProfilesState.getProfiles) profiles$: Observable<ProfileWithId[]>;
+	@Select(NetworksState.getNodeCryptoConfig)
+	cryptoConfig$: Observable<NodeCryptoConfiguration | null>;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -58,10 +63,9 @@ export class RegisterComponent implements OnDestroy {
 		const { profileName, passphrase, pin } = this.profileForm.value;
 
 		this.store
-			.select(ProfilesState.getProfileById)
+			.select(PinsState.getPinByProfileId(profileId))
 			.pipe(
 				untilDestroyed(this),
-				map((getProfileById) => getProfileById(profileId)),
 				first((profile) => !!profile),
 				finalize(() => {
 					this.router.navigate(['/dashboard']);
@@ -99,7 +103,7 @@ export class RegisterComponent implements OnDestroy {
 				}
 				return null;
 			})
-		);
+		)
 
 	pinValidator = (control: FormControl): ValidationErrors | null => {
 		if (!control.value) {
@@ -108,7 +112,7 @@ export class RegisterComponent implements OnDestroy {
 			return { confirm: true, error: true };
 		}
 		return null;
-	};
+	}
 
 	private createForm() {
 		this.profileForm = this.formBuilder.group({
