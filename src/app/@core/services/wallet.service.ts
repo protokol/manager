@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { Logger } from '@core/services/logger.service';
+import { map } from 'rxjs/operators';
+import { ElectronWorkerWallet } from '@core/web-workers/electron-worker-wallet';
+import { throwError } from 'rxjs';
+
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
-import * as bip38Type from 'bip38';
 import * as bip39Type from 'bip39';
-import * as wifType from 'wif';
 import * as arkCryptoType from '@arkecosystem/crypto';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { ElectronUtils } from '@core/utils/electron-utils';
 
 export enum MnemonicGenerateLanguage {
 	ENGLISH = 'english',
@@ -16,21 +19,13 @@ export enum MnemonicGenerateLanguage {
 export class WalletService {
 	readonly log = new Logger(this.constructor.name);
 
-	private readonly bip38: typeof bip38Type;
 	private readonly bip39: typeof bip39Type;
 	private readonly arkCrypto: typeof arkCryptoType;
-	private readonly wif: typeof wifType;
-
-	static get isElectron(): boolean {
-		return !!(window && window.process && window.process.type);
-	}
 
 	constructor() {
-		if (WalletService.isElectron) {
-			this.bip38 = window.require('bip38');
+		if (ElectronUtils.isElectron()) {
 			this.bip39 = window.require('bip39');
 			this.arkCrypto = window.require('@arkecosystem/crypto');
-			this.wif = window.require('wif');
 		}
 	}
 
@@ -56,10 +51,30 @@ export class WalletService {
 		pin: string,
 		network: NodeCryptoConfiguration['network']
 	) {
-		const key = this.arkCrypto.Identities.WIF.fromPassphrase(passphrase, network);
-		const decoded = this.wif.decode(key);
+		const walletWorker = new ElectronWorkerWallet();
+		walletWorker
+			.send({
+				type: 'encode',
+				payload: {
+					passphrase,
+					pin,
+					network
+				}
+			});
 
-		return this.bip38.encrypt(decoded.privateKey, decoded.compressed, pin);
+		return walletWorker.onMessage()
+			.pipe(
+				map(response => {
+					switch (response.type) {
+						case 'encode_response':
+							return response.payload.encoded;
+						case 'error':
+							return throwError(response.payload.error);
+						default:
+							return throwError('Invalid response!');
+					}
+				})
+			);
 	}
 
 	dencrypt(
@@ -67,11 +82,29 @@ export class WalletService {
 		pin: string,
 		network: NodeCryptoConfiguration['network']
 	) {
-		const decryptedKey = this.bip38.decrypt(encodedPassphrase, pin);
-		return this.wif.encode(
-			network.wif,
-			decryptedKey.privateKey,
-			decryptedKey.compressed
-		);
+		const walletWorker = new ElectronWorkerWallet();
+		walletWorker
+			.send({
+				type: 'decode',
+				payload: {
+					encodedPassphrase,
+					pin,
+					network
+				}
+			});
+
+		return walletWorker.onMessage()
+			.pipe(
+				map(response => {
+					switch (response.type) {
+						case 'decode_response':
+							return response.payload.decoded;
+						case 'error':
+							return throwError(response.payload.error);
+						default:
+							return throwError('Invalid response!');
+					}
+				}),
+			);
 	}
 }

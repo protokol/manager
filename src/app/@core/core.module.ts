@@ -29,7 +29,7 @@ import { PinsState } from '@core/store/pins/pins.state';
 		NodeClientService,
 		WalletService,
 		StoreUtilsService,
-		HasProfileGuard,
+		HasProfileGuard
 	],
 })
 export class CoreModule {

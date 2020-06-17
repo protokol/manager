@@ -11,7 +11,7 @@ import {
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 
-export interface NetworksStateModel {
+interface NetworksStateModel {
 	baseUrl: string | null;
 	nodeCryptoConfiguration: NodeCryptoConfiguration | null;
 }
