@@ -31,7 +31,6 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 		console.log('spawn worker');
 
 		this.worker.on('message', (message) => {
-			console.log('message', message);
 			if (message.type === 'started') {
 				this.isStarted$.next(true);
 			} else {
@@ -45,7 +44,6 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 			.pipe(
 				filter(isStarted => !!isStarted),
 				tap(() => {
-					console.log('send', data);
 					this.worker.send(data);
 				})).subscribe();
 	}
@@ -60,7 +58,6 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 
 	terminate() {
 		if (this.worker) {
-			console.log('kill worker 123');
 			this.worker.send({
 				type: 'exit'
 			});
