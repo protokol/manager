@@ -5,7 +5,6 @@ const wif = require('wif');
 const { Identities } = require('@arkecosystem/crypto');
 
 process.on('message', (message: WebWorkerWalletPost) => {
-	console.log('worker message', message);
 	switch (message.type) {
 		case 'encode': {
 			try {
@@ -20,7 +19,6 @@ process.on('message', (message: WebWorkerWalletPost) => {
 						encoded: bip38.encrypt(decoded.privateKey, decoded.compressed, pin)
 					}
 				} as WebWorkerWalletReceive);
-				console.log('encode_response');
 			} catch (e) {
 				process.send({
 					type: 'error',
@@ -28,7 +26,6 @@ process.on('message', (message: WebWorkerWalletPost) => {
 						error: e.message
 					}
 				} as WebWorkerWalletReceive);
-				console.log('error');
 			}
 			break;
 		}
