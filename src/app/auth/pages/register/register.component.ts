@@ -50,7 +50,7 @@ export class RegisterComponent implements OnDestroy {
 		this.createForm();
 	}
 
-	addProfile() {
+	addProfile(networkConfig: NodeCryptoConfiguration['network']) {
 		this.isFormDirty = false;
 
 		if (!this.profileForm.valid) {
@@ -80,6 +80,7 @@ export class RegisterComponent implements OnDestroy {
 					passphrase,
 				},
 				pin,
+				networkConfig,
 				true,
 				profileId
 			)
