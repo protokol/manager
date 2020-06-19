@@ -8,7 +8,6 @@ import { State, Selector, Action, StateContext, createSelector } from '@ngxs/sto
 import { Injectable } from '@angular/core';
 import { WalletService } from '@core/services/wallet.service';
 import { AddPinAction } from '@core/store/pins/pins.actions';
-import { PinsStateModel } from '@core/store/pins/pins.state';
 
 export interface Profile {
 	profileName: string;
