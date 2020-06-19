@@ -10,10 +10,7 @@ import { PinsState } from '@core/store/pins/pins.state';
 export class HasProfileGuard implements CanLoad {
 	constructor(private store: Store, private router: Router) {}
 
-	canLoad(
-		route: Route,
-		segments: UrlSegment[]
-	): Observable<boolean> | Promise<boolean> | boolean {
+	canLoad(): Observable<boolean> {
 		return this.store.selectOnce(ProfilesState.getSelectedProfile).pipe(
 			switchMap((selectedProfile) => {
 				if (!selectedProfile) {

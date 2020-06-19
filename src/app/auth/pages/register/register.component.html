@@ -2,7 +2,7 @@
 	<div class="register-box">
 		<ng-container *ngIf="cryptoConfig$ | async as cryptoConfig; else formLoading">
 			<h1>Register</h1>
-			<form nz-form (ngSubmit)="addProfile()" [formGroup]="profileForm" novalidate>
+			<form nz-form (ngSubmit)="addProfile(cryptoConfig.network)" [formGroup]="profileForm" novalidate>
 				<div class="top-logo">
 					<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
 					<h1>Protokol Manager</h1>

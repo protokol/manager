@@ -18,9 +18,7 @@ export class StoreUtilsService {
 		network: NodeCryptoConfiguration['network']
 	): Observable<boolean> {
 		return new Observable<boolean>((subscriber) => {
-			const profile = this.store.selectSnapshot(ProfilesState.getProfileById)(
-				profileId
-			);
+			const profile = this.store.selectSnapshot(ProfilesState.getProfileById(profileId));
 			let canDecrypt = true;
 			try {
 				this.walletService.dencrypt(profile.encodedPassphrase, pin, network);

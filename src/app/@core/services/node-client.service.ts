@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Connection } from '@arkecosystem/client';
 import { from, Observable, of } from 'rxjs';
 import {
-	NodeConfiguration,
 	NodeCryptoConfiguration,
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -26,28 +25,6 @@ export class NodeClientService {
 	}
 
 	constructor() {}
-
-	getNodeConfiguration(
-		baseUrl: string,
-		connectionOptions?: ConnectionOptions
-	): Observable<NodeConfiguration> {
-		return from(
-			NodeClientService.getConnection(baseUrl, connectionOptions)
-				.api('node')
-				.configuration()
-		).pipe(
-			tap((response) => {
-				if (response.body.errors) {
-					this.log.error('Response contains errors:', response.body.errors);
-				}
-			}),
-			map((response) => response.body.data),
-			catchError((err) => {
-				this.log.error(err);
-				return of(null);
-			})
-		);
-	}
 
 	getNodeCryptoConfiguration(
 		baseUrl: string,

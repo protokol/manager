@@ -20,10 +20,7 @@ import { PinsState } from '@core/store/pins/pins.state';
 		}),
 		NgxsStoragePluginModule.forRoot({
 			key: [ProfilesState, NetworksState],
-		}),
-		NgxsStoragePluginModule.forRoot({
-			key: [ProfilesState],
-			storage: StorageOption.SessionStorage,
+			storage: StorageOption.LocalStorage
 		}),
 		CommonModule,
 		IconsProviderModule,

@@ -2,7 +2,6 @@ import { Logger } from '@core/services/logger.service';
 import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
-	NodeConfiguration,
 	NodeCryptoConfiguration,
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import {
@@ -11,17 +10,14 @@ import {
 } from '@core/store/network/networks.actions';
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
-import { forkJoin } from 'rxjs';
 
 export interface NetworksStateModel {
 	baseUrl: string | null;
-	nodeConfiguration: NodeConfiguration | null;
 	nodeCryptoConfiguration: NodeCryptoConfiguration | null;
 }
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
 	baseUrl: null,
-	nodeConfiguration: null,
 	nodeCryptoConfiguration: null,
 };
 
@@ -30,15 +26,10 @@ const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
 	defaults: { ...NETWORKS_DEFAULT_STATE },
 })
 @Injectable()
-export class NetworksState {
+export class 	NetworksState {
 	readonly log = new Logger(this.constructor.name);
 
 	constructor(private nodeClientService: NodeClientService) {}
-
-	@Selector()
-	static getNetworkConfig({ nodeConfiguration }: NetworksStateModel) {
-		return nodeConfiguration;
-	}
 
 	@Selector()
 	static getNodeCryptoConfig({ nodeCryptoConfiguration }: NetworksStateModel) {
@@ -55,21 +46,12 @@ export class NetworksState {
 			baseUrl,
 		});
 
-		forkJoin([
-			this.nodeClientService.getNodeConfiguration(baseUrl).pipe(
-				tap((nodeConfiguration) => {
-					patchState({
-						nodeConfiguration,
-					});
-				})
-			),
-			this.nodeClientService.getNodeCryptoConfiguration(baseUrl).pipe(
-				tap((nodeCryptoConfiguration) => {
-					patchState({
-						nodeCryptoConfiguration,
-					});
-				})
-			),
-		]).subscribe();
+		this.nodeClientService.getNodeCryptoConfiguration(baseUrl).pipe(
+			tap((nodeCryptoConfiguration) => {
+				patchState({
+					nodeCryptoConfiguration
+				});
+			})
+		).subscribe();
 	}
 }

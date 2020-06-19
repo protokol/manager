@@ -4,11 +4,9 @@ import {
 	PROFILES_TYPE_NAME,
 	RemoveProfileAction,
 } from './profiles.actions';
-import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
+import { State, Selector, Action, StateContext, createSelector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { WalletService } from '@core/services/wallet.service';
-import { NetworksState } from '@core/store/network/networks.state';
-import { tap } from 'rxjs/operators';
 import { AddPinAction } from '@core/store/pins/pins.actions';
 
 export interface Profile {
@@ -38,12 +36,7 @@ const PROFILES_DEFAULT_STATE: ProfilesStateModel = {
 export class ProfilesState {
 	readonly log = new Logger(this.constructor.name);
 
-	constructor(private walletService: WalletService, private store: Store) {}
-
-	@Selector()
-	static getProfileState(state: ProfilesStateModel) {
-		return { ...state };
-	}
+	constructor(private walletService: WalletService) {}
 
 	@Selector()
 	static getProfiles({ profiles }: ProfilesStateModel): ProfileWithId[] {
@@ -53,11 +46,10 @@ export class ProfilesState {
 		);
 	}
 
-	@Selector()
-	static getProfileById({ profiles }: ProfilesStateModel) {
-		return (profileId: string) => {
+	static getProfileById(profileId: string) {
+		return createSelector([ProfilesState], ({ profiles }: ProfilesStateModel) => {
 			return profiles[profileId];
-		};
+		});
 	}
 
 	@Selector()
@@ -74,38 +66,33 @@ export class ProfilesState {
 		{
 			profile: { profileName, passphrase },
 			pin,
+			cryptoConfig,
 			profileId,
-			markAsDefault,
+			markAsDefault
 		}: AddProfileAction
 	) {
-		this.store
-			.selectOnce(NetworksState.getNodeCryptoConfig)
-			.pipe(
-				tap((nodeCryptoConfig) => {
-					const encodedPassphrase = this.walletService.encrypt(
-						passphrase,
-						pin,
-						nodeCryptoConfig.network
-					);
-					// const decodedPassphrase = this.walletService.dencrypt(encodedPassphrase, pin, nodeCryptoConfig.network);
-					patchState(
-						Object.assign(
-							{
-								profiles: {
-									...getState().profiles,
-									[profileId]: {
-										profileName,
-										encodedPassphrase,
-									},
-								},
-							},
-							markAsDefault ? { selectedProfileId: profileId } : {}
-						)
-					);
-				}),
-				tap(() => dispatch(new AddPinAction(profileId, pin)))
+		const encodedPassphrase = this.walletService.encrypt(
+			passphrase,
+			pin,
+			cryptoConfig
+		);
+
+		patchState(
+			Object.assign(
+				{
+					profiles: {
+						...getState().profiles,
+						[profileId]: {
+							profileName,
+							encodedPassphrase
+						}
+					}
+				},
+				markAsDefault ? { selectedProfileId: profileId } : {}
 			)
-			.subscribe();
+		);
+
+		dispatch(new AddPinAction(profileId, pin));
 	}
 
 	@Action(RemoveProfileAction)
