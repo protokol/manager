@@ -8,6 +8,8 @@ import { State, Selector, Action, StateContext, createSelector } from '@ngxs/sto
 import { Injectable } from '@angular/core';
 import { WalletService } from '@core/services/wallet.service';
 import { AddPinAction } from '@core/store/pins/pins.actions';
+import { Bip38Service } from '@core/services/bip38.service';
+import { tap } from 'rxjs/operators';
 
 export interface Profile {
 	profileName: string;
@@ -36,7 +38,7 @@ const PROFILES_DEFAULT_STATE: ProfilesStateModel = {
 export class ProfilesState {
 	readonly log = new Logger(this.constructor.name);
 
-	constructor(private walletService: WalletService) {}
+	constructor(private bip38Service: Bip38Service) {}
 
 	@Selector()
 	static getProfiles({ profiles }: ProfilesStateModel): ProfileWithId[] {
@@ -71,28 +73,29 @@ export class ProfilesState {
 			markAsDefault
 		}: AddProfileAction
 	) {
-		const encodedPassphrase = this.walletService.encrypt(
+		return this.bip38Service.encrypt(
 			passphrase,
 			pin,
 			cryptoConfig
+		).pipe(
+			tap((encodedPassphrase) => {
+				patchState(
+					Object.assign(
+						{
+							profiles: {
+								...getState().profiles,
+								[profileId]: {
+									profileName,
+									encodedPassphrase
+								}
+							}
+						},
+						markAsDefault ? { selectedProfileId: profileId } : {}
+					)
+				);
+			}),
+			tap(() => dispatch(new AddPinAction(profileId, pin)))
 		);
-
-		patchState(
-			Object.assign(
-				{
-					profiles: {
-						...getState().profiles,
-						[profileId]: {
-							profileName,
-							encodedPassphrase
-						}
-					}
-				},
-				markAsDefault ? { selectedProfileId: profileId } : {}
-			)
-		);
-
-		dispatch(new AddPinAction(profileId, pin));
 	}
 
 	@Action(RemoveProfileAction)

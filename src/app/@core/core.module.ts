@@ -11,6 +11,8 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { HasProfileGuard } from '@core/guards/has-profile.guard';
 import { PinsState } from '@core/store/pins/pins.state';
+import { Bip38Service } from '@core/services/bip38.service';
+import { bip38Factory } from '@core/factory/bip38.factory';
 
 @NgModule({
 	declarations: [],
@@ -29,7 +31,12 @@ import { PinsState } from '@core/store/pins/pins.state';
 		NodeClientService,
 		WalletService,
 		StoreUtilsService,
-		HasProfileGuard
+		HasProfileGuard,
+		{
+			provide: Bip38Service,
+			useFactory: bip38Factory,
+			deps: []
+		}
 	],
 })
 export class CoreModule {

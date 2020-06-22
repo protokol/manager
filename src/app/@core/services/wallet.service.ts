@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Logger } from '@core/services/logger.service';
-import { map } from 'rxjs/operators';
-import { ElectronWorkerWallet } from '@core/web-workers/electron-worker-wallet';
-import { throwError } from 'rxjs';
+import { ElectronUtils } from '@core/utils/electron-utils';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
 import * as bip39Type from 'bip39';
 import * as arkCryptoType from '@arkecosystem/crypto';
-import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { ElectronUtils } from '@core/utils/electron-utils';
 
 export enum MnemonicGenerateLanguage {
 	ENGLISH = 'english',
@@ -44,67 +40,5 @@ export class WalletService {
 			),
 			passphrase,
 		};
-	}
-
-	encrypt(
-		passphrase: string,
-		pin: string,
-		network: NodeCryptoConfiguration['network']
-	) {
-		const walletWorker = new ElectronWorkerWallet();
-		walletWorker
-			.send({
-				type: 'encode',
-				payload: {
-					passphrase,
-					pin,
-					network
-				}
-			});
-
-		return walletWorker.onMessage()
-			.pipe(
-				map(response => {
-					switch (response.type) {
-						case 'encode_response':
-							return response.payload.encoded;
-						case 'error':
-							return throwError(response.payload.error);
-						default:
-							return throwError('Invalid response!');
-					}
-				})
-			);
-	}
-
-	dencrypt(
-		encodedPassphrase: string,
-		pin: string,
-		network: NodeCryptoConfiguration['network']
-	) {
-		const walletWorker = new ElectronWorkerWallet();
-		walletWorker
-			.send({
-				type: 'decode',
-				payload: {
-					encodedPassphrase,
-					pin,
-					network
-				}
-			});
-
-		return walletWorker.onMessage()
-			.pipe(
-				map(response => {
-					switch (response.type) {
-						case 'decode_response':
-							return response.payload.decoded;
-						case 'error':
-							return throwError(response.payload.error);
-						default:
-							return throwError('Invalid response!');
-					}
-				}),
-			);
 	}
 }
