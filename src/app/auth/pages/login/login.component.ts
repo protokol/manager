@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { StoreUtilsService } from '@app/@core/store/store-utils.service';
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { AddPinAction } from '@core/store/pins/pins.actions';
 
 @Component({
@@ -55,10 +55,11 @@ export class LoginComponent implements OnDestroy {
 		this.storeUtilsService
 			.isPinForProfileValid(profileId, pin, cryptoConfig.network)
 			.pipe(
-				tap((isValidPin) => {
+				finalize(() => {
 					this.isLoading = false;
 					this.profileForm.enable();
-
+				}),
+				tap((isValidPin) => {
 					if (isValidPin) {
 						this.store.dispatch(new AddPinAction(profileId, pin));
 						this.router.navigate(['/dashboard']);
