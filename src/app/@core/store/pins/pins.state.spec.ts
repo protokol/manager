@@ -12,7 +12,7 @@ describe('Pins', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [NgxsModule.forRoot([PinsState])]
+			imports: [NgxsModule.forRoot([PinsState])],
 		});
 
 		store = TestBed.inject(Store);
@@ -21,7 +21,7 @@ describe('Pins', () => {
 	it('should add pin', () => {
 		store.dispatch(new AddPinAction(profileIdFixture, pin1Fixture));
 
-		const pins = store.selectSnapshot(state => state.pins.pins);
+		const pins = store.selectSnapshot((state) => state.pins.pins);
 		expect(pins).toEqual({ [profileIdFixture]: pin1Fixture });
 	});
 
@@ -30,30 +30,31 @@ describe('Pins', () => {
 			pins: {
 				[uuid()]: pin1Fixture,
 				[uuid()]: pin2Fixture,
-			}
+			},
 		};
 
 		store.reset({
-			pins: { ...pinsStateFixture }
+			pins: { ...pinsStateFixture },
 		});
 
-		const pins = store.selectSnapshot(state => state.pins);
+		const pins = store.selectSnapshot((state) => state.pins);
 		expect(pins).toEqual(pinsStateFixture);
 
 		store.dispatch(new ClearPinsAction());
-		const pinsEmpty = store.selectSnapshot(state => state.pins.pins);
+		const pinsEmpty = store.selectSnapshot((state) => state.pins.pins);
 		expect(pinsEmpty).toEqual({});
 	});
 
 	it('should select pin', () => {
 		store.reset({
 			pins: {
-				pins: { [profileIdFixture]: pin1Fixture }
-			}
+				pins: { [profileIdFixture]: pin1Fixture },
+			},
 		});
 
-		const profilePin = store.selectSnapshot(PinsState.getPinByProfileId(profileIdFixture));
+		const profilePin = store.selectSnapshot(
+			PinsState.getPinByProfileId(profileIdFixture)
+		);
 		expect(profilePin).toEqual(pin1Fixture);
 	});
 });
-

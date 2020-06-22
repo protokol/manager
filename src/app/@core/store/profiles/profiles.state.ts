@@ -4,7 +4,13 @@ import {
 	PROFILES_TYPE_NAME,
 	RemoveProfileAction,
 } from './profiles.actions';
-import { State, Selector, Action, StateContext, createSelector } from '@ngxs/store';
+import {
+	State,
+	Selector,
+	Action,
+	StateContext,
+	createSelector,
+} from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { WalletService } from '@core/services/wallet.service';
 import { AddPinAction } from '@core/store/pins/pins.actions';
@@ -70,14 +76,10 @@ export class ProfilesState {
 			pin,
 			cryptoConfig,
 			profileId,
-			markAsDefault
+			markAsDefault,
 		}: AddProfileAction
 	) {
-		return this.bip38Service.encrypt(
-			passphrase,
-			pin,
-			cryptoConfig
-		).pipe(
+		return this.bip38Service.encrypt(passphrase, pin, cryptoConfig).pipe(
 			tap((encodedPassphrase) => {
 				patchState(
 					Object.assign(
@@ -86,9 +88,9 @@ export class ProfilesState {
 								...getState().profiles,
 								[profileId]: {
 									profileName,
-									encodedPassphrase
-								}
-							}
+									encodedPassphrase,
+								},
+							},
 						},
 						markAsDefault ? { selectedProfileId: profileId } : {}
 					)

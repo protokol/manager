@@ -1,9 +1,7 @@
 import { Logger } from '@core/services/logger.service';
 import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import {
-	NodeCryptoConfiguration,
-} from '@arkecosystem/client/dist/resourcesTypes/node';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import {
 	NETWORKS_TYPE_NAME,
 	SetNetwork,
@@ -26,10 +24,15 @@ const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
 	defaults: { ...NETWORKS_DEFAULT_STATE },
 })
 @Injectable()
-export class 	NetworksState {
+export class NetworksState {
 	readonly log = new Logger(this.constructor.name);
 
 	constructor(private nodeClientService: NodeClientService) {}
+
+	@Selector()
+	static getBaseUrl({ baseUrl }: NetworksStateModel) {
+		return baseUrl;
+	}
 
 	@Selector()
 	static getNodeCryptoConfig({ nodeCryptoConfiguration }: NetworksStateModel) {
@@ -46,12 +49,15 @@ export class 	NetworksState {
 			baseUrl,
 		});
 
-		this.nodeClientService.getNodeCryptoConfiguration(baseUrl).pipe(
-			tap((nodeCryptoConfiguration) => {
-				patchState({
-					nodeCryptoConfiguration
-				});
-			})
-		).subscribe();
+		this.nodeClientService
+			.getNodeCryptoConfiguration(baseUrl)
+			.pipe(
+				tap((nodeCryptoConfiguration) => {
+					patchState({
+						nodeCryptoConfiguration,
+					});
+				})
+			)
+			.subscribe();
 	}
 }

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Connection } from '@arkecosystem/client';
 import { from, Observable, of } from 'rxjs';
-import {
-	NodeCryptoConfiguration,
-} from '@arkecosystem/client/dist/resourcesTypes/node';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
+import { Collections, NFTConnection } from '@protokol/nft-client';
+import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
+import { Pagination } from '@app/@shared/interfaces/table.types';
 
 interface ConnectionOptions {
 	timeout?: number;
@@ -17,11 +17,29 @@ export class NodeClientService {
 
 	static getConnection(
 		baseUrl: string,
-		{ timeout = 5000 }: ConnectionOptions = {}
+		{ timeout = 5000 }: ConnectionOptions = {},
+		{ isNftEndpoint }: { isNftEndpoint: boolean } = { isNftEndpoint: false }
 	) {
-		return new Connection(`${baseUrl}/api`).withOptions({
-			timeout: timeout || 5000,
+		isNftEndpoint = isNftEndpoint || false;
+
+		const host = isNftEndpoint ? `${baseUrl}/api/nft` : `${baseUrl}/api`;
+		return new NFTConnection(host).withOptions({
+			timeout: timeout || 5000
 		});
+	}
+
+	genericErrorHandler() {
+		return (
+			tap((response: ApiResponse<any>) => {
+				if (response.body.errors) {
+					this.log.error('Response contains errors:', response.body.errors);
+				}
+			}),
+				catchError((err) => {
+					this.log.error(err);
+					return of(null);
+				})
+		);
 	}
 
 	constructor() {}
@@ -35,16 +53,28 @@ export class NodeClientService {
 				.api('node')
 				.crypto()
 		).pipe(
-			tap((response) => {
-				if (response.body.errors) {
-					this.log.error('Response contains errors:', response.body.errors);
-				}
-			}),
 			map((response) => response.body.data),
-			catchError((err) => {
-				this.log.error(err);
-				return of(null);
-			})
+			this.genericErrorHandler()
+		);
+	}
+
+	getCollections(baseUrl: string, connectionOptions?: ConnectionOptions): Observable<Pagination<Collections>> {
+		return from(NodeClientService.getConnection(baseUrl, connectionOptions, { isNftEndpoint: true })
+			.NFTBaseApi('collections')
+			.all()
+		).pipe(
+			map((response) => response.body),
+			this.genericErrorHandler()
+		);
+	}
+
+	getAssets(baseUrl: string, connectionOptions?: ConnectionOptions): Observable<Pagination<Collections>> {
+		return from(NodeClientService.getConnection(baseUrl, connectionOptions, { isNftEndpoint: true })
+			.NFTBaseApi('transfers')
+			.all()
+		).pipe(
+			map((response) => response.body),
+			this.genericErrorHandler()
 		);
 	}
 }

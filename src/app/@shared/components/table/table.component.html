@@ -1,0 +1,54 @@
+<nz-table
+	nzShowSizeChanger
+	[nzPageSizeOptions]="[50, 100, 1000]"
+	[nzData]="rows$ | async"
+	[nzFrontPagination]="isFrontPagination$ | async"
+	[nzLoading]="isLoading$ | async"
+	[nzTotal]="pagination.total"
+	[nzPageSize]="pagination.pageSize"
+	[nzPageIndex]="pagination.pageIndex"
+	(nzQueryParams)="onQueryParamsChange($event)"
+>
+	<thead>
+	<tr>
+		<ng-container *ngFor="let header of headers">
+			<th [nzColumnKey]="header.propertyName">
+				<ng-template *ngIf="header.headerNameTpl;else headerNameTpl">
+					<ng-container *ngTemplateOutlet="header.headerNameTpl">
+					</ng-container>
+				</ng-template>
+			</th>
+			<ng-template #headerNameTpl>
+				{{header.headerName}}
+			</ng-template>
+		</ng-container>
+	</tr>
+	</thead>
+	<tbody>
+	<ng-container *ngFor="let row of (rows$ | async)">
+		<tr>
+			<ng-container *ngFor="let header of headers">
+				<td nzBreakWord>
+
+					<ng-container *ngIf="header.columnTransformTpl; else columnTransform">
+						<ng-container *ngTemplateOutlet="header.columnTransformTpl; context : { row: row }">
+						</ng-container>
+					</ng-container>
+
+					<ng-template #columnTransform>
+						<ng-container *ngIf="header.columnTransform; else columnProperty">
+							<ng-container *ngTemplateOutlet="header.columnTransformTpl; context : { row: row }">
+							</ng-container>
+						</ng-container>
+					</ng-template>
+
+					<ng-template #columnProperty>
+						{{row[header.propertyName]}}
+					</ng-template>
+
+				</td>
+			</ng-container>
+		</tr>
+	</ng-container>
+	</tbody>
+</nz-table>

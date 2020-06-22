@@ -18,10 +18,13 @@ export class StoreUtilsService {
 		pin: string,
 		network: NodeCryptoConfiguration['network']
 	): Observable<boolean> {
-		const profile = this.store.selectSnapshot(ProfilesState.getProfileById(profileId));
-		return this.bip38Service.decrypt(profile.encodedPassphrase, pin, network)
+		const profile = this.store.selectSnapshot(
+			ProfilesState.getProfileById(profileId)
+		);
+		return this.bip38Service
+			.decrypt(profile.encodedPassphrase, pin, network)
 			.pipe(
-				map(decrypted => !!decrypted),
+				map((decrypted) => !!decrypted),
 				catchError(() => {
 					return of(false);
 				})

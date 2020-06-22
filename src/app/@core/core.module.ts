@@ -21,8 +21,13 @@ import { bip38Factory } from '@core/factory/bip38.factory';
 			developmentMode: !environment.production,
 		}),
 		NgxsStoragePluginModule.forRoot({
-			key: [ProfilesState, NetworksState],
-			storage: StorageOption.LocalStorage
+			key: [
+				ProfilesState,
+				NetworksState,
+				// Preserve pins for development
+				...(environment.production ? [] : [PinsState])
+			],
+			storage: StorageOption.LocalStorage,
 		}),
 		CommonModule,
 		IconsProviderModule,
@@ -35,8 +40,8 @@ import { bip38Factory } from '@core/factory/bip38.factory';
 		{
 			provide: Bip38Service,
 			useFactory: bip38Factory,
-			deps: []
-		}
+			deps: [],
+		},
 	],
 })
 export class CoreModule {

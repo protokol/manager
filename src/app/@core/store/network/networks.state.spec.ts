@@ -15,10 +15,7 @@ describe('Networks', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [NgxsModule.forRoot([NetworksState])],
-			providers: [
-				WalletService,
-				NodeClientService
-			]
+			providers: [WalletService, NodeClientService],
 		});
 
 		store = TestBed.inject(Store);
@@ -26,16 +23,23 @@ describe('Networks', () => {
 	});
 
 	it('should set network and load crypto', () => {
-		const nodeCryptoConfiguration = { network: { wif: 10, name: '4382984398' } } as any;
-		spy = spyOn(nodeClientService, 'getNodeCryptoConfiguration')
-			.and.returnValue(of(nodeCryptoConfiguration));
+		const nodeCryptoConfiguration = {
+			network: { wif: 10, name: '4382984398' },
+		} as any;
+		spy = spyOn(nodeClientService, 'getNodeCryptoConfiguration').and.returnValue(
+			of(nodeCryptoConfiguration)
+		);
 
 		store.dispatch(new SetNetwork(baseUrlFixture));
 
-		const networkStateBaseUrl = store.selectSnapshot(state => state.networks.baseUrl);
+		const networkStateBaseUrl = store.selectSnapshot(
+			(state) => state.networks.baseUrl
+		);
 		expect(networkStateBaseUrl).toEqual(baseUrlFixture);
 
-		const nodeCryptoConfig = store.selectSnapshot(NetworksState.getNodeCryptoConfig);
+		const nodeCryptoConfig = store.selectSnapshot(
+			NetworksState.getNodeCryptoConfig
+		);
 		expect(nodeCryptoConfig).toEqual(nodeCryptoConfiguration);
 	});
 });

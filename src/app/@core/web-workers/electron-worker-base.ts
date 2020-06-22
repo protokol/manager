@@ -26,7 +26,10 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 			this.electron = window.require('electron');
 		}
 
-		const path = this.path.resolve(this.electron.remote.app.getAppPath(), `./dist/electron-workers/${workerPath}.js`);
+		const path = this.path.resolve(
+			this.electron.remote.app.getAppPath(),
+			`./dist/electron-workers/${workerPath}.js`
+		);
 		this.worker = this.childProcess.fork(path);
 		console.log('spawn worker');
 
@@ -40,26 +43,28 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 	}
 
 	send(data: TInput) {
-		this.isStarted$.asObservable()
+		this.isStarted$
+			.asObservable()
 			.pipe(
-				filter(isStarted => !!isStarted),
+				filter((isStarted) => !!isStarted),
 				tap(() => {
 					this.worker.send(data);
-				})).subscribe();
+				})
+			)
+			.subscribe();
 	}
 
 	onMessage(): Observable<TOutput> {
-		return this.onMessage$.asObservable()
-			.pipe(
-				first(value => value !== null), // Ignore first value
-				finalize(() => this.terminate())
-			);
+		return this.onMessage$.asObservable().pipe(
+			first((value) => value !== null), // Ignore first value
+			finalize(() => this.terminate())
+		);
 	}
 
 	terminate() {
 		if (this.worker) {
 			this.worker.send({
-				type: 'exit'
+				type: 'exit',
 			});
 		}
 	}

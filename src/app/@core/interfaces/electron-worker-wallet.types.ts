@@ -53,4 +53,7 @@ export interface ErrorReceive {
 }
 
 export type WebWorkerWalletPost = EncodePost | DecodePost | ExitPost;
-export type WebWorkerWalletReceive = EncodeReceive | DecodeReceive | ErrorReceive;
+export type WebWorkerWalletReceive =
+	| EncodeReceive
+	| DecodeReceive
+	| ErrorReceive;
