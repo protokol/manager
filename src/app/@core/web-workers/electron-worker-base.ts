@@ -31,7 +31,6 @@ export class ElectronWorkerBase<TInput = any, TOutput = any> {
 			`./dist/electron-workers/${workerPath}.js`
 		);
 		this.worker = this.childProcess.fork(path);
-		console.log('spawn worker');
 
 		this.worker.on('message', (message) => {
 			if (message.type === 'started') {
