@@ -16,7 +16,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CollectionsState } from '@app/dashboard/pages/collections/state/collections/collections.state';
 import { Collections } from '@protokol/nft-client';
 import { PaginationMeta, TableColumnConfig } from '@app/@shared/interfaces/table.types';
-import { NzModalService } from 'ng-zorro-antd';
+import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/components/collections-view-modal/collections-view-modal.component';
 
 @Component({
@@ -48,20 +48,25 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 		this.tableColumns = [{
 			propertyName: 'id',
 			headerName: 'Id',
-			columnTransformTpl: this.idTpl
+			columnTransformTpl: this.idTpl,
+			sortBy: true
 		}, {
 			propertyName: 'name',
-			headerName: 'Name'
+			headerName: 'Name',
+			sortBy: true
 		}, {
 			propertyName: 'description',
-			headerName: 'Description'
+			headerName: 'Description',
+			sortBy: true
 		}, {
 			propertyName: 'maximumSupply',
-			headerName: 'Supply'
+			headerName: 'Supply',
+			sortBy: true
 		}, {
 			propertyName: 'senderPublicKey',
 			headerName: 'Owner',
-			columnTransformTpl: this.ownerTpl
+			columnTransformTpl: this.ownerTpl,
+			sortBy: true
 		}, {
 			headerName: 'Actions',
 			columnTransformTpl: this.actionsTpl
@@ -103,5 +108,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 			},
 			nzFooter: null
 		});
+	}
+
+	paginationChange(params: NzTableQueryParams) {
 	}
 }

@@ -17,14 +17,17 @@
 		</ng-container>
 
 		<ng-container *ngFor="let header of headers">
-			<th [nzColumnKey]="header.propertyName">
-				<ng-template *ngIf="header.headerNameTpl;else headerNameTpl">
-					<ng-container *ngTemplateOutlet="header.headerNameTpl">
+			<ng-container *ngIf="header.sortBy; else headerWithoutSortTpl">
+				<th [nzColumnKey]="header.propertyName" [nzSortFn]="true">
+					<ng-container *ngTemplateOutlet="headerTpl; context : { header: header }">
 					</ng-container>
-				</ng-template>
-			</th>
-			<ng-template #headerNameTpl>
-				{{header.headerName}}
+				</th>
+			</ng-container>
+			<ng-template #headerWithoutSortTpl>
+				<th [nzColumnKey]="header.propertyName">
+					<ng-container *ngTemplateOutlet="headerTpl; context : { header: header }">
+					</ng-container>
+				</th>
 			</ng-template>
 		</ng-container>
 	</tr>
@@ -73,3 +76,13 @@
 	</ng-container>
 	</tbody>
 </nz-table>
+
+<ng-template #headerTpl let-header="header">
+	<ng-template *ngIf="header.headerNameTpl;else headerNameTpl">
+		<ng-container *ngTemplateOutlet="header.headerNameTpl">
+		</ng-container>
+	</ng-template>
+	<ng-template #headerNameTpl>
+		{{header.headerName}}
+	</ng-template>
+</ng-template>

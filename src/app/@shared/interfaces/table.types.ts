@@ -6,6 +6,7 @@ export interface TableColumnConfig<T = any> {
 	headerNameTpl?: TemplateRef<never>;
 	columnTransform?: (row: T, propertyValue: any) => any;
 	columnTransformTpl?: TemplateRef<{ row: T }>;
+	sortBy?: boolean;
 }
 
 export interface PaginationMeta {
