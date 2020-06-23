@@ -29,6 +29,8 @@ import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionsComponent implements OnInit, OnDestroy {
+	private params: NzTableQueryParams;
+
 	@Select(CollectionsState.getCollectionIds) collectionIds$: Observable<
 		string[]
 	>;
@@ -51,8 +53,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private store: Store,
-		private nzModalService: NzModalService,
-		private viewContainerRef: ViewContainerRef
+		private nzModalService: NzModalService
 	) {}
 
 	ngOnInit() {
@@ -66,17 +67,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 			{
 				propertyName: 'name',
 				headerName: 'Name',
-				sortBy: true,
 			},
 			{
 				propertyName: 'description',
 				headerName: 'Description',
-				sortBy: true,
 			},
 			{
 				propertyName: 'maximumSupply',
 				headerName: 'Supply',
-				sortBy: true,
 			},
 			{
 				propertyName: 'senderPublicKey',
@@ -95,7 +93,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 			switchMap((collectionsIds) =>
 				this.store
 					.select(CollectionsState.getCollectionsByIds(collectionsIds))
-					.pipe(filter((collection) => collection.some((c) => !!c)))
 			),
 			tap(() => this.isLoading$.next(false))
 		);
@@ -119,8 +116,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 		this.nzModalService.create({
 			nzTitle: `"${row.name}" json schema`,
 			nzContent: CollectionsViewModalComponent,
-			nzViewContainerRef: this.viewContainerRef,
-			nzGetContainer: () => document.body,
 			nzComponentParams: {
 				jsonSchema: row.jsonSchema,
 			},
@@ -128,5 +123,12 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	paginationChange(params: NzTableQueryParams) {}
+	paginationChange(params: NzTableQueryParams) {
+		// TODO: Fix multiple emit bug
+		if (!this.params) {
+			this.params = params;
+		} else {
+			this.store.dispatch(new LoadCollections(params));
+		}
+	}
 }

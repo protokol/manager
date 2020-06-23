@@ -6,6 +6,7 @@ import { Logger } from '@core/services/logger.service';
 import { Collections, NFTConnection } from '@protokol/nft-client';
 import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
 import { Pagination } from '@app/@shared/interfaces/table.types';
+import { AllCollectionsQuery } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 interface ConnectionOptions {
 	timeout?: number;
@@ -56,12 +57,15 @@ export class NodeClientService {
 
 	getCollections(
 		baseUrl: string,
+		query: AllCollectionsQuery | {} = {},
 		connectionOptions?: ConnectionOptions
 	): Observable<Pagination<Collections>> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('collections')
-				.all()
+				.all({
+					...query
+				})
 		).pipe(
 			map((response) => response.body),
 			this.genericErrorHandler()

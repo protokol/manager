@@ -19,6 +19,7 @@ import {
 import { NetworksState } from '@core/store/network/networks.state';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
+import { TableUtils } from '@shared/utils/table-utils';
 
 interface CollectionsStateModel {
 	collectionsIds: string[];
@@ -72,11 +73,13 @@ export class CollectionsState {
 	loadCollections({
 		patchState,
 		dispatch,
-	}: StateContext<CollectionsStateModel>) {
+	}: StateContext<CollectionsStateModel>, {
+		tableQueryParams
+	}: LoadCollections) {
 		const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
 
 		this.nodeClientService
-			.getCollections(baseUrl)
+			.getCollections(baseUrl, TableUtils.toAllCollectionQuery(tableQueryParams))
 			.pipe(
 				tap(({ data }) => dispatch(new SetCollectionsByIds(data))),
 				tap(({ data, meta }) => {
@@ -87,8 +90,6 @@ export class CollectionsState {
 				})
 			)
 			.subscribe();
-
-		this.nodeClientService.getAssets(baseUrl).subscribe();
 	}
 
 	@Action(SetCollectionsByIds)

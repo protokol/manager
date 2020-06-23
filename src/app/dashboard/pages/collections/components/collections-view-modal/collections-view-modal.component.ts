@@ -13,7 +13,6 @@ export class CollectionsViewModalComponent {
 
 	constructor() {
 		this.editorOptions = new JsonEditorOptions();
-		this.editorOptions.mode = 'view';
-		this.editorOptions.expandAll = true;
+		this.editorOptions.mode = 'code';
 	}
 }
