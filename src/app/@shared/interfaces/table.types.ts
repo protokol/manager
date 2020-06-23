@@ -1,10 +1,10 @@
 import { TemplateRef } from '@angular/core';
 
 export interface TableColumnConfig<T = any> {
-	propertyName: keyof T;
+	propertyName?: keyof T;
 	headerName?: string;
 	headerNameTpl?: TemplateRef<never>;
-	columnTransform?: (row: T) => any;
+	columnTransform?: (row: T, propertyValue: any) => any;
 	columnTransformTpl?: TemplateRef<{ row: T }>;
 }
 

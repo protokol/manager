@@ -2,5 +2,17 @@
 	[isLoading]="isLoading$ | async"
 	[rows]="rows$"
 	[tableColumns]="tableColumns"
-	[meta]="meta$ | async"
-></app-table>
+	[meta]="meta$ | async">
+</app-table>
+
+<ng-template #actionsTpl let-row="row">
+	<a (click)="showJsonSchema($event, row)">Schema</a>
+</ng-template>
+
+<ng-template #idTpl let-row="row">
+	<app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #ownerTpl let-row="row">
+	<app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+</ng-template>

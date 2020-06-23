@@ -64,13 +64,13 @@ export class CollectionsState {
 		this.nodeClientService
 			.getCollections(baseUrl)
 			.pipe(
+				tap(({ data }) => dispatch(new SetCollectionsByIds(data))),
 				tap(({data, meta}) => {
 					patchState({
 						collectionsIds: data.map(c => c.id),
 						meta
 					});
-				}),
-				tap(({ data }) => dispatch(new SetCollectionsByIds(data)))
+				})
 			)
 			.subscribe();
 

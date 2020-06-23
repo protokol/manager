@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	OnDestroy,
+	OnInit,
+	TemplateRef,
+	ViewChild,
+	ViewContainerRef
+} from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { LoadCollections } from '@app/dashboard/pages/collections/state/collections/collections.actions';
 import { NetworksState } from '@core/store/network/networks.state';
@@ -8,6 +16,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CollectionsState } from '@app/dashboard/pages/collections/state/collections/collections.state';
 import { Collections } from '@protokol/nft-client';
 import { PaginationMeta, TableColumnConfig } from '@app/@shared/interfaces/table.types';
+import { NzModalService } from 'ng-zorro-antd';
+import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/components/collections-view-modal/collections-view-modal.component';
 
 @Component({
 	selector: 'app-collections',
@@ -19,22 +29,44 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 	@Select(CollectionsState.getCollectionIds) collectionIds$: Observable<string[]>;
 	@Select(CollectionsState.getMeta) meta$: Observable<PaginationMeta>;
 
+	@ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{ row: Collections }>;
+	@ViewChild('idTpl', { static: true }) idTpl!: TemplateRef<{ row: Collections }>;
+	@ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{ row: Collections }>;
+
 	isLoading$ = new BehaviorSubject(false);
 
 	rows$: Observable<Collections[]> = of([]);
 	tableColumns: TableColumnConfig<Collections>[];
 
-	constructor(private store: Store) {
+	constructor(
+		private store: Store,
+		private nzModalService: NzModalService,
+		private viewContainerRef: ViewContainerRef) {
+	}
+
+	ngOnInit() {
 		this.tableColumns = [{
+			propertyName: 'id',
+			headerName: 'Id',
+			columnTransformTpl: this.idTpl
+		}, {
 			propertyName: 'name',
 			headerName: 'Name'
 		}, {
 			propertyName: 'description',
 			headerName: 'Description'
+		}, {
+			propertyName: 'maximumSupply',
+			headerName: 'Supply'
+		}, {
+			propertyName: 'senderPublicKey',
+			headerName: 'Owner',
+			columnTransformTpl: this.ownerTpl
+		}, {
+			headerName: 'Actions',
+			columnTransformTpl: this.actionsTpl
 		}];
-	}
 
-	ngOnInit() {
 		this.rows$ = this.collectionIds$
 			.pipe(
 				distinctUntilChanged(),
@@ -57,4 +89,19 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {}
+
+	showJsonSchema(event: MouseEvent, row: Collections) {
+		event.preventDefault();
+
+		this.nzModalService.create({
+			nzTitle: `"${row.name}" json schema`,
+			nzContent: CollectionsViewModalComponent,
+			nzViewContainerRef: this.viewContainerRef,
+			nzGetContainer: () => document.body,
+			nzComponentParams: {
+				jsonSchema: row.jsonSchema
+			},
+			nzFooter: null
+		});
+	}
 }
