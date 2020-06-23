@@ -1,13 +1,19 @@
 import {
 	ChangeDetectionStrategy,
-	Component, ContentChild,
+	Component,
+	ContentChild,
 	EventEmitter,
 	Input,
 	OnInit,
-	Output, TemplateRef
+	Output,
+	TemplateRef,
 } from '@angular/core';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
-import { PaginationMeta, TableColumnConfig, TablePagination } from '@app/@shared/interfaces/table.types';
+import {
+	PaginationMeta,
+	TableColumnConfig,
+	TablePagination,
+} from '@app/@shared/interfaces/table.types';
 import { share, tap } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 
@@ -29,12 +35,14 @@ export class TableComponent implements OnInit {
 	pagination: TablePagination = {
 		pageIndex: 0,
 		pageSize: 0,
-		total: 0
+		total: 0,
 	};
 
 	@ContentChild(TemplateRef, { static: false }) expandTpl: TemplateRef<any>;
 
-	@Output() paginationChange: EventEmitter<NzTableQueryParams> = new EventEmitter<NzTableQueryParams>();
+	@Output() paginationChange: EventEmitter<
+		NzTableQueryParams
+	> = new EventEmitter<NzTableQueryParams>();
 
 	@Input('scrollX')
 	set _scrollX(scrollX: string | null) {
@@ -85,25 +93,29 @@ export class TableComponent implements OnInit {
 			this.pagination = {
 				total: meta.totalCount,
 				pageSize: meta.count,
-				pageIndex: 0
+				pageIndex: 0,
 			};
 		}
 	}
 
 	private pipeRows(rows$: Observable<any[]>) {
-		return rows$
-			.pipe(
-				tap((rows) => {
-					const isExpandable = this.isExpandable$.getValue();
-					if (isExpandable && rows.every(r => r.hasOwnProperty('id'))) {
-						this.expandableRows$.next(rows.reduce((acc, curr) => ({
-							...acc,
-							[curr.id]: false
-						}), {}));
-					}
-				}),
-				share()
-			);
+		return rows$.pipe(
+			tap((rows) => {
+				const isExpandable = this.isExpandable$.getValue();
+				if (isExpandable && rows.every((r) => r.hasOwnProperty('id'))) {
+					this.expandableRows$.next(
+						rows.reduce(
+							(acc, curr) => ({
+								...acc,
+								[curr.id]: false,
+							}),
+							{}
+						)
+					);
+				}
+			}),
+			share()
+		);
 	}
 
 	constructor() {}
@@ -117,7 +129,7 @@ export class TableComponent implements OnInit {
 	onExpandChange(expanded: boolean, id: string) {
 		this.expandableRows$.next({
 			...this.expandableRows$.getValue(),
-			[id]: expanded
+			[id]: expanded,
 		});
 	}
 }

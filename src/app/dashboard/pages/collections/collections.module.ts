@@ -16,10 +16,9 @@ import { NzModalModule } from 'ng-zorro-antd';
 		CommonModule,
 		SharedModule,
 		NgJsonEditorModule,
-		NzModalModule
+		NzModalModule,
 	],
 	declarations: [CollectionsComponent, CollectionsViewModalComponent],
-	exports: [CollectionsComponent]
+	exports: [CollectionsComponent],
 })
-export class CollectionsModule {
-}
+export class CollectionsModule {}

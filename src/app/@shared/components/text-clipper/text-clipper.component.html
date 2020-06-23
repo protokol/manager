@@ -1,1 +1,8 @@
-<a (cbOnSuccess)="copiedSuccessful($event)" nz-tooltip ngxClipboard [cbContent]="text$ | async" [nzTooltipTitle]="text$ | async">{{textClipped$ | async}}</a>
+<a
+	(cbOnSuccess)="copiedSuccessful($event)"
+	nz-tooltip
+	ngxClipboard
+	[cbContent]="text$ | async"
+	[nzTooltipTitle]="text$ | async"
+	>{{ textClipped$ | async }}</a
+>

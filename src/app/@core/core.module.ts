@@ -25,7 +25,7 @@ import { bip38Factory } from '@core/factory/bip38.factory';
 				ProfilesState,
 				NetworksState,
 				// Preserve pins for development
-				...(environment.production ? [] : [PinsState])
+				...(environment.production ? [] : [PinsState]),
 			],
 			storage: StorageOption.LocalStorage,
 		}),

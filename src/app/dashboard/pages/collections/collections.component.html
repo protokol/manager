@@ -3,7 +3,8 @@
 	[rows]="rows$"
 	[tableColumns]="tableColumns"
 	[meta]="meta$ | async"
- (paginationChange)="paginationChange($event)">
+	(paginationChange)="paginationChange($event)"
+>
 </app-table>
 
 <ng-template #actionsTpl let-row="row">

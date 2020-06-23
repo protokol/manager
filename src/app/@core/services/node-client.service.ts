@@ -17,14 +17,10 @@ export class NodeClientService {
 
 	static getConnection(
 		baseUrl: string,
-		{ timeout = 5000 }: ConnectionOptions = {},
-		{ isNftEndpoint }: { isNftEndpoint: boolean } = { isNftEndpoint: false }
+		{ timeout = 5000 }: ConnectionOptions = {}
 	) {
-		isNftEndpoint = isNftEndpoint || false;
-
-		const host = isNftEndpoint ? `${baseUrl}/api/nft` : `${baseUrl}/api`;
-		return new NFTConnection(host).withOptions({
-			timeout: timeout || 5000
+		return new NFTConnection(`${baseUrl}/api`).withOptions({
+			timeout: timeout || 5000,
 		});
 	}
 
@@ -35,10 +31,10 @@ export class NodeClientService {
 					this.log.error('Response contains errors:', response.body.errors);
 				}
 			}),
-				catchError((err) => {
-					this.log.error(err);
-					return of(null);
-				})
+			catchError((err) => {
+				this.log.error(err);
+				return of(null);
+			})
 		);
 	}
 
@@ -58,20 +54,28 @@ export class NodeClientService {
 		);
 	}
 
-	getCollections(baseUrl: string, connectionOptions?: ConnectionOptions): Observable<Pagination<Collections>> {
-		return from(NodeClientService.getConnection(baseUrl, connectionOptions, { isNftEndpoint: true })
-			.NFTBaseApi('collections')
-			.all()
+	getCollections(
+		baseUrl: string,
+		connectionOptions?: ConnectionOptions
+	): Observable<Pagination<Collections>> {
+		return from(
+			NodeClientService.getConnection(baseUrl, connectionOptions)
+				.NFTBaseApi('collections')
+				.all()
 		).pipe(
 			map((response) => response.body),
 			this.genericErrorHandler()
 		);
 	}
 
-	getAssets(baseUrl: string, connectionOptions?: ConnectionOptions): Observable<Pagination<Collections>> {
-		return from(NodeClientService.getConnection(baseUrl, connectionOptions, { isNftEndpoint: true })
-			.NFTBaseApi('transfers')
-			.all()
+	getAssets(
+		baseUrl: string,
+		connectionOptions?: ConnectionOptions
+	): Observable<Pagination<Collections>> {
+		return from(
+			NodeClientService.getConnection(baseUrl, connectionOptions)
+				.NFTBaseApi('transfers')
+				.all()
 		).pipe(
 			map((response) => response.body),
 			this.genericErrorHandler()

@@ -8,7 +8,7 @@ import { IClipboardResponse } from 'ngx-clipboard';
 	selector: 'app-text-clipper',
 	templateUrl: './text-clipper.component.html',
 	styleUrls: ['./text-clipper.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextClipperComponent {
 	text$ = new BehaviorSubject('');
@@ -20,8 +20,7 @@ export class TextClipperComponent {
 		}
 	}
 
-	constructor(private nzMessageService: NzMessageService) {
-	}
+	constructor(private nzMessageService: NzMessageService) {}
 
 	copiedSuccessful(event: IClipboardResponse) {
 		if (event.isSuccess) {
@@ -32,14 +31,13 @@ export class TextClipperComponent {
 	}
 
 	get textClipped$(): Observable<string> {
-		return this.text$
-			.pipe(
-				map(text => {
-					if (!text || (text && text.length <= 12)) {
-						return text || '';
-					}
-					return `${text.substring(0, 6)}…${text.slice(-6)}`;
-				})
-			);
+		return this.text$.pipe(
+			map((text) => {
+				if (!text || (text && text.length <= 12)) {
+					return text || '';
+				}
+				return `${text.substring(0, 6)}…${text.slice(-6)}`;
+			})
+		);
 	}
 }

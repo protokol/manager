@@ -8,9 +8,8 @@ describe('TextClipperComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TextClipperComponent]
-		})
-			.compileComponents();
+			declarations: [TextClipperComponent],
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
