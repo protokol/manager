@@ -27,10 +27,16 @@ export class Bip38Service implements Bip38ServiceInterface {
 		}
 	}
 
-
-	encrypt(passphrase: string, pin: string, network: NodeCryptoConfiguration['network']) {
+	encrypt(
+		passphrase: string,
+		pin: string,
+		network: NodeCryptoConfiguration['network']
+	) {
 		try {
-			const key = this.arkCrypto.Identities.WIF.fromPassphrase(passphrase, network);
+			const key = this.arkCrypto.Identities.WIF.fromPassphrase(
+				passphrase,
+				network
+			);
 			const decoded = this.wif.decode(key);
 			const encrypted = this.bip38.encrypt(
 				decoded.privateKey,
@@ -43,10 +49,18 @@ export class Bip38Service implements Bip38ServiceInterface {
 		}
 	}
 
-	decrypt(encodedPassphrase: string, pin: string, network: NodeCryptoConfiguration['network']) {
+	decrypt(
+		encodedPassphrase: string,
+		pin: string,
+		network: NodeCryptoConfiguration['network']
+	) {
 		try {
 			const decryptedKey = this.bip38.decrypt(encodedPassphrase, pin);
-			const encoded = this.wif.encode(network.wif, decryptedKey.privateKey, decryptedKey.compressed);
+			const encoded = this.wif.encode(
+				network.wif,
+				decryptedKey.privateKey,
+				decryptedKey.compressed
+			);
 			return of(encoded);
 		} catch (e) {
 			return throwError(e);

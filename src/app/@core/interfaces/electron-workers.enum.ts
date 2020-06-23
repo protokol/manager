@@ -1,3 +1,3 @@
 export enum ElectronWorkers {
-	wallet = 'wallet.worker'
+	wallet = 'wallet.worker',
 }

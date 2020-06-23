@@ -2,7 +2,6 @@
 	"name": "protokol-manager",
 	"version": "0.0.0",
 	"scripts": {
-		"postinstall": "electron-builder install-app-deps && npm run prettier -s",
 		"ng": "ng",
 		"start": "npm-run-all -p electron:serve ng:serve",
 		"build": "npm run electron:serve-tsc && ng build --base-href ./",
@@ -36,18 +35,21 @@
 		"@angular/platform-browser": "~9.1.9",
 		"@angular/platform-browser-dynamic": "~9.1.9",
 		"@angular/router": "~9.1.9",
-		"@arkecosystem/client": "^1.1.4",
 		"@arkecosystem/crypto": "^2.6.38",
 		"@ngxs/storage-plugin": "^3.6.2",
 		"@ngxs/store": "^3.6.2",
+		"@protokol/nft-client": "^1.0.0-beta.4",
+		"ang-jsoneditor": "^1.9.4",
+		"bip38": "^3.0.0",
 		"bip39": "^3.0.0",
+		"jsoneditor": "^9.0.0",
 		"ng-zorro-antd": "^9.1.2",
+		"ngx-clipboard": "^13.0.1",
 		"rxjs": "~6.5.4",
 		"tslib": "^1.10.0",
 		"uuid": "^8.1.0",
-		"zone.js": "~0.10.2",
 		"wif": "^2.0.6",
-		"bip38": "^3.0.0"
+		"zone.js": "~0.10.2"
 	},
 	"devDependencies": {
 		"@angular-builders/custom-webpack": "^9.1.0",

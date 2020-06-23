@@ -2,7 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { Store, NgxsModule } from '@ngxs/store';
 import { v4 as uuid } from 'uuid';
 import { Profile, ProfilesState } from '@core/store/profiles/profiles.state';
-import { AddProfileAction, RemoveProfileAction } from '@core/store/profiles/profiles.actions';
+import {
+	AddProfileAction,
+	RemoveProfileAction,
+} from '@core/store/profiles/profiles.actions';
 import { WalletService } from '@core/services/wallet.service';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { first } from 'rxjs/operators';
@@ -12,11 +15,13 @@ describe('Profiles', () => {
 	let walletService: WalletService;
 	let spy: any;
 	const profileIdFixture = uuid();
-	const passphraseFixture = 'private chase figure ribbon verify ginger fitness fee keep budget test hero';
+	const passphraseFixture =
+		'private chase figure ribbon verify ginger fitness fee keep budget test hero';
 	const pinFixture = '1234';
 	const profileFixture: Profile = {
 		profileName: 'Profile 1',
-		encodedPassphrase: '1wSiHh5Ku6wy9ft949uf3Co1wGn2ip2CK23DXSVBXw26PYWfAL6GnTfhpT'
+		encodedPassphrase:
+			'1wSiHh5Ku6wy9ft949uf3Co1wGn2ip2CK23DXSVBXw26PYWfAL6GnTfhpT',
 	};
 	const nodeCryptoConfigurationNetworkFixture: NodeCryptoConfiguration['network'] = {
 		aip20: 0,
@@ -27,15 +32,13 @@ describe('Profiles', () => {
 		nethash: 'd9acd04bde4234a81addb8482333b4ac906bed7be5a9970ce8ada428bd083192',
 		pubKeyHash: 23,
 		slip44: 1,
-		wif: 186
+		wif: 186,
 	};
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [NgxsModule.forRoot([ProfilesState])],
-			providers: [
-				WalletService
-			]
+			providers: [WalletService],
 		});
 
 		store = TestBed.inject(Store);
@@ -43,60 +46,76 @@ describe('Profiles', () => {
 	});
 
 	it('should add profile', async () => {
-		spy = spyOn(walletService, 'encrypt').and.returnValue(profileFixture.encodedPassphrase);
+		spy = spyOn(walletService, 'encrypt').and.returnValue(
+			profileFixture.encodedPassphrase
+		);
 
-		await store.dispatch(new AddProfileAction({
-			profileName: profileFixture.profileName,
-			passphrase: passphraseFixture
-		}, pinFixture, nodeCryptoConfigurationNetworkFixture, true, profileIdFixture))
+		await store
+			.dispatch(
+				new AddProfileAction(
+					{
+						profileName: profileFixture.profileName,
+						passphrase: passphraseFixture,
+					},
+					pinFixture,
+					nodeCryptoConfigurationNetworkFixture,
+					true,
+					profileIdFixture
+				)
+			)
 			.toPromise();
 
-		const selectedProfileId = await store.select(state => state.profiles.selectedProfileId)
-			.pipe(first(profileId => !!profileId))
+		const selectedProfileId = await store
+			.select((state) => state.profiles.selectedProfileId)
+			.pipe(first((profileId) => !!profileId))
 			.toPromise();
 		expect(selectedProfileId).toBe(profileIdFixture);
 
-		const profiles = store.selectSnapshot(state => state.profiles.profiles);
+		const profiles = store.selectSnapshot((state) => state.profiles.profiles);
 		expect(profiles).toEqual({ [profileIdFixture]: profileFixture });
 	});
 
 	it('should remove profile', async () => {
 		store.reset({
 			profiles: {
-				profiles: { [profileIdFixture]: profileFixture }
-			}
+				profiles: { [profileIdFixture]: profileFixture },
+			},
 		});
 
 		await store.dispatch(new RemoveProfileAction(profileIdFixture));
 
-		const profiles = store.selectSnapshot(state => state.profiles.profiles);
+		const profiles = store.selectSnapshot((state) => state.profiles.profiles);
 		expect(profiles).toEqual({});
 	});
 
 	it('should select all profiles', () => {
 		store.reset({
 			profiles: {
-				profiles: { [profileIdFixture]: profileFixture }
-			}
+				profiles: { [profileIdFixture]: profileFixture },
+			},
 		});
 
 		const profiles = store.selectSnapshot(ProfilesState.getProfiles);
-		expect(profiles).toEqual([{
-			id: profileIdFixture,
-			...profileFixture
-		}]);
+		expect(profiles).toEqual([
+			{
+				id: profileIdFixture,
+				...profileFixture,
+			},
+		]);
 	});
 
 	it('should select profile by id', () => {
 		store.reset({
 			profiles: {
-				profiles: { [profileIdFixture]: profileFixture }
-			}
+				profiles: { [profileIdFixture]: profileFixture },
+			},
 		});
 
-		const profile = store.selectSnapshot(ProfilesState.getProfileById(profileIdFixture));
+		const profile = store.selectSnapshot(
+			ProfilesState.getProfileById(profileIdFixture)
+		);
 		expect(profile).toEqual({
-			...profileFixture
+			...profileFixture,
 		});
 	});
 
@@ -104,15 +123,16 @@ describe('Profiles', () => {
 		store.reset({
 			profiles: {
 				profiles: { [profileIdFixture]: profileFixture },
-				selectedProfileId: profileIdFixture
-			}
+				selectedProfileId: profileIdFixture,
+			},
 		});
 
-		const selectedProfile = store.selectSnapshot(ProfilesState.getSelectedProfile);
+		const selectedProfile = store.selectSnapshot(
+			ProfilesState.getSelectedProfile
+		);
 		expect(selectedProfile).toEqual({
 			id: profileIdFixture,
-			...profileFixture
+			...profileFixture,
 		});
 	});
 });
-

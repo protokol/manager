@@ -23,12 +23,9 @@ describe('HasProfileGuard', () => {
 			imports: [
 				RouterTestingModule.withRoutes([]),
 				HttpClientTestingModule,
-				NgxsModule.forRoot([ProfilesState, PinsState])
+				NgxsModule.forRoot([ProfilesState, PinsState]),
 			],
-			providers: [
-				WalletService,
-				HasProfileGuard
-			]
+			providers: [WalletService, HasProfileGuard],
 		});
 		guard = TestBed.inject(HasProfileGuard);
 		router = TestBed.inject(Router);
@@ -39,25 +36,27 @@ describe('HasProfileGuard', () => {
 		expect(guard).toBeTruthy();
 	});
 
-	it('should prevent load', done => {
-		guard.canLoad()
+	it('should prevent load', (done) => {
+		guard
+			.canLoad()
 			.pipe(finalize(done))
-			.subscribe(res => expect(res).toBeFalsy());
+			.subscribe((res) => expect(res).toBeFalsy());
 	});
 
-	it('should load', done => {
+	it('should load', (done) => {
 		store.reset({
 			pins: {
-				pins: { [profileIdFixture]: pinFixture }
+				pins: { [profileIdFixture]: pinFixture },
 			},
 			profiles: {
 				profiles: { [profileIdFixture]: {} },
-				selectedProfileId: profileIdFixture
-			}
+				selectedProfileId: profileIdFixture,
+			},
 		});
 
-		guard.canLoad()
+		guard
+			.canLoad()
 			.pipe(finalize(done))
-			.subscribe(res => expect(res).toBeTrue());
+			.subscribe((res) => expect(res).toBeTrue());
 	});
 });

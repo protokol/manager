@@ -4,13 +4,15 @@ import { DashboardShell } from './dashboard.service';
 
 const routes: Routes = [
 	DashboardShell.childRoutes([
-		{ path: '', pathMatch: 'full', redirectTo: 'welcome' },
+		{ path: '', pathMatch: 'full', redirectTo: 'collections' },
 		{
-			path: 'welcome',
+			path: 'collections',
 			loadChildren: () =>
-				import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
+				import('./pages/collections/collections.module').then(
+					(m) => m.CollectionsModule
+				),
 		},
-		{ path: '**', redirectTo: 'welcome' },
+		{ path: '**', redirectTo: 'collections' },
 	]),
 ];
 

@@ -104,7 +104,7 @@ export class RegisterComponent implements OnDestroy {
 				}
 				return null;
 			})
-		)
+		);
 
 	pinValidator = (control: FormControl): ValidationErrors | null => {
 		if (!control.value) {
@@ -113,7 +113,7 @@ export class RegisterComponent implements OnDestroy {
 			return { confirm: true, error: true };
 		}
 		return null;
-	}
+	};
 
 	private createForm() {
 		this.profileForm = this.formBuilder.group({

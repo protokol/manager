@@ -21,31 +21,29 @@ export class Bip38WorkerService implements Bip38ServiceInterface {
 		network: NodeCryptoConfiguration['network']
 	) {
 		const walletWorker = new ElectronWorkerWallet();
-		walletWorker
-			.send({
-				type: 'encode',
-				payload: {
-					passphrase,
-					pin,
-					network
-				}
-			});
+		walletWorker.send({
+			type: 'encode',
+			payload: {
+				passphrase,
+				pin,
+				network,
+			},
+		});
 
-		return walletWorker.onMessage()
-			.pipe(
-				map(response => {
-					switch (response.type) {
-						case 'encode_response':
-							return response.payload.encoded;
-						case 'error':
-							throwError(response.payload.error);
-							break;
-						default:
-							throwError('Invalid response!');
-							break;
-					}
-				})
-			);
+		return walletWorker.onMessage().pipe(
+			map((response) => {
+				switch (response.type) {
+					case 'encode_response':
+						return response.payload.encoded;
+					case 'error':
+						throwError(response.payload.error);
+						break;
+					default:
+						throwError('Invalid response!');
+						break;
+				}
+			})
+		);
 	}
 
 	decrypt(
@@ -54,30 +52,28 @@ export class Bip38WorkerService implements Bip38ServiceInterface {
 		network: NodeCryptoConfiguration['network']
 	) {
 		const walletWorker = new ElectronWorkerWallet();
-		walletWorker
-			.send({
-				type: 'decode',
-				payload: {
-					encodedPassphrase,
-					pin,
-					network
-				}
-			});
+		walletWorker.send({
+			type: 'decode',
+			payload: {
+				encodedPassphrase,
+				pin,
+				network,
+			},
+		});
 
-		return walletWorker.onMessage()
-			.pipe(
-				map(response => {
-					switch (response.type) {
-						case 'decode_response':
-							return response.payload.decoded;
-						case 'error':
-							throwError(response.payload.error);
-							break;
-						default:
-							throwError('Invalid response!');
-							break;
-					}
-				}),
-			);
+		return walletWorker.onMessage().pipe(
+			map((response) => {
+				switch (response.type) {
+					case 'decode_response':
+						return response.payload.decoded;
+					case 'error':
+						throwError(response.payload.error);
+						break;
+					default:
+						throwError('Invalid response!');
+						break;
+				}
+			})
+		);
 	}
 }
