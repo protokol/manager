@@ -19,11 +19,11 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 interface CollectionsStateModel {
 	collectionsIds: string[];
-	collections: { [name: string]: Collections };
+	collections: { [name: string]: BaseResourcesTypes.Collections };
 	meta: PaginationMeta | null;
 }
 

@@ -1,6 +1,6 @@
-import { AllCollectionsQuery } from '@protokol/nft-client/dist/resourcesTypes/base';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { NzTableSortOrder } from 'ng-zorro-antd/table/src/table.types';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 export abstract class TableUtils {
 	static toApiSortOrder(tableSortOrder: NzTableSortOrder) {
@@ -13,7 +13,7 @@ export abstract class TableUtils {
 		}
 	}
 
-	static toAllCollectionQuery(tableQueryParams?: NzTableQueryParams): AllCollectionsQuery {
+	static toAllCollectionQuery(tableQueryParams?: NzTableQueryParams): BaseResourcesTypes.AllCollectionsQuery {
 		const { pageSize, pageIndex, sort } = tableQueryParams || {
 			pageIndex: 0,
 			pageSize: 100

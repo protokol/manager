@@ -16,10 +16,10 @@ import {
 	TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { NzTableQueryParams } from 'ng-zorro-antd';
-import { Assets } from '@protokol/nft-client/dist/resourcesTypes/base';
 import { AssetsState } from '@app/dashboard/pages/assets/state/collections/assets.state';
 import { LoadAssets } from '@app/dashboard/pages/assets/state/collections/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 @Component({
 	selector: 'app-assets',
@@ -38,22 +38,22 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@Select(AssetsState.getMeta) meta$: Observable<PaginationMeta>;
 
 	@ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
-		row: Assets;
+		row: BaseResourcesTypes.Assets;
 	}>;
 	@ViewChild('idTpl', { static: true }) idTpl!: TemplateRef<{
-		row: Assets;
+		row: BaseResourcesTypes.Assets;
 	}>;
 	@ViewChild('collectionIdTpl', { static: true }) collectionIdTpl!: TemplateRef<{
-		row: Assets;
+		row: BaseResourcesTypes.Assets;
 	}>;
 	@ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
-		row: Assets;
+		row: BaseResourcesTypes.Assets;
 	}>;
 
 	isLoading$ = new BehaviorSubject(false);
 
-	rows$: Observable<Assets[]> = of([]);
-	tableColumns: TableColumnConfig<Assets>[];
+	rows$: Observable<BaseResourcesTypes.Assets[]> = of([]);
+	tableColumns: TableColumnConfig<BaseResourcesTypes.Assets>[];
 
 	constructor(
 		private store: Store
@@ -105,7 +105,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {}
 
-	showAttributes(event: MouseEvent, row: Assets) {
+	showAttributes(event: MouseEvent, row: BaseResourcesTypes.Assets) {
 		event.preventDefault();
 
 		this.log.info('row', row);

@@ -14,12 +14,12 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { Assets } from '@protokol/nft-client/dist/resourcesTypes/base';
 import { ASSETS_TYPE_NAME, LoadAssets, SetAssetsByIds } from './assets.actions';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 interface AssetsStateModel {
 	assetsIds: string[];
-	assets: { [name: string]: Assets };
+	assets: { [name: string]: BaseResourcesTypes.Assets };
 	meta: PaginationMeta | null;
 }
 
