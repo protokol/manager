@@ -12,6 +12,13 @@ const routes: Routes = [
 					(m) => m.CollectionsModule
 				),
 		},
+		{
+			path: 'assets',
+			loadChildren: () =>
+				import('./pages/assets/assets.module').then(
+					(m) => m.AssetsModule
+				),
+		},
 		{ path: '**', redirectTo: 'collections' },
 	]),
 ];

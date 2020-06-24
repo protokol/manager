@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { Collections, NFTConnection } from '@protokol/nft-client';
+import { NFTConnection } from '@protokol/nft-client';
 import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
 import { Pagination } from '@app/@shared/interfaces/table.types';
-import { AllCollectionsQuery } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { AllCollectionsQuery, Assets } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 interface ConnectionOptions {
 	timeout?: number;
@@ -55,6 +56,21 @@ export class NodeClientService {
 		);
 	}
 
+	getCollection(
+		baseUrl: string,
+		collectionId: string,
+		connectionOptions?: ConnectionOptions
+	): Observable<Collections> {
+		return from(
+			NodeClientService.getConnection(baseUrl, connectionOptions)
+				.NFTBaseApi('collections')
+				.get(collectionId)
+		).pipe(
+			map((response) => response.body),
+			this.genericErrorHandler()
+		);
+	}
+
 	getCollections(
 		baseUrl: string,
 		query: AllCollectionsQuery | {} = {},
@@ -72,14 +88,32 @@ export class NodeClientService {
 		);
 	}
 
-	getAssets(
+	getAsset(
 		baseUrl: string,
+		assetId: string,
 		connectionOptions?: ConnectionOptions
-	): Observable<Pagination<Collections>> {
+	): Observable<Assets> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
-				.NFTBaseApi('transfers')
-				.all()
+				.NFTBaseApi('assets')
+				.get(assetId)
+		).pipe(
+			map((response) => response.body),
+			this.genericErrorHandler()
+		);
+	}
+
+	getAssets(
+		baseUrl: string,
+		query: AllCollectionsQuery | {} = {},
+		connectionOptions?: ConnectionOptions
+	): Observable<Pagination<Assets>> {
+		return from(
+			NodeClientService.getConnection(baseUrl, connectionOptions)
+				.NFTBaseApi('assets')
+				.all({
+					...query
+				})
 		).pipe(
 			map((response) => response.body),
 			this.genericErrorHandler()

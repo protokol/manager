@@ -10,6 +10,7 @@ import {
 	LockOutline,
 	WalletOutline,
 	DashOutline,
+	BlockOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -21,6 +22,7 @@ const icons = [
 	LockOutline,
 	WalletOutline,
 	DashOutline,
+	BlockOutline,
 ];
 
 @NgModule({
