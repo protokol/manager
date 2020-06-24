@@ -10,7 +10,6 @@ import {
 import { Injectable } from '@angular/core';
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
-import { Collections } from '@protokol/nft-client';
 import {
 	COLLECTIONS_TYPE_NAME,
 	LoadCollections,
@@ -20,6 +19,7 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
+import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 interface CollectionsStateModel {
 	collectionsIds: string[];

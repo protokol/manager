@@ -5,7 +5,6 @@ import {
 	OnInit,
 	TemplateRef,
 	ViewChild,
-	ViewContainerRef,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { LoadCollections } from '@app/dashboard/pages/collections/state/collections/collections.actions';
@@ -14,13 +13,13 @@ import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CollectionsState } from '@app/dashboard/pages/collections/state/collections/collections.state';
-import { Collections } from '@protokol/nft-client';
 import {
 	PaginationMeta,
 	TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/components/collections-view-modal/collections-view-modal.component';
+import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 @Component({
 	selector: 'app-collections',

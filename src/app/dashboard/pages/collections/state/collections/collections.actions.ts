@@ -1,5 +1,5 @@
-import { Collections } from '@protokol/nft-client';
 import { NzTableQueryParams } from 'ng-zorro-antd';
+import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 export const COLLECTIONS_TYPE_NAME = 'collections';
 
