@@ -1,0 +1,83 @@
+<div class="login-container">
+	<div class="login-box">
+		<ng-container *ngIf="cryptoConfig$ | async as cryptoConfig; else formLoading">
+			<h1>Login</h1>
+			<form
+				nz-form
+				(ngSubmit)="addProfile(cryptoConfig)"
+				[formGroup]="profileForm"
+				novalidate
+			>
+				<div class="top-logo">
+					<img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
+					<h1>Protokol Manager</h1>
+				</div>
+
+				<ng-container *ngIf="profiles$ | async as profiles">
+					<nz-form-item>
+						<nz-form-control
+							nzErrorTip="Please select a profile!"
+							nzHasFeedback
+							nzValidatingTip="Validating..."
+						>
+							<nz-select
+								nzShowSearch
+								nzAllowClear
+								nzPlaceHolder="Select a profile"
+								formControlName="profileId"
+							>
+								<ng-container *ngFor="let profile of profiles">
+									<nz-option
+										[nzLabel]="profile.profileName"
+										[nzValue]="profile.id"
+									></nz-option>
+								</ng-container>
+							</nz-select>
+						</nz-form-control>
+					</nz-form-item>
+				</ng-container>
+
+				<nz-form-item>
+					<nz-form-control nzErrorTip="Please enter your PIN!">
+						<nz-input-group nzPrefixIcon="lock">
+							<input
+								type="password"
+								nz-input
+								formControlName="pin"
+								placeholder="PIN"
+							/>
+						</nz-input-group>
+					</nz-form-control>
+				</nz-form-item>
+
+				<div nz-row [nzGutter]="[24, 12]">
+					<div nz-col [nzSpan]="24" [nzFlex]="1" class="button-wrapper">
+						<button
+							nz-button
+							class="login-form-button"
+							nzType="primary"
+							[nzLoading]="isLoading"
+							[disabled]="isLoading || (isFormDirty && !profileForm.valid)"
+						>
+							Log In
+						</button>
+						<button nz-button nzType="default" [nzLoading]="isLoading">
+							<a routerLink="/auth/register">
+								Register
+							</a>
+						</button>
+					</div>
+					<div nz-col [nzSpan]="24">
+						<ng-container *ngIf="isPinInvalid">
+							<span nz-typography nzType="danger">Invalid PIN!</span>
+						</ng-container>
+					</div>
+				</div>
+			</form>
+		</ng-container>
+	</div>
+</div>
+
+<ng-template #formLoading>
+	<nz-spin nzSimple></nz-spin>
+</ng-template>

@@ -1,0 +1,17 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"target": "es5",
+		"outDir": "dist",
+		"lib": [
+			"es2018",
+			"webworker"
+		],
+		"types": [
+			"node"
+		]
+	},
+	"include": [
+		"electron-workers/**/*.worker.ts"
+	]
+}
