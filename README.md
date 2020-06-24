@@ -1,8 +1,8 @@
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-# Electron app for managing NFT Functionality For ARK Core-v3 Bridgechains
+# Protokol Manager
 
-A repository consuming a set of `@protokol` packages providing Digital Asset (NFT) Support for any ARK Core v3 based bridgechains. Support the following main features:
+A repository consuming a set of `@protokol` packages providing Digital Asset (NFT) Support for any ARK Core v3 based bridgechains. Supporting the following main features:
 
 - profile management
 - asset creation (JSON Schema based asset structure)
@@ -12,7 +12,7 @@ For more information and detailed documentation follow this link: https://docs.p
 
 This work is licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-## Production install
+## Production Install
 Prebuild packages are available for:
 
 - [macOS](https://github.com/protokol/protokol-manager/releases)
@@ -20,7 +20,7 @@ Prebuild packages are available for:
 - [Windows](https://github.com/protokol/protokol-manager/releases)
 
 ## Source Install
-### Development environment setup
+### Development Environment Setup
 
 Run `npm start` for a dev server. An electron window should spawn. The app will automatically reload if you change any of the source files.
 
@@ -34,11 +34,11 @@ cd protokol-manager
 npm install
 ```
 
-#### Running unit tests
+#### Running Unit Tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-#### Running end-to-end tests
+#### Running End-To-End Tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
