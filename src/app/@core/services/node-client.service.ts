@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { NFTConnection } from '@protokol/nft-client';
+import { NFTConnection, BaseResourcesTypes } from '@protokol/nft-client';
 import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
 import { Pagination } from '@app/@shared/interfaces/table.types';
-import { AllCollectionsQuery, Assets } from '@protokol/nft-client/dist/resourcesTypes/base';
-import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
 
 interface ConnectionOptions {
 	timeout?: number;
@@ -60,7 +58,7 @@ export class NodeClientService {
 		baseUrl: string,
 		collectionId: string,
 		connectionOptions?: ConnectionOptions
-	): Observable<Collections> {
+	): Observable<BaseResourcesTypes.Collections> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('collections')
@@ -73,9 +71,9 @@ export class NodeClientService {
 
 	getCollections(
 		baseUrl: string,
-		query: AllCollectionsQuery | {} = {},
+		query: BaseResourcesTypes.AllCollectionsQuery | {} = {},
 		connectionOptions?: ConnectionOptions
-	): Observable<Pagination<Collections>> {
+	): Observable<Pagination<BaseResourcesTypes.Collections>> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('collections')
@@ -92,7 +90,7 @@ export class NodeClientService {
 		baseUrl: string,
 		assetId: string,
 		connectionOptions?: ConnectionOptions
-	): Observable<Assets> {
+	): Observable<BaseResourcesTypes.Assets> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('assets')
@@ -105,9 +103,9 @@ export class NodeClientService {
 
 	getAssets(
 		baseUrl: string,
-		query: AllCollectionsQuery | {} = {},
+		query: BaseResourcesTypes.AllCollectionsQuery | {} = {},
 		connectionOptions?: ConnectionOptions
-	): Observable<Pagination<Assets>> {
+	): Observable<Pagination<BaseResourcesTypes.Assets>> {
 		return from(
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('assets')

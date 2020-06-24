@@ -19,7 +19,7 @@ import {
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/components/collections-view-modal/collections-view-modal.component';
-import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 @Component({
 	selector: 'app-collections',
@@ -36,19 +36,19 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 	@Select(CollectionsState.getMeta) meta$: Observable<PaginationMeta>;
 
 	@ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
-		row: Collections;
+		row: BaseResourcesTypes.Collections;
 	}>;
 	@ViewChild('idTpl', { static: true }) idTpl!: TemplateRef<{
-		row: Collections;
+		row: BaseResourcesTypes.Collections;
 	}>;
 	@ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
-		row: Collections;
+		row: BaseResourcesTypes.Collections;
 	}>;
 
 	isLoading$ = new BehaviorSubject(false);
 
-	rows$: Observable<Collections[]> = of([]);
-	tableColumns: TableColumnConfig<Collections>[];
+	rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
+	tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
 
 	constructor(
 		private store: Store,
@@ -109,7 +109,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {}
 
-	showJsonSchema(event: MouseEvent, row: Collections) {
+	showJsonSchema(event: MouseEvent, row: BaseResourcesTypes.Collections) {
 		event.preventDefault();
 
 		this.nzModalService.create({

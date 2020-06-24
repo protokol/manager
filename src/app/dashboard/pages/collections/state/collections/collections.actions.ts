@@ -1,5 +1,5 @@
 import { NzTableQueryParams } from 'ng-zorro-antd';
-import { Collections } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 export const COLLECTIONS_TYPE_NAME = 'collections';
 
@@ -12,5 +12,5 @@ export class LoadCollections {
 export class SetCollectionsByIds {
 	static type = `[${COLLECTIONS_TYPE_NAME}] SetCollectionsByIds`;
 
-	constructor(public collections: Collections[] | Collections) {}
+	constructor(public collections: BaseResourcesTypes.Collections[] | BaseResourcesTypes.Collections) {}
 }
