@@ -1,5 +1,15 @@
 {
 	"name": "protokol-manager",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/protokol/protokol-manager.git"
+	},
+	"author": "Protokol <info@protokol.com>",
+	"contributors": [
+		"Matej Lubej <matej@protokol.com>"
+	],
+	"description": "Manager for NFT Functionality",
+	"license": "CC BY-NC-SA 4.0",
 	"version": "0.0.0",
 	"scripts": {
 		"ng": "ng",
