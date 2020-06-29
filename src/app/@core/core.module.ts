@@ -14,6 +14,8 @@ import { PinsState } from '@core/store/pins/pins.state';
 import { Bip38Service } from '@core/services/bip38.service';
 import { bip38Factory } from '@core/factory/bip38.factory';
 import { CollectionsState } from '@core/store/collections/collections.state';
+import { AssetsService } from '@core/services/assets.service';
+import { CollectionsService } from '@core/services/collections.service';
 
 @NgModule({
 	declarations: [],
@@ -40,6 +42,8 @@ import { CollectionsState } from '@core/store/collections/collections.state';
 	],
 	providers: [
 		NodeClientService,
+		AssetsService,
+		CollectionsService,
 		WalletService,
 		StoreUtilsService,
 		HasProfileGuard,

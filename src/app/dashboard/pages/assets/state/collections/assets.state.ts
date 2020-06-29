@@ -19,6 +19,7 @@ import { BaseResourcesTypes } from '@protokol/nft-client';
 import { LoadCollection } from '@core/store/collections/collections.actions';
 import { CollectionsState, CollectionsStateModel } from '@core/store/collections/collections.state';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
+import { AssetsService } from '@core/services/assets.service';
 
 interface AssetsStateModel {
 	assetsIds: string[];
@@ -41,8 +42,7 @@ export class AssetsState {
 	readonly log = new Logger(this.constructor.name);
 
 	constructor(
-		private nodeClientService: NodeClientService,
-		private store: Store
+		private assetsService: AssetsService
 	) {}
 
 	@Selector()
@@ -86,10 +86,8 @@ export class AssetsState {
 		tableQueryParams,
 		options
 	}: LoadAssets) {
-		const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
-
-		this.nodeClientService
-			.getAssets(baseUrl, TableUtils.toAllCollectionQuery(tableQueryParams))
+		this.assetsService
+			.getAssets(TableUtils.toAllCollectionQuery(tableQueryParams))
 			.pipe(
 				tap(({ data }) => dispatch(new SetAssetsByIds(data))),
 				tap(({ data, meta }) => {

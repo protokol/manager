@@ -20,6 +20,7 @@ import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { CollectionsService } from '@core/services/collections.service';
 
 export interface CollectionsStateModel {
 	collectionsIds: string[];
@@ -42,8 +43,7 @@ export class CollectionsState {
 	readonly log = new Logger(this.constructor.name);
 
 	constructor(
-		private nodeClientService: NodeClientService,
-		private store: Store
+		private collectionsService: CollectionsService
 	) {}
 
 	@Selector()
@@ -86,9 +86,8 @@ export class CollectionsState {
 				})
 			);
 
-			const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
-			this.nodeClientService
-				.getCollection(baseUrl, collectionId)
+			this.collectionsService
+				.getCollection(collectionId)
 				.pipe(
 					tap((data) => dispatch(new SetCollectionsByIds(data)),
 						() => {
@@ -110,10 +109,8 @@ export class CollectionsState {
 	}: StateContext<CollectionsStateModel>, {
 		tableQueryParams
 	}: LoadCollections) {
-		const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
-
-		this.nodeClientService
-			.getCollections(baseUrl, TableUtils.toAllCollectionQuery(tableQueryParams))
+		this.collectionsService
+			.getCollections(TableUtils.toAllCollectionQuery(tableQueryParams))
 			.pipe(
 				tap(({ data }) => dispatch(new SetCollectionsByIds(data))),
 				tap(({ data, meta }) => {
