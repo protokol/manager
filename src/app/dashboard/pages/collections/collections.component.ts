@@ -7,12 +7,12 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { LoadCollections } from '@app/dashboard/pages/collections/state/collections/collections.actions';
+import { LoadCollections } from '@app/@core/store/collections/collections.actions';
 import { NetworksState } from '@core/store/network/networks.state';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { CollectionsState } from '@app/dashboard/pages/collections/state/collections/collections.state';
+import { CollectionsState } from '@app/@core/store/collections/collections.state';
 import {
 	PaginationMeta,
 	TableColumnConfig,

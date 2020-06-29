@@ -16,6 +16,9 @@ import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
 import { ASSETS_TYPE_NAME, LoadAssets, SetAssetsByIds } from './assets.actions';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { LoadCollection } from '@core/store/collections/collections.actions';
+import { CollectionsState, CollectionsStateModel } from '@core/store/collections/collections.state';
+import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 
 interface AssetsStateModel {
 	assetsIds: string[];
@@ -52,15 +55,25 @@ export class AssetsState {
 		return meta;
 	}
 
-	static getAssetsByIds(assetIds: string[]) {
+	static getAssetsByIds(assetIds: string[], options: { withCollections } = { withCollections: false }) {
 		return createSelector(
-			[AssetsState],
-			({ assets }: AssetsStateModel) => {
+			[AssetsState, CollectionsState],
+			({ assets }: AssetsStateModel, { collections }: CollectionsStateModel): AssetWithCollection[] => {
 				if (!assetIds.length) {
 					return [];
 				}
 
-				return assetIds.map((cId) => assets[cId]);
+				const { withCollections } = options;
+				return assetIds.map((cId) => {
+					if (withCollections) {
+						const { collectionId } = assets[cId] || {};
+						return Object.assign({}, assets[cId], {
+							collection: collectionId ? collections[collectionId] : undefined
+						});
+					}
+
+					return assets[cId];
+				});
 			}
 		);
 	}
@@ -70,7 +83,8 @@ export class AssetsState {
 		patchState,
 		dispatch,
 	}: StateContext<AssetsStateModel>, {
-		tableQueryParams
+		tableQueryParams,
+		options
 	}: LoadAssets) {
 		const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
 
@@ -83,6 +97,13 @@ export class AssetsState {
 						assetsIds: data.map((c) => c.id),
 						meta,
 					});
+				}),
+				tap(({ data }) => {
+					if (options.withLoadCollection) {
+						data.forEach(c => {
+							dispatch(new LoadCollection(c.collectionId));
+						});
+					}
 				})
 			)
 			.subscribe();

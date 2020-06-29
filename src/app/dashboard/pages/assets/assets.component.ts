@@ -87,7 +87,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			distinctUntilChanged(),
 			switchMap((collectionsIds) =>
 				this.store
-					.select(AssetsState.getAssetsByIds(collectionsIds))
+					.select(AssetsState.getAssetsByIds(collectionsIds, { withCollections: true }))
+					.pipe(
+						filter(assets => {
+							if (!assets.length) {
+								return true;
+							}
+							return assets.every(a => a.collection !== null);
+						})
+					)
 			),
 			tap(() => this.isLoading$.next(false))
 		);
@@ -98,7 +106,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				untilDestroyed(this),
 				filter((baseUrl) => !!baseUrl),
 				tap(() => this.isLoading$.next(true)),
-				tap(() => this.store.dispatch(new LoadAssets()))
+				tap(() => this.store.dispatch(new LoadAssets(undefined, { withLoadCollection: true })))
 			)
 			.subscribe();
 	}
