@@ -13,11 +13,17 @@ import { HasProfileGuard } from '@core/guards/has-profile.guard';
 import { PinsState } from '@core/store/pins/pins.state';
 import { Bip38Service } from '@core/services/bip38.service';
 import { bip38Factory } from '@core/factory/bip38.factory';
+import { CollectionsState } from '@core/store/collections/collections.state';
 
 @NgModule({
 	declarations: [],
 	imports: [
-		NgxsModule.forRoot([ProfilesState, NetworksState, PinsState], {
+		NgxsModule.forRoot([
+			ProfilesState,
+			NetworksState,
+			PinsState,
+			CollectionsState
+		], {
 			developmentMode: !environment.production,
 		}),
 		NgxsStoragePluginModule.forRoot({

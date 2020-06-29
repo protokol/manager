@@ -64,7 +64,7 @@ export class NodeClientService {
 				.NFTBaseApi('collections')
 				.get(collectionId)
 		).pipe(
-			map((response) => response.body),
+			map((response) => response.body.data),
 			this.genericErrorHandler()
 		);
 	}
@@ -96,7 +96,7 @@ export class NodeClientService {
 				.NFTBaseApi('assets')
 				.get(assetId)
 		).pipe(
-			map((response) => response.body),
+			map((response) => response.body.data),
 			this.genericErrorHandler()
 		);
 	}
