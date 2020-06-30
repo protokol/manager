@@ -15,11 +15,13 @@ import {
 	PaginationMeta,
 	TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzTableQueryParams } from 'ng-zorro-antd';
+import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { AssetsState } from '@app/dashboard/pages/assets/state/collections/assets.state';
 import { LoadAssets } from '@app/dashboard/pages/assets/state/collections/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
+import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
+import { TextUtils } from '@core/utils/text-utils';
 
 @Component({
 	selector: 'app-assets',
@@ -32,31 +34,32 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	private params: NzTableQueryParams;
 
-	@Select(AssetsState.getAssetsIds) collectionIds$: Observable<
+	@Select(AssetsState.getAssetsIds) assetIds$: Observable<
 		string[]
 	>;
 	@Select(AssetsState.getMeta) meta$: Observable<PaginationMeta>;
 
 	@ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
-		row: BaseResourcesTypes.Assets;
+		row: AssetWithCollection;
 	}>;
 	@ViewChild('idTpl', { static: true }) idTpl!: TemplateRef<{
-		row: BaseResourcesTypes.Assets;
+		row: AssetWithCollection;
 	}>;
 	@ViewChild('collectionIdTpl', { static: true }) collectionIdTpl!: TemplateRef<{
-		row: BaseResourcesTypes.Assets;
+		row: AssetWithCollection;
 	}>;
 	@ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
-		row: BaseResourcesTypes.Assets;
+		row: AssetWithCollection;
 	}>;
 
 	isLoading$ = new BehaviorSubject(false);
 
-	rows$: Observable<BaseResourcesTypes.Assets[]> = of([]);
-	tableColumns: TableColumnConfig<BaseResourcesTypes.Assets>[];
+	rows$: Observable<AssetWithCollection[]> = of([]);
+	tableColumns: TableColumnConfig<AssetWithCollection>[];
 
 	constructor(
-		private store: Store
+		private store: Store,
+		private nzModalService: NzModalService
 	) {}
 
 	ngOnInit() {
@@ -83,17 +86,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			},
 		];
 
-		this.rows$ = this.collectionIds$.pipe(
+		this.rows$ = this.assetIds$.pipe(
 			distinctUntilChanged(),
-			switchMap((collectionsIds) =>
+			switchMap((assetIds) =>
 				this.store
-					.select(AssetsState.getAssetsByIds(collectionsIds, { withCollections: true }))
+					.select(AssetsState.getAssetsByIds(assetIds, { withCollections: true }))
 					.pipe(
 						filter(assets => {
 							if (!assets.length) {
 								return true;
 							}
-							return assets.every(a => a.collection !== null);
+							return assets.every(a => a && a.collection !== null);
 						})
 					)
 			),
@@ -113,10 +116,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {}
 
-	showAttributes(event: MouseEvent, row: BaseResourcesTypes.Assets) {
+	showAttributes(event: MouseEvent, row: AssetWithCollection) {
 		event.preventDefault();
 
-		this.log.info('row', row);
+		this.nzModalService.create({
+			nzTitle: `"${TextUtils.clip(row.id)}" preview`,
+			nzContent: AssetViewModalComponent,
+			nzComponentParams: {
+				jsonSchema: {...row.collection.jsonSchema},
+				formValues: {...row.attributes}
+			},
+			nzFooter: null,
+			nzWidth: '75vw'
+		});
 	}
 
 	paginationChange(params: NzTableQueryParams) {

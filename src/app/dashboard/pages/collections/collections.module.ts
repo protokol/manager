@@ -16,6 +16,6 @@ import { NzModalModule } from 'ng-zorro-antd';
 		NzModalModule,
 	],
 	declarations: [CollectionsComponent, CollectionsViewModalComponent],
-	exports: [CollectionsComponent],
+	exports: [],
 })
 export class CollectionsModule {}

@@ -16,6 +16,7 @@ import { bip38Factory } from '@core/factory/bip38.factory';
 import { CollectionsState } from '@core/store/collections/collections.state';
 import { AssetsService } from '@core/services/assets.service';
 import { CollectionsService } from '@core/services/collections.service';
+import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-library.module';
 
 @NgModule({
 	declarations: [],
@@ -39,6 +40,7 @@ import { CollectionsService } from '@core/services/collections.service';
 		}),
 		CommonModule,
 		IconsProviderModule,
+		AjsfWidgetLibraryModule
 	],
 	providers: [
 		NodeClientService,
