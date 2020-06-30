@@ -4,8 +4,12 @@ import { AssetsComponent } from './assets.component';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { NzModalModule } from 'ng-zorro-antd';
+import { NzGridModule, NzModalModule } from 'ng-zorro-antd';
 import { AssetsState } from '@app/dashboard/pages/assets/state/collections/assets.state';
+import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
+import { NgJsonEditorModule } from 'ang-jsoneditor';
+import { JsonSchemaFormModule } from '@ajsf/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	imports: [
@@ -14,8 +18,16 @@ import { AssetsState } from '@app/dashboard/pages/assets/state/collections/asset
 		CommonModule,
 		SharedModule,
 		NzModalModule,
+		NgJsonEditorModule,
+		NzGridModule,
+		JsonSchemaFormModule,
+		ReactiveFormsModule
 	],
-	declarations: [AssetsComponent],
-	exports: [AssetsComponent],
+	providers: [],
+	declarations: [
+		AssetsComponent,
+		AssetViewModalComponent
+	],
+	exports: [],
 })
 export class AssetsModule {}

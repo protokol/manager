@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd';
 import { IClipboardResponse } from 'ngx-clipboard';
+import { TextUtils } from '@core/utils/text-utils';
 
 @Component({
 	selector: 'app-text-clipper',
@@ -32,12 +33,7 @@ export class TextClipperComponent {
 
 	get textClipped$(): Observable<string> {
 		return this.text$.pipe(
-			map((text) => {
-				if (!text || (text && text.length <= 12)) {
-					return text || '';
-				}
-				return `${text.substring(0, 6)}…${text.slice(-6)}`;
-			})
+			map(TextUtils.clip)
 		);
 	}
 }
