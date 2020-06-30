@@ -104,6 +104,7 @@ export class RegisterComponent implements OnDestroy {
 				}
 				return null;
 			})
+			// tslint:disable-next-line:semicolon
 		);
 
 	pinValidator = (control: FormControl): ValidationErrors | null => {
@@ -113,6 +114,7 @@ export class RegisterComponent implements OnDestroy {
 			return { confirm: true, error: true };
 		}
 		return null;
+		// tslint:disable-next-line:semicolon
 	};
 
 	private createForm() {

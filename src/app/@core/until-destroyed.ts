@@ -51,6 +51,7 @@ export function untilDestroyed(
 		if (!instance[untilDestroyedSymbol]) {
 			instance[untilDestroyedSymbol] = new Subject();
 
+			// tslint:disable-next-line:space-before-function-paren
 			instance[destroyMethodName] = function () {
 				if (hasDestroyFunction) {
 					originalDestroy.apply(this, arguments);
