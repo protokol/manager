@@ -19,48 +19,48 @@ import { CollectionsService } from '@core/services/collections.service';
 import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-library.module';
 
 @NgModule({
-	declarations: [],
-	imports: [
-		NgxsModule.forRoot(
-			[ProfilesState, NetworksState, PinsState, CollectionsState],
-			{
-				developmentMode: !environment.production,
-			}
-		),
-		NgxsStoragePluginModule.forRoot({
-			key: [
-				ProfilesState,
-				NetworksState,
-				// Preserve pins for development
-				...(environment.production ? [] : [PinsState]),
-			],
-			storage: StorageOption.LocalStorage,
-		}),
-		CommonModule,
-		IconsProviderModule,
-		AjsfWidgetLibraryModule,
-	],
-	providers: [
-		NodeClientService,
-		AssetsService,
-		CollectionsService,
-		WalletService,
-		StoreUtilsService,
-		HasProfileGuard,
-		{
-			provide: Bip38Service,
-			useFactory: bip38Factory,
-			deps: [],
-		},
-	],
+  declarations: [],
+  imports: [
+    NgxsModule.forRoot(
+      [ProfilesState, NetworksState, PinsState, CollectionsState],
+      {
+        developmentMode: !environment.production,
+      }
+    ),
+    NgxsStoragePluginModule.forRoot({
+      key: [
+        ProfilesState,
+        NetworksState,
+        // Preserve pins for development
+        ...(environment.production ? [] : [PinsState]),
+      ],
+      storage: StorageOption.LocalStorage,
+    }),
+    CommonModule,
+    IconsProviderModule,
+    AjsfWidgetLibraryModule,
+  ],
+  providers: [
+    NodeClientService,
+    AssetsService,
+    CollectionsService,
+    WalletService,
+    StoreUtilsService,
+    HasProfileGuard,
+    {
+      provide: Bip38Service,
+      useFactory: bip38Factory,
+      deps: [],
+    },
+  ],
 })
 export class CoreModule {
-	constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-		// Import guard
-		if (parentModule) {
-			throw new Error(
-				`${parentModule} has already been loaded. Import Core module in the AppModule only.`
-			);
-		}
-	}
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    // Import guard
+    if (parentModule) {
+      throw new Error(
+        `${parentModule} has already been loaded. Import Core module in the AppModule only.`
+      );
+    }
+  }
 }

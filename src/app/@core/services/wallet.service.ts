@@ -8,37 +8,37 @@ import * as bip39Type from 'bip39';
 import * as arkCryptoType from '@arkecosystem/crypto';
 
 export enum MnemonicGenerateLanguage {
-	ENGLISH = 'english',
+  ENGLISH = 'english',
 }
 
 @Injectable()
 export class WalletService {
-	readonly log = new Logger(this.constructor.name);
+  readonly log = new Logger(this.constructor.name);
 
-	private readonly bip39: typeof bip39Type;
-	private readonly arkCrypto: typeof arkCryptoType;
+  private readonly bip39: typeof bip39Type;
+  private readonly arkCrypto: typeof arkCryptoType;
 
-	constructor() {
-		if (ElectronUtils.isElectron()) {
-			this.bip39 = window.require('bip39');
-			this.arkCrypto = window.require('@arkecosystem/crypto');
-		}
-	}
+  constructor() {
+    if (ElectronUtils.isElectron()) {
+      this.bip39 = window.require('bip39');
+      this.arkCrypto = window.require('@arkecosystem/crypto');
+    }
+  }
 
-	generate(pubKeyHash, language: MnemonicGenerateLanguage) {
-		const passphrase = this.bip39.generateMnemonic(
-			null,
-			null,
-			this.bip39.wordlists[language]
-		);
-		const publicKey = this.arkCrypto.Identities.Keys.fromPassphrase(passphrase)
-			.publicKey;
-		return {
-			address: this.arkCrypto.Identities.Address.fromPublicKey(
-				publicKey,
-				pubKeyHash
-			),
-			passphrase,
-		};
-	}
+  generate(pubKeyHash, language: MnemonicGenerateLanguage) {
+    const passphrase = this.bip39.generateMnemonic(
+      null,
+      null,
+      this.bip39.wordlists[language]
+    );
+    const publicKey = this.arkCrypto.Identities.Keys.fromPassphrase(passphrase)
+      .publicKey;
+    return {
+      address: this.arkCrypto.Identities.Address.fromPublicKey(
+        publicKey,
+        pubKeyHash
+      ),
+      passphrase,
+    };
+  }
 }

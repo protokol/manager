@@ -35,32 +35,32 @@ const untilDestroyedSymbol = Symbol('untilDestroyed');
  * ```
  */
 export function untilDestroyed(
-	instance: object,
-	destroyMethodName: string = 'ngOnDestroy'
+  instance: object,
+  destroyMethodName: string = 'ngOnDestroy'
 ) {
-	return <T>(source: Observable<T>) => {
-		const originalDestroy = instance[destroyMethodName];
-		const hasDestroyFunction = typeof originalDestroy === 'function';
+  return <T>(source: Observable<T>) => {
+    const originalDestroy = instance[destroyMethodName];
+    const hasDestroyFunction = typeof originalDestroy === 'function';
 
-		if (!hasDestroyFunction) {
-			throw new Error(
-				`${instance.constructor.name} is using untilDestroyed but doesn't implement ${destroyMethodName}`
-			);
-		}
+    if (!hasDestroyFunction) {
+      throw new Error(
+        `${instance.constructor.name} is using untilDestroyed but doesn't implement ${destroyMethodName}`
+      );
+    }
 
-		if (!instance[untilDestroyedSymbol]) {
-			instance[untilDestroyedSymbol] = new Subject();
+    if (!instance[untilDestroyedSymbol]) {
+      instance[untilDestroyedSymbol] = new Subject();
 
-			// tslint:disable-next-line:space-before-function-paren
-			instance[destroyMethodName] = function () {
-				if (hasDestroyFunction) {
-					originalDestroy.apply(this, arguments);
-				}
-				instance[untilDestroyedSymbol].next();
-				instance[untilDestroyedSymbol].complete();
-			};
-		}
+      // tslint:disable-next-line:space-before-function-paren
+      instance[destroyMethodName] = function () {
+        if (hasDestroyFunction) {
+          originalDestroy.apply(this, arguments);
+        }
+        instance[untilDestroyedSymbol].next();
+        instance[untilDestroyedSymbol].complete();
+      };
+    }
 
-		return source.pipe(takeUntil<T>(instance[untilDestroyedSymbol]));
-	};
+    return source.pipe(takeUntil<T>(instance[untilDestroyedSymbol]));
+  };
 }

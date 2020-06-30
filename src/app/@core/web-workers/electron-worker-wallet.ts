@@ -1,15 +1,15 @@
 import { ElectronWorkerBase } from '@core/web-workers/electron-worker-base';
 import {
-	WebWorkerWalletPost,
-	WebWorkerWalletReceive,
+  WebWorkerWalletPost,
+  WebWorkerWalletReceive,
 } from '@core/interfaces/electron-worker-wallet.types';
 import { ElectronWorkers } from '../interfaces/electron-workers.enum';
 
 export class ElectronWorkerWallet extends ElectronWorkerBase<
-	WebWorkerWalletPost,
-	WebWorkerWalletReceive
+  WebWorkerWalletPost,
+  WebWorkerWalletReceive
 > {
-	constructor() {
-		super(ElectronWorkers.wallet);
-	}
+  constructor() {
+    super(ElectronWorkers.wallet);
+  }
 }

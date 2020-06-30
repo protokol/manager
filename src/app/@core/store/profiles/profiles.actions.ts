@@ -5,19 +5,19 @@ import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesType
 export const PROFILES_TYPE_NAME = 'profiles';
 
 export class AddProfileAction {
-	static type = `[${PROFILES_TYPE_NAME}] AddProfile`;
+  static type = `[${PROFILES_TYPE_NAME}] AddProfile`;
 
-	constructor(
-		public profile: Omit<Profile, 'encodedPassphrase'> & { passphrase: string },
-		public pin: string,
-		public cryptoConfig: NodeCryptoConfiguration['network'],
-		public markAsDefault: boolean = false,
-		public profileId: string = uuid()
-	) {}
+  constructor(
+    public profile: Omit<Profile, 'encodedPassphrase'> & { passphrase: string },
+    public pin: string,
+    public cryptoConfig: NodeCryptoConfiguration['network'],
+    public markAsDefault: boolean = false,
+    public profileId: string = uuid()
+  ) {}
 }
 
 export class RemoveProfileAction {
-	static type = `[${PROFILES_TYPE_NAME}] RemoveProfile`;
+  static type = `[${PROFILES_TYPE_NAME}] RemoveProfile`;
 
-	constructor(public profileId: string) {}
+  constructor(public profileId: string) {}
 }

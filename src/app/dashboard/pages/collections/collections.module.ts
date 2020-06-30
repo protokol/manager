@@ -8,14 +8,14 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { NzModalModule } from 'ng-zorro-antd';
 
 @NgModule({
-	imports: [
-		CollectionsRoutingModule,
-		CommonModule,
-		SharedModule,
-		NgJsonEditorModule,
-		NzModalModule,
-	],
-	declarations: [CollectionsComponent, CollectionsViewModalComponent],
-	exports: [],
+  imports: [
+    CollectionsRoutingModule,
+    CommonModule,
+    SharedModule,
+    NgJsonEditorModule,
+    NzModalModule,
+  ],
+  declarations: [CollectionsComponent, CollectionsViewModalComponent],
+  exports: [],
 })
 export class CollectionsModule {}
