@@ -12,30 +12,26 @@ import { AntSubmitComponent } from './components/ant-submit/ant-submit.component
 import { AntSelectComponent } from './components/ant-select/ant-select.component';
 
 const declareAndExportComponents = [
-	AntInputComponent,
-	AntNumberComponent,
-	AntAddReferenceComponent,
-	AntButtonComponent,
-	AntSubmitComponent,
-	AntSelectComponent
+  AntInputComponent,
+  AntNumberComponent,
+  AntAddReferenceComponent,
+  AntButtonComponent,
+  AntSubmitComponent,
+  AntSelectComponent,
 ];
 
 @NgModule({
-	declarations: [...declareAndExportComponents],
-	providers: [
-		WidgetConfigService
-	],
-	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		NzInputModule,
-		JsonSchemaFormModule,
-		NzButtonModule,
-		NzSelectModule,
-		FormsModule
-	],
-	exports: [...declareAndExportComponents]
+  declarations: [...declareAndExportComponents],
+  providers: [WidgetConfigService],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NzInputModule,
+    JsonSchemaFormModule,
+    NzButtonModule,
+    NzSelectModule,
+    FormsModule,
+  ],
+  exports: [...declareAndExportComponents],
 })
-export class AjsfWidgetLibraryModule {
-}
-
+export class AjsfWidgetLibraryModule {}

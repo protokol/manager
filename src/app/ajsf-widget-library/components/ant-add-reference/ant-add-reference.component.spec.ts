@@ -8,9 +8,8 @@ describe('AntAddReferenceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AntAddReferenceComponent ]
-    })
-    .compileComponents();
+      declarations: [AntAddReferenceComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

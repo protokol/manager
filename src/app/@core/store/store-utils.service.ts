@@ -9,25 +9,25 @@ import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class StoreUtilsService {
-	readonly log = new Logger(this.constructor.name);
+  readonly log = new Logger(this.constructor.name);
 
-	constructor(private bip38Service: Bip38Service, private store: Store) {}
+  constructor(private bip38Service: Bip38Service, private store: Store) {}
 
-	isPinForProfileValid(
-		profileId: string,
-		pin: string,
-		network: NodeCryptoConfiguration['network']
-	): Observable<boolean> {
-		const profile = this.store.selectSnapshot(
-			ProfilesState.getProfileById(profileId)
-		);
-		return this.bip38Service
-			.decrypt(profile.encodedPassphrase, pin, network)
-			.pipe(
-				map((decrypted) => !!decrypted),
-				catchError(() => {
-					return of(false);
-				})
-			);
-	}
+  isPinForProfileValid(
+    profileId: string,
+    pin: string,
+    network: NodeCryptoConfiguration['network']
+  ): Observable<boolean> {
+    const profile = this.store.selectSnapshot(
+      ProfilesState.getProfileById(profileId)
+    );
+    return this.bip38Service
+      .decrypt(profile.encodedPassphrase, pin, network)
+      .pipe(
+        map((decrypted) => !!decrypted),
+        catchError(() => {
+          return of(false);
+        })
+      );
+  }
 }

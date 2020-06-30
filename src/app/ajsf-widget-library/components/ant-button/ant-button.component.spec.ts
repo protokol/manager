@@ -8,9 +8,8 @@ describe('AntButtonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AntButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [AntButtonComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

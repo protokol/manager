@@ -8,8 +8,8 @@ import { Bip38Service } from '@core/services/bip38.service';
  * The issue is that hot reload breaks worker service in develop mode
  */
 export const bip38Factory = (): Bip38ServiceInterface => {
-	if (environment.production) {
-		return new Bip38WorkerService();
-	}
-	return new Bip38Service();
+  if (environment.production) {
+    return new Bip38WorkerService();
+  }
+  return new Bip38Service();
 };

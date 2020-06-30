@@ -1,3 +1,3 @@
 export interface ConnectionOptions {
-	timeout?: number;
+  timeout?: number;
 }

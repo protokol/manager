@@ -7,39 +7,40 @@ import { WalletService } from '@core/services/wallet.service';
 import { NetworksState } from '@core/store/network/networks.state';
 
 describe('Networks', () => {
-	let store: Store;
-	let nodeClientService: NodeClientService;
-	const baseUrlFixture = 'http://localhost:4003';
-	let spy: any;
+  let store: Store;
+  let nodeClientService: NodeClientService;
+  const baseUrlFixture = 'http://localhost:4003';
+  let spy: any;
 
-	beforeEach(() => {
-		TestBed.configureTestingModule({
-			imports: [NgxsModule.forRoot([NetworksState])],
-			providers: [WalletService, NodeClientService],
-		});
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([NetworksState])],
+      providers: [WalletService, NodeClientService],
+    });
 
-		store = TestBed.inject(Store);
-		nodeClientService = TestBed.inject(NodeClientService);
-	});
+    store = TestBed.inject(Store);
+    nodeClientService = TestBed.inject(NodeClientService);
+  });
 
-	it('should set network and load crypto', () => {
-		const nodeCryptoConfiguration = {
-			network: { wif: 10, name: '4382984398' },
-		} as any;
-		spy = spyOn(nodeClientService, 'getNodeCryptoConfiguration').and.returnValue(
-			of(nodeCryptoConfiguration)
-		);
+  it('should set network and load crypto', () => {
+    const nodeCryptoConfiguration = {
+      network: { wif: 10, name: '4382984398' },
+    } as any;
+    spy = spyOn(
+      nodeClientService,
+      'getNodeCryptoConfiguration'
+    ).and.returnValue(of(nodeCryptoConfiguration));
 
-		store.dispatch(new SetNetwork(baseUrlFixture));
+    store.dispatch(new SetNetwork(baseUrlFixture));
 
-		const networkStateBaseUrl = store.selectSnapshot(
-			(state) => state.networks.baseUrl
-		);
-		expect(networkStateBaseUrl).toEqual(baseUrlFixture);
+    const networkStateBaseUrl = store.selectSnapshot(
+      (state) => state.networks.baseUrl
+    );
+    expect(networkStateBaseUrl).toEqual(baseUrlFixture);
 
-		const nodeCryptoConfig = store.selectSnapshot(
-			NetworksState.getNodeCryptoConfig
-		);
-		expect(nodeCryptoConfig).toEqual(nodeCryptoConfiguration);
-	});
+    const nodeCryptoConfig = store.selectSnapshot(
+      NetworksState.getNodeCryptoConfig
+    );
+    expect(nodeCryptoConfig).toEqual(nodeCryptoConfiguration);
+  });
 });

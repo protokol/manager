@@ -8,18 +8,16 @@ import { AntSelectComponent } from '@app/ajsf-widget-library/components/ant-sele
 
 @Injectable()
 export class WidgetConfigService {
+  constructor() {}
 
-	constructor() {
-	}
-
-	static getWidgets() {
-		return {
-			$ref: AntAddReferenceComponent,
-			text: AntInputComponent,
-			number: AntNumberComponent,
-			button: AntButtonComponent,
-			submit: AntSubmitComponent,
-			select: AntSelectComponent
-		};
-	}
+  static getWidgets() {
+    return {
+      $ref: AntAddReferenceComponent,
+      text: AntInputComponent,
+      number: AntNumberComponent,
+      button: AntButtonComponent,
+      submit: AntSubmitComponent,
+      select: AntSelectComponent,
+    };
+  }
 }

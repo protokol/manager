@@ -2,14 +2,14 @@ import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesType
 import { Observable } from 'rxjs';
 
 export interface Bip38ServiceInterface {
-	encrypt(
-		passphrase: string,
-		pin: string,
-		network: NodeCryptoConfiguration['network']
-	): Observable<string>;
-	decrypt(
-		encodedPassphrase: string,
-		pin: string,
-		network: NodeCryptoConfiguration['network']
-	): Observable<string>;
+  encrypt(
+    passphrase: string,
+    pin: string,
+    network: NodeCryptoConfiguration['network']
+  ): Observable<string>;
+  decrypt(
+    encodedPassphrase: string,
+    pin: string,
+    network: NodeCryptoConfiguration['network']
+  ): Observable<string>;
 }

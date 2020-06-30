@@ -4,23 +4,23 @@ import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-co
 import { environment } from '@env/environment.prod';
 
 @Component({
-	selector: 'app-asset-view-modal',
-	templateUrl: './asset-view-modal.component.html',
-	styleUrls: ['./asset-view-modal.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-asset-view-modal',
+  templateUrl: './asset-view-modal.component.html',
+  styleUrls: ['./asset-view-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssetViewModalComponent {
-	readonly editorOptions: JsonEditorOptions;
+  readonly editorOptions: JsonEditorOptions;
 
-	@Input() jsonSchema: object;
-	@Input() formValues: object;
+  @Input() jsonSchema: object;
+  @Input() formValues: object;
 
-	widgets = WidgetConfigService.getWidgets();
-	isProduction = environment.production;
+  widgets = WidgetConfigService.getWidgets();
+  isProduction = environment.production;
 
-	constructor() {
-		this.editorOptions = new JsonEditorOptions();
-		this.editorOptions.mode = 'view';
-		this.editorOptions.expandAll = true;
-	}
+  constructor() {
+    this.editorOptions = new JsonEditorOptions();
+    this.editorOptions.mode = 'view';
+    this.editorOptions.expandAll = true;
+  }
 }

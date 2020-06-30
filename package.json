@@ -31,7 +31,7 @@
 		"lint": "ng lint && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
 		"prettier": "prettier --write \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
 		"prettier:check": "prettier --list-different \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
-		"format-staged": "pretty-quick --staged --pattern \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
+		"format-staged": "pretty-quick --staged --pattern \"**/*.*(ts|js|html|scss)\"",
 		"e2e": "ng e2e"
 	},
 	"main": "main.js",
@@ -116,7 +116,8 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run format-staged"
+			"pre-commit": "npm run format-staged",
+			"pre-push": "npm run lint"
 		}
 	}
 }

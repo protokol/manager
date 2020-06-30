@@ -12,22 +12,19 @@ import { JsonSchemaFormModule } from '@ajsf/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [
-		AssetsRoutingModule,
-		NgxsModule.forFeature([AssetsState]),
-		CommonModule,
-		SharedModule,
-		NzModalModule,
-		NgJsonEditorModule,
-		NzGridModule,
-		JsonSchemaFormModule,
-		ReactiveFormsModule
-	],
-	providers: [],
-	declarations: [
-		AssetsComponent,
-		AssetViewModalComponent
-	],
-	exports: [],
+  imports: [
+    AssetsRoutingModule,
+    NgxsModule.forFeature([AssetsState]),
+    CommonModule,
+    SharedModule,
+    NzModalModule,
+    NgJsonEditorModule,
+    NzGridModule,
+    JsonSchemaFormModule,
+    ReactiveFormsModule,
+  ],
+  providers: [],
+  declarations: [AssetsComponent, AssetViewModalComponent],
+  exports: [],
 })
 export class AssetsModule {}

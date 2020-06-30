@@ -10,18 +10,18 @@ import { RouterModule } from '@angular/router';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
 @NgModule({
-	declarations: [DashboardShellComponent],
-	imports: [
-		CommonModule,
-		NzLayoutModule,
-		NzMenuModule,
-		FormsModule,
-		HttpClientModule,
-		NzIconModule,
-		RouterModule,
-		DashboardRoutingModule,
-		NzAvatarModule,
-		NzDropDownModule,
-	],
+  declarations: [DashboardShellComponent],
+  imports: [
+    CommonModule,
+    NzLayoutModule,
+    NzMenuModule,
+    FormsModule,
+    HttpClientModule,
+    NzIconModule,
+    RouterModule,
+    DashboardRoutingModule,
+    NzAvatarModule,
+    NzDropDownModule,
+  ],
 })
 export class DashboardModule {}

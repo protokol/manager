@@ -8,9 +8,8 @@ describe('AntSelectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AntSelectComponent ]
-    })
-    .compileComponents();
+      declarations: [AntSelectComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

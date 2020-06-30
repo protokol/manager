@@ -1,24 +1,24 @@
 <app-table
-	[isLoading]="isLoading$ | async"
-	[rows]="rows$"
-	[tableColumns]="tableColumns"
-	[meta]="meta$ | async"
-	(paginationChange)="paginationChange($event)"
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="paginationChange($event)"
 >
 </app-table>
 
 <ng-template #actionsTpl let-row="row">
-	<a (click)="showAttributes($event, row)">Attributes</a>
+  <a (click)="showAttributes($event, row)">Attributes</a>
 </ng-template>
 
 <ng-template #idTpl let-row="row">
-	<app-text-clipper [text]="row.id"></app-text-clipper>
+  <app-text-clipper [text]="row.id"></app-text-clipper>
 </ng-template>
 
 <ng-template #collectionIdTpl let-row="row">
-	<app-text-clipper [text]="row.collectionId"></app-text-clipper>
+  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
 </ng-template>
 
 <ng-template #ownerTpl let-row="row">
-	<app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
 </ng-template>

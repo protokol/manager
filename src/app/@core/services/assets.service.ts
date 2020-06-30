@@ -11,39 +11,39 @@ import { Store } from '@ngxs/store';
 
 @Injectable()
 export class AssetsService {
-	readonly log = new Logger(this.constructor.name);
+  readonly log = new Logger(this.constructor.name);
 
-	constructor(private store: Store) {}
+  constructor(private store: Store) {}
 
-	getAsset(
-		assetId: string,
-		baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
-		connectionOptions?: ConnectionOptions
-	): Observable<BaseResourcesTypes.Assets> {
-		return from(
-			NodeClientService.getConnection(baseUrl, connectionOptions)
-				.NFTBaseApi('assets')
-				.get(assetId)
-		).pipe(
-			map((response) => response.body.data),
-			NodeClientService.genericErrorHandler()
-		);
-	}
+  getAsset(
+    assetId: string,
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<BaseResourcesTypes.Assets> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTBaseApi('assets')
+        .get(assetId)
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler()
+    );
+  }
 
-	getAssets(
-		query: BaseResourcesTypes.AllCollectionsQuery | {} = {},
-		baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
-		connectionOptions?: ConnectionOptions
-	): Observable<Pagination<BaseResourcesTypes.Assets>> {
-		return from(
-			NodeClientService.getConnection(baseUrl, connectionOptions)
-				.NFTBaseApi('assets')
-				.all({
-					...query
-				})
-		).pipe(
-			map((response) => response.body),
-			NodeClientService.genericErrorHandler()
-		);
-	}
+  getAssets(
+    query: BaseResourcesTypes.AllCollectionsQuery | {} = {},
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<Pagination<BaseResourcesTypes.Assets>> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTBaseApi('assets')
+        .all({
+          ...query,
+        })
+    ).pipe(
+      map((response) => response.body),
+      NodeClientService.genericErrorHandler()
+    );
+  }
 }
