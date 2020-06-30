@@ -41,7 +41,7 @@ export class CollectionsService {
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('collections')
 				.all({
-					...query
+					...query,
 				})
 		).pipe(
 			map((response) => response.body),

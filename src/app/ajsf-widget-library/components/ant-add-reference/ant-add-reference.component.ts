@@ -4,7 +4,7 @@ import { JsonSchemaFormService } from '@ajsf/core';
 @Component({
 	selector: 'app-ant-add-reference',
 	templateUrl: './ant-add-reference.component.html',
-	styleUrls: ['./ant-add-reference.component.scss']
+	styleUrls: ['./ant-add-reference.component.scss'],
 })
 export class AntAddReferenceComponent implements OnInit {
 	options: any;
@@ -15,18 +15,17 @@ export class AntAddReferenceComponent implements OnInit {
 	@Input() layoutIndex: number[];
 	@Input() dataIndex: number[];
 
-	constructor(
-		private jsf: JsonSchemaFormService
-	) {
-	}
+	constructor(private jsf: JsonSchemaFormService) {}
 
 	ngOnInit() {
 		this.options = this.layoutNode.options || {};
 	}
 
 	get showAddButton(): boolean {
-		return !this.layoutNode.arrayItem ||
-			this.layoutIndex[this.layoutIndex.length - 1] < this.options.maxItems;
+		return (
+			!this.layoutNode.arrayItem ||
+			this.layoutIndex[this.layoutIndex.length - 1] < this.options.maxItems
+		);
 	}
 
 	addItem(event) {
@@ -38,9 +37,11 @@ export class AntAddReferenceComponent implements OnInit {
 		const parent: any = {
 			dataIndex: this.dataIndex.slice(0, -1),
 			layoutIndex: this.layoutIndex.slice(0, -1),
-			layoutNode: this.jsf.getParentNode(this)
+			layoutNode: this.jsf.getParentNode(this),
 		};
-		return parent.layoutNode.add ||
-			this.jsf.setArrayItemTitle(parent, this.layoutNode, this.itemCount);
+		return (
+			parent.layoutNode.add ||
+			this.jsf.setArrayItemTitle(parent, this.layoutNode, this.itemCount)
+		);
 	}
 }

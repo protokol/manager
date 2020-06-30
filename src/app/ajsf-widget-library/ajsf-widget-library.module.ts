@@ -17,14 +17,12 @@ const declareAndExportComponents = [
 	AntAddReferenceComponent,
 	AntButtonComponent,
 	AntSubmitComponent,
-	AntSelectComponent
+	AntSelectComponent,
 ];
 
 @NgModule({
 	declarations: [...declareAndExportComponents],
-	providers: [
-		WidgetConfigService
-	],
+	providers: [WidgetConfigService],
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -32,10 +30,8 @@ const declareAndExportComponents = [
 		JsonSchemaFormModule,
 		NzButtonModule,
 		NzSelectModule,
-		FormsModule
+		FormsModule,
 	],
-	exports: [...declareAndExportComponents]
+	exports: [...declareAndExportComponents],
 })
-export class AjsfWidgetLibraryModule {
-}
-
+export class AjsfWidgetLibraryModule {}

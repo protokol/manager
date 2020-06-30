@@ -15,9 +15,7 @@ const routes: Routes = [
 		{
 			path: 'assets',
 			loadChildren: () =>
-				import('./pages/assets/assets.module').then(
-					(m) => m.AssetsModule
-				),
+				import('./pages/assets/assets.module').then((m) => m.AssetsModule),
 		},
 		{ path: '**', redirectTo: 'collections' },
 	]),

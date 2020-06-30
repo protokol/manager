@@ -32,8 +32,6 @@ export class TextClipperComponent {
 	}
 
 	get textClipped$(): Observable<string> {
-		return this.text$.pipe(
-			map(TextUtils.clip)
-		);
+		return this.text$.pipe(map(TextUtils.clip));
 	}
 }

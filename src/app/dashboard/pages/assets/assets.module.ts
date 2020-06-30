@@ -21,13 +21,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 		NgJsonEditorModule,
 		NzGridModule,
 		JsonSchemaFormModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
 	],
 	providers: [],
-	declarations: [
-		AssetsComponent,
-		AssetViewModalComponent
-	],
+	declarations: [AssetsComponent, AssetViewModalComponent],
 	exports: [],
 })
 export class AssetsModule {}

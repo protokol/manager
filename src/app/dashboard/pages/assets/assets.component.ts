@@ -34,9 +34,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	private params: NzTableQueryParams;
 
-	@Select(AssetsState.getAssetsIds) assetIds$: Observable<
-		string[]
-	>;
+	@Select(AssetsState.getAssetsIds) assetIds$: Observable<string[]>;
 	@Select(AssetsState.getMeta) meta$: Observable<PaginationMeta>;
 
 	@ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
@@ -57,10 +55,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	rows$: Observable<AssetWithCollection[]> = of([]);
 	tableColumns: TableColumnConfig<AssetWithCollection>[];
 
-	constructor(
-		private store: Store,
-		private nzModalService: NzModalService
-	) {}
+	constructor(private store: Store, private nzModalService: NzModalService) {}
 
 	ngOnInit() {
 		this.tableColumns = [
@@ -73,12 +68,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			{
 				propertyName: 'collectionId',
 				headerName: 'Collection',
-				columnTransformTpl: this.collectionIdTpl
+				columnTransformTpl: this.collectionIdTpl,
 			},
 			{
 				propertyName: 'ownerPublicKey',
 				headerName: 'Owner',
-				columnTransformTpl: this.ownerTpl
+				columnTransformTpl: this.ownerTpl,
 			},
 			{
 				headerName: 'Actions',
@@ -92,11 +87,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.store
 					.select(AssetsState.getAssetsByIds(assetIds, { withCollections: true }))
 					.pipe(
-						filter(assets => {
+						filter((assets) => {
 							if (!assets.length) {
 								return true;
 							}
-							return assets.every(a => a && a.collection !== null);
+							return assets.every((a) => a && a.collection !== null);
 						})
 					)
 			),
@@ -109,7 +104,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				untilDestroyed(this),
 				filter((baseUrl) => !!baseUrl),
 				tap(() => this.isLoading$.next(true)),
-				tap(() => this.store.dispatch(new LoadAssets(undefined, { withLoadCollection: true })))
+				tap(() =>
+					this.store.dispatch(
+						new LoadAssets(undefined, { withLoadCollection: true })
+					)
+				)
 			)
 			.subscribe();
 	}
@@ -123,11 +122,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			nzTitle: `"${TextUtils.clip(row.id)}" preview`,
 			nzContent: AssetViewModalComponent,
 			nzComponentParams: {
-				jsonSchema: {...row.collection.jsonSchema},
-				formValues: {...row.attributes}
+				jsonSchema: { ...row.collection.jsonSchema },
+				formValues: { ...row.attributes },
 			},
 			nzFooter: null,
-			nzWidth: '75vw'
+			nzWidth: '75vw',
 		});
 	}
 

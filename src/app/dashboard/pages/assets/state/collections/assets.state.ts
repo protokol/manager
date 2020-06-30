@@ -17,7 +17,10 @@ import { TableUtils } from '@shared/utils/table-utils';
 import { ASSETS_TYPE_NAME, LoadAssets, SetAssetsByIds } from './assets.actions';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { LoadCollection } from '@core/store/collections/collections.actions';
-import { CollectionsState, CollectionsStateModel } from '@core/store/collections/collections.state';
+import {
+	CollectionsState,
+	CollectionsStateModel,
+} from '@core/store/collections/collections.state';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetsService } from '@core/services/assets.service';
 
@@ -41,9 +44,7 @@ const ASSETS_DEFAULT_STATE: AssetsStateModel = {
 export class AssetsState {
 	readonly log = new Logger(this.constructor.name);
 
-	constructor(
-		private assetsService: AssetsService
-	) {}
+	constructor(private assetsService: AssetsService) {}
 
 	@Selector()
 	static getAssetsIds({ assetsIds }: AssetsStateModel) {
@@ -55,10 +56,16 @@ export class AssetsState {
 		return meta;
 	}
 
-	static getAssetsByIds(assetIds: string[], options: { withCollections } = { withCollections: false }) {
+	static getAssetsByIds(
+		assetIds: string[],
+		options: { withCollections } = { withCollections: false }
+	) {
 		return createSelector(
 			[AssetsState, CollectionsState],
-			({ assets }: AssetsStateModel, { collections }: CollectionsStateModel): AssetWithCollection[] => {
+			(
+				{ assets }: AssetsStateModel,
+				{ collections }: CollectionsStateModel
+			): AssetWithCollection[] => {
 				if (!assetIds.length) {
 					return [];
 				}
@@ -68,7 +75,7 @@ export class AssetsState {
 					if (withCollections) {
 						const { collectionId } = assets[cId] || {};
 						return Object.assign({}, assets[cId], {
-							collection: collectionId ? collections[collectionId] : undefined
+							collection: collectionId ? collections[collectionId] : undefined,
 						});
 					}
 
@@ -79,13 +86,10 @@ export class AssetsState {
 	}
 
 	@Action(LoadAssets)
-	loadAssets({
-		patchState,
-		dispatch,
-	}: StateContext<AssetsStateModel>, {
-		tableQueryParams,
-		options
-	}: LoadAssets) {
+	loadAssets(
+		{ patchState, dispatch }: StateContext<AssetsStateModel>,
+		{ tableQueryParams, options }: LoadAssets
+	) {
 		this.assetsService
 			.getAssets(TableUtils.toAllCollectionQuery(tableQueryParams))
 			.pipe(
@@ -98,7 +102,7 @@ export class AssetsState {
 				}),
 				tap(({ data }) => {
 					if (options.withLoadCollection) {
-						data.forEach(c => {
+						data.forEach((c) => {
 							dispatch(new LoadCollection(c.collectionId));
 						});
 					}
@@ -112,9 +116,7 @@ export class AssetsState {
 		{ setState }: StateContext<AssetsStateModel>,
 		{ assets }: SetAssetsByIds
 	) {
-		const assetsSet = Array.isArray(assets)
-			? assets
-			: [assets];
+		const assetsSet = Array.isArray(assets) ? assets : [assets];
 
 		setState(
 			patch({

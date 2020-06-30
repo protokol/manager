@@ -5,7 +5,7 @@ import { JsonEditorOptions } from 'ang-jsoneditor';
 	selector: 'app-collections-view-modal',
 	templateUrl: './collections-view-modal.component.html',
 	styleUrls: ['./collections-view-modal.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionsViewModalComponent {
 	readonly editorOptions: JsonEditorOptions;

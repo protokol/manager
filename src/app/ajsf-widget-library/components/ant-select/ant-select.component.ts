@@ -5,7 +5,7 @@ import { AbstractControl } from '@angular/forms';
 @Component({
 	selector: 'app-ant-select',
 	templateUrl: './ant-select.component.html',
-	styleUrls: ['./ant-select.component.scss']
+	styleUrls: ['./ant-select.component.scss'],
 })
 export class AntSelectComponent implements OnInit {
 	formControl: AbstractControl;
@@ -20,16 +20,15 @@ export class AntSelectComponent implements OnInit {
 	@Input() layoutIndex: number[];
 	@Input() dataIndex: number[];
 
-	constructor(
-		private jsf: JsonSchemaFormService
-	) {
-	}
+	constructor(private jsf: JsonSchemaFormService) {}
 
 	ngOnInit() {
 		this.options = this.layoutNode.options || {};
 		this.selectList = buildTitleMap(
 			this.options.titleMap || this.options.enumNames,
-			this.options.enum, !!this.options.required, !!this.options.flatList
+			this.options.enum,
+			!!this.options.required,
+			!!this.options.flatList
 		);
 		this.jsf.initializeControl(this);
 	}

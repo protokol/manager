@@ -5,7 +5,7 @@ import { AbstractControl } from '@angular/forms';
 @Component({
 	selector: 'app-ant-number',
 	templateUrl: './ant-number.component.html',
-	styleUrls: ['./ant-number.component.scss']
+	styleUrls: ['./ant-number.component.scss'],
 })
 export class AntNumberComponent implements OnInit {
 	formControl: AbstractControl;
@@ -22,10 +22,7 @@ export class AntNumberComponent implements OnInit {
 	@Input() layoutIndex: number[];
 	@Input() dataIndex: number[];
 
-	constructor(
-		private jsf: JsonSchemaFormService
-	) {
-	}
+	constructor(private jsf: JsonSchemaFormService) {}
 
 	ngOnInit() {
 		this.options = this.layoutNode.options || {};

@@ -39,7 +39,7 @@ export class AssetsService {
 			NodeClientService.getConnection(baseUrl, connectionOptions)
 				.NFTBaseApi('assets')
 				.all({
-					...query
+					...query,
 				})
 		).pipe(
 			map((response) => response.body),

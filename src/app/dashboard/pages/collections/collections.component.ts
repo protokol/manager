@@ -50,10 +50,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 	rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
 	tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
 
-	constructor(
-		private store: Store,
-		private nzModalService: NzModalService
-	) {}
+	constructor(private store: Store, private nzModalService: NzModalService) {}
 
 	ngOnInit() {
 		this.tableColumns = [
@@ -90,8 +87,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 		this.rows$ = this.collectionIds$.pipe(
 			distinctUntilChanged(),
 			switchMap((collectionsIds) =>
-				this.store
-					.select(CollectionsState.getCollectionsByIds(collectionsIds))
+				this.store.select(CollectionsState.getCollectionsByIds(collectionsIds))
 			),
 			tap(() => this.isLoading$.next(false))
 		);

@@ -13,18 +13,25 @@ export abstract class TableUtils {
 		}
 	}
 
-	static toAllCollectionQuery(tableQueryParams?: NzTableQueryParams): BaseResourcesTypes.AllCollectionsQuery {
+	static toAllCollectionQuery(
+		tableQueryParams?: NzTableQueryParams
+	): BaseResourcesTypes.AllCollectionsQuery {
 		const { pageSize, pageIndex, sort } = tableQueryParams || {
 			pageIndex: 0,
-			pageSize: 100
+			pageSize: 100,
 		};
-		const currentSort = sort && sort.find(item => item && item.value !== null);
+		const currentSort = sort && sort.find((item) => item && item.value !== null);
 		const sortField = (currentSort && currentSort.key) || null;
-		const sortOrder = TableUtils.toApiSortOrder((currentSort && currentSort.value) || 'ascend');
+		const sortOrder = TableUtils.toApiSortOrder(
+			(currentSort && currentSort.value) || 'ascend'
+		);
 
-		return Object.assign({
-			limit: pageSize,
-			page: pageIndex + 1
-		}, sortField ? { orderBy: `${sortField}:${sortOrder}` } : {});
+		return Object.assign(
+			{
+				limit: pageSize,
+				page: pageIndex + 1,
+			},
+			sortField ? { orderBy: `${sortField}:${sortOrder}` } : {}
+		);
 	}
 }

@@ -21,14 +21,12 @@ import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-li
 @NgModule({
 	declarations: [],
 	imports: [
-		NgxsModule.forRoot([
-			ProfilesState,
-			NetworksState,
-			PinsState,
-			CollectionsState
-		], {
-			developmentMode: !environment.production,
-		}),
+		NgxsModule.forRoot(
+			[ProfilesState, NetworksState, PinsState, CollectionsState],
+			{
+				developmentMode: !environment.production,
+			}
+		),
 		NgxsStoragePluginModule.forRoot({
 			key: [
 				ProfilesState,
@@ -40,7 +38,7 @@ import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-li
 		}),
 		CommonModule,
 		IconsProviderModule,
-		AjsfWidgetLibraryModule
+		AjsfWidgetLibraryModule,
 	],
 	providers: [
 		NodeClientService,

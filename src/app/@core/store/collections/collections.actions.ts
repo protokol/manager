@@ -18,5 +18,9 @@ export class LoadCollections {
 export class SetCollectionsByIds {
 	static type = `[${COLLECTIONS_TYPE_NAME}] SetCollectionsByIds`;
 
-	constructor(public collections: BaseResourcesTypes.Collections[] | BaseResourcesTypes.Collections) {}
+	constructor(
+		public collections:
+			| BaseResourcesTypes.Collections[]
+			| BaseResourcesTypes.Collections
+	) {}
 }

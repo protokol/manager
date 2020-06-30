@@ -7,7 +7,7 @@ import { environment } from '@env/environment.prod';
 	selector: 'app-asset-view-modal',
 	templateUrl: './asset-view-modal.component.html',
 	styleUrls: ['./asset-view-modal.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssetViewModalComponent {
 	readonly editorOptions: JsonEditorOptions;

@@ -10,8 +10,7 @@ import { SetNetwork } from '@core/store/network/networks.actions';
 	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-	constructor(private store: Store) {
-	}
+	constructor(private store: Store) {}
 
 	ngOnInit() {
 		if (environment.production) {

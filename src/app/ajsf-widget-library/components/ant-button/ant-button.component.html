@@ -1,5 +1,4 @@
-<div
-	[class]="options?.htmlClass || ''">
+<div [class]="options?.htmlClass || ''">
 	<button
 		nz-button
 		[attr.readonly]="options?.readonly ? 'readonly' : null"
@@ -9,9 +8,12 @@
 		[name]="controlName"
 		[type]="layoutNode?.type"
 		[value]="controlValue"
-		(click)="updateValue($event)">
-        <span *ngIf="options?.icon || options?.title"
-														[class]="options?.icon"
-														[innerHTML]="options?.title"></span>
+		(click)="updateValue($event)"
+	>
+		<span
+			*ngIf="options?.icon || options?.title"
+			[class]="options?.icon"
+			[innerHTML]="options?.title"
+		></span>
 	</button>
 </div>

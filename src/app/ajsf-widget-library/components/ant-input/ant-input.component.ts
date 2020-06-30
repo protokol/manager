@@ -6,7 +6,7 @@ import { Logger } from '@core/services/logger.service';
 @Component({
 	selector: 'app-ant-input',
 	templateUrl: './ant-input.component.html',
-	styleUrls: ['./ant-input.component.scss']
+	styleUrls: ['./ant-input.component.scss'],
 })
 export class AntInputComponent implements OnInit {
 	readonly log = new Logger(this.constructor.name);
@@ -22,10 +22,7 @@ export class AntInputComponent implements OnInit {
 	@Input() layoutIndex: number[];
 	@Input() dataIndex: number[];
 
-	constructor(
-		private jsf: JsonSchemaFormService
-	) {
-	}
+	constructor(private jsf: JsonSchemaFormService) {}
 
 	ngOnInit() {
 		this.options = this.layoutNode.options || {};

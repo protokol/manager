@@ -1,5 +1,4 @@
-<div
-	[class]="options?.htmlClass || ''">
+<div [class]="options?.htmlClass || ''">
 	<input
 		nz-input
 		nzSize="default"
@@ -12,5 +11,6 @@
 		[name]="controlName"
 		[type]="layoutNode?.type"
 		[value]="controlValue"
-		(click)="updateValue($event)">
+		(click)="updateValue($event)"
+	/>
 </div>
