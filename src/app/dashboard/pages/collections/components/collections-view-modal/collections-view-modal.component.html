@@ -1,1 +1,16 @@
-<json-editor [options]="editorOptions" [data]="jsonSchema"></json-editor>
+<div nz-row [nzGutter]="[24, 12]" class="view-modal">
+  <div nz-col [nzSpan]="12">
+    <json-editor [options]="editorOptions" [data]="jsonSchema"></json-editor>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <fieldset [disabled]="true">
+      <json-schema-form
+        loadExternalAssets="true"
+        [schema]="jsonSchema"
+        [debug]="!isProduction"
+        [widgets]="widgets"
+      >
+      </json-schema-form>
+    </fieldset>
+  </div>
+</div>

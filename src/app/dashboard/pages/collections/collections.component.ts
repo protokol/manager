@@ -115,6 +115,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         jsonSchema: row.jsonSchema,
       },
       nzFooter: null,
+      nzWidth: '75vw',
     });
   }
 

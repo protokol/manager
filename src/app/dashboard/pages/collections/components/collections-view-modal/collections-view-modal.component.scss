@@ -1,0 +1,15 @@
+.view-modal {
+  min-height: 50vh;
+}
+
+:host ::ng-deep {
+  .jsoneditor-tree {
+    min-height: 45vh;
+  }
+
+  json-schema-form {
+    app-ant-submit {
+      display: none;
+    }
+  }
+}
