@@ -1,3 +1,13 @@
 .text-white {
   color: $white-color;
 }
+
+.ant-form-item-label {
+  > label {
+    &.ant-form-item-required {
+      &::before {
+        color: $error-color;
+      }
+    }
+  }
+}

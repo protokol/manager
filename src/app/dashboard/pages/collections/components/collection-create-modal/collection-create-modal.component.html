@@ -1,0 +1,71 @@
+<form
+  nz-form
+  (ngSubmit)="createCollection($event)"
+  [formGroup]="collectionForm"
+  novalidate
+>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="email" nzRequired>Name</nz-form-label>
+    <nz-form-control nzErrorTip="Please enter name of collection!" nzSpan="10">
+      <input
+        id="email"
+        type="text"
+        nz-input
+        formControlName="name"
+        placeholder="Collection name"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="maximumSupply" nzRequired
+      >Maximum Supply</nz-form-label
+    >
+    <nz-form-control
+      nzErrorTip="Please enter maximum supply of collection!"
+      nzSpan="4"
+    >
+      <input
+        type="number"
+        nz-input
+        formControlName="maximumSupply"
+        placeholder="Collection maximum supply"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="description">Comment</nz-form-label>
+    <nz-form-control [nzSpan]="20">
+      <textarea
+        formControlName="description"
+        nz-input
+        rows="2"
+        placeholder="Collection descriptions"
+      ></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-divider></nz-divider>
+
+  <div nz-row [nzGutter]="[24, 12]" class="view-modal">
+    <div nz-col [nzSpan]="12">
+      <json-editor
+        [options]="editorOptions"
+        [debug]="!isProduction"
+        formControlName="jsonSchema"
+      ></json-editor>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <ng-container *ngIf="c('jsonSchema').valueChanges | async">
+        <json-schema-form
+          loadExternalAssets="true"
+          [schema]="c('jsonSchema').value"
+          [debug]="!isProduction"
+          [widgets]="widgets"
+        >
+        </json-schema-form>
+      </ng-container>
+    </div>
+  </div>
+</form>

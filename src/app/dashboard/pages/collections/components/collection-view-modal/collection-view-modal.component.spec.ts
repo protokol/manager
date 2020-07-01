@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionsViewModalComponent } from './collections-view-modal.component';
+import { CollectionViewModalComponent } from './collections-view-modal.component';
 
 describe('CollectionsViewModalComponent', () => {
-  let component: CollectionsViewModalComponent;
-  let fixture: ComponentFixture<CollectionsViewModalComponent>;
+  let component: CollectionViewModalComponent;
+  let fixture: ComponentFixture<CollectionViewModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CollectionsViewModalComponent],
+      declarations: [CollectionViewModalComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CollectionsViewModalComponent);
+    fixture = TestBed.createComponent(CollectionViewModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

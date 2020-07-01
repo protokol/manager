@@ -4,12 +4,12 @@ import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-co
 import { environment } from '@env/environment';
 
 @Component({
-  selector: 'app-collections-view-modal',
-  templateUrl: './collections-view-modal.component.html',
-  styleUrls: ['./collections-view-modal.component.scss'],
+  selector: 'app-collection-view-modal',
+  templateUrl: './collection-view-modal.component.html',
+  styleUrls: ['./collection-view-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionsViewModalComponent {
+export class CollectionViewModalComponent {
   readonly editorOptions: JsonEditorOptions;
 
   widgets = WidgetConfigService.getWidgets();
