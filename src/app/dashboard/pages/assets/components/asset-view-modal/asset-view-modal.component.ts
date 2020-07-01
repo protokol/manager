@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
-import { environment } from '@env/environment.prod';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-asset-view-modal',

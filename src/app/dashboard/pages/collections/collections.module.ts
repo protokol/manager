@@ -5,7 +5,8 @@ import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { CollectionsViewModalComponent } from './components/collections-view-modal/collections-view-modal.component';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
-import { NzModalModule } from 'ng-zorro-antd';
+import { NzGridModule, NzModalModule } from 'ng-zorro-antd';
+import { JsonSchemaFormModule } from '@ajsf/core';
 
 @NgModule({
   imports: [
@@ -14,6 +15,8 @@ import { NzModalModule } from 'ng-zorro-antd';
     SharedModule,
     NgJsonEditorModule,
     NzModalModule,
+    NzGridModule,
+    JsonSchemaFormModule,
   ],
   declarations: [CollectionsComponent, CollectionsViewModalComponent],
   exports: [],
