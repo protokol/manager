@@ -10,6 +10,7 @@ import { AntAddReferenceComponent } from './components/ant-add-reference/ant-add
 import { AntButtonComponent } from './components/ant-button/ant-button.component';
 import { AntSubmitComponent } from './components/ant-submit/ant-submit.component';
 import { AntSelectComponent } from './components/ant-select/ant-select.component';
+import { AntFrameworkComponent } from './components/ant-framework/ant-framework.component';
 
 const declareAndExportComponents = [
   AntInputComponent,
@@ -18,6 +19,7 @@ const declareAndExportComponents = [
   AntButtonComponent,
   AntSubmitComponent,
   AntSelectComponent,
+  AntFrameworkComponent,
 ];
 
 @NgModule({

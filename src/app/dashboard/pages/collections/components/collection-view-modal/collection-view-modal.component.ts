@@ -12,7 +12,7 @@ import { environment } from '@env/environment';
 export class CollectionViewModalComponent {
   readonly editorOptions: JsonEditorOptions;
 
-  widgets = WidgetConfigService.getWidgets();
+  framework = WidgetConfigService.getFramework();
   isProduction = environment.production;
 
   @Input() jsonSchema: object;
