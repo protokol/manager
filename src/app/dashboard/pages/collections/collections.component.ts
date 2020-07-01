@@ -18,8 +18,9 @@ import {
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
-import { CollectionsViewModalComponent } from '@app/dashboard/pages/collections/components/collections-view-modal/collections-view-modal.component';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { CollectionCreateModalComponent } from '@app/dashboard/pages/collections/components/collection-create-modal/collection-create-modal.component';
+import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
 
 @Component({
   selector: 'app-collections',
@@ -110,7 +111,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     this.nzModalService.create({
       nzTitle: `"${row.name}" json schema`,
-      nzContent: CollectionsViewModalComponent,
+      nzContent: CollectionViewModalComponent,
       nzComponentParams: {
         jsonSchema: row.jsonSchema,
       },
@@ -126,5 +127,15 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(new LoadCollections(params));
     }
+  }
+
+  showAddCollectionModal(event: MouseEvent) {
+    event.preventDefault();
+
+    this.nzModalService.create({
+      nzTitle: 'Create new collection',
+      nzContent: CollectionCreateModalComponent,
+      nzWidth: '75vw',
+    });
   }
 }

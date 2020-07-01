@@ -1,12 +1,20 @@
-<app-table
-  [isLoading]="isLoading$ | async"
-  [rows]="rows$"
-  [tableColumns]="tableColumns"
-  [meta]="meta$ | async"
-  (paginationChange)="paginationChange($event)"
->
-</app-table>
-
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <button nz-button nzType="primary" (click)="showAddCollectionModal($event)">
+      Add Collection
+    </button>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
 <ng-template #actionsTpl let-row="row">
   <a (click)="showJsonSchema($event, row)">Schema</a>
 </ng-template>
