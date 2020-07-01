@@ -15,7 +15,7 @@ export class AssetViewModalComponent {
   @Input() jsonSchema: object;
   @Input() formValues: object;
 
-  widgets = WidgetConfigService.getWidgets();
+  framework = WidgetConfigService.getFramework();
   isProduction = environment.production;
 
   constructor() {

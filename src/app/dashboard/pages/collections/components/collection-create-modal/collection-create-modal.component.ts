@@ -16,7 +16,7 @@ export class CollectionCreateModalComponent {
   readonly editorOptions: JsonEditorOptions;
 
   collectionForm!: FormGroup;
-  widgets = WidgetConfigService.getWidgets();
+  framework = WidgetConfigService.getFramework();
   isProduction = environment.production;
 
   constructor(private formBuilder: FormBuilder) {

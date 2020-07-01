@@ -36,4 +36,8 @@ export class AntSelectComponent implements OnInit {
   updateValue(value) {
     this.jsf.updateValue(this, value);
   }
+
+  isEmptyOption(option) {
+    return option === '<em>None</em>';
+  }
 }
