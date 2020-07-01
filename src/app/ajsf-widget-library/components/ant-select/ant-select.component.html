@@ -19,9 +19,8 @@
       <nz-option
         *ngIf="!isArray(selectItem?.items)"
         [nzValue]="selectItem?.value"
-        nzCustomContent
+        [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
       >
-        <span [innerHTML]="selectItem?.name"></span>
       </nz-option>
       <nz-option-group
         *ngIf="isArray(selectItem?.items)"
@@ -30,9 +29,8 @@
         <nz-option
           *ngFor="let subItem of selectItem.items"
           [nzValue]="subItem"
-          nzCustomContent
+          [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
         >
-          <span [innerHTML]="subItem?.name"></span>
         </nz-option>
       </nz-option-group>
     </ng-template>
@@ -52,9 +50,8 @@
       <nz-option
         *ngIf="!isArray(selectItem?.items)"
         [nzValue]="selectItem?.value"
-        nzCustomContent
+        [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
       >
-        <span [innerHTML]="selectItem?.name"></span>
       </nz-option>
       <nz-option-group
         *ngIf="isArray(selectItem?.items)"
@@ -62,10 +59,9 @@
       >
         <nz-option
           *ngFor="let subItem of selectItem.items"
-          [nzValue]="subItem?.value"
-          nzCustomContent
+          [nzValue]="subItem"
+          [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
         >
-          <span [innerHTML]="subItem?.name"></span>
         </nz-option>
       </nz-option-group>
     </ng-template>
