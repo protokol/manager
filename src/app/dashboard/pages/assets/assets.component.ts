@@ -137,7 +137,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
           untilDestroyed(this),
           first(([a]) => a && a.collection !== null),
           tap(([a]) => {
-            debugger;
             this.showAssetDetail(a);
           })
         )
