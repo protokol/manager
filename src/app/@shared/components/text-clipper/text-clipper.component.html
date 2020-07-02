@@ -1,8 +1,15 @@
-<a
-  (cbOnSuccess)="copiedSuccessful($event)"
-  nz-tooltip
-  ngxClipboard
-  [cbContent]="text$ | async"
-  [nzTooltipTitle]="text$ | async"
-  >{{ textClipped$ | async }}</a
->
+<ng-container *ngIf="shouldCopy$ | async; else shouldNotCopy">
+  <a
+    (cbOnSuccess)="copiedSuccessful($event)"
+    nz-tooltip
+    ngxClipboard
+    [cbContent]="text$ | async"
+    [nzTooltipTitle]="text$ | async"
+    >{{ textClipped$ | async }}</a
+  >
+</ng-container>
+<ng-template #shouldNotCopy>
+  <a (click)="onClick($event)" nz-tooltip [nzTooltipTitle]="text$ | async">{{
+    textClipped$ | async
+  }}</a>
+</ng-template>

@@ -20,6 +20,7 @@ import { Logger } from '@app/@core/services/logger.service';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { LoadTransfers } from '@app/dashboard/pages/transfers/state/transfers/transfers.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transfers',
@@ -53,7 +54,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
   rows$: Observable<BaseResourcesTypes.Transfers[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Transfers>[];
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit() {
     this.tableColumns = [
@@ -105,5 +106,9 @@ export class TransfersComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(new LoadTransfers(params));
     }
+  }
+
+  onAssetClick(nftId: string) {
+    this.router.navigate(['/dashboard/assets', nftId]);
   }
 }
