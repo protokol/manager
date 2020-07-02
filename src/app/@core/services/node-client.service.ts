@@ -34,7 +34,7 @@ export class NodeClientService {
       }),
       catchError((err) => {
         log.error(err);
-        return of(null);
+        return of(undefined);
       })
     );
   }

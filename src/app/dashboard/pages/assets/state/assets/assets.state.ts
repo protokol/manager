@@ -11,7 +11,13 @@ import { tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { ASSETS_TYPE_NAME, LoadAssets, SetAssetsByIds } from './assets.actions';
+import {
+  AssetLoadOptions,
+  ASSETS_TYPE_NAME,
+  LoadAsset,
+  LoadAssets,
+  SetAssetsByIds,
+} from './assets.actions';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { LoadCollection } from '@core/store/collections/collections.actions';
 import {
@@ -55,7 +61,7 @@ export class AssetsState {
 
   static getAssetsByIds(
     assetIds: string[],
-    options: { withCollections } = { withCollections: false }
+    { withCollection }: AssetLoadOptions
   ) {
     return createSelector(
       [AssetsState, CollectionsState],
@@ -67,9 +73,8 @@ export class AssetsState {
           return [];
         }
 
-        const { withCollections } = options;
         return assetIds.map((cId) => {
-          if (withCollections) {
+          if (withCollection) {
             const { collectionId } = assets[cId] || {};
             return Object.assign({}, assets[cId], {
               collection: collectionId ? collections[collectionId] : undefined,
@@ -82,10 +87,47 @@ export class AssetsState {
     );
   }
 
+  @Action(LoadAsset)
+  loadAsset(
+    { getState, setState, dispatch }: StateContext<AssetsStateModel>,
+    { assetId, options: { withCollection } }: LoadAsset
+  ) {
+    const asset = getState().assets[assetId];
+
+    if (!asset && asset !== null) {
+      setState(
+        patch({
+          assets: patch({ [assetId]: null }),
+        })
+      );
+
+      this.assetsService
+        .getAsset(assetId)
+        .pipe(
+          tap(
+            (data) => dispatch(new SetAssetsByIds(data)),
+            () => {
+              setState(
+                patch({
+                  assets: patch({ [assetId]: undefined }),
+                })
+              );
+            }
+          ),
+          tap((data) => {
+            if (withCollection) {
+              dispatch(new LoadCollection(data.collectionId));
+            }
+          })
+        )
+        .subscribe();
+    }
+  }
+
   @Action(LoadAssets)
   loadAssets(
     { patchState, dispatch }: StateContext<AssetsStateModel>,
-    { tableQueryParams, options }: LoadAssets
+    { tableQueryParams, options: { withCollection } }: LoadAssets
   ) {
     this.assetsService
       .getAssets(TableUtils.toAllCollectionQuery(tableQueryParams))
@@ -100,7 +142,7 @@ export class AssetsState {
           }
         }),
         tap(({ data }) => {
-          if (options.withLoadCollection) {
+          if (withCollection) {
             data.forEach((c) => {
               dispatch(new LoadCollection(c.collectionId));
             });

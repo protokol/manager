@@ -4,6 +4,7 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -16,6 +17,7 @@ import {
 } from '@app/@shared/interfaces/table.types';
 import { share, tap } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd';
+import { untilDestroyed } from '@core/until-destroyed';
 
 @Component({
   selector: 'app-table',
@@ -23,7 +25,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
   scrollX$ = new BehaviorSubject<string | null>(null);
   scrollY$ = new BehaviorSubject<string | null>('70vh');
   isLoading$ = new BehaviorSubject(false);
@@ -100,6 +102,7 @@ export class TableComponent implements OnInit {
 
   private pipeRows(rows$: Observable<any[]>) {
     return rows$.pipe(
+      untilDestroyed(this),
       tap((rows) => {
         const isExpandable = this.isExpandable$.getValue();
         if (isExpandable && rows.every((r) => r.hasOwnProperty('id'))) {
@@ -135,4 +138,6 @@ export class TableComponent implements OnInit {
       [id]: expanded,
     });
   }
+
+  ngOnDestroy(): void {}
 }

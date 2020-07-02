@@ -8,7 +8,13 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  first,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import {
@@ -17,11 +23,15 @@ import {
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { AssetsState } from '@app/dashboard/pages/assets/state/assets/assets.state';
-import { LoadAssets } from '@app/dashboard/pages/assets/state/assets/assets.actions';
+import {
+  LoadAsset,
+  LoadAssets,
+} from '@app/dashboard/pages/assets/state/assets/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 import { TextUtils } from '@core/utils/text-utils';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-assets',
@@ -56,7 +66,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
   rows$: Observable<AssetWithCollection[]> = of([]);
   tableColumns: TableColumnConfig<AssetWithCollection>[];
 
-  constructor(private store: Store, private nzModalService: NzModalService) {}
+  constructor(
+    private store: Store,
+    private nzModalService: NzModalService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.tableColumns = [
@@ -87,7 +101,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
       switchMap((assetIds) =>
         this.store
           .select(
-            AssetsState.getAssetsByIds(assetIds, { withCollections: true })
+            AssetsState.getAssetsByIds(assetIds, { withCollection: true })
           )
           .pipe(
             filter((assets) => {
@@ -109,11 +123,28 @@ export class AssetsComponent implements OnInit, OnDestroy {
         tap(() => this.isLoading$.next(true)),
         tap(() =>
           this.store.dispatch(
-            new LoadAssets(this.params, { withLoadCollection: true })
+            new LoadAssets(this.params, { withCollection: true })
           )
         )
       )
       .subscribe();
+
+    const assetId: string = this.route.snapshot.paramMap.get('id');
+    if (assetId) {
+      this.store
+        .select(AssetsState.getAssetsByIds([assetId], { withCollection: true }))
+        .pipe(
+          untilDestroyed(this),
+          first(([a]) => a && a.collection !== null),
+          tap(([a]) => {
+            debugger;
+            this.showAssetDetail(a);
+          })
+        )
+        .subscribe();
+
+      this.store.dispatch(new LoadAsset(assetId, { withCollection: true }));
+    }
   }
 
   ngOnDestroy() {}
@@ -121,12 +152,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
   showAttributes(event: MouseEvent, row: AssetWithCollection) {
     event.preventDefault();
 
+    this.showAssetDetail(row);
+  }
+
+  showAssetDetail(assetWithCollection: AssetWithCollection) {
     this.nzModalService.create({
-      nzTitle: `"${TextUtils.clip(row.id)}" preview`,
+      nzTitle: `"${TextUtils.clip(assetWithCollection.id)}" preview`,
       nzContent: AssetViewModalComponent,
       nzComponentParams: {
-        jsonSchema: { ...row.collection.jsonSchema },
-        formValues: { ...row.attributes },
+        jsonSchema: { ...assetWithCollection.collection.jsonSchema },
+        formValues: { ...assetWithCollection.attributes },
       },
       nzFooter: null,
       nzWidth: '75vw',

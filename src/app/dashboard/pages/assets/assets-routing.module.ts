@@ -7,6 +7,10 @@ const routes: Routes = [
     path: '',
     component: AssetsComponent,
   },
+  {
+    path: ':id',
+    component: AssetsComponent,
+  },
 ];
 
 @NgModule({
