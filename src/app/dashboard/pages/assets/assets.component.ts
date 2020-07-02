@@ -16,8 +16,8 @@ import {
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
-import { AssetsState } from '@app/dashboard/pages/assets/state/collections/assets.state';
-import { LoadAssets } from '@app/dashboard/pages/assets/state/collections/assets.actions';
+import { AssetsState } from '@app/dashboard/pages/assets/state/assets/assets.state';
+import { LoadAssets } from '@app/dashboard/pages/assets/state/assets/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
