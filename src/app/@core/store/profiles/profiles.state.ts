@@ -12,7 +12,6 @@ import {
   createSelector,
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { WalletService } from '@core/services/wallet.service';
 import { AddPinAction } from '@core/store/pins/pins.actions';
 import { Bip38Service } from '@core/services/bip38.service';
 import { tap } from 'rxjs/operators';

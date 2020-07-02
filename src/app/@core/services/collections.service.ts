@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
-import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { catchError, map, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { NFTConnection, BaseResourcesTypes } from '@protokol/nft-client';
-import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 import { Pagination } from '@app/@shared/interfaces/table.types';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NodeClientService } from '@core/services/node-client.service';

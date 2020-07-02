@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { isDefined, JsonSchemaFormService } from '@ajsf/core';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -27,10 +21,7 @@ export class AntFrameworkComponent implements OnInit, OnChanges {
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
 
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private jsf: JsonSchemaFormService
-  ) {}
+  constructor(private jsf: JsonSchemaFormService) {}
 
   get showRemoveButton(): boolean {
     if (
