@@ -20,9 +20,11 @@
 			"@shared": ["src/app/@shared"],
 			"@shared/*": ["src/app/@shared/*"],
 			"@env/*": ["src/environments/*"]
-		}
-	},
-	"angularCompilerOptions": {
+		},
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "angularCompilerOptions": {
 		"fullTemplateTypeCheck": true,
 		"strictInjectionParameters": true
 	}
