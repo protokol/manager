@@ -25,8 +25,8 @@ export class CollectionsService {
         .NFTBaseApi('collections')
         .get(collectionId)
     ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
+      NodeClientService.genericErrorHandler(this.log),
+      map((response) => response.body.data)
     );
   }
 
@@ -42,8 +42,8 @@ export class CollectionsService {
           ...query,
         })
     ).pipe(
-      map((response) => response.body),
-      NodeClientService.genericErrorHandler(this.log)
+      NodeClientService.genericListErrorHandler(this.log),
+      map((response) => response.body)
     );
   }
 }

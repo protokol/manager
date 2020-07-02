@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable, of, OperatorFunction } from 'rxjs';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NFTConnection } from '@protokol/nft-client';
-import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
+import {
+  ApiResponse,
+  ApiResponseWithPagination,
+} from '@arkecosystem/client/dist/interfaces';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 
 @Injectable()
@@ -36,6 +39,35 @@ export class NodeClientService {
     );
   }
 
+  static genericListErrorHandler(logger?: Logger): OperatorFunction<any, any> {
+    const log = logger || new Logger('NodeClientService');
+
+    return (
+      tap((response: ApiResponseWithPagination<any>) => {
+        if (response.body.errors) {
+          log.error('Response contains errors:', response.body.errors);
+        }
+      }),
+      catchError((err) => {
+        log.error(err);
+        return of({
+          data: [],
+          meta: {
+            pageCount: 0,
+            totalCount: 0,
+            count: 0,
+            first: '',
+            last: '',
+            next: undefined,
+            previous: undefined,
+            self: '',
+            totalCountIsEstimate: false,
+          },
+        });
+      })
+    );
+  }
+
   constructor() {}
 
   getNodeCryptoConfiguration(
@@ -47,8 +79,8 @@ export class NodeClientService {
         .api('node')
         .crypto()
     ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
+      NodeClientService.genericErrorHandler(this.log),
+      map((response) => response.body.data)
     );
   }
 }

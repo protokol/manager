@@ -99,7 +99,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadCollections()))
+        tap(() => this.store.dispatch(new LoadCollections(this.params)))
       )
       .subscribe();
   }
@@ -121,7 +121,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   paginationChange(params: NzTableQueryParams) {
-    // TODO: Fix multiple emit bug
     if (!this.params) {
       this.params = params;
     } else {

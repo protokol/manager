@@ -123,7 +123,10 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {}
 
   onQueryParamsChange(tableQueryParams: NzTableQueryParams) {
-    this.paginationChange.emit(tableQueryParams);
+    const { pageIndex, pageSize } = tableQueryParams;
+    if (!(pageIndex === 0 && pageSize === 0)) {
+      this.paginationChange.emit(tableQueryParams);
+    }
   }
 
   onExpandChange(expanded: boolean, id: string) {
