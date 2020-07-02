@@ -5,7 +5,7 @@ import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { NzGridModule, NzModalModule } from 'ng-zorro-antd';
-import { AssetsState } from '@app/dashboard/pages/assets/state/collections/assets.state';
+import { AssetsState } from '@app/dashboard/pages/assets/state/assets/assets.state';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { JsonSchemaFormModule } from '@ajsf/core';

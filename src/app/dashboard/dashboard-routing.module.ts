@@ -17,6 +17,13 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/assets/assets.module').then((m) => m.AssetsModule),
     },
+    {
+      path: 'transfers',
+      loadChildren: () =>
+        import('./pages/transfers/transfers.module').then(
+          (m) => m.TransfersModule
+        ),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];
