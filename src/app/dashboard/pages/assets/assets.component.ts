@@ -109,7 +109,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
         tap(() => this.isLoading$.next(true)),
         tap(() =>
           this.store.dispatch(
-            new LoadAssets(undefined, { withLoadCollection: true })
+            new LoadAssets(this.params, { withLoadCollection: true })
           )
         )
       )
@@ -134,7 +134,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   paginationChange(params: NzTableQueryParams) {
-    // TODO: Fix multiple emit bug
     if (!this.params) {
       this.params = params;
     } else {

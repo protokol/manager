@@ -25,8 +25,8 @@ export class AssetsService {
         .NFTBaseApi('assets')
         .get(assetId)
     ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler()
+      NodeClientService.genericErrorHandler(this.log),
+      map((response) => response.body.data)
     );
   }
 
@@ -42,8 +42,8 @@ export class AssetsService {
           ...query,
         })
     ).pipe(
-      map((response) => response.body),
-      NodeClientService.genericErrorHandler()
+      NodeClientService.genericListErrorHandler(this.log),
+      map((response) => response.body)
     );
   }
 }

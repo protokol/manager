@@ -92,10 +92,12 @@ export class AssetsState {
       .pipe(
         tap(({ data }) => dispatch(new SetAssetsByIds(data))),
         tap(({ data, meta }) => {
-          patchState({
-            assetsIds: data.map((c) => c.id),
-            meta,
-          });
+          if (data.length) {
+            patchState({
+              assetsIds: data.map((c) => c.id),
+              meta,
+            });
+          }
         }),
         tap(({ data }) => {
           if (options.withLoadCollection) {
@@ -110,7 +112,7 @@ export class AssetsState {
 
   @Action(SetAssetsByIds)
   setAssetsByIds(
-    { setState }: StateContext<AssetsStateModel>,
+    { setState, getState }: StateContext<AssetsStateModel>,
     { assets }: SetAssetsByIds
   ) {
     const assetsSet = Array.isArray(assets) ? assets : [assets];
@@ -122,7 +124,7 @@ export class AssetsState {
             ...acc,
             [value.id]: value,
           }),
-          {}
+          { ...getState().assets }
         ),
       })
     );
