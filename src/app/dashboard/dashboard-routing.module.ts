@@ -24,6 +24,11 @@ const routes: Routes = [
           (m) => m.TransfersModule
         ),
     },
+    {
+      path: 'burns',
+      loadChildren: () =>
+        import('./pages/burns/burns.module').then((m) => m.BurnsModule),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];

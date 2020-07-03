@@ -23,11 +23,11 @@
 
 <ng-template #assetsTpl let-row="row">
   <ng-container *ngIf="row.nftTransfer && row.nftTransfer.nftIds">
-    <ng-container *ngFor="let ntfId of row.nftTransfer.nftIds">
+    <ng-container *ngFor="let nftId of row.nftTransfer.nftIds">
       <app-text-clipper
         [copy]="false"
-        (clicked)="onAssetClick(ntfId)"
-        [text]="ntfId"
+        (clicked)="onAssetClick(nftId)"
+        [text]="nftId"
       ></app-text-clipper>
     </ng-container>
   </ng-container>
