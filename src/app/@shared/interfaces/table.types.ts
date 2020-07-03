@@ -1,4 +1,5 @@
 import { TemplateRef } from '@angular/core';
+import { ApiQuery } from '@arkecosystem/client';
 
 export interface TableColumnConfig<T = any> {
   propertyName?: keyof T;
@@ -7,6 +8,7 @@ export interface TableColumnConfig<T = any> {
   columnTransform?: (row: T, propertyValue: any) => any;
   columnTransformTpl?: TemplateRef<{ row: T }>;
   sortBy?: boolean;
+  searchBy?: boolean;
 }
 
 export interface PaginationMeta {
@@ -30,4 +32,17 @@ export interface TablePagination {
   total: number;
   pageSize: number;
   pageIndex: number;
+}
+
+export interface TableColumnSearch {
+  isVisible: boolean;
+  value: string | null;
+}
+
+export interface TableApiQuery extends ApiQuery {
+  orderBy?: string;
+  transform?: boolean;
+  filters?: {
+    [filterName: string]: string;
+  };
 }

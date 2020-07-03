@@ -9,7 +9,14 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { LoadCollections } from '@app/@core/store/collections/collections.actions';
 import { NetworksState } from '@core/store/network/networks.state';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  skip,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CollectionsState } from '@app/@core/store/collections/collections.state';
@@ -21,6 +28,7 @@ import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { CollectionCreateModalComponent } from '@app/dashboard/pages/collections/components/collection-create-modal/collection-create-modal.component';
 import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
+import { Logger } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-collections',
@@ -29,6 +37,7 @@ import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionsComponent implements OnInit, OnDestroy {
+  readonly log = new Logger(this.constructor.name);
   private params: NzTableQueryParams;
 
   @Select(CollectionsState.getCollectionIds) collectionIds$: Observable<
@@ -47,6 +56,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }>;
 
   isLoading$ = new BehaviorSubject(false);
+  searchTerm$ = new BehaviorSubject('');
 
   rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
@@ -64,6 +74,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       {
         propertyName: 'name',
         headerName: 'Name',
+        searchBy: true,
       },
       {
         propertyName: 'description',
@@ -100,6 +111,33 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
         tap(() => this.store.dispatch(new LoadCollections(this.params)))
+      )
+      .subscribe();
+
+    this.searchTerm$
+      .pipe(
+        skip(1),
+        untilDestroyed(this),
+        debounceTime(750),
+        tap((searchTerm) => {
+          try {
+            const jsonSearchTerm = JSON.parse(searchTerm);
+
+            this.store.dispatch(
+              new LoadCollections({
+                ...this.params,
+                filter: [
+                  {
+                    key: 'jsonSchema',
+                    value: jsonSearchTerm,
+                  },
+                ],
+              })
+            );
+          } catch (e) {
+            this.log.error('Search term should be a valid JSON', e);
+          }
+        })
       )
       .subscribe();
   }

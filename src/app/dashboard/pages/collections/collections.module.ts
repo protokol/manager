@@ -16,7 +16,7 @@ import { JsonSchemaFormModule } from '@ajsf/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { CollectionViewModalComponent } from './components/collection-view-modal/collection-view-modal.component';
 import { CollectionCreateModalComponent } from './components/collection-create-modal/collection-create-modal.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -33,6 +33,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     NzInputModule,
     NzDividerModule,
+    FormsModule,
   ],
   declarations: [
     CollectionsComponent,

@@ -3,7 +3,7 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/nft-client';
-import { Pagination } from '@app/@shared/interfaces/table.types';
+import { Pagination, TableApiQuery } from '@app/@shared/interfaces/table.types';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NodeClientService } from '@core/services/node-client.service';
 import { Store } from '@ngxs/store';
@@ -31,7 +31,7 @@ export class TransfersService {
   }
 
   getTransfers(
-    query: BaseResourcesTypes.AllCollectionsQuery | {} = {},
+    query: TableApiQuery | {} = {},
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Transfers>> {

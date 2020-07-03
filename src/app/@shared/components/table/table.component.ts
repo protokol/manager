@@ -13,6 +13,7 @@ import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import {
   PaginationMeta,
   TableColumnConfig,
+  TableColumnSearch,
   TablePagination,
 } from '@app/@shared/interfaces/table.types';
 import { share, tap } from 'rxjs/operators';
@@ -39,6 +40,8 @@ export class TableComponent implements OnInit, OnDestroy {
     pageSize: 0,
     total: 0,
   };
+  search: { [columnName: string]: TableColumnSearch } = {};
+  tableQueryParams: NzTableQueryParams;
 
   @ContentChild(TemplateRef, { static: false }) expandTpl: TemplateRef<any>;
 
@@ -87,6 +90,18 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input('tableColumns')
   set _tableColumns(tableColumns: TableColumnConfig[]) {
     this.headers = [...tableColumns];
+    this.search = tableColumns
+      .filter((c) => c.searchBy === true)
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.propertyName]: {
+            isVisible: false,
+            value: null,
+          } as TableColumnSearch,
+        }),
+        {} as { [columnName: string]: TableColumnSearch }
+      );
   }
 
   @Input('meta')
@@ -128,7 +143,11 @@ export class TableComponent implements OnInit, OnDestroy {
   onQueryParamsChange(tableQueryParams: NzTableQueryParams) {
     const { pageIndex, pageSize } = tableQueryParams;
     if (!(pageIndex === 0 && pageSize === 0)) {
-      this.paginationChange.emit(tableQueryParams);
+      this.paginationChange.emit({
+        ...tableQueryParams,
+        filter: this.serializeFilter(),
+      });
+      this.tableQueryParams = tableQueryParams;
     }
   }
 
@@ -137,6 +156,46 @@ export class TableComponent implements OnInit, OnDestroy {
       ...this.expandableRows$.getValue(),
       [id]: expanded,
     });
+  }
+
+  searchChanged(event: MouseEvent) {
+    event.preventDefault();
+    this.emitPaginationChange();
+  }
+
+  searchReset(event: MouseEvent, propertyName: string) {
+    event.preventDefault();
+    this.search = {
+      ...this.search,
+      [propertyName]: {
+        isVisible: false,
+        value: null,
+      },
+    };
+
+    this.emitPaginationChange();
+  }
+
+  emitPaginationChange() {
+    this.paginationChange.emit({
+      pageSize: this.pagination.pageSize,
+      pageIndex: this.pagination.pageIndex,
+      sort: [...this.tableQueryParams.sort],
+      filter: this.serializeFilter(),
+    });
+  }
+
+  serializeFilter() {
+    return Object.keys(this.search).reduce(
+      (acc, curr) => [
+        ...acc,
+        {
+          key: curr,
+          value: this.search[curr].value,
+        },
+      ],
+      []
+    );
   }
 
   ngOnDestroy(): void {}

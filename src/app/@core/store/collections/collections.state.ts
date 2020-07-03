@@ -104,8 +104,19 @@ export class CollectionsState {
     { patchState, dispatch }: StateContext<CollectionsStateModel>,
     { tableQueryParams }: LoadCollections
   ) {
-    this.collectionsService
-      .getCollections(TableUtils.toAllCollectionQuery(tableQueryParams))
+    const hasFilters =
+      tableQueryParams &&
+      tableQueryParams.filter &&
+      tableQueryParams.filter.length;
+    const loadCollections$ = hasFilters
+      ? this.collectionsService.searchCollections(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        )
+      : this.collectionsService.getCollections(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        );
+
+    loadCollections$
       .pipe(
         tap(({ data }) => dispatch(new SetCollectionsByIds(data))),
         tap(({ data, meta }) => {
