@@ -18,18 +18,34 @@
 
       <ng-container *ngFor="let header of headers">
         <ng-container *ngIf="header.sortBy; else headerWithoutSortTpl">
-          <th [nzColumnKey]="header.propertyName" [nzSortFn]="true">
+          <th
+            [nzColumnKey]="header.propertyName"
+            [nzSortFn]="true"
+            nzCustomFilter
+          >
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
             >
             </ng-container>
+            <ng-container *ngIf="header.searchBy">
+              <ng-container
+                *ngTemplateOutlet="headerSearchTpl; context: { header: header }"
+              >
+              </ng-container>
+            </ng-container>
           </th>
         </ng-container>
         <ng-template #headerWithoutSortTpl>
-          <th [nzColumnKey]="header.propertyName">
+          <th [nzColumnKey]="header.propertyName" nzCustomFilter>
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
             >
+            </ng-container>
+            <ng-container *ngIf="header.searchBy">
+              <ng-container
+                *ngTemplateOutlet="headerSearchTpl; context: { header: header }"
+              >
+              </ng-container>
             </ng-container>
           </th>
         </ng-template>
@@ -97,4 +113,45 @@
   <ng-template #headerNameTpl>
     {{ header.headerName }}
   </ng-template>
+</ng-template>
+
+<ng-template #headerSearchTpl let-header="header">
+  <nz-filter-trigger
+    [(nzVisible)]="search[header.propertyName].isVisible"
+    [nzActive]="!!search[header.propertyName].value"
+    [nzDropdownMenu]="searchMenu"
+  >
+    <i nz-icon nzType="search"></i>
+  </nz-filter-trigger>
+
+  <nz-dropdown-menu #searchMenu="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <label>
+          <input
+            type="text"
+            nz-input
+            [placeholder]="'Search ' + header.headerName"
+            [(ngModel)]="search[header.propertyName].value"
+          />
+        </label>
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="searchChanged($event)"
+          class="search-button"
+        >
+          Search
+        </button>
+        <button
+          nz-button
+          nzSize="small"
+          (click)="searchReset($event, header.propertyName)"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
 </ng-template>

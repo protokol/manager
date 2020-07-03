@@ -1,8 +1,25 @@
 <nz-space nzDirection="vertical" nzSize="middle">
   <nz-space-item>
-    <button nz-button nzType="primary" (click)="showAddCollectionModal($event)">
-      Add Collection
-    </button>
+    <div class="top-header">
+      <button
+        nz-button
+        nzType="primary"
+        (click)="showAddCollectionModal($event)"
+      >
+        Add Collection
+      </button>
+      <nz-form-control [nzSpan]="4">
+        <nz-input-group nzPrefixIcon="search">
+          <input
+            type="text"
+            nz-input
+            placeholder="Search..."
+            [ngModel]="searchTerm$ | async"
+            (ngModelChange)="searchTerm$.next($event)"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </div>
   </nz-space-item>
   <nz-space-item>
     <app-table

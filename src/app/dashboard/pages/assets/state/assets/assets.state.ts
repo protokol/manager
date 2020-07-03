@@ -129,8 +129,19 @@ export class AssetsState {
     { patchState, dispatch }: StateContext<AssetsStateModel>,
     { tableQueryParams, options: { withCollection } }: LoadAssets
   ) {
-    this.assetsService
-      .getAssets(TableUtils.toAllCollectionQuery(tableQueryParams))
+    const hasFilters =
+      tableQueryParams &&
+      tableQueryParams.filter &&
+      tableQueryParams.filter.length;
+    const loadAssets$ = hasFilters
+      ? this.assetsService.searchAssets(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        )
+      : this.assetsService.getAssets(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        );
+
+    loadAssets$
       .pipe(
         tap(({ data }) => dispatch(new SetAssetsByIds(data))),
         tap(({ data, meta }) => {

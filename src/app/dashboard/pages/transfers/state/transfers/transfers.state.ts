@@ -70,7 +70,7 @@ export class TransfersState {
     { tableQueryParams }: LoadTransfers
   ) {
     this.transfersService
-      .getTransfers(TableUtils.toAllCollectionQuery(tableQueryParams))
+      .getTransfers(TableUtils.toTableApiQuery(tableQueryParams))
       .pipe(
         tap(({ data }) => dispatch(new SetTransfersByIds(data))),
         tap(({ data, meta }) => {

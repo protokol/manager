@@ -1,6 +1,6 @@
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { NzTableSortOrder } from 'ng-zorro-antd/table/src/table.types';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { TableApiQuery } from '@shared/interfaces/table.types';
 
 export abstract class TableUtils {
   static toApiSortOrder(tableSortOrder: NzTableSortOrder) {
@@ -13,10 +13,8 @@ export abstract class TableUtils {
     }
   }
 
-  static toAllCollectionQuery(
-    tableQueryParams?: NzTableQueryParams
-  ): BaseResourcesTypes.AllCollectionsQuery {
-    const { pageSize, pageIndex, sort } = tableQueryParams || {
+  static toTableApiQuery(tableQueryParams?: NzTableQueryParams): TableApiQuery {
+    const { pageSize, pageIndex, sort, filter } = tableQueryParams || {
       pageIndex: 0,
       pageSize: 100,
     };
@@ -32,7 +30,18 @@ export abstract class TableUtils {
         limit: pageSize,
         page: pageIndex + 1,
       },
-      sortField ? { orderBy: `${sortField}:${sortOrder}` } : {}
+      sortField ? { orderBy: `${sortField}:${sortOrder}` } : {},
+      filter && filter.length
+        ? {
+            filters: filter.reduce(
+              (acc, curr) => ({
+                ...acc,
+                [curr.key]: curr.value,
+              }),
+              {}
+            ),
+          }
+        : {}
     );
   }
 }
