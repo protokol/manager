@@ -74,14 +74,20 @@ export class AssetsState {
         }
 
         return assetIds.map((cId) => {
+          const asset = assets[cId];
+          if (!asset) {
+            return null;
+          }
           if (withCollection) {
-            const { collectionId } = assets[cId] || {};
-            return Object.assign({}, assets[cId], {
-              collection: collectionId ? collections[collectionId] : undefined,
+            const { collectionId } = asset;
+            return Object.assign({}, asset, {
+              collection: collections.hasOwnProperty(collectionId)
+                ? collections[collectionId]
+                : null,
             });
           }
 
-          return assets[cId];
+          return asset;
         });
       }
     );
