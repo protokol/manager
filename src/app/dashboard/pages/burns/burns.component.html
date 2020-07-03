@@ -1,0 +1,26 @@
+<app-table
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="paginationChange($event)"
+>
+</app-table>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsTpl let-row="row">
+  <ng-container *ngIf="row.nftBurn && row.nftBurn.nftId as nftId">
+    <app-text-clipper
+      [copy]="false"
+      (clicked)="onAssetClick(nftId)"
+      [text]="nftId"
+    ></app-text-clipper>
+  </ng-container>
+</ng-template>

@@ -18,6 +18,7 @@ import { AssetsService } from '@core/services/assets.service';
 import { CollectionsService } from '@core/services/collections.service';
 import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-library.module';
 import { TransfersService } from '@core/services/transfers.service';
+import { BurnsService } from '@core/services/burns.service';
 
 @NgModule({
   declarations: [],
@@ -46,6 +47,7 @@ import { TransfersService } from '@core/services/transfers.service';
     AssetsService,
     CollectionsService,
     TransfersService,
+    BurnsService,
     WalletService,
     StoreUtilsService,
     HasProfileGuard,
