@@ -8,9 +8,10 @@ import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NodeClientService } from '@core/services/node-client.service';
 import { Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
+import { CollectionsServiceInterface } from '@core/interfaces/collections-service.interface';
 
 @Injectable()
-export class CollectionsService {
+export class CollectionsService implements CollectionsServiceInterface {
   readonly log = new Logger(this.constructor.name);
 
   constructor(private store: Store) {}
