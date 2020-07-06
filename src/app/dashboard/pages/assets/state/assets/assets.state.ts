@@ -27,7 +27,7 @@ import {
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetsService } from '@core/services/assets.service';
 
-interface AssetsStateModel {
+export interface AssetsStateModel {
   assetsIds: string[];
   assets: { [name: string]: BaseResourcesTypes.Assets };
   meta: PaginationMeta | null;
@@ -61,7 +61,7 @@ export class AssetsState {
 
   static getAssetsByIds(
     assetIds: string[],
-    { withCollection }: AssetLoadOptions
+    { withCollection }: AssetLoadOptions = { withCollection: false }
   ) {
     return createSelector(
       [AssetsState, CollectionsState],

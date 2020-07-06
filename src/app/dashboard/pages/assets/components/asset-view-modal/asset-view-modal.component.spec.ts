@@ -1,19 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 
-import { CollectionsViewModalComponent } from './collections-view-modal.component';
-
-describe('CollectionsViewModalComponent', () => {
-  let component: CollectionsViewModalComponent;
-  let fixture: ComponentFixture<CollectionsViewModalComponent>;
+describe('AssetViewModalComponent', () => {
+  let component: AssetViewModalComponent;
+  let fixture: ComponentFixture<AssetViewModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CollectionsViewModalComponent],
+      declarations: [AssetViewModalComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CollectionsViewModalComponent);
+    fixture = TestBed.createComponent(AssetViewModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

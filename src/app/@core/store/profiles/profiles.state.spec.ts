@@ -6,14 +6,14 @@ import {
   AddProfileAction,
   RemoveProfileAction,
 } from '@core/store/profiles/profiles.actions';
-import { WalletService } from '@core/services/wallet.service';
-import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { Bip38Service } from '@core/services/bip38.service';
+import { of } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 
 describe('Profiles', () => {
   let store: Store;
-  let walletService: WalletService;
-  let spy: any;
+  let bip38Service: Bip38Service;
   const profileIdFixture = uuid();
   const passphraseFixture =
     'private chase figure ribbon verify ginger fitness fee keep budget test hero';
@@ -42,16 +42,16 @@ describe('Profiles', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([ProfilesState])],
-      providers: [WalletService],
+      providers: [Bip38Service],
     });
 
     store = TestBed.inject(Store);
-    walletService = TestBed.inject(WalletService);
+    bip38Service = TestBed.inject(Bip38Service);
   });
 
   it('should add profile', async () => {
-    spy = spyOn(walletService, 'encrypt').and.returnValue(
-      profileFixture.encodedPassphrase
+    spyOn(bip38Service, 'encrypt').and.returnValue(
+      of(profileFixture.encodedPassphrase)
     );
 
     await store

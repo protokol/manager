@@ -5,12 +5,12 @@ import { of } from 'rxjs';
 import { SetNetwork } from '@core/store/network/networks.actions';
 import { WalletService } from '@core/services/wallet.service';
 import { NetworksState } from '@core/store/network/networks.state';
+import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 
 describe('Networks', () => {
   let store: Store;
   let nodeClientService: NodeClientService;
   const baseUrlFixture = 'http://localhost:4003';
-  let spy: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,11 +25,10 @@ describe('Networks', () => {
   it('should set network and load crypto', () => {
     const nodeCryptoConfiguration = {
       network: { wif: 10, name: '4382984398' },
-    } as any;
-    spy = spyOn(
-      nodeClientService,
-      'getNodeCryptoConfiguration'
-    ).and.returnValue(of(nodeCryptoConfiguration));
+    } as Partial<NodeCryptoConfiguration> & any;
+    spyOn(nodeClientService, 'getNodeCryptoConfiguration').and.returnValue(
+      of(nodeCryptoConfiguration)
+    );
 
     store.dispatch(new SetNetwork(baseUrlFixture));
 
