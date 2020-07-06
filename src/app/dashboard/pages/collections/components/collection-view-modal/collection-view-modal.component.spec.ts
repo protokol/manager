@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CollectionViewModalComponent } from './collections-view-modal.component';
+import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
 
 describe('CollectionsViewModalComponent', () => {
   let component: CollectionViewModalComponent;
