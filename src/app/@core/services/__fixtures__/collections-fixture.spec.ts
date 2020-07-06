@@ -1,6 +1,5 @@
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { v4 as uuid } from 'uuid';
-import { PaginationMeta } from '@shared/interfaces/table.types';
 
 const collectionFixture: BaseResourcesTypes.Collections = {
   id: uuid(),
@@ -35,18 +34,6 @@ const getCollectionsFixture = (
   return Array.from({ length }, () => getCollectionFixture());
 };
 
-const getMetaFixture = (length: number = 100): PaginationMeta => ({
-  totalCountIsEstimate: false,
-  self: '',
-  previous: undefined,
-  next: undefined,
-  last: '',
-  first: '',
-  count: length,
-  totalCount: length,
-  pageCount: length,
-});
-
 const collectionsFixture = getCollectionsFixture();
 
 export {
@@ -54,5 +41,4 @@ export {
   collectionsFixture,
   getCollectionFixture,
   getCollectionsFixture,
-  getMetaFixture,
 };

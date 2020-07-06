@@ -6,8 +6,8 @@ import { CollectionsServiceInterface } from '@core/interfaces/collections-servic
 import {
   collectionsFixture,
   getCollectionFixture,
-  getMetaFixture,
 } from '@core/services/__fixtures__/collections-fixture.spec';
+import { getMetaFixture } from '@core/services/__fixtures__/base-fixture.spec';
 
 @Injectable()
 export class CollectionsServiceMock implements CollectionsServiceInterface {

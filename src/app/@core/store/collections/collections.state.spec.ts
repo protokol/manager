@@ -15,8 +15,8 @@ import { CollectionsServiceMock } from '@core/services/__mocks__/collections-ser
 import {
   collectionsFixture,
   getCollectionFixture,
-  getMetaFixture,
 } from '@app/@core/services/__fixtures__/collections-fixture.spec';
+import { getMetaFixture } from '@app/@core/services/__fixtures__/base-fixture.spec';
 
 describe('Collections', () => {
   let store: Store;
@@ -97,7 +97,7 @@ describe('Collections', () => {
     expect(meta).toEqual(metaFixture);
   });
 
-  it('should select meta', () => {
+  it('should select collections by ids', () => {
     const collectionsArrayFixture = [
       getCollectionFixture(uuid()),
       getCollectionFixture(uuid()),

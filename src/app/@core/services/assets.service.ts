@@ -8,9 +8,10 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
+import { AssetsServiceInterface } from '@core/interfaces/assets-service.interface';
 
 @Injectable()
-export class AssetsService {
+export class AssetsService implements AssetsServiceInterface {
   readonly log = new Logger(this.constructor.name);
 
   constructor(private store: Store) {}
