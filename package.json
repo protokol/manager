@@ -12,7 +12,7 @@
 	"license": "CC BY-NC-SA 4.0",
 	"version": "0.0.0",
 	"scripts": {
-    "postinstall": "electron-builder install-app-deps && npm run prettier -s",
+    "postinstall": "electron-builder install-app-deps",
 		"ng": "ng",
 		"start": "npm-run-all -p electron:serve ng:serve",
 		"build": "npm run electron:serve-tsc && ng build --base-href ./",
