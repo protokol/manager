@@ -9,6 +9,7 @@ import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { AssetsServiceInterface } from '@core/interfaces/assets-service.interface';
+import { AssetsWallet } from '@protokol/nft-client/dist/resourcesTypes/base/assets';
 
 @Injectable()
 export class AssetsService implements AssetsServiceInterface {
@@ -69,6 +70,21 @@ export class AssetsService implements AssetsServiceInterface {
     ).pipe(
       NodeClientService.genericListErrorHandler(this.log),
       map((response) => response.body)
+    );
+  }
+
+  getAssetOwner(
+    assetId: string,
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<AssetsWallet> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTBaseApi('assets')
+        .wallet(assetId)
+    ).pipe(
+      NodeClientService.genericListErrorHandler(this.log),
+      map((response) => response.body.data)
     );
   }
 }
