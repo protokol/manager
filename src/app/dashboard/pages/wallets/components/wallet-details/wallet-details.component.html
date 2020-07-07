@@ -1,0 +1,72 @@
+<ng-container *ngIf="wallet$ | async as wallet; else loading">
+  <nz-descriptions
+    [nzTitle]="walletTitle"
+    nzBordered
+    [nzColumn]="descriptionColumns"
+  >
+    <nz-descriptions-item nzTitle="Address">
+      <a nz-typography nzCopyable [nzCopyText]="wallet.address">{{
+        wallet.address
+      }}</a>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="PublicKey">
+      <a nz-typography nzCopyable [nzCopyText]="wallet.publicKey">{{
+        wallet.publicKey
+      }}</a>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Balance">{{
+      wallet.balance
+    }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Locked balance">
+      <ng-container *ngIf="wallet.lockedBalance; else noData">
+        {{ wallet.lockedBalance }}
+      </ng-container>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Nonce">
+      {{ wallet.nonce }}
+    </nz-descriptions-item>
+  </nz-descriptions>
+
+  <ng-container *ngIf="wallet.isDelegate">
+    <nz-divider nzText="Delegate"></nz-divider>
+
+    <nz-descriptions nzBordered [nzColumn]="descriptionColumns">
+      <nz-descriptions-item nzTitle="Username">
+        <ng-container
+          *ngIf="wallet.attributes?.delegate?.username; else noData"
+        >
+          {{ wallet.attributes.delegate.username }}
+        </ng-container>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Rank">
+        <ng-container *ngIf="wallet.attributes?.delegate?.rank; else noData">
+          {{ wallet.attributes.delegate.rank }}
+        </ng-container>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Forged Fees">
+        <ng-container
+          *ngIf="wallet.attributes?.delegate?.forgedFees; else noData"
+        >
+          {{ wallet.attributes.delegate.forgedFees }}
+        </ng-container>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Forged Rewards">
+        <ng-container
+          *ngIf="wallet.attributes?.delegate?.forgedRewards; else noData"
+        >
+          {{ wallet.attributes.delegate.forgedRewards }}
+        </ng-container>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </ng-container>
+
+  <ng-template #walletTitle>
+    Wallet <a>{{ wallet.address }}</a> details
+  </ng-template>
+</ng-container>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>
+
+<ng-template #noData>--</ng-template>

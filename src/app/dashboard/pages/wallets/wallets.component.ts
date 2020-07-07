@@ -20,6 +20,7 @@ import { Logger } from '@app/@core/services/logger.service';
 import { WalletsState } from '@app/dashboard/pages/wallets/state/wallets/wallets.state';
 import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
 import { LoadWallets } from '@app/dashboard/pages/wallets/state/wallets/wallets.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wallets',
@@ -47,7 +48,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   rows$: Observable<Wallet[]> = of([]);
   tableColumns: TableColumnConfig<Wallet>[];
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit() {
     this.tableColumns = [
@@ -102,5 +103,9 @@ export class WalletsComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(new LoadWallets(params));
     }
+  }
+
+  onAddressClick(address: string) {
+    this.router.navigate(['/dashboard/wallets', address]);
   }
 }

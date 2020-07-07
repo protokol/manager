@@ -8,7 +8,11 @@
 </app-table>
 
 <ng-template #addressTpl let-row="row">
-  <app-text-clipper [text]="row.address"></app-text-clipper>
+  <app-text-clipper
+    [text]="row.address"
+    [copy]="false"
+    (clicked)="onAddressClick(row.address)"
+  ></app-text-clipper>
 </ng-template>
 
 <ng-template #publicKeyTpl let-row="row">

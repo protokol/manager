@@ -3,6 +3,12 @@ import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
 
 export const WALLETS_TYPE_NAME = 'wallets';
 
+export class LoadWallet {
+  static type = `[${WALLETS_TYPE_NAME}] LoadWallet`;
+
+  constructor(public walletId: string) {}
+}
+
 export class LoadWallets {
   static type = `[${WALLETS_TYPE_NAME}] LoadWallets`;
 
