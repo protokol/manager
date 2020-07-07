@@ -29,6 +29,7 @@ import { BaseResourcesTypes } from '@protokol/nft-client';
 import { CollectionCreateModalComponent } from '@app/dashboard/pages/collections/components/collection-create-modal/collection-create-modal.component';
 import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
 import { Logger } from '@core/services/logger.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-collections',
@@ -61,7 +62,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
 
-  constructor(private store: Store, private nzModalService: NzModalService) {}
+  constructor(
+    private store: Store,
+    private nzModalService: NzModalService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.tableColumns = [
@@ -173,6 +178,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       nzTitle: 'Create new collection',
       nzContent: CollectionCreateModalComponent,
       nzWidth: '75vw',
+    });
+  }
+
+  onWalletDetailsClick(addressOrPublicKey: string, collectionId: string) {
+    this.router.navigate(['/dashboard/wallets', addressOrPublicKey], {
+      queryParams: {
+        collectionId,
+      },
     });
   }
 }

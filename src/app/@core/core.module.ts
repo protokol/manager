@@ -20,12 +20,13 @@ import { AjsfWidgetLibraryModule } from '@app/ajsf-widget-library/ajsf-widget-li
 import { TransfersService } from '@core/services/transfers.service';
 import { BurnsService } from '@core/services/burns.service';
 import { WalletsService } from '@core/services/wallets.service';
+import { WalletsState } from '@core/store/wallets/wallets.state';
 
 @NgModule({
   declarations: [],
   imports: [
     NgxsModule.forRoot(
-      [ProfilesState, NetworksState, PinsState, CollectionsState],
+      [ProfilesState, NetworksState, PinsState, CollectionsState, WalletsState],
       {
         developmentMode: !environment.production,
       }

@@ -31,7 +31,7 @@ import { Logger } from '@app/@core/services/logger.service';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 import { TextUtils } from '@core/utils/text-utils';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-assets',
@@ -61,7 +61,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     row: AssetWithCollection;
   }>;
 
-  isLoading$ = new BehaviorSubject(false);
+  isLoading$ = new BehaviorSubject(true);
 
   rows$: Observable<AssetWithCollection[]> = of([]);
   tableColumns: TableColumnConfig<AssetWithCollection>[];
@@ -69,7 +69,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private nzModalService: NzModalService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -173,5 +174,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(new LoadAssets(params));
     }
+  }
+
+  onWalletDetailsClick(addressOrPublicKey: string, assetId: string) {
+    this.router.navigate(['/dashboard/wallets', addressOrPublicKey], {
+      queryParams: {
+        assetId,
+      },
+    });
   }
 }

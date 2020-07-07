@@ -8,7 +8,13 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import {
@@ -17,9 +23,9 @@ import {
 } from '@app/@shared/interfaces/table.types';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
-import { WalletsState } from '@app/dashboard/pages/wallets/state/wallets/wallets.state';
+import { WalletsState } from '@app/@core/store/wallets/wallets.state';
 import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
-import { LoadWallets } from '@app/dashboard/pages/wallets/state/wallets/wallets.actions';
+import { LoadWallets } from '@app/@core/store/wallets/wallets.actions';
 import { Router } from '@angular/router';
 
 @Component({
@@ -81,6 +87,12 @@ export class WalletsComponent implements OnInit, OnDestroy {
       switchMap((walletIds) =>
         this.store.select(WalletsState.getWalletsByIds(walletIds))
       ),
+      map((wallets) =>
+        wallets.map((w) => {
+          const { wallet } = w || {};
+          return wallet;
+        })
+      ),
       tap(() => this.isLoading$.next(false))
     );
 
@@ -105,7 +117,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAddressClick(address: string) {
-    this.router.navigate(['/dashboard/wallets', address]);
+  onWalletDetailsClick(addressOrPublicKey: string) {
+    this.router.navigate(['/dashboard/wallets', addressOrPublicKey]);
   }
 }
