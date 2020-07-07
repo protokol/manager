@@ -13,6 +13,7 @@ import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
 import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
 import {
+  LoadWallet,
   LoadWallets,
   SetWalletsByIds,
   WALLETS_TYPE_NAME,
@@ -61,6 +62,38 @@ export class WalletsState {
     });
   }
 
+  @Action(LoadWallet)
+  loadWallet(
+    { getState, setState, dispatch }: StateContext<WalletsStateModel>,
+    { walletId }: LoadWallet
+  ) {
+    const wallet = getState().wallets[walletId];
+
+    if (!wallet && wallet !== null) {
+      setState(
+        patch({
+          wallets: patch({ [walletId]: null }),
+        })
+      );
+
+      this.walletsService
+        .getWallet(walletId)
+        .pipe(
+          tap(
+            (data) => dispatch(new SetWalletsByIds(data)),
+            () => {
+              setState(
+                patch({
+                  wallets: patch({ [walletId]: undefined }),
+                })
+              );
+            }
+          )
+        )
+        .subscribe();
+    }
+  }
+
   @Action(LoadWallets)
   loadWallets(
     { patchState, dispatch }: StateContext<WalletsStateModel>,
@@ -95,6 +128,7 @@ export class WalletsState {
           (acc, value) => ({
             ...acc,
             [value.publicKey]: value,
+            [value.address]: value,
           }),
           { ...getState().wallets }
         ),
