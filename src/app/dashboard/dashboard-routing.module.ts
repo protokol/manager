@@ -29,6 +29,11 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/burns/burns.module').then((m) => m.BurnsModule),
     },
+    {
+      path: 'wallets',
+      loadChildren: () =>
+        import('./pages/wallets/wallets.module').then((m) => m.WalletsModule),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];
