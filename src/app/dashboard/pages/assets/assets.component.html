@@ -8,7 +8,9 @@
 </app-table>
 
 <ng-template #actionsTpl let-row="row">
-  <a (click)="showAttributes($event, row)">Attributes</a>
+  <button nz-button nzType="default" (click)="showAttributes($event, row)">
+    Attributes
+  </button>
 </ng-template>
 
 <ng-template #idTpl let-row="row">

@@ -33,7 +33,9 @@
   </nz-space-item>
 </nz-space>
 <ng-template #actionsTpl let-row="row">
-  <a (click)="showJsonSchema($event, row)">Schema</a>
+  <button nz-button nzType="default" (click)="showJsonSchema($event, row)">
+    Schema
+  </button>
 </ng-template>
 
 <ng-template #idTpl let-row="row">
