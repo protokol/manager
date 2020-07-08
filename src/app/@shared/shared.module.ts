@@ -4,6 +4,7 @@ import { TableComponent } from './components/table/table.component';
 import {
   NzButtonModule,
   NzDropDownModule,
+  NzGridModule,
   NzIconModule,
   NzInputModule,
   NzMessageModule,
@@ -14,8 +15,15 @@ import {
 import { TextClipperComponent } from './components/text-clipper/text-clipper.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { FormsModule } from '@angular/forms';
+import { SchemaContainerComponent } from './components/schema-container/schema-container.component';
+import { SchemaContainerItemComponent } from './components/schema-container-item/schema-container-item.component';
 
-const declareAndExportComponents = [TableComponent, TextClipperComponent];
+const declareAndExportComponents = [
+  TableComponent,
+  TextClipperComponent,
+  SchemaContainerComponent,
+  SchemaContainerItemComponent,
+];
 
 @NgModule({
   imports: [
@@ -30,6 +38,7 @@ const declareAndExportComponents = [TableComponent, TextClipperComponent];
     NzInputModule,
     FormsModule,
     NzButtonModule,
+    NzGridModule,
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

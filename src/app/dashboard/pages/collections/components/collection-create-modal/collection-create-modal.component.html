@@ -48,15 +48,16 @@
 
   <nz-divider></nz-divider>
 
-  <div nz-row [nzGutter]="[24, 12]" class="view-modal">
-    <div nz-col [nzSpan]="12">
+  <app-schema-container>
+    <app-schema-container-item editor>
       <json-editor
+        class="json-schema-editor"
         [options]="editorOptions"
         [debug]="!isProduction"
         formControlName="jsonSchema"
       ></json-editor>
-    </div>
-    <div nz-col [nzSpan]="12">
+    </app-schema-container-item>
+    <app-schema-container-item form>
       <ng-container *ngIf="c('jsonSchema').valueChanges | async">
         <json-schema-form
           loadExternalAssets="true"
@@ -66,6 +67,6 @@
         >
         </json-schema-form>
       </ng-container>
-    </div>
-  </div>
+    </app-schema-container-item>
+  </app-schema-container>
 </form>
