@@ -12,12 +12,27 @@
 </ng-template>
 
 <ng-template #senderTpl let-row="row">
-  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+  <app-text-clipper
+    [copy]="false"
+    (clicked)="
+      onWalletDetailsClick(row.senderPublicKey, row.nftTransfer.nftIds[0])
+    "
+    [text]="row.senderPublicKey"
+  ></app-text-clipper>
 </ng-template>
 
 <ng-template #receiverTpl let-row="row">
   <ng-container *ngIf="row.nftTransfer && row.nftTransfer.recipientId">
-    <app-text-clipper [text]="row.nftTransfer.recipientId"></app-text-clipper>
+    <app-text-clipper
+      [copy]="false"
+      (clicked)="
+        onWalletDetailsClick(
+          row.nftTransfer.recipientId,
+          row.nftTransfer.nftIds[0]
+        )
+      "
+      [text]="row.nftTransfer.recipientId"
+    ></app-text-clipper>
   </ng-container>
 </ng-template>
 

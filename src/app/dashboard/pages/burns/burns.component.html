@@ -12,7 +12,11 @@
 </ng-template>
 
 <ng-template #senderTpl let-row="row">
-  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+  <app-text-clipper
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey, row.nftBurn.nftId)"
+    [text]="row.senderPublicKey"
+  ></app-text-clipper>
 </ng-template>
 
 <ng-template #assetsTpl let-row="row">
