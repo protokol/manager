@@ -1,8 +1,8 @@
-<div nz-row [nzGutter]="[24, 12]" class="view-modal">
-  <div nz-col [nzSpan]="12">
+<app-schema-container>
+  <app-schema-container-item editor>
     <json-editor [options]="editorOptions" [data]="jsonSchema"></json-editor>
-  </div>
-  <div nz-col [nzSpan]="12">
+  </app-schema-container-item>
+  <app-schema-container-item form>
     <fieldset [disabled]="true">
       <json-schema-form
         loadExternalAssets="true"
@@ -12,5 +12,5 @@
       >
       </json-schema-form>
     </fieldset>
-  </div>
-</div>
+  </app-schema-container-item>
+</app-schema-container>
