@@ -66,10 +66,36 @@
     </ng-template>
   </ng-container>
   <ng-container *ngIf="walletObj.collectionsWallet as collectionsWallet">
-    {{ collectionsWallet | json }}
+    <ng-container
+      *ngTemplateOutlet="
+        collectionsTable;
+        context: { collections: collectionsWallet.nft.collections }
+      "
+    >
+    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        assetsTable;
+        context: { assetsIds: collectionsWallet.nft.assetsIds }
+      "
+    >
+    </ng-container>
   </ng-container>
   <ng-container *ngIf="walletObj.assetsWallet as assetsWallet">
-    {{ assetsWallet | json }}
+    <ng-container
+      *ngTemplateOutlet="
+        collectionsTable;
+        context: { collections: assetsWallet.nft.collections }
+      "
+    >
+    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        assetsTable;
+        context: { assetsIds: assetsWallet.nft.assetsIds }
+      "
+    >
+    </ng-container>
   </ng-container>
 </ng-container>
 
@@ -78,3 +104,73 @@
 </ng-template>
 
 <ng-template #noData>--</ng-template>
+
+<ng-template #assetsTable let-assetsIds="assetsIds">
+  <nz-divider nzText="Assets"></nz-divider>
+
+  <ng-container *ngIf="getAssets(assetsIds) | async as assets">
+    <app-table
+      [rows]="assets"
+      [tableColumns]="assetsTableColumns"
+      scrollY="25vh"
+    >
+    </app-table>
+  </ng-container>
+</ng-template>
+
+<ng-template #assetsIdTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsCollectionIdTpl let-row="row">
+  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsOwnerTpl let-row="row">
+  <app-text-clipper
+    [text]="row.ownerPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.ownerPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsSenderTpl let-row="row">
+  <app-text-clipper
+    [text]="row.senderPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsActionsTpl let-row="row">
+  <a (click)="toAssetDetails($event, row)">Attributes</a>
+</ng-template>
+
+<ng-template #collectionsTable let-collections="collections">
+  <nz-divider nzText="Collections"></nz-divider>
+  <div class="collections-table">
+    <app-table
+      [rows]="collections"
+      [tableColumns]="collectionsTableColumns"
+      scrollY="25vh"
+      scrollX="hidden"
+    >
+    </app-table>
+  </div>
+</ng-template>
+
+<ng-template #collectionsIdTpl let-row="row">
+  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
+</ng-template>
+
+<ng-template #collectionsNameTpl let-row="row">
+  {{ row?.nftCollectionAsset?.name }}
+</ng-template>
+
+<ng-template #collectionsDescriptionTpl let-row="row">
+  {{ row?.nftCollectionAsset?.description }}
+</ng-template>
+
+<ng-template #collectionsMaxSupplyTpl let-row="row">
+  {{ row?.nftCollectionAsset?.maximumSupply }}
+</ng-template>
