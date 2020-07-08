@@ -1,7 +1,9 @@
 :host ::ng-deep {
   .collections-table {
+    /* stylelint-disable declaration-no-important */
     .ant-table-body {
       overflow-x: hidden !important;
     }
+    /* stylelint-enable declaration-no-important */
   }
 }
