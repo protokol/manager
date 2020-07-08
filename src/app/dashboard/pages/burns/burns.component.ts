@@ -104,4 +104,12 @@ export class BurnsComponent implements OnInit, OnDestroy {
   onAssetClick(nftId: string) {
     this.router.navigate(['/dashboard/assets', nftId]);
   }
+
+  onWalletDetailsClick(addressOrPublicKey: string, assetId: string) {
+    this.router.navigate(['/dashboard/wallets', addressOrPublicKey], {
+      queryParams: {
+        assetId,
+      },
+    });
+  }
 }
