@@ -21,6 +21,14 @@
 
 <ng-template #ownerTpl let-row="row">
   <app-text-clipper
+    [text]="row.ownerPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.ownerPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper
     [text]="row.senderPublicKey"
     [copy]="false"
     (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"

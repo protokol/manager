@@ -1,17 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { Store, NgxsModule } from '@ngxs/store';
 import { v4 as uuid } from 'uuid';
-import {
-  AssetsState,
-  AssetsStateModel,
-} from '@app/dashboard/pages/assets/state/assets/assets.state';
+import { AssetsState, AssetsStateModel } from '@core/store/assets/assets.state';
 import { AssetsService } from '@core/services/assets.service';
 import { AssetsServiceMock } from '@core/services/__mocks__/assets-service-mock.spec';
 import {
   ASSETS_TYPE_NAME,
   LoadAsset,
   LoadAssets,
-} from '@app/dashboard/pages/assets/state/assets/assets.actions';
+} from '@core/store/assets/assets.actions';
 import {
   assetsFixture,
   getAssetFixture,

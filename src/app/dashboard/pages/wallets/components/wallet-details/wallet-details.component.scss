@@ -1,0 +1,7 @@
+:host ::ng-deep {
+  .collections-table {
+    .ant-table-body {
+      overflow-x: hidden !important;
+    }
+  }
+}

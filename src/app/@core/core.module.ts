@@ -21,12 +21,20 @@ import { TransfersService } from '@core/services/transfers.service';
 import { BurnsService } from '@core/services/burns.service';
 import { WalletsService } from '@core/services/wallets.service';
 import { WalletsState } from '@core/store/wallets/wallets.state';
+import { AssetsState } from '@core/store/assets/assets.state';
 
 @NgModule({
   declarations: [],
   imports: [
     NgxsModule.forRoot(
-      [ProfilesState, NetworksState, PinsState, CollectionsState, WalletsState],
+      [
+        ProfilesState,
+        NetworksState,
+        PinsState,
+        CollectionsState,
+        WalletsState,
+        AssetsState,
+      ],
       {
         developmentMode: !environment.production,
       }

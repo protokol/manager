@@ -68,7 +68,7 @@ export class AssetsState {
       (
         { assets }: AssetsStateModel,
         { collections }: CollectionsStateModel
-      ): AssetWithCollection[] => {
+      ): AssetWithCollection[] | BaseResourcesTypes.Assets[] => {
         if (!assetIds.length) {
           return [];
         }

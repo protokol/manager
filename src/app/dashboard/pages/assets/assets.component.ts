@@ -22,11 +22,8 @@ import {
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
-import { AssetsState } from '@app/dashboard/pages/assets/state/assets/assets.state';
-import {
-  LoadAsset,
-  LoadAssets,
-} from '@app/dashboard/pages/assets/state/assets/assets.actions';
+import { AssetsState } from '@app/@core/store/assets/assets.state';
+import { LoadAsset, LoadAssets } from '@app/@core/store/assets/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
 import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asset.types';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
@@ -60,6 +57,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
   @ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
     row: AssetWithCollection;
   }>;
+  @ViewChild('senderTpl', { static: true }) senderTpl!: TemplateRef<{
+    row: AssetWithCollection;
+  }>;
 
   isLoading$ = new BehaviorSubject(true);
 
@@ -89,6 +89,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
       {
         propertyName: 'ownerPublicKey',
         headerName: 'Owner',
+        columnTransformTpl: this.ownerTpl,
+      },
+      {
+        propertyName: 'senderPublicKey',
+        headerName: 'Sender',
         columnTransformTpl: this.ownerTpl,
       },
       {
