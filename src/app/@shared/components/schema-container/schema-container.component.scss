@@ -17,9 +17,7 @@ $container-height: 500px;
   .jsoneditor-tree-inner {
     height: calc(#{$container-height} - 80px);
   }
-}
 
-:host ::ng-deep {
   json-editor {
     > div {
       position: sticky;
