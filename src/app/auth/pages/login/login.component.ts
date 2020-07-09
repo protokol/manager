@@ -1,24 +1,25 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  ProfilesState,
-  ProfileWithId,
-} from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { StoreUtilsService } from '@app/@core/store/store-utils.service';
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { finalize, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, map, tap } from 'rxjs/operators';
 import { AddPinAction } from '@core/store/pins/pins.actions';
+import { ProfilesState } from '@core/store/profiles/profiles.state';
+import { ProfileWithId } from '@core/interfaces/profiles.types';
+import { untilDestroyed } from '@core/until-destroyed';
+import { ClearNetwork, SetNetwork } from '@core/store/network/networks.actions';
+import { FormUtils } from '@core/utils/form-utils';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   error?: string;
   isLoading: boolean;
@@ -36,13 +37,18 @@ export class LoginComponent implements OnDestroy {
     private storeUtilsService: StoreUtilsService
   ) {
     this.createForm();
+    this.registerFormListeners();
+  }
+
+  ngOnInit(): void {
+    this.store.dispatch(new ClearNetwork());
   }
 
   addProfile(cryptoConfig: NodeCryptoConfiguration) {
     this.isFormDirty = false;
 
     if (!this.profileForm.valid) {
-      this.profileForm.markAllAsTouched();
+      FormUtils.markFormGroupTouched(this.profileForm);
       this.isFormDirty = true;
       return;
     }
@@ -76,6 +82,26 @@ export class LoginComponent implements OnDestroy {
       profileId: ['', Validators.required],
       pin: ['', Validators.required],
     });
+  }
+
+  private registerFormListeners() {
+    this.profileForm.controls.profileId.valueChanges
+      .pipe(
+        untilDestroyed(this),
+        map((profileId) => {
+          const { nodeBaseUrl } = this.store.selectSnapshot(
+            ProfilesState.getProfileById(profileId)
+          );
+          return nodeBaseUrl;
+        }),
+        distinctUntilChanged(),
+        tap((baseUrl) => {
+          this.store.dispatch(
+            new SetNetwork(baseUrl || 'http://nft.protokol.com:4003')
+          );
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {}

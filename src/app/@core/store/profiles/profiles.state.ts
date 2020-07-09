@@ -15,15 +15,7 @@ import { Injectable } from '@angular/core';
 import { AddPinAction } from '@core/store/pins/pins.actions';
 import { Bip38Service } from '@core/services/bip38.service';
 import { tap } from 'rxjs/operators';
-
-export interface Profile {
-  profileName: string;
-  encodedPassphrase: string;
-}
-
-export interface ProfileWithId extends Profile {
-  id: string;
-}
+import { Profile, ProfileWithId } from '@core/interfaces/profiles.types';
 
 export interface ProfilesStateModel {
   profiles: { [profileId: string]: Profile };
@@ -82,7 +74,7 @@ export class ProfilesState {
     }: AddProfileAction
   ) {
     return this.bip38Service.encrypt(passphrase, pin, cryptoConfig).pipe(
-      tap((encodedPassphrase) => {
+      tap((encodedWif) => {
         patchState(
           Object.assign(
             {
@@ -90,7 +82,7 @@ export class ProfilesState {
                 ...getState().profiles,
                 [profileId]: {
                   profileName,
-                  encodedPassphrase,
+                  encodedWif,
                 },
               },
             },

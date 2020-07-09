@@ -79,8 +79,8 @@ export class NodeClientService {
         .api('node')
         .crypto()
     ).pipe(
-      NodeClientService.genericErrorHandler(this.log),
-      map((response) => response.body.data)
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
     );
   }
 }

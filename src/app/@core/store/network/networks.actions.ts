@@ -5,3 +5,9 @@ export class SetNetwork {
 
   constructor(public baseUrl: string) {}
 }
+
+export class ClearNetwork {
+  static type = `[${NETWORKS_TYPE_NAME}] ClearNetwork`;
+
+  constructor() {}
+}

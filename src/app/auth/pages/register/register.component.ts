@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,13 +7,10 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {
-  ProfilesState,
-  ProfileWithId,
-} from '@core/store/profiles/profiles.state';
+import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { finalize, first, map } from 'rxjs/operators';
+import { finalize, first, map, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { AddProfileAction } from '@core/store/profiles/profiles.actions';
 import { v4 as uuid } from 'uuid';
@@ -25,21 +22,34 @@ import {
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { PinsState } from '@core/store/pins/pins.state';
+import { RegisterNetworkEnum } from '@app/auth/interfaces/register.types';
+import { environment } from '@env/environment';
+import { ClearNetwork, SetNetwork } from '@core/store/network/networks.actions';
+import { FormUtils } from '@core/utils/form-utils';
+import { ProfileWithId } from '@app/@core/interfaces/profiles.types';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent implements OnInit, OnDestroy {
+  networks = environment.networks;
+  RegisterNetworkEnum = RegisterNetworkEnum;
+
+  currentStepIndex = 0;
+  networkForm!: FormGroup;
   profileForm!: FormGroup;
   error?: string;
   isLoading: boolean;
-  isFormDirty = false;
+  isProfileFormDirty = false;
+  isNetworkFormDirty = false;
 
   @Select(ProfilesState.getProfiles) profiles$: Observable<ProfileWithId[]>;
   @Select(NetworksState.getNodeCryptoConfig)
   cryptoConfig$: Observable<NodeCryptoConfiguration | null>;
+  @Select(NetworksState.getIsValidNetwork)
+  validNetwork$: Observable<boolean | null>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,15 +57,20 @@ export class RegisterComponent implements OnDestroy {
     private store: Store,
     private walletService: WalletService
   ) {
-    this.createForm();
+    this.createForms();
+    this.registerFormListeners();
+  }
+
+  ngOnInit(): void {
+    this.store.dispatch(new ClearNetwork());
   }
 
   addProfile(networkConfig: NodeCryptoConfiguration['network']) {
-    this.isFormDirty = false;
+    this.isProfileFormDirty = false;
 
     if (!this.profileForm.valid) {
-      this.profileForm.markAllAsTouched();
-      this.isFormDirty = true;
+      FormUtils.markFormGroupTouched(this.profileForm);
+      this.isProfileFormDirty = true;
       return;
     }
 
@@ -78,6 +93,7 @@ export class RegisterComponent implements OnDestroy {
         {
           profileName,
           passphrase,
+          nodeBaseUrl: this.store.selectSnapshot(NetworksState.getBaseUrl),
         },
         pin,
         networkConfig,
@@ -110,14 +126,21 @@ export class RegisterComponent implements OnDestroy {
   pinValidator = (control: FormControl): ValidationErrors | null => {
     if (!control.value) {
       return { required: true };
-    } else if (control.value !== this.c('pin').value) {
+    } else if (control.value !== this.pf('pin').value) {
       return { confirm: true, error: true };
     }
     return null;
     // tslint:disable-next-line:semicolon
   };
 
-  private createForm() {
+  private createForms() {
+    this.networkForm = this.formBuilder.group({
+      networkUrl: ['', [Validators.required]],
+      customNetworkUrl: ['', []],
+      customNetworkUrlProtocol: ['http://', []],
+      networkType: [RegisterNetworkEnum.Predefined, [Validators.required]],
+    });
+
     this.profileForm = this.formBuilder.group({
       profileName: [
         '',
@@ -132,7 +155,30 @@ export class RegisterComponent implements OnDestroy {
     });
   }
 
-  c(controlName: string): AbstractControl {
+  private registerFormListeners() {
+    this.nf('networkType')
+      .valueChanges.pipe(
+        untilDestroyed(this),
+        tap((networkType: RegisterNetworkEnum) => {
+          if (networkType === RegisterNetworkEnum.Custom) {
+            this.nf('customNetworkUrl').setValidators(Validators.required);
+            this.nf('networkUrl').clearValidators();
+          } else if (networkType === RegisterNetworkEnum.Predefined) {
+            this.nf('networkUrl').setValidators(Validators.required);
+            this.nf('customNetworkUrl').clearValidators();
+          }
+          this.nf('networkUrl').updateValueAndValidity();
+          this.nf('customNetworkUrl').updateValueAndValidity();
+        })
+      )
+      .subscribe();
+  }
+
+  nf(controlName: string): AbstractControl {
+    return this.networkForm.controls[controlName];
+  }
+
+  pf(controlName: string): AbstractControl {
     return this.profileForm.controls[controlName];
   }
 
@@ -145,7 +191,74 @@ export class RegisterComponent implements OnDestroy {
       MnemonicGenerateLanguage.ENGLISH
     );
 
-    this.c('passphrase').setValue(passphrase);
-    this.c('address').setValue(address);
+    this.pf('passphrase').setValue(passphrase);
+    this.pf('address').setValue(address);
+  }
+
+  selectNetwork() {
+    if (this.isLoading) {
+      return;
+    }
+
+    this.isNetworkFormDirty = false;
+
+    if (!this.networkForm.valid) {
+      FormUtils.markFormGroupTouched(this.networkForm);
+      this.isNetworkFormDirty = true;
+      return;
+    }
+
+    this.store.dispatch(new ClearNetwork());
+    this.isLoading = true;
+
+    const getNetworkUrl = () => {
+      const { networkType } = this.networkForm.value;
+      switch (networkType) {
+        case RegisterNetworkEnum.Predefined: {
+          const { networkUrl } = this.networkForm.value;
+          return networkUrl;
+        }
+        case RegisterNetworkEnum.Custom:
+        default: {
+          const {
+            customNetworkUrl,
+            customNetworkUrlProtocol,
+          } = this.networkForm.value;
+          return `${customNetworkUrlProtocol}${customNetworkUrl}`;
+        }
+      }
+    };
+
+    const nodeUrl = getNetworkUrl();
+
+    this.store
+      .select(NetworksState.getIsValidNetwork)
+      .pipe(
+        untilDestroyed(this),
+        first(
+          (isValidNetwork) =>
+            isValidNetwork === true || isValidNetwork === false
+        ),
+        tap((isValidNetwork) => {
+          if (isValidNetwork) {
+            this.currentStepIndex = 1;
+          }
+          this.isLoading = false;
+        })
+      )
+      .subscribe();
+
+    this.store.dispatch(new SetNetwork(nodeUrl));
+  }
+
+  getNetworkLabel(network: typeof environment.networks[0]) {
+    return `${network.label} (${network.value})`;
+  }
+
+  goToNetworkStep(event: MouseEvent) {
+    event.preventDefault();
+
+    this.store.dispatch(new ClearNetwork());
+    this.currentStepIndex = 0;
   }
 }

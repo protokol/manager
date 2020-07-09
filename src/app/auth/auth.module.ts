@@ -8,12 +8,16 @@ import {
   NzButtonModule,
   NzCheckboxModule,
   NzFormModule,
+  NzIconModule,
   NzInputModule,
+  NzRadioModule,
   NzSelectModule,
   NzSpinModule,
+  NzStepsModule,
   NzTypographyModule,
 } from 'ng-zorro-antd';
 import { RegisterComponent } from '@app/auth/pages/register/register.component';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
@@ -29,6 +33,10 @@ import { RegisterComponent } from '@app/auth/pages/register/register.component';
     NzAlertModule,
     NzSpinModule,
     NzSelectModule,
+    NzStepsModule,
+    NzRadioModule,
+    NzIconModule,
+    NgLetModule,
   ],
 })
 export class AuthModule {}

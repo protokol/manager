@@ -3,19 +3,23 @@ import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import {
+  ClearNetwork,
   NETWORKS_TYPE_NAME,
   SetNetwork,
 } from '@core/store/network/networks.actions';
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
+import { NetworkUtils } from '@core/utils/network-utils';
 
 interface NetworksStateModel {
   baseUrl: string | null;
+  isValidNetwork: boolean | null;
   nodeCryptoConfiguration: NodeCryptoConfiguration | null;
 }
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   baseUrl: null,
+  isValidNetwork: null,
   nodeCryptoConfiguration: null,
 };
 
@@ -32,6 +36,11 @@ export class NetworksState {
   @Selector()
   static getBaseUrl({ baseUrl }: NetworksStateModel) {
     return baseUrl;
+  }
+
+  @Selector()
+  static getIsValidNetwork({ isValidNetwork }: NetworksStateModel) {
+    return isValidNetwork;
   }
 
   @Selector()
@@ -52,12 +61,35 @@ export class NetworksState {
     this.nodeClientService
       .getNodeCryptoConfiguration(baseUrl)
       .pipe(
-        tap((nodeCryptoConfiguration) => {
-          patchState({
-            nodeCryptoConfiguration,
-          });
-        })
+        tap(
+          (nodeCryptoConfiguration) => {
+            if (
+              NetworkUtils.isNodeCryptoConfiguration(nodeCryptoConfiguration)
+            ) {
+              patchState({
+                nodeCryptoConfiguration,
+                isValidNetwork: true,
+              });
+            } else {
+              patchState({
+                isValidNetwork: false,
+              });
+            }
+          },
+          () => {
+            patchState({
+              isValidNetwork: false,
+            });
+          }
+        )
       )
       .subscribe();
+  }
+
+  @Action(ClearNetwork)
+  clearNetwork({ setState }: StateContext<NetworksStateModel>) {
+    setState({
+      ...NETWORKS_DEFAULT_STATE,
+    });
   }
 }
