@@ -1,173 +1,295 @@
 <div class="register-container">
   <div class="register-box">
-    <ng-container
-      *ngIf="cryptoConfig$ | async as cryptoConfig; else formLoading"
-    >
-      <h1>Register</h1>
-      <form
-        nz-form
-        (ngSubmit)="addProfile(cryptoConfig.network)"
-        [formGroup]="profileForm"
-        novalidate
-      >
-        <div class="top-logo">
-          <img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
-          <h1>Protokol Manager</h1>
-        </div>
-        <nz-form-item>
-          <nz-form-control
-            [nzErrorTip]="profileNameErrorTpl"
-            nzSpan="12"
-            nzHasFeedback
-            nzValidatingTip="Validating..."
-          >
-            <nz-input-group nzPrefixIcon="user">
-              <input
-                type="text"
-                nz-input
-                formControlName="profileName"
-                placeholder="Profile Name"
-              />
-              <ng-template #profileNameErrorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">
-                  <span nz-typography nzType="danger"
-                    >Please input your profile name!</span
-                  >
-                </ng-container>
-                <ng-container *ngIf="control.hasError('duplicated')">
-                  <span nz-typography nzType="danger"
-                    >Profile name is already used!</span
-                  >
-                </ng-container>
-              </ng-template>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
+    <h1>Register</h1>
 
-        <nz-form-item [nzGutter]="[24, 0]">
-          <nz-form-control
-            nzErrorTip="Please enter your passphrase or generate one!"
-            nzSpan="20"
-          >
-            <nz-input-group nzPrefixIcon="dash">
-              <input
-                type="text"
-                nz-input
-                formControlName="passphrase"
-                placeholder="Passphrase"
-              />
-            </nz-input-group>
-          </nz-form-control>
-          <button
-            nz-button
-            nzType="default"
-            [nzLoading]="isLoading"
-            [disabled]="isLoading || (isFormDirty && !profileForm.valid)"
-            (click)="onGenerateClick($event, cryptoConfig.network.pubKeyHash)"
-          >
-            Generate
-          </button>
-        </nz-form-item>
+    <nz-steps [nzCurrent]="currentStepIndex">
+      <nz-step nzTitle="Select network"></nz-step>
+      <nz-step nzTitle="Profile"></nz-step>
+    </nz-steps>
 
-        <nz-form-item>
-          <nz-form-control
-            nzErrorTip="Please enter your passphrase!"
-            nzSpan="20"
-          >
-            <nz-input-group nzPrefixIcon="wallet">
-              <input
-                type="text"
-                nz-input
-                formControlName="address"
-                placeholder="Address"
-              />
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-control nzErrorTip="Please enter your pin!" nzSpan="10">
-            <nz-input-group nzPrefixIcon="lock">
-              <input
-                type="password"
-                nz-input
-                formControlName="pin"
-                placeholder="PIN"
-              />
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-control [nzErrorTip]="confirmPinErrorTpl" nzSpan="10">
-            <nz-input-group nzPrefixIcon="lock">
-              <input
-                type="password"
-                nz-input
-                formControlName="pinConfirm"
-                placeholder="Confirm PIN"
-              />
-              <ng-template #confirmPinErrorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">
-                  <span nz-typography nzType="danger"
-                    >Please confirm your PIN!</span
-                  >
-                </ng-container>
-                <ng-container *ngIf="control.hasError('confirm')">
-                  <span nz-typography nzType="danger">PIN does not match!</span>
-                </ng-container>
-              </ng-template>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <div nz-row [nzGutter]="[0, 24]">
-          <div nz-col [nzSpan]="24">
-            <nz-alert
-              nzType="warning"
-              nzMessage="Please keep your PIN safe!"
-              nzDescription="We are unable to recover PIN, in case it's lost."
-              nzShowIcon
-            ></nz-alert>
-          </div>
-          <div nz-col [nzSpan]="24">
-            <nz-form-item>
-              <nz-form-control
-                nzErrorTip="You must agree to terms of use and privacy policy!"
-              >
-                <label nz-checkbox formControlName="agree">
-                  <span nz-typography class="text-white"
-                    >I agree to the <a>Terms of use</a> and
-                    <a>Privacy policy</a></span
-                  >
-                </label>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-        </div>
-
-        <div nz-row [nzGutter]="[24, 12]">
-          <div nz-col [nzSpan]="24" class="button-wrapper">
-            <button
-              nz-button
-              nzType="primary"
-              [nzLoading]="isLoading"
-              [disabled]="isLoading || (isFormDirty && !profileForm.valid)"
-            >
-              Add Profile
-            </button>
-            <button nz-button nzType="default" [nzLoading]="isLoading">
-              <a routerLink="/auth/login">
-                Have an account?
-              </a>
-            </button>
-          </div>
-        </div>
-      </form>
+    <ng-container *ngIf="currentStepIndex === 0">
+      <ng-container *ngTemplateOutlet="registerStep1"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="currentStepIndex === 1">
+      <ng-container *ngTemplateOutlet="registerStep2"></ng-container>
     </ng-container>
   </div>
 </div>
 
-<ng-template #formLoading>
+<ng-template #registerStep1>
+  <form
+    class="form-step-1"
+    nz-form
+    (ngSubmit)="selectNetwork()"
+    [formGroup]="networkForm"
+    novalidate
+    nzLayout="vertical"
+  >
+    <ng-container *ngTemplateOutlet="brandLogoTpl"></ng-container>
+
+    <div class="form-items">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="10" nzFor="network-type"
+          >Network Type</nz-form-label
+        >
+        <nz-form-control [nzSpan]="10" nzErrorTip="Choose network type!">
+          <nz-radio-group id="network-type" formControlName="networkType">
+            <label nz-radio [nzValue]="RegisterNetworkEnum.Predefined"
+              >Pre-defined</label
+            >
+            <label nz-radio [nzValue]="RegisterNetworkEnum.Custom"
+              >Custom</label
+            >
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <ng-container
+        *ngIf="nf('networkType').value === RegisterNetworkEnum.Predefined"
+      >
+        <nz-form-item>
+          <nz-form-label [nzSpan]="10" nzFor="networkUrl" nzRequired
+            >Select network</nz-form-label
+          >
+          <nz-form-control [nzSpan]="20" nzErrorTip="Choose network!">
+            <nz-select
+              nzPlaceHolder="Select network"
+              formControlName="networkUrl"
+            >
+              <ng-container *ngFor="let network of networks">
+                <nz-option
+                  [nzLabel]="getNetworkLabel(network)"
+                  [nzValue]="network.value"
+                ></nz-option>
+              </ng-container>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+
+      <ng-container
+        *ngIf="nf('networkType').value === RegisterNetworkEnum.Custom"
+      >
+        <nz-form-item>
+          <nz-form-label [nzSpan]="10" nzFor="customNetworkUrl" nzRequired
+            >Network url:</nz-form-label
+          >
+          <nz-form-control nzErrorTip="Please enter network url!" nzSpan="20">
+            <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+              <input type="text" nz-input formControlName="customNetworkUrl" />
+            </nz-input-group>
+
+            <ng-template #addOnBeforeTemplate>
+              <nz-select formControlName="customNetworkUrlProtocol">
+                <nz-option nzLabel="Http://" nzValue="http://"></nz-option>
+                <nz-option nzLabel="Https://" nzValue="https://"></nz-option>
+              </nz-select>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+
+      <ng-container *ngLet="validNetwork$ | async as validNetwork">
+        <ng-container *ngIf="validNetwork === false">
+          <span nz-typography nzType="danger">
+            Invalid network!<br />
+            Please check if node is online and url is correct!
+          </span>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div nz-row [nzGutter]="[24, 12]">
+      <div nz-col [nzSpan]="24" class="button-wrapper">
+        <button nz-button nzType="default" [nzLoading]="isLoading">
+          <a routerLink="/auth/login">
+            Have an account?
+          </a>
+        </button>
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="isLoading"
+          [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
+        >
+          Select network<i nz-icon nzType="right"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #registerStep2>
+  <ng-container
+    *ngIf="cryptoConfig$ | async as cryptoConfig; else formLoadingTpl"
+  >
+    <form
+      nz-form
+      (ngSubmit)="addProfile(cryptoConfig.network)"
+      [formGroup]="profileForm"
+      novalidate
+    >
+      <ng-container *ngTemplateOutlet="brandLogoTpl"></ng-container>
+      <nz-form-item>
+        <nz-form-control
+          [nzErrorTip]="profileNameErrorTpl"
+          nzSpan="12"
+          nzHasFeedback
+          nzValidatingTip="Validating..."
+        >
+          <nz-input-group nzPrefixIcon="user">
+            <input
+              type="text"
+              nz-input
+              formControlName="profileName"
+              placeholder="Profile Name"
+            />
+            <ng-template #profileNameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                <span nz-typography nzType="danger"
+                  >Please input your profile name!</span
+                >
+              </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')">
+                <span nz-typography nzType="danger"
+                  >Profile name is already used!</span
+                >
+              </ng-container>
+            </ng-template>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item [nzGutter]="[24, 0]">
+        <nz-form-control
+          nzErrorTip="Please enter your passphrase or generate one!"
+          nzSpan="20"
+        >
+          <nz-input-group nzPrefixIcon="dash">
+            <input
+              type="text"
+              nz-input
+              formControlName="passphrase"
+              placeholder="Passphrase"
+            />
+          </nz-input-group>
+        </nz-form-control>
+        <button
+          nz-button
+          nzType="default"
+          [nzLoading]="isLoading"
+          [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
+          (click)="onGenerateClick($event, cryptoConfig.network.pubKeyHash)"
+        >
+          Generate
+        </button>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please enter your passphrase!" nzSpan="20">
+          <nz-input-group nzPrefixIcon="wallet">
+            <input
+              type="text"
+              nz-input
+              formControlName="address"
+              placeholder="Address"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please enter your pin!" nzSpan="10">
+          <nz-input-group nzPrefixIcon="lock">
+            <input
+              type="password"
+              nz-input
+              formControlName="pin"
+              placeholder="PIN"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="confirmPinErrorTpl" nzSpan="10">
+          <nz-input-group nzPrefixIcon="lock">
+            <input
+              type="password"
+              nz-input
+              formControlName="pinConfirm"
+              placeholder="Confirm PIN"
+            />
+            <ng-template #confirmPinErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                <span nz-typography nzType="danger"
+                  >Please confirm your PIN!</span
+                >
+              </ng-container>
+              <ng-container *ngIf="control.hasError('confirm')">
+                <span nz-typography nzType="danger">PIN does not match!</span>
+              </ng-container>
+            </ng-template>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div nz-row [nzGutter]="[0, 24]">
+        <div nz-col [nzSpan]="24">
+          <nz-alert
+            nzType="warning"
+            nzMessage="Please keep your PIN safe!"
+            nzDescription="We are unable to recover PIN, in case it's lost."
+            nzShowIcon
+          ></nz-alert>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-control
+              nzErrorTip="You must agree to terms of use and privacy policy!"
+            >
+              <label nz-checkbox formControlName="agree">
+                <span nz-typography class="text-white"
+                  >I agree to the <a>Terms of use</a> and
+                  <a>Privacy policy</a></span
+                >
+              </label>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-row [nzGutter]="[24, 12]">
+        <div nz-col [nzSpan]="24" class="button-wrapper">
+          <button
+            nz-button
+            nzType="default"
+            [nzLoading]="isLoading"
+            (click)="goToNetworkStep($event)"
+          >
+            <i nz-icon nzType="left"></i>&nbsp;Select network
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="isLoading"
+            [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
+          >
+            Add Profile
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</ng-template>
+
+<ng-template #brandLogoTpl>
+  <div class="top-logo">
+    <img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
+    <h1>Protokol Manager</h1>
+  </div>
+</ng-template>
+
+<ng-template #formLoadingTpl>
   <nz-spin nzSimple></nz-spin>
 </ng-template>

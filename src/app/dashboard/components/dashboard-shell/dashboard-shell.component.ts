@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import {
-  ProfilesState,
-  ProfileWithId,
-} from '@core/store/profiles/profiles.state';
 import { Observable } from 'rxjs';
 import { ClearPinsAction } from '@core/store/pins/pins.actions';
 import { Router } from '@angular/router';
+import { ProfilesState } from '@core/store/profiles/profiles.state';
+import { ProfileWithId } from '@core/interfaces/profiles.types';
 
 @Component({
   selector: 'app-dashboard-shell',

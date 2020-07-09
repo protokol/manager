@@ -25,7 +25,7 @@
     "value-no-vendor-prefix": true,
     "no-empty-source": null,
     "selector-class-pattern": "[a-z-]+",
-    "selector-id-pattern": "[a-z_]+",
+    "selector-id-pattern": "[a-z-]+",
     "selector-max-id": 0,
     "selector-max-universal": 0,
     "selector-type-no-unknown": [

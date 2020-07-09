@@ -21,13 +21,11 @@ export class StoreUtilsService {
     const profile = this.store.selectSnapshot(
       ProfilesState.getProfileById(profileId)
     );
-    return this.bip38Service
-      .decrypt(profile.encodedPassphrase, pin, network)
-      .pipe(
-        map((decrypted) => !!decrypted),
-        catchError(() => {
-          return of(false);
-        })
-      );
+    return this.bip38Service.decrypt(profile.encodedWif, pin, network).pipe(
+      map((decrypted) => !!decrypted),
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 }

@@ -22,8 +22,17 @@ $register-form-width: 650px;
 
   form {
     min-width: $register-form-width;
-    padding: 36px;
+    padding: 20px 36px 36px;
     background-color: $info-color;
+
+    &.form-step-1 {
+      .form-items {
+        padding: 0 12px 6px;
+        margin-bottom: 18px;
+        border-radius: 2px;
+        background-color: $white-color;
+      }
+    }
   }
 }
 
@@ -58,4 +67,8 @@ $register-form-width: 650px;
 .button-wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+nz-steps {
+  padding-bottom: 20px;
 }

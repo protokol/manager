@@ -1,6 +1,6 @@
-import { Profile } from './profiles.state';
 import { v4 as uuid } from 'uuid';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { Profile } from '@app/@core/interfaces/profiles.types';
 
 export const PROFILES_TYPE_NAME = 'profiles';
 
@@ -8,7 +8,7 @@ export class AddProfileAction {
   static type = `[${PROFILES_TYPE_NAME}] AddProfile`;
 
   constructor(
-    public profile: Omit<Profile, 'encodedPassphrase'> & { passphrase: string },
+    public profile: Omit<Profile, 'encodedWif'> & { passphrase: string },
     public pin: string,
     public cryptoConfig: NodeCryptoConfiguration['network'],
     public markAsDefault: boolean = false,
