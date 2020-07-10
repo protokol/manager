@@ -31,8 +31,9 @@ export class WalletService {
       null,
       this.bip39.wordlists[language]
     );
-    const publicKey = this.arkCrypto.Identities.Keys.fromPassphrase(passphrase)
-      .publicKey;
+    const { publicKey } = this.arkCrypto.Identities.Keys.fromPassphrase(
+      passphrase
+    );
     return {
       address: this.arkCrypto.Identities.Address.fromPublicKey(
         publicKey,

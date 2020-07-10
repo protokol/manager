@@ -54,10 +54,13 @@
             nz-dropdown
             nzPlacement="bottomRight"
             [nzDropdownMenu]="menu"
-            [nzText]="selectedProfile.profileName.charAt(0)"
+            [nzText]="selectedProfile.name.charAt(0)"
           ></nz-avatar>
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
+              <li nz-menu-item>
+                <a routerLink="/dashboard/profiles">Switch profile</a>
+              </li>
               <li nz-menu-item (click)="onSignOut($event)">Sign out</li>
             </ul>
           </nz-dropdown-menu>

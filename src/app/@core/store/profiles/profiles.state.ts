@@ -3,6 +3,7 @@ import {
   AddProfileAction,
   PROFILES_TYPE_NAME,
   RemoveProfileAction,
+  SetSelectedProfile,
 } from './profiles.actions';
 import {
   State,
@@ -66,7 +67,7 @@ export class ProfilesState {
   addProfile(
     { getState, patchState, dispatch }: StateContext<ProfilesStateModel>,
     {
-      profile: { profileName, passphrase },
+      profile: { name, passphrase, nodeBaseUrl, address },
       pin,
       cryptoConfig,
       profileId,
@@ -81,8 +82,10 @@ export class ProfilesState {
               profiles: {
                 ...getState().profiles,
                 [profileId]: {
-                  profileName,
+                  name,
                   encodedWif,
+                  nodeBaseUrl,
+                  address,
                 },
               },
             },
@@ -92,6 +95,16 @@ export class ProfilesState {
       }),
       tap(() => dispatch(new AddPinAction(profileId, pin)))
     );
+  }
+
+  @Action(SetSelectedProfile)
+  setSelectedProfile(
+    { patchState }: StateContext<ProfilesStateModel>,
+    { profileId }: RemoveProfileAction
+  ) {
+    patchState({
+      selectedProfileId: profileId,
+    });
   }
 
   @Action(RemoveProfileAction)

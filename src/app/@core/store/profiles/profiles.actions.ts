@@ -16,6 +16,12 @@ export class AddProfileAction {
   ) {}
 }
 
+export class SetSelectedProfile {
+  static type = `[${PROFILES_TYPE_NAME}] SetSelectedProfile`;
+
+  constructor(public profileId: string) {}
+}
+
 export class RemoveProfileAction {
   static type = `[${PROFILES_TYPE_NAME}] RemoveProfile`;
 
