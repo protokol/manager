@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
 
     const profileId = uuid();
-    const { profileName, passphrase, pin } = this.profileForm.value;
+    const { profileName, passphrase, pin, address } = this.profileForm.value;
 
     this.store
       .select(PinsState.getPinByProfileId(profileId))
@@ -91,9 +91,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       new AddProfileAction(
         {
-          profileName,
+          name: profileName,
           passphrase,
           nodeBaseUrl: this.store.selectSnapshot(NetworksState.getBaseUrl),
+          address,
         },
         pin,
         networkConfig,
@@ -110,9 +111,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       untilDestroyed(this),
       first(),
       map((profiles) =>
-        profiles.length
-          ? profiles.some((p) => p.profileName === control.value)
-          : false
+        profiles.length ? profiles.some((p) => p.name === control.value) : false
       ),
       map((isProfileNameDuplicated) => {
         if (isProfileNameDuplicated) {
@@ -148,7 +147,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         [this.profileNameAsyncValidator],
       ],
       passphrase: ['', Validators.required],
-      address: [{ value: '', disabled: true }, Validators.required],
+      address: ['', Validators.required],
       pin: ['', Validators.required],
       pinConfirm: ['', [Validators.required, this.pinValidator]],
       agree: [false, Validators.required],

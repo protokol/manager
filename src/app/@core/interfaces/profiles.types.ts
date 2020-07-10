@@ -1,5 +1,6 @@
 export interface Profile {
-  profileName: string;
+  name: string;
+  address: string;
   encodedWif: string;
   nodeBaseUrl: string;
 }
