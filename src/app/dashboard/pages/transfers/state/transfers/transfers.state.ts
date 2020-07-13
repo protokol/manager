@@ -74,12 +74,10 @@ export class TransfersState {
       .pipe(
         tap(({ data }) => dispatch(new SetTransfersByIds(data))),
         tap(({ data, meta }) => {
-          if (data.length) {
-            patchState({
-              transfersIds: data.map((t) => t.id),
-              meta,
-            });
-          }
+          patchState({
+            transfersIds: data.map((t) => t.id),
+            meta,
+          });
         })
       )
       .subscribe();

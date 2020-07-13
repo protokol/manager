@@ -200,12 +200,10 @@ export class WalletsState {
       .pipe(
         tap(({ data }) => dispatch(new SetWalletsByIds(data))),
         tap(({ data, meta }) => {
-          if (data.length) {
-            patchState({
-              walletsIds: data.map((i) => i.publicKey),
-              meta,
-            });
-          }
+          patchState({
+            walletsIds: data.map((i) => i.publicKey),
+            meta,
+          });
         })
       )
       .subscribe();

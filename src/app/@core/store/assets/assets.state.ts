@@ -151,12 +151,10 @@ export class AssetsState {
       .pipe(
         tap(({ data }) => dispatch(new SetAssetsByIds(data))),
         tap(({ data, meta }) => {
-          if (data.length) {
-            patchState({
-              assetsIds: data.map((c) => c.id),
-              meta,
-            });
-          }
+          patchState({
+            assetsIds: data.map((c) => c.id),
+            meta,
+          });
         }),
         tap(({ data }) => {
           if (withCollection) {

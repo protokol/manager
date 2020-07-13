@@ -39,8 +39,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AssetsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  private params: NzTableQueryParams;
-
   @Select(AssetsState.getAssetsIds) assetIds$: Observable<string[]>;
   @Select(AssetsState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -50,8 +48,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
   @ViewChild('idTpl', { static: true }) idTpl!: TemplateRef<{
     row: AssetWithCollection;
   }>;
-  @ViewChild('collectionIdTpl', { static: true })
-  collectionIdTpl!: TemplateRef<{
+  @ViewChild('collectionNameTpl', { static: true })
+  collectionNameTpl!: TemplateRef<{
     row: AssetWithCollection;
   }>;
   @ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
@@ -82,9 +80,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
         sortBy: true,
       },
       {
-        propertyName: 'collectionId',
         headerName: 'Collection',
-        columnTransformTpl: this.collectionIdTpl,
+        columnTransformTpl: this.collectionNameTpl,
       },
       {
         propertyName: 'ownerPublicKey',
@@ -129,7 +126,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
         tap(() => this.isLoading$.next(true)),
         tap(() =>
           this.store.dispatch(
-            new LoadAssets(this.params, { withCollection: true })
+            new LoadAssets(undefined, { withCollection: true })
           )
         )
       )
@@ -174,11 +171,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   paginationChange(params: NzTableQueryParams) {
-    if (!this.params) {
-      this.params = params;
-    } else {
-      this.store.dispatch(new LoadAssets(params));
-    }
+    this.store.dispatch(new LoadAssets(params, { withCollection: true }));
   }
 
   onWalletDetailsClick(addressOrPublicKey: string, assetId: string) {

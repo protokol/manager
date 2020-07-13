@@ -31,8 +31,6 @@ import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions'
 export class BurnsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  private params: NzTableQueryParams;
-
   @Select(BurnsState.getBurnsIds) burnIds$: Observable<string[]>;
   @Select(BurnsState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -86,7 +84,7 @@ export class BurnsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadBurns(this.params)))
+        tap(() => this.store.dispatch(new LoadBurns()))
       )
       .subscribe();
   }
@@ -94,11 +92,7 @@ export class BurnsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   paginationChange(params: NzTableQueryParams) {
-    if (!this.params) {
-      this.params = params;
-    } else {
-      this.store.dispatch(new LoadBurns(params));
-    }
+    this.store.dispatch(new LoadBurns(params));
   }
 
   onAssetClick(nftId: string) {

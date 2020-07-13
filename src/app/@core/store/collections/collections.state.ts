@@ -120,12 +120,10 @@ export class CollectionsState {
       .pipe(
         tap(({ data }) => dispatch(new SetCollectionsByIds(data))),
         tap(({ data, meta }) => {
-          if (data.length) {
-            patchState({
-              collectionsIds: data.map((c) => c.id),
-              meta,
-            });
-          }
+          patchState({
+            collectionsIds: data.map((c) => c.id),
+            meta,
+          });
         })
       )
       .subscribe();

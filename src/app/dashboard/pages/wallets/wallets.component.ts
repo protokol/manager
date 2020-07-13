@@ -37,8 +37,6 @@ import { Router } from '@angular/router';
 export class WalletsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  private params: NzTableQueryParams;
-
   @Select(WalletsState.getWalletsIds) walletIds$: Observable<string[]>;
   @Select(WalletsState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -102,7 +100,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadWallets(this.params)))
+        tap(() => this.store.dispatch(new LoadWallets()))
       )
       .subscribe();
   }
@@ -110,11 +108,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   paginationChange(params: NzTableQueryParams) {
-    if (!this.params) {
-      this.params = params;
-    } else {
-      this.store.dispatch(new LoadWallets(params));
-    }
+    this.store.dispatch(new LoadWallets(params));
   }
 
   onWalletDetailsClick(addressOrPublicKey: string) {

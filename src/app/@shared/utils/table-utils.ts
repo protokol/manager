@@ -15,8 +15,8 @@ export abstract class TableUtils {
 
   static toTableApiQuery(tableQueryParams?: NzTableQueryParams): TableApiQuery {
     const { pageSize, pageIndex, sort, filter } = tableQueryParams || {
-      pageIndex: 0,
-      pageSize: 100,
+      pageIndex: 1,
+      pageSize: TableUtils.getDefaultPageSize(),
     };
     const currentSort =
       sort && sort.find((item) => item && item.value !== null);
@@ -28,7 +28,7 @@ export abstract class TableUtils {
     return Object.assign(
       {
         limit: pageSize,
-        page: pageIndex + 1,
+        page: pageIndex,
       },
       sortField ? { orderBy: `${sortField}:${sortOrder}` } : {},
       filter && filter.length
@@ -43,5 +43,18 @@ export abstract class TableUtils {
           }
         : {}
     );
+  }
+
+  static getDefaultPageSize() {
+    return 50;
+  }
+
+  static getDefaultNzTableQueryParams(): NzTableQueryParams {
+    return {
+      pageIndex: 1,
+      pageSize: 50,
+      filter: [],
+      sort: [],
+    };
   }
 }

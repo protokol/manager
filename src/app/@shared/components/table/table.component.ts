@@ -9,16 +9,17 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
+import { BehaviorSubject, isObservable, Observable, of, Subject } from 'rxjs';
 import {
   PaginationMeta,
   TableColumnConfig,
   TableColumnSearch,
   TablePagination,
 } from '@app/@shared/interfaces/table.types';
-import { share, tap } from 'rxjs/operators';
+import { distinctUntilChanged, share, skip, tap } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
+import { TableUtils } from '@shared/utils/table-utils';
 
 @Component({
   selector: 'app-table',
@@ -33,21 +34,23 @@ export class TableComponent implements OnInit, OnDestroy {
   isExpandable$ = new BehaviorSubject(false);
   expandableRows$ = new BehaviorSubject<{ [name: string]: boolean }>({});
   isFrontPagination$ = new BehaviorSubject(false);
+  pagination$ = new BehaviorSubject<TablePagination>({
+    pageIndex: 0,
+    pageSize: TableUtils.getDefaultPageSize(),
+    total: 0,
+  });
   rows$: Observable<any[]>;
   headers: TableColumnConfig[] = [];
-  pagination: TablePagination = {
-    pageIndex: 0,
-    pageSize: 0,
-    total: 0,
-  };
   search: { [columnName: string]: TableColumnSearch } = {};
-  tableQueryParams: NzTableQueryParams;
+  tableQueryParams: Partial<NzTableQueryParams> = {
+    pageIndex: 1,
+    pageSize: TableUtils.getDefaultPageSize(),
+  };
 
   @ContentChild(TemplateRef, { static: false }) expandTpl: TemplateRef<any>;
 
-  @Output() paginationChange: EventEmitter<
-    NzTableQueryParams
-  > = new EventEmitter<NzTableQueryParams>();
+  paginationChange$ = new Subject<NzTableQueryParams>();
+  @Output() paginationChange = new EventEmitter<NzTableQueryParams>();
 
   @Input('scrollX')
   set _scrollX(scrollX: string | null) {
@@ -107,11 +110,33 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input('meta')
   set _meta(meta: PaginationMeta) {
     if (meta) {
-      this.pagination = {
-        total: meta.totalCount,
-        pageSize: meta.count,
-        pageIndex: 0,
+      const { totalCountIsEstimate, totalCount, count } = meta;
+      const { pageIndex, pageSize } = this.tableQueryParams;
+      const isEmptyNextPage = count <= 0 && pageIndex > 1;
+
+      const getTotal = () => {
+        const calculateTotalCount = () =>
+          (pageIndex - 1) * pageSize + totalCount;
+        const calculateTotalCountPrev = () => (pageIndex - 1) * pageSize;
+
+        if (totalCountIsEstimate && count < pageSize) {
+          return calculateTotalCount();
+        } else if (totalCountIsEstimate) {
+          return isEmptyNextPage
+            ? calculateTotalCountPrev() - 1
+            : calculateTotalCount() + 1;
+        }
+        return totalCount;
       };
+
+      this.pagination$.next({
+        total: getTotal(),
+        pageSize,
+        pageIndex:
+          (totalCountIsEstimate && isEmptyNextPage
+            ? pageIndex - 1
+            : pageIndex) || 1,
+      });
     }
   }
 
@@ -136,18 +161,32 @@ export class TableComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor() {}
+  constructor() {
+    this.paginationChange$
+      .asObservable()
+      .pipe(
+        untilDestroyed(this),
+        distinctUntilChanged(
+          (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+        ),
+        skip(1),
+        tap((pagination) => {
+          this.paginationChange.emit(pagination);
+        })
+      )
+      .subscribe();
+  }
 
   ngOnInit(): void {}
 
   onQueryParamsChange(tableQueryParams: NzTableQueryParams) {
-    const { pageIndex, pageSize } = tableQueryParams;
-    if (!(pageIndex === 0 && pageSize === 0)) {
-      this.paginationChange.emit({
+    const { pageIndex } = tableQueryParams;
+    if (pageIndex !== 0) {
+      this.paginationChange$.next({
         ...tableQueryParams,
         filter: this.serializeFilter(),
       });
-      this.tableQueryParams = tableQueryParams;
+      this.tableQueryParams = { ...tableQueryParams };
     }
   }
 
@@ -160,7 +199,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   searchChanged(event: MouseEvent) {
     event.preventDefault();
-    this.emitPaginationChange();
+    this.emitPaginationChange({ loadFirstPage: true });
   }
 
   searchReset(event: MouseEvent, propertyName: string) {
@@ -173,29 +212,44 @@ export class TableComponent implements OnInit, OnDestroy {
       },
     };
 
-    this.emitPaginationChange();
+    this.emitPaginationChange({ loadFirstPage: true });
   }
 
-  emitPaginationChange() {
-    this.paginationChange.emit({
-      pageSize: this.pagination.pageSize,
-      pageIndex: this.pagination.pageIndex,
-      sort: [...this.tableQueryParams.sort],
+  emitPaginationChange(
+    options: { loadFirstPage: boolean } = { loadFirstPage: false }
+  ) {
+    const { pageIndex } = this.pagination$.getValue();
+    const { pageSize, sort } = this.tableQueryParams;
+    const { loadFirstPage } = options;
+
+    if (loadFirstPage) {
+      this.tableQueryParams = {
+        ...this.tableQueryParams,
+        pageIndex: 1,
+      };
+    }
+
+    this.paginationChange$.next({
+      pageSize,
+      pageIndex: loadFirstPage ? 1 : pageIndex,
+      sort: [...sort],
       filter: this.serializeFilter(),
     });
   }
 
   serializeFilter() {
-    return Object.keys(this.search).reduce(
-      (acc, curr) => [
-        ...acc,
-        {
-          key: curr,
-          value: this.search[curr].value,
-        },
-      ],
-      []
-    );
+    return Object.keys(this.search)
+      .reduce(
+        (acc, curr) => [
+          ...acc,
+          {
+            key: curr,
+            value: this.search[curr].value,
+          },
+        ],
+        []
+      )
+      .filter((f) => !!f.value);
   }
 
   ngOnDestroy(): void {}

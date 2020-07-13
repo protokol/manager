@@ -4,6 +4,7 @@
   [tableColumns]="tableColumns"
   [meta]="meta$ | async"
   (paginationChange)="paginationChange($event)"
+  scrollY="75vh"
 >
 </app-table>
 
@@ -17,8 +18,8 @@
   <app-text-clipper [text]="row.id"></app-text-clipper>
 </ng-template>
 
-<ng-template #collectionIdTpl let-row="row">
-  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
+<ng-template #collectionNameTpl let-row="row">
+  {{ row.collection.name }}
 </ng-template>
 
 <ng-template #ownerTpl let-row="row">
