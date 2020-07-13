@@ -25,8 +25,8 @@ export class WalletsService {
         .api('wallets')
         .get(addressOrPublicKey)
     ).pipe(
-      NodeClientService.genericErrorHandler(this.log),
-      map((response) => response.body.data)
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
     );
   }
 
@@ -42,8 +42,8 @@ export class WalletsService {
           ...query,
         })
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body)
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 
@@ -66,8 +66,8 @@ export class WalletsService {
           }
         )
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body)
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 }

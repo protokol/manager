@@ -27,8 +27,8 @@ export class BurnsService {
           ...query,
         })
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body)
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 }
