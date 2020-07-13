@@ -31,8 +31,6 @@ import { Router } from '@angular/router';
 export class TransfersComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  private params: NzTableQueryParams;
-
   @Select(TransfersState.getTransfersIds) transferIds$: Observable<string[]>;
   @Select(TransfersState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -93,7 +91,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadTransfers(this.params)))
+        tap(() => this.store.dispatch(new LoadTransfers()))
       )
       .subscribe();
   }
@@ -101,11 +99,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   paginationChange(params: NzTableQueryParams) {
-    if (!this.params) {
-      this.params = params;
-    } else {
-      this.store.dispatch(new LoadTransfers(params));
-    }
+    this.store.dispatch(new LoadTransfers(params));
   }
 
   onAssetClick(nftId: string) {

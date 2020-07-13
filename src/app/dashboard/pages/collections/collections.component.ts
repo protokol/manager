@@ -30,6 +30,7 @@ import { CollectionCreateModalComponent } from '@app/dashboard/pages/collections
 import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
 import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
+import { TableUtils } from '@shared/utils/table-utils';
 
 @Component({
   selector: 'app-collections',
@@ -39,7 +40,7 @@ import { Router } from '@angular/router';
 })
 export class CollectionsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
-  private params: NzTableQueryParams;
+  private params: NzTableQueryParams = TableUtils.getDefaultNzTableQueryParams();
 
   @Select(CollectionsState.getCollectionIds) collectionIds$: Observable<
     string[]
@@ -115,7 +116,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadCollections(this.params)))
+        tap(() => this.store.dispatch(new LoadCollections()))
       )
       .subscribe();
 
@@ -125,22 +126,31 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         debounceTime(750),
         tap((searchTerm) => {
-          try {
-            const jsonSearchTerm = JSON.parse(searchTerm);
+          if (searchTerm) {
+            try {
+              const jsonSearchTerm = JSON.parse(searchTerm);
 
+              this.store.dispatch(
+                new LoadCollections({
+                  ...this.params,
+                  filter: [
+                    {
+                      key: 'jsonSchema',
+                      value: jsonSearchTerm,
+                    },
+                    ...(this.params.filter ? this.params.filter : []),
+                  ],
+                })
+              );
+            } catch (e) {
+              this.log.error('Search term should be a valid JSON', e);
+            }
+          } else {
             this.store.dispatch(
               new LoadCollections({
                 ...this.params,
-                filter: [
-                  {
-                    key: 'jsonSchema',
-                    value: jsonSearchTerm,
-                  },
-                ],
               })
             );
-          } catch (e) {
-            this.log.error('Search term should be a valid JSON', e);
           }
         })
       )
@@ -164,11 +174,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   paginationChange(params: NzTableQueryParams) {
-    if (!this.params) {
-      this.params = params;
-    } else {
-      this.store.dispatch(new LoadCollections(params));
-    }
+    this.params = params;
+    this.store.dispatch(new LoadCollections(params));
   }
 
   showAddCollectionModal(event: MouseEvent) {

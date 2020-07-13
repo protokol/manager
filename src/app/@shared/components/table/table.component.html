@@ -1,13 +1,13 @@
 <nz-table
   nzShowSizeChanger
   [nzScroll]="{ x: scrollX$ | async, y: scrollY$ | async }"
-  [nzPageSizeOptions]="[50, 100, 1000]"
+  [nzPageSizeOptions]="[10, 50, 100]"
   [nzData]="rows$ | async"
   [nzFrontPagination]="isFrontPagination$ | async"
   [nzLoading]="isLoading$ | async"
-  [nzTotal]="pagination.total"
-  [nzPageSize]="pagination.pageSize"
-  [nzPageIndex]="pagination.pageIndex"
+  [nzTotal]="(pagination$ | async).total"
+  [nzPageSize]="(pagination$ | async).pageSize"
+  [nzPageIndex]="(pagination$ | async).pageIndex"
   (nzQueryParams)="onQueryParamsChange($event)"
 >
   <thead>

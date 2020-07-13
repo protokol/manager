@@ -67,12 +67,10 @@ export class BurnsState {
       .pipe(
         tap(({ data }) => dispatch(new SetBurnsByIds(data))),
         tap(({ data, meta }) => {
-          if (data.length) {
-            patchState({
-              burnsIds: data.map((t) => t.id),
-              meta,
-            });
-          }
+          patchState({
+            burnsIds: data.map((t) => t.id),
+            meta,
+          });
         })
       )
       .subscribe();
