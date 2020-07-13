@@ -27,8 +27,8 @@ export class CollectionsService implements CollectionsServiceInterface {
         .NFTBaseApi('collections')
         .get(collectionId)
     ).pipe(
-      NodeClientService.genericErrorHandler(this.log),
-      map((response) => response.body.data)
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
     );
   }
 
@@ -44,8 +44,8 @@ export class CollectionsService implements CollectionsServiceInterface {
           ...query,
         })
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body)
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 
@@ -68,8 +68,8 @@ export class CollectionsService implements CollectionsServiceInterface {
           }
         )
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body)
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 
@@ -83,8 +83,8 @@ export class CollectionsService implements CollectionsServiceInterface {
         .NFTBaseApi('collections')
         .wallet(collectionId)
     ).pipe(
-      NodeClientService.genericListErrorHandler(this.log),
-      map((response) => response.body.data)
+      map((response) => response.body.data),
+      NodeClientService.genericListErrorHandler(this.log)
     );
   }
 }
