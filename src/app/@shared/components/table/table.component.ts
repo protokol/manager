@@ -70,10 +70,6 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input('isExpandable')
   set _isExpandable(isExpandable: boolean) {
     this.isExpandable$.next(isExpandable);
-    // Expanded table does not seems to work with fixed scroll
-    if (isExpandable) {
-      this.scrollY$.next(null);
-    }
   }
 
   @Input('isFrontPagination')

@@ -48,6 +48,23 @@ export class AuctionsService {
     );
   }
 
+  getAllCanceledAuctions(
+    query: TableApiQuery | {} = {},
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTExchangeApi('auctions')
+        .getAllCanceledAuctions({
+          ...query,
+        })
+    ).pipe(
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
+    );
+  }
+
   searchAuctions(
     query: TableApiQuery = { filters: {} },
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),

@@ -71,4 +71,21 @@ export class BidsService {
       NodeClientService.genericListErrorHandler(this.log)
     );
   }
+
+  canceledBids(
+    query: TableApiQuery | {} = {},
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTExchangeApi('bids')
+        .getAllCanceledBids({
+          ...query,
+        })
+    ).pipe(
+      map((response) => response.body),
+      NodeClientService.genericListErrorHandler(this.log)
+    );
+  }
 }
