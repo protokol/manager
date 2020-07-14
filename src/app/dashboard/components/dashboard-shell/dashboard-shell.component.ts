@@ -5,6 +5,7 @@ import { ClearPinsAction } from '@core/store/pins/pins.actions';
 import { Router } from '@angular/router';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
+import { NetworksState } from '@core/store/network/networks.state';
 
 @Component({
   selector: 'app-dashboard-shell',
@@ -26,5 +27,12 @@ export class DashboardShellComponent implements OnInit {
 
     this.store.dispatch(new ClearPinsAction());
     this.router.navigate(['/auth']);
+  }
+
+  goToNodeConfiguration(event: MouseEvent) {
+    event.preventDefault();
+
+    const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
+    this.router.navigate(['/dashboard/nodes', baseUrl]);
   }
 }

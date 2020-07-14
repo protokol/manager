@@ -10,7 +10,7 @@
     <div class="sidebar-logo">
       <a routerLink="/dashboard">
         <img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
-        <h1>Protokol</h1>
+        <h1>Protokol Manager</h1>
       </a>
     </div>
     <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
@@ -60,6 +60,11 @@
             <ul nz-menu>
               <li nz-menu-item>
                 <a routerLink="/dashboard/profiles">Switch profile</a>
+              </li>
+              <li nz-menu-item>
+                <a (click)="goToNodeConfiguration($event)"
+                  >Node configuration</a
+                >
               </li>
               <li nz-menu-item (click)="onSignOut($event)">Sign out</li>
             </ul>
