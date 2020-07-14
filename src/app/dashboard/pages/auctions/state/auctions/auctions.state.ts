@@ -67,10 +67,25 @@ export class AuctionsState {
   @Action(LoadAuctions)
   loadAuctions(
     { patchState, dispatch }: StateContext<AuctionsStateModel>,
-    { tableQueryParams }: LoadAuctions
+    { options: { tableQueryParams, canceled } }: LoadAuctions
   ) {
-    this.auctionsService
-      .getAuctions(TableUtils.toTableApiQuery(tableQueryParams))
+    const hasFilters =
+      tableQueryParams &&
+      tableQueryParams.filter &&
+      tableQueryParams.filter.length;
+    const loadAuctions$ = canceled
+      ? this.auctionsService.getAllCanceledAuctions(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        )
+      : hasFilters
+      ? this.auctionsService.searchAuctions(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        )
+      : this.auctionsService.getAuctions(
+          TableUtils.toTableApiQuery(tableQueryParams)
+        );
+
+    loadAuctions$
       .pipe(
         tap(({ data }) => dispatch(new SetAuctionsByIds(data))),
         tap(({ data, meta }) => {

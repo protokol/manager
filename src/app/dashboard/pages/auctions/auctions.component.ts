@@ -8,7 +8,13 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  skip,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import {
@@ -31,6 +37,8 @@ import { LoadAuctions } from '@app/dashboard/pages/auctions/state/auctions/aucti
 export class AuctionsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
+  private tableQueryParams: NzTableQueryParams;
+
   @Select(AuctionsState.getAuctionsIds) auctionsIds$: Observable<string[]>;
   @Select(AuctionsState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -51,6 +59,7 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   }>;
 
   isLoading$ = new BehaviorSubject(false);
+  isCanceled$ = new BehaviorSubject(false);
 
   rows$: Observable<ExchangeResourcesTypes.Auctions[]> = of([]);
   tableColumns: TableColumnConfig<ExchangeResourcesTypes.Auctions>[];
@@ -58,6 +67,21 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   constructor(private store: Store, private router: Router) {}
 
   ngOnInit() {
+    this.isCanceled$
+      .pipe(
+        untilDestroyed(this),
+        skip(1),
+        tap((canceled) => {
+          this.store.dispatch(
+            new LoadAuctions({
+              tableQueryParams: this.tableQueryParams,
+              canceled,
+            })
+          );
+        })
+      )
+      .subscribe();
+
     this.tableColumns = [
       {
         propertyName: 'id',
@@ -105,8 +129,9 @@ export class AuctionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  paginationChange(params: NzTableQueryParams) {
-    this.store.dispatch(new LoadAuctions(params));
+  paginationChange(tableQueryParams: NzTableQueryParams) {
+    this.tableQueryParams = tableQueryParams;
+    this.store.dispatch(new LoadAuctions({ tableQueryParams }));
   }
 
   onAssetClick(nftId: string) {
