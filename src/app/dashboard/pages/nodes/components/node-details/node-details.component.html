@@ -1,0 +1,56 @@
+<ng-container
+  *ngIf="nodeConfiguration$ | async as nodeConfiguration; else loading"
+>
+  <nz-descriptions
+    [nzTitle]="nodeTitle"
+    nzBordered
+    [nzColumn]="descriptionColumns"
+  >
+    <nz-descriptions-item nzTitle="Url">
+      <a nz-typography nzCopyable [nzCopyText]="nodeUrl$ | async">
+        {{ nodeUrl$ | async }}
+      </a>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Version">
+      {{ nodeConfiguration?.core?.version }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Symbol">
+      {{ nodeConfiguration.symbol }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Token">
+      {{ nodeConfiguration.token }}
+    </nz-descriptions-item>
+  </nz-descriptions>
+
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="12">
+      <nz-divider nzText="Configuration"></nz-divider>
+      <json-editor
+        [options]="cryptoEditorOptions"
+        [data]="nodeConfiguration"
+      ></json-editor>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <ng-container
+        *ngIf="
+          nodeCryptoConfiguration$ | async as nodeCryptoConfiguration;
+          else loading
+        "
+      >
+        <nz-divider nzText="Crypto Configuration"></nz-divider>
+        <json-editor
+          [options]="cryptoEditorOptions"
+          [data]="nodeCryptoConfiguration"
+        ></json-editor>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #nodeTitle>
+  Node <a>{{ nodeUrl$ | async }}</a> configuration
+</ng-template>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

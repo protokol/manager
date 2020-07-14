@@ -41,6 +41,11 @@ const routes: Routes = [
           (m) => m.ProfilesModule
         ),
     },
+    {
+      path: 'nodes',
+      loadChildren: () =>
+        import('./pages/nodes/nodes.module').then((m) => m.NodesModule),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of, OperatorFunction } from 'rxjs';
-import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import {
+  NodeCryptoConfiguration,
+  NodeConfiguration,
+} from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NFTConnection } from '@protokol/nft-client';
@@ -78,6 +81,34 @@ export class NodeClientService {
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('node')
         .crypto()
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
+    );
+  }
+
+  getNodeConfiguration(
+    baseUrl: string,
+    connectionOptions?: ConnectionOptions
+  ): Observable<NodeConfiguration> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .api('node')
+        .configuration()
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
+    );
+  }
+
+  getPeer(
+    baseUrl: string,
+    connectionOptions?: ConnectionOptions
+  ): Observable<NodeConfiguration> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .api('peers')
+        .get('116.203.193.15')
     ).pipe(
       map((response) => response.body.data),
       NodeClientService.genericErrorHandler(this.log)
