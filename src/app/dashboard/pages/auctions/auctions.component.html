@@ -1,0 +1,52 @@
+<ng-container *ngIf="rows$ | async as rows">
+  <app-table
+    [isLoading]="isLoading$.asObservable() | async"
+    [rows]="rows"
+    [tableColumns]="tableColumns"
+    [meta]="meta$ | async"
+    (paginationChange)="paginationChange($event)"
+    isExpandable="true"
+    scrollY="75vh"
+  >
+    <ng-template let-row="row">
+      <app-auction-bids-table
+        [auctionId]="row.id"
+        [assetId]="row.nftAuction.nftIds[0]"
+      ></app-auction-bids-table>
+    </ng-template>
+  </app-table>
+</ng-container>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper
+    [copy]="false"
+    (clicked)="
+      onWalletDetailsClick(row.senderPublicKey, row.nftAuction.nftIds[0])
+    "
+    [text]="row.senderPublicKey"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #startAmountTpl let-row="row">
+  {{ row?.nftAuction?.startAmount }}
+</ng-template>
+
+<ng-template #expirationTpl let-row="row">
+  {{ row?.nftAuction?.expiration?.blockHeight }}
+</ng-template>
+
+<ng-template #assetsTpl let-row="row">
+  <ng-container *ngIf="row.nftAuction && row.nftAuction.nftIds">
+    <ng-container *ngFor="let nftId of row.nftAuction.nftIds">
+      <app-text-clipper
+        [copy]="false"
+        (clicked)="onAssetClick(nftId)"
+        [text]="nftId"
+      ></app-text-clipper>
+    </ng-container>
+  </ng-container>
+</ng-template>

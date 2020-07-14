@@ -1,0 +1,25 @@
+<app-table
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="onPaginationChange($event)"
+  scrollY="20vh"
+>
+</app-table>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #bidAmountTpl let-row="row">
+  {{ row.nftBid.bidAmount }}
+</ng-template>
+
+<ng-template #senderPublicKeyTpl let-row="row">
+  <app-text-clipper
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey)"
+    [text]="row.senderPublicKey"
+  ></app-text-clipper>
+</ng-template>
