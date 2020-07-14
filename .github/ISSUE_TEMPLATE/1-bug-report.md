@@ -14,11 +14,6 @@ Existing issues often contain information about workarounds, resolution, or prog
 
 # 🐞 bug report
 
-### Affected Package
-<!-- Can you pin-point one or more @protokol/* packages as the source of the bug? -->
-<!-- ✍️edit: --> The issue is caused by package @protokol/....
-
-
 ### Is this a regression?
 
 <!-- Did this behavior use to work in the previous version? -->
@@ -45,6 +40,10 @@ Issues that don't have enough info and can't be reproduced will be closed.
 
 </code></pre>
 
+## 📷Screenshot
+<!-- Often a screenshot can help to capture the issue better than a long description. -->
+<!-- ✍️upload a screenshot:-->
+
 
 ## 🌍  Your Environment
 
@@ -56,6 +55,7 @@ Issues that don't have enough info and can't be reproduced will be closed.
 **ARK CORE Version:**
 <pre><code>
 <!-- ✍️-->
+<!-- Version can be located in node configuration page️-->
 </code></pre>
 
 **Anything else relevant?**
