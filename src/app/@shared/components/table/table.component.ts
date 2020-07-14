@@ -16,7 +16,7 @@ import {
   TableColumnSearch,
   TablePagination,
 } from '@app/@shared/interfaces/table.types';
-import { distinctUntilChanged, share, skip, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, share, skip, tap } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
 import { TableUtils } from '@shared/utils/table-utils';
@@ -143,6 +143,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private pipeRows(rows$: Observable<any[]>) {
     return rows$.pipe(
       untilDestroyed(this),
+      filter((rows) => !!rows),
       tap((rows) => {
         const isExpandable = this.isExpandable$.getValue();
         if (isExpandable && rows.every((r) => r.hasOwnProperty('id'))) {

@@ -46,6 +46,13 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/nodes/nodes.module').then((m) => m.NodesModule),
     },
+    {
+      path: 'auctions',
+      loadChildren: () =>
+        import('./pages/auctions/auctions.module').then(
+          (m) => m.AuctionsModule
+        ),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];

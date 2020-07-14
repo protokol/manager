@@ -22,6 +22,8 @@ import { BurnsService } from '@core/services/burns.service';
 import { WalletsService } from '@core/services/wallets.service';
 import { WalletsState } from '@core/store/wallets/wallets.state';
 import { AssetsState } from '@core/store/assets/assets.state';
+import { AuctionsService } from '@core/services/auctions.service';
+import { BidsService } from '@core/services/bids.service';
 
 @NgModule({
   declarations: [],
@@ -59,6 +61,8 @@ import { AssetsState } from '@core/store/assets/assets.state';
     TransfersService,
     BurnsService,
     WalletsService,
+    AuctionsService,
+    BidsService,
     WalletService,
     StoreUtilsService,
     HasProfileGuard,
