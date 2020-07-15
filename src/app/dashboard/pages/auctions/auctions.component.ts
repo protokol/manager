@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -39,6 +40,8 @@ export class AuctionsComponent implements OnInit, OnDestroy {
 
   private tableQueryParams: NzTableQueryParams;
 
+  @HostBinding('class.canceled') canceledClass = false;
+
   @Select(AuctionsState.getAuctionsIds) auctionsIds$: Observable<string[]>;
   @Select(AuctionsState.getMeta) meta$: Observable<PaginationMeta>;
 
@@ -71,6 +74,7 @@ export class AuctionsComponent implements OnInit, OnDestroy {
       .pipe(
         untilDestroyed(this),
         skip(1),
+        tap((canceled) => (this.canceledClass = canceled)),
         tap((canceled) => {
           this.store.dispatch(
             new LoadAuctions({

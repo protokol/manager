@@ -3,6 +3,15 @@
     min-height: 70vh;
     overflow-x: hidden;
 
+    .ant-table-body {
+      min-height: 20vh;
+      overflow-x: hidden;
+    }
+  }
+}
+
+:host:not(.canceled) ::ng-deep {
+  .ant-table-body {
     table {
       th,
       tr {
@@ -13,9 +22,6 @@
     }
 
     .ant-table-body {
-      min-height: 20vh;
-      overflow-x: hidden;
-
       table {
         th,
         tr {
