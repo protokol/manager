@@ -24,6 +24,7 @@ import { WalletsState } from '@core/store/wallets/wallets.state';
 import { AssetsState } from '@core/store/assets/assets.state';
 import { AuctionsService } from '@core/services/auctions.service';
 import { BidsService } from '@core/services/bids.service';
+import { TradesService } from '@core/services/trades.service';
 
 @NgModule({
   declarations: [],
@@ -63,6 +64,7 @@ import { BidsService } from '@core/services/bids.service';
     WalletsService,
     AuctionsService,
     BidsService,
+    TradesService,
     WalletService,
     StoreUtilsService,
     HasProfileGuard,

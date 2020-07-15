@@ -1,0 +1,6 @@
+:host ::ng-deep {
+  .ant-table-body {
+    min-height: 75vh;
+    overflow-x: hidden;
+  }
+}

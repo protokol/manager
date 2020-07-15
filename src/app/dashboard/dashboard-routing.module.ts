@@ -58,6 +58,11 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/bids/bids.module').then((m) => m.BidsModule),
     },
+    {
+      path: 'trades',
+      loadChildren: () =>
+        import('./pages/trades/trades.module').then((m) => m.TradesModule),
+    },
     { path: '**', redirectTo: 'collections' },
   ]),
 ];
