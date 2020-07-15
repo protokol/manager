@@ -3,9 +3,27 @@
     min-height: 70vh;
     overflow-x: hidden;
 
+    table {
+      th,
+      tr {
+        td:first-child {
+          width: 50px;
+        }
+      }
+    }
+
     .ant-table-body {
       min-height: 20vh;
       overflow-x: hidden;
+
+      table {
+        th,
+        tr {
+          td:first-child {
+            width: unset;
+          }
+        }
+      }
     }
   }
 }
