@@ -1,0 +1,51 @@
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <div class="top-header">
+      <nz-space nzDirection="horizontal" nzSize="small">
+        <nz-space-item>
+          <span nz-typography>Canceled</span>
+        </nz-space-item>
+        <nz-space-item>
+          <nz-switch
+            [ngModel]="isCanceled$ | async"
+            (ngModelChange)="isCanceled$.next($event)"
+            [nzLoading]="isLoading$ | async"
+          ></nz-switch>
+        </nz-space-item>
+      </nz-space>
+    </div>
+  </nz-space-item>
+  <nz-space-item>
+    <ng-container *ngIf="rows$ | async as rows">
+      <app-table
+        [isLoading]="isLoading$ | async"
+        [rows]="rows"
+        [tableColumns]="tableColumns"
+        [meta]="meta$ | async"
+        (paginationChange)="paginationChange($event)"
+        scrollY="70vh"
+      >
+      </app-table>
+    </ng-container>
+  </nz-space-item>
+</nz-space>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #auctionIdTpl let-row="row">
+  <ng-container *ngIf="row?.nftBid?.auctionId">
+    <app-text-clipper [text]="row.nftBid.auctionId"></app-text-clipper>
+  </ng-container>
+</ng-template>
+
+<ng-template #bidAmountTpl let-row="row">
+  <ng-container *ngIf="row?.nftBid?.bidAmount">
+    {{ row.nftBid.bidAmount }}
+  </ng-container>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+</ng-template>
