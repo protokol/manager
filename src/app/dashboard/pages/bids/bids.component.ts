@@ -18,7 +18,6 @@ import {
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { ExchangeResourcesTypes } from '@protokol/nft-client';
-import { Router } from '@angular/router';
 import { BidsState } from './state/bids/bids.state';
 import { LoadBids } from './state/bids/bids.actions';
 
@@ -55,7 +54,7 @@ export class BidsComponent implements OnInit, OnDestroy {
   rows$: Observable<ExchangeResourcesTypes.Bids[]> = of([]);
   tableColumns: TableColumnConfig[];
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     combineLatest([
@@ -116,13 +115,5 @@ export class BidsComponent implements OnInit, OnDestroy {
   paginationChange(tableQueryParams: NzTableQueryParams) {
     this.tableQueryParams = tableQueryParams;
     this.store.dispatch(new LoadBids({ tableQueryParams }));
-  }
-
-  onWalletDetailsClick(addressOrPublicKey: string, assetId: string) {
-    this.router.navigate(['/dashboard/wallets', addressOrPublicKey], {
-      queryParams: {
-        assetId,
-      },
-    });
   }
 }
