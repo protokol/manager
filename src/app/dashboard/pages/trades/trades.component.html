@@ -1,0 +1,29 @@
+<app-table
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="paginationChange($event)"
+  scrollY="75vh"
+>
+</app-table>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #auctionIdTpl let-row="row">
+  <ng-container *ngIf="row?.completedTrade?.auctionId">
+    <app-text-clipper [text]="row.completedTrade.auctionId"></app-text-clipper>
+  </ng-container>
+</ng-template>
+
+<ng-template #bidIdTpl let-row="row">
+  <ng-container *ngIf="row?.completedTrade?.bidId">
+    <app-text-clipper [text]="row.completedTrade.bidId"></app-text-clipper>
+  </ng-container>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+</ng-template>
