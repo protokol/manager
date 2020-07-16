@@ -20,7 +20,7 @@ export class TradesService {
     tradeId: string,
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
-  ): Observable<ExchangeResourcesTypes.Trades> {
+  ): Observable<ExchangeResourcesTypes.TradeById> {
     return from(
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')

@@ -3,6 +3,12 @@ import { ExchangeResourcesTypes } from '@protokol/nft-client';
 
 export const AUCTIONS_TYPE_NAME = 'auctions';
 
+export class LoadAuction {
+  static type = `[${AUCTIONS_TYPE_NAME}] LoadAuction`;
+
+  constructor(public auctionId: string) {}
+}
+
 export class LoadAuctions {
   static type = `[${AUCTIONS_TYPE_NAME}] LoadAuctions`;
 

@@ -1,12 +1,18 @@
-<app-table
-  [isLoading]="isLoading$ | async"
-  [rows]="rows$"
-  [tableColumns]="tableColumns"
-  [meta]="meta$ | async"
-  (paginationChange)="paginationChange($event)"
-  scrollY="75vh"
->
-</app-table>
+<ng-container *ngIf="rows$ | async as rows">
+  <app-table
+    [isLoading]="isLoading$ | async"
+    [rows]="rows"
+    [tableColumns]="tableColumns"
+    [meta]="meta$ | async"
+    (paginationChange)="paginationChange($event)"
+    [isExpandable]="true"
+    scrollY="75vh"
+  >
+    <ng-template let-row="row">
+      <app-trade-details [tradeId]="row.id"></app-trade-details>
+    </ng-template>
+  </app-table>
+</ng-container>
 
 <ng-template #idTpl let-row="row">
   <app-text-clipper [text]="row.id"></app-text-clipper>

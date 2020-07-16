@@ -17,17 +17,20 @@ import {
   TRADES_TYPE_NAME,
   LoadTrades,
   SetTradesByIds,
+  LoadTrade,
 } from '@app/dashboard/pages/trades/state/trades/trades.actions';
 
 interface TradesStateModel {
   tradesIds: string[];
   trades: { [name: string]: ExchangeResourcesTypes.Trades };
+  tradeDetails: { [name: string]: ExchangeResourcesTypes.TradeById };
   meta: PaginationMeta | null;
 }
 
 const TRADES_DEFAULT_STATE: TradesStateModel = {
   tradesIds: [],
   trades: {},
+  tradeDetails: {},
   meta: null,
 };
 
@@ -47,18 +50,82 @@ export class TradesState {
   }
 
   @Selector()
+  static getTrades({ trades }: TradesStateModel) {
+    return trades;
+  }
+
+  @Selector()
+  static getTradeDetails({ tradeDetails }: TradesStateModel) {
+    return tradeDetails;
+  }
+
+  @Selector()
   static getMeta({ meta }: TradesStateModel) {
     return meta;
   }
 
   static getTradesByIds(tradesIds: string[]) {
-    return createSelector([TradesState], ({ trades }: TradesStateModel) => {
-      if (!tradesIds.length) {
-        return [];
-      }
+    return createSelector(
+      [TradesState.getTrades],
+      (trades: ReturnType<typeof TradesState.getTrades>) => {
+        if (!tradesIds.length) {
+          return [];
+        }
 
-      return tradesIds.map((cId) => trades[cId]);
-    });
+        return tradesIds.map((cId) => trades[cId]);
+      }
+    );
+  }
+
+  static getTradeDetailsByIds(tradesIds: string[]) {
+    return createSelector(
+      [TradesState.getTradeDetails],
+      (tradeDetails: ReturnType<typeof TradesState.getTrades>) => {
+        if (!tradesIds.length) {
+          return [];
+        }
+
+        return tradesIds.map((cId) => tradeDetails[cId]);
+      }
+    );
+  }
+
+  @Action(LoadTrade)
+  loadTrade(
+    { getState, setState }: StateContext<TradesStateModel>,
+    { tradeId }: LoadTrade
+  ) {
+    const trade = getState().tradeDetails[tradeId];
+
+    if (!trade && trade !== null) {
+      setState(
+        patch({
+          tradeDetails: patch({ [tradeId]: null }),
+        })
+      );
+
+      this.tradesService
+        .getTrade(tradeId)
+        .pipe(
+          tap(
+            (data) => {
+              setState(
+                patch({
+                  tradeDetails: patch({ [tradeId]: data }),
+                })
+              );
+            },
+            () => {
+              setState(
+                patch({
+                  tradeDetails: patch({ [tradeId]: undefined }),
+                })
+              );
+            }
+          )
+        )
+        .subscribe();
+    }
   }
 
   @Action(LoadTrades)
