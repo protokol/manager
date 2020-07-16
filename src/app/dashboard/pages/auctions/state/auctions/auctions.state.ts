@@ -15,6 +15,7 @@ import { ExchangeResourcesTypes } from '@protokol/nft-client';
 import { AuctionsService } from '@core/services/auctions.service';
 import {
   AUCTIONS_TYPE_NAME,
+  LoadAuction,
   LoadAuctions,
   SetAuctionsByIds,
 } from './auctions.actions';
@@ -62,6 +63,35 @@ export class AuctionsState {
         return auctionsIds.map((cId) => auctions[cId]);
       }
     );
+  }
+
+  @Action(LoadAuction)
+  loadAuction(
+    { getState, setState, dispatch }: StateContext<AuctionsStateModel>,
+    { auctionId }: LoadAuction
+  ) {
+    const auction = getState().auctions[auctionId];
+
+    if (!auction && auction !== null) {
+      setState(
+        patch({
+          auctions: patch({ [auctionId]: null }),
+        })
+      );
+
+      this.auctionsService.getAuction(auctionId).pipe(
+        tap(
+          (data) => dispatch(new SetAuctionsByIds(data)),
+          () => {
+            setState(
+              patch({
+                auctions: patch({ [auctionId]: undefined }),
+              })
+            );
+          }
+        )
+      );
+    }
   }
 
   @Action(LoadAuctions)

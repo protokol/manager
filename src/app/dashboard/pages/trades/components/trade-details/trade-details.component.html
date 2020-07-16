@@ -1,0 +1,28 @@
+<ng-container *ngIf="trade$ | async as trade; else loading">
+  <nz-descriptions nzBordered [nzColumn]="descriptionColumns" nzSize="small">
+    <nz-descriptions-item nzTitle="Auction start amount">
+      {{ trade?.completedTrade?.auction?.startAmount }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Auction expiration height">
+      {{ trade?.completedTrade?.auction?.expiration?.blockHeight }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Auction ntfs" [nzSpan]="2">
+      <ng-container *ngIf="trade?.completedTrade?.auction?.nftIds">
+        <ng-container *ngFor="let nftId of trade.completedTrade.auction.nftIds">
+          <app-text-clipper
+            [copy]="false"
+            (clicked)="onAssetClick(nftId)"
+            [text]="nftId"
+          ></app-text-clipper>
+        </ng-container>
+      </ng-container>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Bid amount">
+      {{ trade?.completedTrade?.bid?.bidAmount }}
+    </nz-descriptions-item>
+  </nz-descriptions>
+</ng-container>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

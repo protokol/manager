@@ -2,5 +2,14 @@
   .ant-table-body {
     min-height: 75vh;
     overflow-x: hidden;
+
+    table {
+      th,
+      tr {
+        td:not(.ant-descriptions-item-label):first-child {
+          width: 50px;
+        }
+      }
+    }
   }
 }
