@@ -1,0 +1,11 @@
+.button-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+nz-form-item {
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}

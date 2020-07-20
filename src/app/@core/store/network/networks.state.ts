@@ -1,10 +1,17 @@
 import { Logger } from '@core/services/logger.service';
-import { State, Selector, Action, StateContext } from '@ngxs/store';
+import {
+  State,
+  Selector,
+  Action,
+  StateContext,
+  createSelector,
+} from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import {
   ClearNetwork,
   NETWORKS_TYPE_NAME,
+  SetCoreManagerPort,
   SetNetwork,
 } from '@core/store/network/networks.actions';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -13,12 +20,14 @@ import { NetworkUtils } from '@core/utils/network-utils';
 
 interface NetworksStateModel {
   baseUrl: string | null;
+  coreManagerPort: number;
   isValidNetwork: boolean | null;
   nodeCryptoConfiguration: NodeCryptoConfiguration | null;
 }
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   baseUrl: null,
+  coreManagerPort: 4005,
   isValidNetwork: null,
   nodeCryptoConfiguration: null,
 };
@@ -36,6 +45,23 @@ export class NetworksState {
   @Selector()
   static getBaseUrl({ baseUrl }: NetworksStateModel) {
     return baseUrl;
+  }
+
+  @Selector()
+  static getCoreManagerPort({ coreManagerPort }: NetworksStateModel) {
+    return coreManagerPort;
+  }
+
+  static getNodeManagerUrl() {
+    return createSelector(
+      [NetworksState.getBaseUrl, NetworksState.getCoreManagerPort],
+      (
+        baseUrl: ReturnType<typeof NetworksState.getBaseUrl>,
+        port: ReturnType<typeof NetworksState.getCoreManagerPort>
+      ) => {
+        return NetworkUtils.buildNodeManagerUrl(baseUrl, port);
+      }
+    );
   }
 
   @Selector()
@@ -90,6 +116,16 @@ export class NetworksState {
   clearNetwork({ setState }: StateContext<NetworksStateModel>) {
     setState({
       ...NETWORKS_DEFAULT_STATE,
+    });
+  }
+
+  @Action(SetCoreManagerPort)
+  setCoreManagerPort(
+    { patchState }: StateContext<NetworksStateModel>,
+    { coreManagerPort }: SetCoreManagerPort
+  ) {
+    patchState({
+      coreManagerPort,
     });
   }
 }

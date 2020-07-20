@@ -6,6 +6,12 @@ export class SetNetwork {
   constructor(public baseUrl: string) {}
 }
 
+export class SetCoreManagerPort {
+  static type = `[${NETWORKS_TYPE_NAME}] SetCoreManagerPort`;
+
+  constructor(public coreManagerPort: number) {}
+}
+
 export class ClearNetwork {
   static type = `[${NETWORKS_TYPE_NAME}] ClearNetwork`;
 

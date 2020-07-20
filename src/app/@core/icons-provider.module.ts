@@ -13,6 +13,7 @@ import {
   BlockOutline,
   SearchOutline,
   FundOutline,
+  ApiOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -27,6 +28,7 @@ const icons = [
   BlockOutline,
   SearchOutline,
   FundOutline,
+  ApiOutline,
 ];
 
 @NgModule({

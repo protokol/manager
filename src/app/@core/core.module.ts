@@ -25,6 +25,8 @@ import { AssetsState } from '@core/store/assets/assets.state';
 import { AuctionsService } from '@core/services/auctions.service';
 import { BidsService } from '@core/services/bids.service';
 import { TradesService } from '@core/services/trades.service';
+import { NodeManagerService } from '@core/services/node-manager.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [],
@@ -54,6 +56,7 @@ import { TradesService } from '@core/services/trades.service';
     CommonModule,
     IconsProviderModule,
     AjsfWidgetLibraryModule,
+    HttpClientModule,
   ],
   providers: [
     NodeClientService,
@@ -66,6 +69,7 @@ import { TradesService } from '@core/services/trades.service';
     BidsService,
     TradesService,
     WalletService,
+    NodeManagerService,
     StoreUtilsService,
     HasProfileGuard,
     {

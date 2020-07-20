@@ -12,6 +12,11 @@ import {
   NodeCryptoConfiguration,
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { JsonEditorOptions } from 'ang-jsoneditor';
+import { NodeManagerService } from '@core/services/node-manager.service';
+import { finalize, tap } from 'rxjs/operators';
+import { untilDestroyed } from '@core/until-destroyed';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
 
 @Component({
   selector: 'app-node-details',
@@ -28,13 +33,17 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     null
   );
   nodeUrl$ = new BehaviorSubject('');
+  isLoadingNodeManager$ = new BehaviorSubject(false);
 
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private nodeClientService: NodeClientService
+    private nodeClientService: NodeClientService,
+    private nodeManagerService: NodeManagerService,
+    private nzMessageService: NzMessageService,
+    private nzModalService: NzModalService
   ) {
     this.cryptoEditorOptions = new JsonEditorOptions();
     this.cryptoEditorOptions.mode = 'view';
@@ -63,4 +72,36 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  onNodeManagerClick(event: MouseEvent) {
+    event.preventDefault();
+
+    if (this.isLoadingNodeManager$.getValue()) {
+      return;
+    }
+
+    this.isLoadingNodeManager$.next(true);
+    this.nodeManagerService
+      .infoCoreVersion()
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          () => {
+            this.router.navigate(['/dashboard/nodes/manager']);
+          },
+          () => {
+            this.nzMessageService.error('Core manager not available!');
+
+            this.nzModalService.create({
+              nzTitle: 'Node manager settings',
+              nzContent: NodeManagerSettingsModalComponent,
+              nzFooter: null,
+              nzWidth: '35vw',
+            });
+          }
+        ),
+        finalize(() => this.isLoadingNodeManager$.next(false))
+      )
+      .subscribe();
+  }
 }
