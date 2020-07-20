@@ -1,0 +1,19 @@
+<ng-container *ngIf="infoCoreVersion$ | async as nodeCoreVersion; else loading">
+  <nz-descriptions
+    [nzTitle]="nodeManagerTitle"
+    nzBordered
+    [nzColumn]="descriptionColumns"
+  >
+    <nz-descriptions-item nzTitle="Version">
+      {{ nodeCoreVersion?.currentVersion }}
+    </nz-descriptions-item>
+  </nz-descriptions>
+</ng-container>
+
+<ng-template #nodeManagerTitle>
+  Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
+</ng-template>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

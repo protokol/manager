@@ -48,7 +48,22 @@
 </ng-container>
 
 <ng-template #nodeTitle>
-  Node <a>{{ nodeUrl$ | async }}</a> configuration
+  <div class="node-title">
+    <div>
+      Node <a>{{ nodeUrl$ | async }}</a> configuration
+    </div>
+    <div>
+      <button
+        nz-button
+        nzSize="small"
+        nzType="primary"
+        [nzLoading]="isLoadingNodeManager$ | async"
+        (click)="onNodeManagerClick($event)"
+      >
+        Node manager<i nz-icon nzType="right"></i>
+      </button>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #loading>

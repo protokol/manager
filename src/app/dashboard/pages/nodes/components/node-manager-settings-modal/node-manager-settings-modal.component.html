@@ -1,0 +1,43 @@
+<form nz-form [formGroup]="managerSettingsForm" novalidate>
+  <nz-form-item>
+    <nz-form-control [nzErrorTip]="portErrorTpl" nzSpan="10">
+      <nz-input-group nzPrefixIcon="api">
+        <input
+          type="number"
+          nz-input
+          formControlName="port"
+          placeholder="Port"
+        />
+        <ng-template #portErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please input port number!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Port number should be bigger than 0!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Port number should be smaller or equal 65535!
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-input-group>
+    </nz-form-control>
+
+    <div class="button-wrapper">
+      <button
+        nz-button
+        nzType="primary"
+        [nzLoading]="isLoading$ | async"
+        [disabled]="(isLoading$ | async) || !managerSettingsForm.valid"
+        (click)="onManagerSettingsFormSubmit($event)"
+      >
+        Update settings
+      </button>
+    </div>
+  </nz-form-item>
+</form>
