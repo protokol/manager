@@ -31,7 +31,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
 
   rows$: Observable<ProcessListItem[]>;
   rowsLoading$: BehaviorSubject<{
-    [name: string]: boolean;
+    [name: string]: { isLoading: boolean; type: string };
   }> = new BehaviorSubject({});
 
   tableColumns: TableColumnConfig<ProcessListItem>[];
@@ -44,7 +44,10 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
           rows.reduce(
             (acc, curr) => ({
               ...acc,
-              [curr.name]: false,
+              [curr.name]: {
+                isLoading: false,
+                type: undefined,
+              },
             }),
             {}
           )
@@ -103,7 +106,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   restartProcess(event: MouseEvent, row: ProcessListItem) {
     event.preventDefault();
 
-    this.setRowLoading(row.name, true);
+    this.setRowLoading(row.name, true, 'restart');
 
     this.nodeManagerService
       .processRestart(row.name)
@@ -126,7 +129,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   processStop(event: MouseEvent, row: ProcessListItem) {
     event.preventDefault();
 
-    this.setRowLoading(row.name, true);
+    this.setRowLoading(row.name, true, 'stop');
 
     this.nodeManagerService
       .processStop(row.name)
@@ -144,10 +147,13 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  setRowLoading(processName: string, isLoading: boolean) {
+  setRowLoading(processName: string, isLoading: boolean, type?: string) {
     this.rowsLoading$.next({
       ...this.rowsLoading$.getValue(),
-      [processName]: isLoading,
+      [processName]: {
+        isLoading,
+        type,
+      },
     });
   }
 
@@ -158,7 +164,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   startProcess(event: MouseEvent, row: ProcessListItem) {
     event.preventDefault();
 
-    this.setRowLoading(row.name, true);
+    this.setRowLoading(row.name, true, 'start');
 
     this.nodeManagerService
       .processStart(row.name)

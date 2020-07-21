@@ -41,3 +41,5 @@ export interface ProcessListItem {
 export type CoreManagerProcessListResponse = CoreManagerResponse<
   ProcessListItem[]
 >;
+
+export type CoreManagerProcessResponse = CoreManagerResponse<ProcessListItem>;
