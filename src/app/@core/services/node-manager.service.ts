@@ -8,6 +8,7 @@ import { NetworkUtils } from '@core/utils/network-utils';
 import { CoreManagerMethods } from '@core/interfaces/core-manager.methods';
 import {
   CoreManagerLogArchivedResponse,
+  CoreManagerProcessListResponse,
   CoreManagerVersionResponse,
 } from '@core/interfaces/core-manager.types';
 
@@ -51,5 +52,64 @@ export class NodeManagerService {
       responseType: 'text',
       ...NetworkUtils.getNodeManagerDefaultHeaders(),
     });
+  }
+
+  processList(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerProcessListResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processList),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  processStart(
+    processName: string,
+    args: string = '--network=testnet --env=test',
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerProcessListResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processRestart, {
+          name: processName,
+          args,
+        }),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  processRestart(
+    processName: string,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerProcessListResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processRestart, {
+          name: processName,
+        }),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  processStop(
+    processName: string,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerProcessListResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processStop, {
+          name: processName,
+        }),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
   }
 }

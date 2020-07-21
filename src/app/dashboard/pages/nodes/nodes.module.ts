@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NodesRoutingModule } from '@app/dashboard/pages/nodes/nodes-routing.module';
 import { NodeDetailsComponent } from '@app/dashboard/pages/nodes/components/node-details/node-details.component';
 import {
+  NzBadgeModule,
   NzButtonModule,
   NzDescriptionsModule,
   NzDividerModule,
@@ -22,6 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogArchivedTableComponent } from './components/log-archived-table/log-archived-table.component';
 import { LogViewModalComponent } from '@app/dashboard/pages/nodes/components/log-view-modal/log-view-modal.component';
 import { NgLetModule } from '@core/directives/ngLet.module';
+import { ProcessListTableComponent } from '@app/dashboard/pages/nodes/components/process-list-table/process-list-table.component';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   imports: [
@@ -42,6 +45,8 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NzModalModule,
     NgLetModule,
     FormsModule,
+    NzBadgeModule,
+    NzSpaceModule,
   ],
   providers: [],
   declarations: [
@@ -50,6 +55,7 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NodeManagerSettingsModalComponent,
     LogArchivedTableComponent,
     LogViewModalComponent,
+    ProcessListTableComponent,
   ],
   exports: [],
 })

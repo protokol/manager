@@ -12,6 +12,7 @@ import { Observable, of } from 'rxjs';
 import {
   CoreManagerVersionResponse,
   LogArchivedItem,
+  ProcessListItem,
 } from '@core/interfaces/core-manager.types';
 
 @Component({
@@ -27,6 +28,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
   infoCoreVersion$: Observable<CoreManagerVersionResponse['result']> = of(null);
   logArchived$: Observable<LogArchivedItem[]> = of([]);
+  processList$: Observable<ProcessListItem[]> = of([]);
 
   constructor(private nodeManagerService: NodeManagerService) {
     this.infoCoreVersion$ = this.nodeManagerService
@@ -35,6 +37,10 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
     this.logArchived$ = this.nodeManagerService
       .logArchived()
+      .pipe(untilDestroyed(this));
+
+    this.processList$ = this.nodeManagerService
+      .processList()
       .pipe(untilDestroyed(this));
   }
 

@@ -1,0 +1,54 @@
+<app-table [rows]="rows$" [tableColumns]="tableColumns" scrollY="15vh">
+</app-table>
+
+<ng-template #actionsTpl let-row="row">
+  <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
+    <ng-container *ngLet="rowsLoading[row.name] as isRowLoading">
+      <nz-space>
+        <nz-space-item>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="startProcess($event, row)"
+            [nzLoading]="isRowLoading"
+          >
+            Start
+          </button>
+        </nz-space-item>
+        <nz-space-item>
+          <button
+            nz-button
+            nzType="dashed"
+            (click)="restartProcess($event, row)"
+            [nzLoading]="isRowLoading"
+          >
+            Restart
+          </button>
+        </nz-space-item>
+        <nz-space-item>
+          <button
+            nz-button
+            nzType="danger"
+            (click)="processStop($event, row)"
+            [nzLoading]="isRowLoading"
+          >
+            Stop
+          </button>
+        </nz-space-item>
+      </nz-space>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #statusTpl let-row="row">
+  <nz-badge
+    [nzStatus]="row.status === 'online' ? 'success' : 'error'"
+    [nzText]="transformText(row.status)"
+  ></nz-badge>
+</ng-template>
+
+<ng-template #memoryTpl let-row="row">
+  {{ formatMemory(row?.monit?.memory) }}MB
+</ng-template>
+
+<ng-template #cpuTpl let-row="row"> {{ row?.monit?.cpu }}% </ng-template>

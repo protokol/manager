@@ -24,3 +24,20 @@ export interface LogArchivedItem {
 export type CoreManagerLogArchivedResponse = CoreManagerResponse<
   LogArchivedItem[]
 >;
+
+export type ProcessStatus = 'online' | 'offline';
+
+export interface ProcessListItem {
+  pid: number;
+  name: string;
+  pm_id: number;
+  monit: {
+    memory: number;
+    cpu: number;
+  };
+  status: ProcessStatus;
+}
+
+export type CoreManagerProcessListResponse = CoreManagerResponse<
+  ProcessListItem[]
+>;
