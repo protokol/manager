@@ -80,16 +80,15 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   viewLog(event: MouseEvent, row: LogArchivedItem) {
     event.preventDefault();
 
+    this.rowsLoading$.next({
+      ...this.rowsLoading$.getValue(),
+      [row.name]: true,
+    });
+
     this.nodeManagerService
       .logDownload(row.downloadLink)
       .pipe(
         untilDestroyed(this),
-        tap(() =>
-          this.rowsLoading$.next({
-            ...this.rowsLoading$.getValue(),
-            [row.name]: true,
-          })
-        ),
         tap(
           (logs) => {
             this.nzModalService.create({

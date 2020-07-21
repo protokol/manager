@@ -13,6 +13,9 @@
 <nz-divider nzText="Logs"></nz-divider>
 <app-log-archived-table [rows]="logArchived$"></app-log-archived-table>
 
+<nz-divider nzText="Processes"></nz-divider>
+<app-process-list-table [rows]="processList$"></app-process-list-table>
+
 <ng-template #nodeManagerTitle>
   Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
 </ng-template>
