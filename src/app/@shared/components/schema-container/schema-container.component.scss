@@ -11,11 +11,11 @@ $container-height: 500px;
 :host ::ng-deep {
   .ace-jsoneditor,
   textarea.jsoneditor-text {
-    min-height: calc(#{$container-height} - 75px);
+    min-height: calc(#{$container-height} - 90px);
   }
 
   .jsoneditor-tree-inner {
-    height: calc(#{$container-height} - 80px);
+    height: calc(#{$container-height} - 95px);
   }
 
   json-editor {
@@ -23,5 +23,16 @@ $container-height: 500px;
       position: sticky;
       top: 6px;
     }
+  }
+}
+
+:host:not(.single-item) ::ng-deep {
+  .ace-jsoneditor,
+  textarea.jsoneditor-text {
+    min-height: calc(#{$container-height} - 75px);
+  }
+
+  .jsoneditor-tree-inner {
+    height: calc(#{$container-height} - 80px);
   }
 }

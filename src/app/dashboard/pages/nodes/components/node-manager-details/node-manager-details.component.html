@@ -10,6 +10,9 @@
   </nz-descriptions>
 </ng-container>
 
+<nz-divider nzText="Logs"></nz-divider>
+<app-log-archived-table [rows]="logArchived$"></app-log-archived-table>
+
 <ng-template #nodeManagerTitle>
   Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
 </ng-template>
