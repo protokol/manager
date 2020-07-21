@@ -18,7 +18,10 @@ import {
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { NodeManagerSettingsModalComponent } from './components/node-manager-settings-modal/node-manager-settings-modal.component';
 import { NodeManagerDetailsComponent } from './components/node-manager-details/node-manager-details.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LogArchivedTableComponent } from './components/log-archived-table/log-archived-table.component';
+import { LogViewModalComponent } from '@app/dashboard/pages/nodes/components/log-view-modal/log-view-modal.component';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -37,12 +40,16 @@ import { ReactiveFormsModule } from '@angular/forms';
     NzInputModule,
     ReactiveFormsModule,
     NzModalModule,
+    NgLetModule,
+    FormsModule,
   ],
   providers: [],
   declarations: [
     NodeDetailsComponent,
     NodeManagerDetailsComponent,
     NodeManagerSettingsModalComponent,
+    LogArchivedTableComponent,
+    LogViewModalComponent,
   ],
   exports: [],
 })

@@ -9,7 +9,10 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { Select } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Observable, of } from 'rxjs';
-import { CoreManagerVersionResponse } from '@core/interfaces/core-manager.types';
+import {
+  CoreManagerVersionResponse,
+  LogArchivedItem,
+} from '@core/interfaces/core-manager.types';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -23,10 +26,15 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   @Select(NetworksState.getNodeManagerUrl()) nodeManagerUrl$;
 
   infoCoreVersion$: Observable<CoreManagerVersionResponse['result']> = of(null);
+  logArchived$: Observable<LogArchivedItem[]> = of([]);
 
   constructor(private nodeManagerService: NodeManagerService) {
     this.infoCoreVersion$ = this.nodeManagerService
       .infoCoreVersion()
+      .pipe(untilDestroyed(this));
+
+    this.logArchived$ = this.nodeManagerService
+      .logArchived()
       .pipe(untilDestroyed(this));
   }
 

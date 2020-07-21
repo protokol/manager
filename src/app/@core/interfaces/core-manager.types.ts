@@ -8,7 +8,19 @@ export interface CoreManagerResponse<T = any> {
   };
 }
 
-export type CoreManagerVersionResponse = CoreManagerResponse<{
+export interface InfoCoreVersion {
   currentVersion: string;
   latestVersion: string;
-}>;
+}
+
+export type CoreManagerVersionResponse = CoreManagerResponse<InfoCoreVersion>;
+
+export interface LogArchivedItem {
+  name: string;
+  size: number;
+  downloadLink: string;
+}
+
+export type CoreManagerLogArchivedResponse = CoreManagerResponse<
+  LogArchivedItem[]
+>;
