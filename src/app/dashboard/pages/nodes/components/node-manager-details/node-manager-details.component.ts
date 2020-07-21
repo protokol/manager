@@ -8,12 +8,13 @@ import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { Select } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import {
   CoreManagerVersionResponse,
   LogArchivedItem,
   ProcessListItem,
 } from '@core/interfaces/core-manager.types';
+import { exhaustMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -28,7 +29,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
   infoCoreVersion$: Observable<CoreManagerVersionResponse['result']> = of(null);
   logArchived$: Observable<LogArchivedItem[]> = of([]);
-  processList$: Observable<ProcessListItem[]> = of([]);
+  processList$: BehaviorSubject<ProcessListItem[]> = new BehaviorSubject([]);
 
   constructor(private nodeManagerService: NodeManagerService) {
     this.infoCoreVersion$ = this.nodeManagerService
@@ -39,9 +40,17 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       .logArchived()
       .pipe(untilDestroyed(this));
 
-    this.processList$ = this.nodeManagerService
-      .processList()
-      .pipe(untilDestroyed(this));
+    timer(0, 3000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() =>
+          this.nodeManagerService.processList().pipe(
+            untilDestroyed(this),
+            tap((processes) => this.processList$.next(processes))
+          )
+        )
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {}

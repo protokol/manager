@@ -9,6 +9,7 @@ import { CoreManagerMethods } from '@core/interfaces/core-manager.methods';
 import {
   CoreManagerLogArchivedResponse,
   CoreManagerProcessListResponse,
+  CoreManagerProcessResponse,
   CoreManagerVersionResponse,
 } from '@core/interfaces/core-manager.types';
 
@@ -72,7 +73,7 @@ export class NodeManagerService {
     url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
   ) {
     return this.httpClient
-      .post<CoreManagerProcessListResponse>(
+      .post<CoreManagerProcessResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processRestart, {
           name: processName,
@@ -88,7 +89,7 @@ export class NodeManagerService {
     url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
   ) {
     return this.httpClient
-      .post<CoreManagerProcessListResponse>(
+      .post<CoreManagerProcessResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processRestart, {
           name: processName,
@@ -103,7 +104,7 @@ export class NodeManagerService {
     url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
   ) {
     return this.httpClient
-      .post<CoreManagerProcessListResponse>(
+      .post<CoreManagerProcessResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processStop, {
           name: processName,
