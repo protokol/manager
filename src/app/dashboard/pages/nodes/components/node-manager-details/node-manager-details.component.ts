@@ -22,12 +22,16 @@ import {
 import {
   distinctUntilChanged,
   exhaustMap,
+  finalize,
   switchMap,
   tap,
 } from 'rxjs/operators';
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 import { LoadManagerProcesses } from '../../state/manager-processes/manager-processes.actions';
 import { TextUtils } from '@core/utils/text-utils';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { Logger } from '@core/services/logger.service';
+import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -36,6 +40,8 @@ import { TextUtils } from '@core/utils/text-utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
+  readonly log = new Logger(this.constructor.name);
+
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
 
   @Select(NetworksState.getNodeManagerUrl()) nodeManagerUrl$;
@@ -58,9 +64,15 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   logArchived$: Observable<LogArchivedItem[]> = of([]);
   processList$: Observable<ProcessListItem[]> = of([]);
 
+  isLastForgedBlockLoading$: BehaviorSubject<boolean> = new BehaviorSubject(
+    false
+  );
+
   constructor(
     private nodeManagerService: NodeManagerService,
-    private store: Store
+    private store: Store,
+    private nzModalService: NzModalService,
+    private nzMessageService: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +101,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
             untilDestroyed(this),
             tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
           )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService.infoCoreStatus().pipe(
+            untilDestroyed(this),
+            tap((status) => this.infoCoreStatus$.next(status))
+          )
         )
       )
       .subscribe();
@@ -97,12 +115,6 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         untilDestroyed(this),
         exhaustMap(() => this.store.dispatch(new LoadManagerProcesses())),
-        exhaustMap(() =>
-          this.nodeManagerService.infoCoreStatus().pipe(
-            untilDestroyed(this),
-            tap((status) => this.infoCoreStatus$.next(status))
-          )
-        ),
         exhaustMap(() =>
           this.nodeManagerService.infoNextForgingSlot().pipe(
             untilDestroyed(this),
@@ -133,6 +145,36 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
   transformText(status: ProcessStatus) {
     return TextUtils.capitalizeFirst(status);
+  }
+
+  viewLastForgedBlock(event: MouseEvent) {
+    event.preventDefault();
+
+    this.isLastForgedBlockLoading$.next(true);
+    this.nodeManagerService
+      .infoLastForgedBlock()
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          (block) => {
+            this.nzModalService.create({
+              nzTitle: 'Last forged block',
+              nzContent: JsonViewModalComponent,
+              nzComponentParams: {
+                data: block,
+              },
+              nzFooter: null,
+              nzWidth: '55vw',
+            });
+          },
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error(`Retrieving last forged block failed!`);
+          }
+        ),
+        finalize(() => this.isLastForgedBlockLoading$.next(false))
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {}

@@ -9,6 +9,7 @@ import {
   CoreManagerBlockchainHeightResponse,
   CoreManagerCoreStatusResponse,
   CoreManagerCurrentDelegateResponse,
+  CoreManagerLastForgedBlockResponse,
   CoreManagerLogArchivedResponse,
   CoreManagerNextForgingSlotResponse,
   CoreManagerProcessListResponse,
@@ -55,6 +56,20 @@ export class NodeManagerService {
         url,
         NetworkUtils.getNodeManagerPayload(
           CoreManagerMethods.infoNextForgingSlot
+        ),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoLastForgedBlock(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerLastForgedBlockResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.infoLastForgedBlock
         ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )

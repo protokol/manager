@@ -11,32 +11,47 @@
       {{ nodeCoreVersion?.latestVersion }}
     </nz-descriptions-item>
 
-    <ng-container *ngIf="blockchainHeight$ | async as blockchainHeight">
-      <nz-descriptions-item nzTitle="Height">
-        <app-text-animate [value]="blockchainHeight?.height"></app-text-animate>
-      </nz-descriptions-item>
-    </ng-container>
+    <nz-descriptions-item nzTitle="Height">
+      <ng-container *ngLet="blockchainHeight$ | async as blockchainHeight">
+        <div class="height-description-item">
+          <app-text-animate
+            [value]="blockchainHeight?.height"
+          ></app-text-animate>
+          <button
+            nz-button
+            nzType="default"
+            (click)="viewLastForgedBlock($event)"
+            [disabled]="!blockchainHeight"
+            [nzLoading]="isLastForgedBlockLoading$ | async"
+          >
+            Last forged block
+          </button>
+        </div>
+      </ng-container>
+    </nz-descriptions-item>
 
-    <ng-container *ngIf="infoNextForgingSlot$ | async as infoNextForgingSlot">
-      <nz-descriptions-item nzTitle="Next slot in(ms)">
+    <nz-descriptions-item nzTitle="Next slot in(ms)">
+      <ng-container *ngIf="infoNextForgingSlot$ | async as infoNextForgingSlot">
         <app-text-animate
           [value]="infoNextForgingSlot?.remainingTime"
         ></app-text-animate>
-      </nz-descriptions-item>
-    </ng-container>
+      </ng-container>
+    </nz-descriptions-item>
 
-    <ng-container *ngIf="infoCurrentDelegate$ | async as infoCurrentDelegate">
-      <nz-descriptions-item nzTitle="Delegate username">
+    <nz-descriptions-item nzTitle="Delegate username">
+      <ng-container *ngIf="infoCurrentDelegate$ | async as infoCurrentDelegate">
         <app-text-animate
           [value]="infoCurrentDelegate?.username"
         ></app-text-animate>
-      </nz-descriptions-item>
-      <nz-descriptions-item nzTitle="Delegate rank">
+      </ng-container>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Delegate rank">
+      <ng-container *ngIf="infoCurrentDelegate$ | async as infoCurrentDelegate">
         <app-text-animate
           [value]="infoCurrentDelegate?.rank"
         ></app-text-animate>
-      </nz-descriptions-item>
-    </ng-container>
+      </ng-container>
+    </nz-descriptions-item>
   </nz-descriptions>
 </ng-container>
 
@@ -49,9 +64,9 @@
 <ng-template #nodeManagerTitle>
   <nz-space nzDirection="horizontal" nzSize="middle">
     <nz-space-item>
-      <span
-        >Node manager @ <a>{{ nodeManagerUrl$ | async }}</a></span
-      >
+      <span>
+        Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
+      </span>
     </nz-space-item>
 
     <nz-space-item>

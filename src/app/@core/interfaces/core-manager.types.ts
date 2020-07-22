@@ -57,6 +57,37 @@ export type CoreManagerNextForgingSlotResponse = CoreManagerResponse<
   InfoNextForgingSlot
 >;
 
+export interface InfoLastForgedBlock {
+  serialized: string;
+  verification: {
+    errors: any[];
+    containsMultiSignatures: boolean;
+    verified: boolean;
+  };
+  transactions: any[];
+  data: {
+    id: string;
+    idHex: string;
+    blockSignature: string;
+    generatorPublicKey: string;
+    payloadHash: string;
+    payloadLength: number;
+    reward: string;
+    totalFee: string;
+    totalAmount: string;
+    numberOfTransactions: number;
+    previousBlock: string;
+    previousBlockHex: string;
+    height: number;
+    timestamp: number;
+    version: number;
+  };
+}
+
+export type CoreManagerLastForgedBlockResponse = CoreManagerResponse<
+  InfoLastForgedBlock
+>;
+
 export type ProcessStatus = 'online' | 'offline';
 
 export interface ProcessListItem {
