@@ -19,6 +19,8 @@ import { SchemaContainerComponent } from './components/schema-container/schema-c
 import { SchemaContainerItemComponent } from './components/schema-container-item/schema-container-item.component';
 import { TextAnimateComponent } from './components/text-animate/text-animate.component';
 import { NgLetModule } from '@core/directives/ngLet.module';
+import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
+import { NgJsonEditorModule } from 'ang-jsoneditor';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -26,6 +28,7 @@ const declareAndExportComponents = [
   SchemaContainerComponent,
   SchemaContainerItemComponent,
   TextAnimateComponent,
+  JsonViewModalComponent,
 ];
 
 @NgModule({
@@ -43,6 +46,7 @@ const declareAndExportComponents = [
     NzButtonModule,
     NzGridModule,
     NgLetModule,
+    NgJsonEditorModule,
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],
