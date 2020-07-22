@@ -1,0 +1,7 @@
+<span
+  nz-typography
+  [@animate]="(animate | async) ? 'on' : 'off'"
+  (@animate.done)="onAnimationEnd()"
+>
+  {{ value }}
+</span>

@@ -7,6 +7,15 @@
     <nz-descriptions-item nzTitle="Version">
       {{ nodeCoreVersion?.currentVersion }}
     </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Latest version">
+      {{ nodeCoreVersion?.latestVersion }}
+    </nz-descriptions-item>
+
+    <ng-container *ngIf="blockchainHeight$ | async as blockchainHeight">
+      <nz-descriptions-item nzTitle="Height">
+        <app-text-animate [value]="blockchainHeight?.height"></app-text-animate>
+      </nz-descriptions-item>
+    </ng-container>
   </nz-descriptions>
 </ng-container>
 
