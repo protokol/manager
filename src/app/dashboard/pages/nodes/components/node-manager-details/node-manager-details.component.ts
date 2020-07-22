@@ -8,13 +8,19 @@ import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { Observable, of, timer } from 'rxjs';
+import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import {
-  CoreManagerVersionResponse,
+  InfoBlockchainHeight,
+  InfoCoreVersion,
   LogArchivedItem,
   ProcessListItem,
 } from '@core/interfaces/core-manager.types';
-import { distinctUntilChanged, exhaustMap, switchMap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  exhaustMap,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 import { LoadManagerProcesses } from '../../state/manager-processes/manager-processes.actions';
 
@@ -33,7 +39,10 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     ReturnType<typeof ManagerProcessesState.getManagerProcessesIds>
   >;
 
-  infoCoreVersion$: Observable<CoreManagerVersionResponse['result']> = of(null);
+  infoCoreVersion$: Observable<InfoCoreVersion> = of(null);
+  blockchainHeight$: BehaviorSubject<
+    InfoBlockchainHeight
+  > = new BehaviorSubject(null);
   logArchived$: Observable<LogArchivedItem[]> = of([]);
   processList$: Observable<ProcessListItem[]> = of([]);
 
@@ -64,6 +73,18 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         untilDestroyed(this),
         exhaustMap(() => this.store.dispatch(new LoadManagerProcesses()))
+      )
+      .subscribe();
+
+    timer(0, 8000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() =>
+          this.nodeManagerService.infoBlockchainHeight().pipe(
+            untilDestroyed(this),
+            tap((height) => this.blockchainHeight$.next(height))
+          )
+        )
       )
       .subscribe();
   }

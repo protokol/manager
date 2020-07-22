@@ -17,12 +17,14 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { FormsModule } from '@angular/forms';
 import { SchemaContainerComponent } from './components/schema-container/schema-container.component';
 import { SchemaContainerItemComponent } from './components/schema-container-item/schema-container-item.component';
+import { TextAnimateComponent } from './components/text-animate/text-animate.component';
 
 const declareAndExportComponents = [
   TableComponent,
   TextClipperComponent,
   SchemaContainerComponent,
   SchemaContainerItemComponent,
+  TextAnimateComponent,
 ];
 
 @NgModule({

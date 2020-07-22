@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { CoreManagerMethods } from '@core/interfaces/core-manager.methods';
 import {
+  CoreManagerBlockchainHeightResponse,
   CoreManagerLogArchivedResponse,
   CoreManagerProcessListResponse,
   CoreManagerProcessResponse,
@@ -26,6 +27,20 @@ export class NodeManagerService {
       .post<CoreManagerVersionResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.infoCoreVersion),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoBlockchainHeight(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerBlockchainHeightResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.infoBlockchainHeight
+        ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
       .pipe(map((response) => response.result));

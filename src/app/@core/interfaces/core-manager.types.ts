@@ -15,6 +15,14 @@ export interface InfoCoreVersion {
 
 export type CoreManagerVersionResponse = CoreManagerResponse<InfoCoreVersion>;
 
+export interface InfoBlockchainHeight {
+  height: number;
+}
+
+export type CoreManagerBlockchainHeightResponse = CoreManagerResponse<
+  InfoBlockchainHeight
+>;
+
 export interface LogArchivedItem {
   name: string;
   size: number;
