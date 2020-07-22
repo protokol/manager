@@ -1,7 +1,9 @@
-<span
-  nz-typography
-  [@animate]="(animate | async) ? 'on' : 'off'"
-  (@animate.done)="onAnimationEnd()"
->
-  {{ value }}
-</span>
+<ng-container *ngLet="animate$ | async as animate">
+  <span
+    nz-typography
+    [@animate]="animate ? 'on' : 'off'"
+    (@animate.done)="onAnimationEnd()"
+  >
+    {{ value }}
+  </span>
+</ng-container>

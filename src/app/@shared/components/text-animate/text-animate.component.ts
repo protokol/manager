@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   transition,
@@ -33,25 +27,29 @@ import {
           color: 'rgba(0, 0, 0, 0.65)',
         })
       ),
-      transition('on => off', [animate('1s')]),
-      transition('off => on', [animate('0.01s')]),
+      transition('on => off', [animate('750ms')]),
+      transition('off => on', [animate('1ms')]),
     ]),
   ],
 })
-export class TextAnimateComponent implements OnChanges {
-  @Input() value;
+export class TextAnimateComponent {
+  value = '';
 
-  animate: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-  constructor() {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.value.currentValue !== changes.value.previousValue) {
-      this.animate.next(true);
+  @Input('value')
+  set _value(value: string) {
+    if (this.value !== value) {
+      this.animate$.next(true);
+      this.value = value;
     }
   }
 
+  animate$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  constructor() {}
+
   onAnimationEnd() {
-    this.animate.next(false);
+    setTimeout(() => {
+      this.animate$.next(false);
+    });
   }
 }
