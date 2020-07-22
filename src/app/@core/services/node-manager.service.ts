@@ -8,6 +8,7 @@ import { NetworkUtils } from '@core/utils/network-utils';
 import {
   CoreManagerBlockchainHeightResponse,
   CoreManagerCoreStatusResponse,
+  CoreManagerCurrentDelegateResponse,
   CoreManagerLogArchivedResponse,
   CoreManagerNextForgingSlotResponse,
   CoreManagerProcessListResponse,
@@ -68,6 +69,20 @@ export class NodeManagerService {
         url,
         NetworkUtils.getNodeManagerPayload(
           CoreManagerMethods.infoBlockchainHeight
+        ),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoCurrentDelegate(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerCurrentDelegateResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.infoCurrentDelegate
         ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )

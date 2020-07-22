@@ -33,10 +33,10 @@ import {
   ],
 })
 export class TextAnimateComponent {
-  value = '';
+  value: string | number = '';
 
   @Input('value')
-  set _value(value: string) {
+  set _value(value: string | number) {
     if (this.value !== value) {
       this.animate$.next(true);
       this.value = value;

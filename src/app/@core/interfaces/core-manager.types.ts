@@ -23,6 +23,15 @@ export type CoreManagerBlockchainHeightResponse = CoreManagerResponse<
   InfoBlockchainHeight
 >;
 
+export interface InfoCurrentDelegate {
+  rank: number;
+  username: string;
+}
+
+export type CoreManagerCurrentDelegateResponse = CoreManagerResponse<
+  InfoCurrentDelegate
+>;
+
 export interface LogArchivedItem {
   name: string;
   size: number;
