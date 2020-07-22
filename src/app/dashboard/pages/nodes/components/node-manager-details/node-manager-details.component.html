@@ -16,6 +16,14 @@
         <app-text-animate [value]="blockchainHeight?.height"></app-text-animate>
       </nz-descriptions-item>
     </ng-container>
+
+    <ng-container *ngIf="infoNextForgingSlot$ | async as infoNextForgingSlot">
+      <nz-descriptions-item nzTitle="Next slot in(ms)">
+        <app-text-animate
+          [value]="infoNextForgingSlot?.remainingTime"
+        ></app-text-animate>
+      </nz-descriptions-item>
+    </ng-container>
   </nz-descriptions>
 </ng-container>
 
@@ -26,7 +34,35 @@
 <app-process-list-table [rows]="processList$"></app-process-list-table>
 
 <ng-template #nodeManagerTitle>
-  Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
+  <nz-space nzDirection="horizontal" nzSize="middle">
+    <nz-space-item>
+      <span
+        >Node manager @ <a>{{ nodeManagerUrl$ | async }}</a></span
+      >
+    </nz-space-item>
+
+    <nz-space-item>
+      <ng-container *ngIf="infoCoreStatus$ | async as infoCoreStatus">
+        <nz-badge
+          [nzStatus]="
+            infoCoreStatus?.processStatus === 'online' ? 'success' : 'error'
+          "
+          [nzText]="'Core ' + transformText(infoCoreStatus?.processStatus)"
+        ></nz-badge>
+      </ng-container>
+    </nz-space-item>
+
+    <nz-space-item>
+      <ng-container *ngIf="infoCoreStatus$ | async as infoCoreStatus">
+        <nz-badge
+          [nzStatus]="infoCoreStatus?.syncing ? 'success' : 'error'"
+          [nzText]="
+            'Core ' + (infoCoreStatus?.syncing ? 'syncing' : 'not syncing')
+          "
+        ></nz-badge>
+      </ng-container>
+    </nz-space-item>
+  </nz-space>
 </ng-template>
 
 <ng-template #loading>

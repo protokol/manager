@@ -33,6 +33,21 @@ export type CoreManagerLogArchivedResponse = CoreManagerResponse<
   LogArchivedItem[]
 >;
 
+export interface InfoCoreStatus {
+  processStatus: ProcessStatus;
+  syncing: boolean;
+}
+
+export type CoreManagerCoreStatusResponse = CoreManagerResponse<InfoCoreStatus>;
+
+export interface InfoNextForgingSlot {
+  remainingTime: number;
+}
+
+export type CoreManagerNextForgingSlotResponse = CoreManagerResponse<
+  InfoNextForgingSlot
+>;
+
 export type ProcessStatus = 'online' | 'offline';
 
 export interface ProcessListItem {

@@ -11,9 +11,12 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import {
   InfoBlockchainHeight,
+  InfoCoreStatus,
   InfoCoreVersion,
+  InfoNextForgingSlot,
   LogArchivedItem,
   ProcessListItem,
+  ProcessStatus,
 } from '@core/interfaces/core-manager.types';
 import {
   distinctUntilChanged,
@@ -23,6 +26,7 @@ import {
 } from 'rxjs/operators';
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 import { LoadManagerProcesses } from '../../state/manager-processes/manager-processes.actions';
+import { TextUtils } from '@core/utils/text-utils';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -40,6 +44,10 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   >;
 
   infoCoreVersion$: Observable<InfoCoreVersion> = of(null);
+  infoCoreStatus$: BehaviorSubject<InfoCoreStatus> = new BehaviorSubject(null);
+  infoNextForgingSlot$: BehaviorSubject<
+    InfoNextForgingSlot
+  > = new BehaviorSubject(null);
   blockchainHeight$: BehaviorSubject<
     InfoBlockchainHeight
   > = new BehaviorSubject(null);
@@ -69,10 +77,34 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       )
     );
 
+    timer(0, 1000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() =>
+          this.nodeManagerService.infoNextForgingSlot().pipe(
+            untilDestroyed(this),
+            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          )
+        )
+      )
+      .subscribe();
+
     timer(0, 3000)
       .pipe(
         untilDestroyed(this),
-        exhaustMap(() => this.store.dispatch(new LoadManagerProcesses()))
+        exhaustMap(() => this.store.dispatch(new LoadManagerProcesses())),
+        exhaustMap(() =>
+          this.nodeManagerService.infoCoreStatus().pipe(
+            untilDestroyed(this),
+            tap((status) => this.infoCoreStatus$.next(status))
+          )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService.infoNextForgingSlot().pipe(
+            untilDestroyed(this),
+            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          )
+        )
       )
       .subscribe();
 
@@ -87,6 +119,10 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe();
+  }
+
+  transformText(status: ProcessStatus) {
+    return TextUtils.capitalizeFirst(status);
   }
 
   ngOnDestroy(): void {}

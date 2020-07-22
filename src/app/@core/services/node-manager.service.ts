@@ -5,14 +5,16 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { HttpClient } from '@angular/common/http';
 import { NetworkUtils } from '@core/utils/network-utils';
-import { CoreManagerMethods } from '@core/interfaces/core-manager.methods';
 import {
   CoreManagerBlockchainHeightResponse,
+  CoreManagerCoreStatusResponse,
   CoreManagerLogArchivedResponse,
+  CoreManagerNextForgingSlotResponse,
   CoreManagerProcessListResponse,
   CoreManagerProcessResponse,
   CoreManagerVersionResponse,
 } from '@core/interfaces/core-manager.types';
+import { CoreManagerMethods } from '../interfaces/core-manager-methods.enum';
 
 @Injectable()
 export class NodeManagerService {
@@ -27,6 +29,32 @@ export class NodeManagerService {
       .post<CoreManagerVersionResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.infoCoreVersion),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoCoreStatus(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerCoreStatusResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.infoCoreStatus),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoNextForgingSlot(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerNextForgingSlotResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.infoNextForgingSlot
+        ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
       .pipe(map((response) => response.result));

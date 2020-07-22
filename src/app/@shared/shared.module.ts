@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { SchemaContainerComponent } from './components/schema-container/schema-container.component';
 import { SchemaContainerItemComponent } from './components/schema-container-item/schema-container-item.component';
 import { TextAnimateComponent } from './components/text-animate/text-animate.component';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -41,6 +42,7 @@ const declareAndExportComponents = [
     FormsModule,
     NzButtonModule,
     NzGridModule,
+    NgLetModule,
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

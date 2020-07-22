@@ -1,6 +1,6 @@
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { v4 as uuid } from 'uuid';
-import { CoreManagerMethods } from '@core/interfaces/core-manager.methods';
+import { CoreManagerMethods } from '@core/interfaces/core-manager-methods.enum';
 
 export abstract class NetworkUtils {
   static isNodeCryptoConfiguration(
