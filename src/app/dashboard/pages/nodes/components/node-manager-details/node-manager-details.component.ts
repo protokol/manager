@@ -13,6 +13,7 @@ import {
   InfoBlockchainHeight,
   InfoCoreStatus,
   InfoCoreVersion,
+  InfoCurrentDelegate,
   InfoNextForgingSlot,
   LogArchivedItem,
   ProcessListItem,
@@ -45,6 +46,9 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
   infoCoreVersion$: Observable<InfoCoreVersion> = of(null);
   infoCoreStatus$: BehaviorSubject<InfoCoreStatus> = new BehaviorSubject(null);
+  infoCurrentDelegate$: BehaviorSubject<
+    InfoCurrentDelegate
+  > = new BehaviorSubject(null);
   infoNextForgingSlot$: BehaviorSubject<
     InfoNextForgingSlot
   > = new BehaviorSubject(null);
@@ -103,6 +107,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
           this.nodeManagerService.infoNextForgingSlot().pipe(
             untilDestroyed(this),
             tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService.infoCurrentDelegate().pipe(
+            untilDestroyed(this),
+            tap((delegate) => this.infoCurrentDelegate$.next(delegate))
           )
         )
       )
