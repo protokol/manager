@@ -25,9 +25,12 @@ import { LogViewModalComponent } from '@app/dashboard/pages/nodes/components/log
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { ProcessListTableComponent } from '@app/dashboard/pages/nodes/components/process-list-table/process-list-table.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NgxsModule } from '@ngxs/store';
+import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 
 @NgModule({
   imports: [
+    NgxsModule.forFeature([ManagerProcessesState]),
     NodesRoutingModule,
     CommonModule,
     SharedModule,

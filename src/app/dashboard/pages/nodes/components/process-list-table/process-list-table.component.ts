@@ -19,6 +19,11 @@ import { TextUtils } from '@core/utils/text-utils';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { NzMessageService } from 'ng-zorro-antd';
+import { Store } from '@ngxs/store';
+import {
+  StartManagerProcess,
+  StopManagerProcess,
+} from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.actions';
 
 @Component({
   selector: 'app-process-list-table',
@@ -71,7 +76,8 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
 
   constructor(
     private nodeManagerService: NodeManagerService,
-    private nzMessageService: NzMessageService
+    private nzMessageService: NzMessageService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -103,50 +109,6 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     ];
   }
 
-  restartProcess(event: MouseEvent, row: ProcessListItem) {
-    event.preventDefault();
-
-    this.setRowLoading(row.name, true, 'restart');
-
-    this.nodeManagerService
-      .processRestart(row.name)
-      .pipe(
-        untilDestroyed(this),
-        tap(
-          () => {},
-          (err) => {
-            this.log.error(err);
-            this.nzMessageService.error(
-              `Restart process "${row.name}" failed!`
-            );
-          }
-        ),
-        finalize(() => this.setRowLoading(row.name, false))
-      )
-      .subscribe();
-  }
-
-  processStop(event: MouseEvent, row: ProcessListItem) {
-    event.preventDefault();
-
-    this.setRowLoading(row.name, true, 'stop');
-
-    this.nodeManagerService
-      .processStop(row.name)
-      .pipe(
-        untilDestroyed(this),
-        tap(
-          () => {},
-          (err) => {
-            this.log.error(err);
-            this.nzMessageService.error(`Stop process "${row.name}" failed!`);
-          }
-        ),
-        finalize(() => this.setRowLoading(row.name, false))
-      )
-      .subscribe();
-  }
-
   setRowLoading(processName: string, isLoading: boolean, type?: string) {
     this.rowsLoading$.next({
       ...this.rowsLoading$.getValue(),
@@ -161,23 +123,65 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     return TextUtils.capitalizeFirst(status);
   }
 
-  startProcess(event: MouseEvent, row: ProcessListItem) {
+  startProcess(event: MouseEvent, { name }: ProcessListItem) {
     event.preventDefault();
 
-    this.setRowLoading(row.name, true, 'start');
+    this.setRowLoading(name, true, 'start');
 
-    this.nodeManagerService
-      .processStart(row.name)
+    this.store
+      .dispatch(new StartManagerProcess(name))
       .pipe(
         untilDestroyed(this),
         tap(
           () => {},
           (err) => {
             this.log.error(err);
-            this.nzMessageService.error(`Start process "${row.name}" failed!`);
+            this.nzMessageService.error(`Start process "${name}" failed!`);
           }
         ),
-        finalize(() => this.setRowLoading(row.name, false))
+        finalize(() => this.setRowLoading(name, false))
+      )
+      .subscribe();
+  }
+
+  restartProcess(event: MouseEvent, { name }: ProcessListItem) {
+    event.preventDefault();
+
+    this.setRowLoading(name, true, 'restart');
+
+    this.nodeManagerService
+      .processRestart(name)
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          () => {},
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error(`Restart process "${name}" failed!`);
+          }
+        ),
+        finalize(() => this.setRowLoading(name, false))
+      )
+      .subscribe();
+  }
+
+  processStop(event: MouseEvent, { name }: ProcessListItem) {
+    event.preventDefault();
+
+    this.setRowLoading(name, true, 'stop');
+
+    this.store
+      .dispatch(new StopManagerProcess(name))
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          () => {},
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error(`Stop process "${name}" failed!`);
+          }
+        ),
+        finalize(() => this.setRowLoading(name, false))
       )
       .subscribe();
   }
