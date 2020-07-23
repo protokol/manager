@@ -11,11 +11,11 @@ import { TableColumnConfig } from '@shared/interfaces/table.types';
 import { LogArchivedItem } from '@core/interfaces/core-manager.types';
 import { Logger } from '@core/services/logger.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LogViewModalComponent } from '@app/dashboard/pages/nodes/components/log-view-modal/log-view-modal.component';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
+import { TextViewModalComponent } from '../text-view-modal/text-view-modal.component';
 
 @Component({
   selector: 'app-log-archived-table',
@@ -93,9 +93,9 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
           (logs) => {
             this.nzModalService.create({
               nzTitle: `"${row.name}" log`,
-              nzContent: LogViewModalComponent,
+              nzContent: TextViewModalComponent,
               nzComponentParams: {
-                logs,
+                text: logs,
               },
               nzFooter: null,
               nzWidth: '75vw',

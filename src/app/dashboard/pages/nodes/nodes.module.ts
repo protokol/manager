@@ -8,6 +8,7 @@ import {
   NzButtonModule,
   NzDescriptionsModule,
   NzDividerModule,
+  NzDropDownModule,
   NzFormModule,
   NzGridModule,
   NzIconModule,
@@ -21,12 +22,12 @@ import { NodeManagerSettingsModalComponent } from './components/node-manager-set
 import { NodeManagerDetailsComponent } from './components/node-manager-details/node-manager-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogArchivedTableComponent } from './components/log-archived-table/log-archived-table.component';
-import { LogViewModalComponent } from '@app/dashboard/pages/nodes/components/log-view-modal/log-view-modal.component';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { ProcessListTableComponent } from '@app/dashboard/pages/nodes/components/process-list-table/process-list-table.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NgxsModule } from '@ngxs/store';
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
+import { TextViewModalComponent } from './components/text-view-modal/text-view-modal.component';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-
     FormsModule,
     NzBadgeModule,
     NzSpaceModule,
+    NzDropDownModule,
   ],
   providers: [],
   declarations: [
@@ -57,7 +59,7 @@ import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-
     NodeManagerDetailsComponent,
     NodeManagerSettingsModalComponent,
     LogArchivedTableComponent,
-    LogViewModalComponent,
+    TextViewModalComponent,
     ProcessListTableComponent,
   ],
   exports: [],
