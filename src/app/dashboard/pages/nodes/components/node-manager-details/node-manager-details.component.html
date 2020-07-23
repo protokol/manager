@@ -1,9 +1,24 @@
 <ng-container *ngIf="infoCoreVersion$ | async as nodeCoreVersion; else loading">
-  <nz-descriptions
-    [nzTitle]="nodeManagerTitle"
-    nzBordered
-    [nzColumn]="descriptionColumns"
-  >
+  <ng-container *ngTemplateOutlet="nodeManagerTitle"></ng-container>
+
+  <div class="actions">
+    <button
+      nz-button
+      nz-dropdown
+      [nzLoading]="isConfigurationLoading$ | async"
+      [nzDropdownMenu]="configurationMenu"
+      nzPlacement="bottomRight"
+    >
+      Configuration
+    </button>
+    <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item (click)="onGetEnv($event)">Get environment</li>
+      </ul>
+    </nz-dropdown-menu>
+  </div>
+
+  <nz-descriptions nzBordered [nzColumn]="descriptionColumns">
     <nz-descriptions-item nzTitle="Version">
       {{ nodeCoreVersion?.currentVersion }}
     </nz-descriptions-item>
@@ -64,8 +79,10 @@
 <ng-template #nodeManagerTitle>
   <nz-space nzDirection="horizontal" nzSize="middle">
     <nz-space-item>
-      <span>
-        Node manager @ <a>{{ nodeManagerUrl$ | async }}</a>
+      <span nz-typography>
+        <strong
+          >Node manager @ <a>{{ nodeManagerUrl$ | async }}</a></strong
+        >
       </span>
     </nz-space-item>
 

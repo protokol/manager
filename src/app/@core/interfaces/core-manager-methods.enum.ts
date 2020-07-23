@@ -9,4 +9,5 @@ export enum CoreManagerMethods {
   processList = 'process.list',
   processRestart = 'process.restart',
   processStop = 'process.stop',
+  configurationGetEnv = 'configuration.getEnv',
 }

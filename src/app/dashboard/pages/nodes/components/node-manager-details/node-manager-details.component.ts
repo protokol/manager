@@ -32,6 +32,7 @@ import { TextUtils } from '@core/utils/text-utils';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Logger } from '@core/services/logger.service';
 import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
+import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -67,6 +68,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   isLastForgedBlockLoading$: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
+  isConfigurationLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -178,4 +180,37 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  onGetEnv(event: MouseEvent) {
+    event.preventDefault();
+
+    this.isConfigurationLoading$.next(true);
+
+    this.nodeManagerService
+      .configurationGetEnv()
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          (env) => {
+            this.nzModalService.create({
+              nzTitle: 'Configuration environment',
+              nzContent: TextViewModalComponent,
+              nzComponentParams: {
+                text: env,
+              },
+              nzFooter: null,
+              nzWidth: '75vw',
+            });
+          },
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error(
+              'Retrieving configuration environment failed!'
+            );
+          }
+        ),
+        finalize(() => this.isConfigurationLoading$.next(false))
+      )
+      .subscribe();
+  }
 }

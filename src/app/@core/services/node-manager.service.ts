@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { NetworkUtils } from '@core/utils/network-utils';
 import {
   CoreManagerBlockchainHeightResponse,
+  CoreManagerConfigGetEnvResponse,
   CoreManagerCoreStatusResponse,
   CoreManagerCurrentDelegateResponse,
   CoreManagerLastForgedBlockResponse,
@@ -182,6 +183,20 @@ export class NodeManagerService {
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.processStop, {
           name: processName,
         }),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  configurationGetEnv(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerConfigGetEnvResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.configurationGetEnv
+        ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
       .pipe(map((response) => response.result));
