@@ -216,4 +216,18 @@ export class NodeManagerService {
       )
       .pipe(map((response) => response.result));
   }
+
+  configurationUpdatePlugins(
+    content: any,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient.post(
+      url,
+      NetworkUtils.getNodeManagerPayload(
+        CoreManagerMethods.configurationUpdatePlugins,
+        { content: JSON.stringify(content) }
+      ),
+      { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+    );
+  }
 }

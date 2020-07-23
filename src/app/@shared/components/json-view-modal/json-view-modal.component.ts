@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  TemplateRef,
+} from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 
 @Component({
@@ -11,6 +16,7 @@ export class JsonViewModalComponent {
   readonly editorOptions: JsonEditorOptions;
 
   @Input() data;
+  @Input() footer?: TemplateRef<{ data: any }>;
 
   constructor() {
     this.editorOptions = new JsonEditorOptions();
