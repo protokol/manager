@@ -23,6 +23,7 @@ import {
   distinctUntilChanged,
   exhaustMap,
   finalize,
+  map,
   switchMap,
   tap,
 } from 'rxjs/operators';
@@ -207,6 +208,38 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
             this.nzMessageService.error(
               'Retrieving configuration environment failed!'
             );
+          }
+        ),
+        finalize(() => this.isConfigurationLoading$.next(false))
+      )
+      .subscribe();
+  }
+
+  onGetPlugins(event: MouseEvent) {
+    event.preventDefault();
+
+    this.isConfigurationLoading$.next(true);
+
+    this.nodeManagerService
+      .configurationGetPlugins()
+      .pipe(
+        untilDestroyed(this),
+        map((env) => JSON.parse(env)),
+        tap(
+          (env) => {
+            this.nzModalService.create({
+              nzTitle: 'Plugins environment',
+              nzContent: JsonViewModalComponent,
+              nzComponentParams: {
+                data: env,
+              },
+              nzFooter: null,
+              nzWidth: '75vw',
+            });
+          },
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error('Retrieving plugins failed!');
           }
         ),
         finalize(() => this.isConfigurationLoading$.next(false))

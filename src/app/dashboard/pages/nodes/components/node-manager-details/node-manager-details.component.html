@@ -3,6 +3,7 @@
 
   <div class="actions">
     <button
+      nzType="primary"
       nz-button
       nz-dropdown
       [nzLoading]="isConfigurationLoading$ | async"
@@ -14,6 +15,7 @@
     <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
       <ul nz-menu>
         <li nz-menu-item (click)="onGetEnv($event)">Get environment</li>
+        <li nz-menu-item (click)="onGetPlugins($event)">Get plugins</li>
       </ul>
     </nz-dropdown-menu>
   </div>
