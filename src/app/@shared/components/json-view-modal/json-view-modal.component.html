@@ -3,3 +3,9 @@
     <json-editor [options]="editorOptions" [data]="data"></json-editor>
   </app-schema-container-item>
 </app-schema-container>
+
+<ng-container *ngIf="footer">
+  <div class="modal-footer">
+    <ng-container *ngTemplateOutlet="footer"></ng-container>
+  </div>
+</ng-container>

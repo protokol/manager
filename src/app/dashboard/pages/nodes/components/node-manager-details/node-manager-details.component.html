@@ -16,6 +16,9 @@
       <ul nz-menu>
         <li nz-menu-item (click)="onGetEnv($event)">Get environment</li>
         <li nz-menu-item (click)="onGetPlugins($event)">Get plugins</li>
+        <li nz-menu-item (click)="onUpdatePlugins($event)">
+          Update plugins configuration
+        </li>
       </ul>
     </nz-dropdown-menu>
   </div>
@@ -114,4 +117,15 @@
 
 <ng-template #loading>
   <nz-spin nzSimple></nz-spin>
+</ng-template>
+
+<ng-template #updatePluginsModalFooter let-data="data">
+  <button
+    nz-button
+    nzType="primary"
+    (click)="onUpdatePluginsSubmit($event, data)"
+    [nzLoading]="isUpdatePluginsLoading$ | async"
+  >
+    Update plugins
+  </button>
 </ng-template>

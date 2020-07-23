@@ -3,6 +3,8 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
@@ -34,6 +36,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Logger } from '@core/services/logger.service';
 import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
 import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
+import { NzModalRef } from 'ng-zorro-antd/modal/modal-ref';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -43,6 +46,8 @@ import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/te
 })
 export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
+
+  private updatePluginsRef: NzModalRef = null;
 
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
 
@@ -70,6 +75,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     false
   );
   isConfigurationLoading$ = new BehaviorSubject<boolean>(false);
+  isUpdatePluginsLoading$ = new BehaviorSubject<boolean>(false);
+
+  @ViewChild('updatePluginsModalFooter', { static: true })
+  updatePluginsModalFooter!: TemplateRef<{
+    data: any;
+  }>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -215,16 +226,21 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  getConfigurationPlugins() {
+    this.isConfigurationLoading$.next(true);
+
+    return this.nodeManagerService.configurationGetPlugins().pipe(
+      untilDestroyed(this),
+      map((env) => JSON.parse(env)),
+      finalize(() => this.isConfigurationLoading$.next(false))
+    );
+  }
+
   onGetPlugins(event: MouseEvent) {
     event.preventDefault();
 
-    this.isConfigurationLoading$.next(true);
-
-    this.nodeManagerService
-      .configurationGetPlugins()
+    this.getConfigurationPlugins()
       .pipe(
-        untilDestroyed(this),
-        map((env) => JSON.parse(env)),
         tap(
           (env) => {
             this.nzModalService.create({
@@ -241,8 +257,65 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
             this.log.error(err);
             this.nzMessageService.error('Retrieving plugins failed!');
           }
+        )
+      )
+      .subscribe();
+  }
+
+  onUpdatePlugins(event: MouseEvent) {
+    event.preventDefault();
+
+    this.getConfigurationPlugins()
+      .pipe(
+        tap(
+          (env) => {
+            this.updatePluginsRef = this.nzModalService.create({
+              nzTitle: 'Update plugins',
+              nzContent: JsonViewModalComponent,
+              nzComponentParams: {
+                data: env,
+                footer: this.updatePluginsModalFooter,
+              },
+              nzFooter: null,
+              nzWidth: '75vw',
+            });
+          },
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error('Retrieving plugins failed!');
+          }
+        )
+      )
+      .subscribe();
+  }
+
+  onUpdatePluginsSubmit(event: MouseEvent, data: any) {
+    event.preventDefault();
+
+    this.isUpdatePluginsLoading$.next(true);
+
+    this.nodeManagerService
+      .configurationUpdatePlugins(data)
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          (response) => {
+            if (!response.hasOwnProperty('error')) {
+              this.nzMessageService.success('Configuration updated!');
+              this.updatePluginsRef.destroy();
+            } else {
+              this.nzMessageService.error(
+                'Configuration failed, check console!'
+              );
+              this.log.error(response);
+            }
+          },
+          (err) => {
+            this.log.error(err);
+            this.nzMessageService.error('Configuration update failed!');
+          }
         ),
-        finalize(() => this.isConfigurationLoading$.next(false))
+        finalize(() => this.isUpdatePluginsLoading$.next(false))
       )
       .subscribe();
   }

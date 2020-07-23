@@ -11,4 +11,5 @@ export enum CoreManagerMethods {
   processStop = 'process.stop',
   configurationGetEnv = 'configuration.getEnv',
   configurationGetPlugins = 'configuration.getPlugins',
+  configurationUpdatePlugins = 'configuration.updatePlugins',
 }

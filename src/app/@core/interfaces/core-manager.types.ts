@@ -108,4 +108,5 @@ export type CoreManagerProcessListResponse = CoreManagerResponse<
 export type CoreManagerProcessResponse = CoreManagerResponse<ProcessListItem>;
 
 export type CoreManagerConfigGetEnvResponse = CoreManagerResponse<string>;
+
 export type CoreManagerConfigGetPluginsResponse = CoreManagerResponse<string>;
