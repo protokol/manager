@@ -8,6 +8,7 @@ import { NetworkUtils } from '@core/utils/network-utils';
 import {
   CoreManagerBlockchainHeightResponse,
   CoreManagerConfigGetEnvResponse,
+  CoreManagerConfigGetPluginsResponse,
   CoreManagerCoreStatusResponse,
   CoreManagerCurrentDelegateResponse,
   CoreManagerLastForgedBlockResponse,
@@ -196,6 +197,20 @@ export class NodeManagerService {
         url,
         NetworkUtils.getNodeManagerPayload(
           CoreManagerMethods.configurationGetEnv
+        ),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  configurationGetPlugins(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerConfigGetPluginsResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(
+          CoreManagerMethods.configurationGetPlugins
         ),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
