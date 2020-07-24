@@ -24,6 +24,7 @@ import {
   StartManagerProcess,
   StopManagerProcess,
 } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.actions';
+import { MemoryUtils } from '@core/utils/memory-utils';
 
 @Component({
   selector: 'app-process-list-table',
@@ -187,11 +188,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   }
 
   formatMemory(memory: number) {
-    if (!memory) {
-      return 0;
-    }
-
-    return (memory / 1024).toFixed(2);
+    return MemoryUtils.toMb(memory);
   }
 
   ngOnDestroy(): void {}

@@ -118,5 +118,9 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  formatMemory(memory: number) {
+    return MemoryUtils.toMb(memory);
+  }
+
   ngOnDestroy(): void {}
 }
