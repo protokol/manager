@@ -15,11 +15,17 @@ import { JsonEditorOptions } from 'ang-jsoneditor';
 export class JsonViewModalComponent {
   readonly editorOptions: JsonEditorOptions;
 
-  @Input() data;
+  jsonData: any = null;
+
+  @Input() inputData;
   @Input() footer?: TemplateRef<{ data: any }>;
 
   constructor() {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
+  }
+
+  onDataChange(data: any) {
+    this.jsonData = data;
   }
 }

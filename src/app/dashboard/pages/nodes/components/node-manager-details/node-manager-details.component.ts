@@ -175,7 +175,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
               nzTitle: 'Last forged block',
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
-                data: block,
+                inputData: block,
               },
               nzFooter: null,
               nzWidth: '55vw',
@@ -247,7 +247,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
               nzTitle: 'Plugins environment',
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
-                data: env,
+                inputData: env,
               },
               nzFooter: null,
               nzWidth: '75vw',
@@ -273,7 +273,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
               nzTitle: 'Update plugins',
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
-                data: env,
+                inputData: env,
                 footer: this.updatePluginsModalFooter,
               },
               nzFooter: null,

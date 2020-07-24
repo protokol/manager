@@ -16,6 +16,7 @@ import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { TextViewModalComponent } from '../text-view-modal/text-view-modal.component';
+import { MemoryUtils } from '@core/utils/memory-utils';
 
 @Component({
   selector: 'app-log-archived-table',
@@ -53,6 +54,9 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: LogArchivedItem;
   }>;
+  @ViewChild('sizeTpl', { static: true }) sizeTpl!: TemplateRef<{
+    row: LogArchivedItem;
+  }>;
 
   constructor(
     private nzModalService: NzModalService,
@@ -69,6 +73,7 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
       {
         propertyName: 'size',
         headerName: 'Size',
+        columnTransformTpl: this.sizeTpl,
       },
       {
         headerName: 'Actions',
