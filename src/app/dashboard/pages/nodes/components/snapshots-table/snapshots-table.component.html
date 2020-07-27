@@ -1,0 +1,42 @@
+<app-table [rows]="rows$" [tableColumns]="tableColumns" scrollY="15vh">
+</app-table>
+
+<ng-template #actionsTpl let-row="row">
+  <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
+    <ng-container *ngLet="rowsLoading[row.name].isLoading as isRowLoading">
+      <ng-container *ngLet="rowsLoading[row.name].type as loadingActionType">
+        <nz-space>
+          <nz-space-item>
+            <button
+              nz-button
+              nzType="primary"
+              (click)="restoreSnapshot($event, row)"
+              [disabled]="isRowLoading"
+              [nzLoading]="loadingActionType === 'restore'"
+            >
+              Restore
+            </button>
+          </nz-space-item>
+          <nz-space-item>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure you want to delete this snapshot?"
+              (nzOnConfirm)="deleteSnapshot(row)"
+              nzPopconfirmPlacement="topRight"
+              nz-button
+              nzType="danger"
+              [disabled]="isRowLoading"
+              [nzLoading]="loadingActionType === 'delete'"
+            >
+              Delete
+            </button>
+          </nz-space-item>
+        </nz-space>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #sizeTpl let-row="row">
+  {{ formatMemory(row?.size) }} MB
+</ng-template>

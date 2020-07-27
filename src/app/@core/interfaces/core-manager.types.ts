@@ -110,3 +110,25 @@ export type CoreManagerProcessResponse = CoreManagerResponse<ProcessListItem>;
 export type CoreManagerConfigGetEnvResponse = CoreManagerResponse<string>;
 
 export type CoreManagerConfigGetPluginsResponse = CoreManagerResponse<string>;
+
+export interface SnapshotsCreatePayload {
+  codec?: string;
+  skipCompression?: boolean;
+  start?: number;
+  end?: number;
+}
+
+export interface SnapshotsListItem {
+  name: string;
+  size: number;
+}
+
+export type CoreManagerSnapshotsListResponse = CoreManagerResponse<
+  SnapshotsListItem[]
+>;
+
+export interface SnapshotsRestorePayload {
+  name?: string;
+  truncate?: boolean;
+  verify?: boolean;
+}

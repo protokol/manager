@@ -12,4 +12,8 @@ export enum CoreManagerMethods {
   configurationGetEnv = 'configuration.getEnv',
   configurationGetPlugins = 'configuration.getPlugins',
   configurationUpdatePlugins = 'configuration.updatePlugins',
+  snapshotsList = 'snapshots.list',
+  snapshotsDelete = 'snapshots.delete',
+  snapshotsCreate = 'snapshots.create',
+  snapshotsRestore = 'snapshots.restore',
 }

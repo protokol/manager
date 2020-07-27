@@ -16,7 +16,10 @@ import {
   CoreManagerNextForgingSlotResponse,
   CoreManagerProcessListResponse,
   CoreManagerProcessResponse,
+  CoreManagerSnapshotsListResponse,
   CoreManagerVersionResponse,
+  SnapshotsCreatePayload,
+  SnapshotsRestorePayload,
 } from '@core/interfaces/core-manager.types';
 import { CoreManagerMethods } from '../interfaces/core-manager-methods.enum';
 
@@ -226,6 +229,59 @@ export class NodeManagerService {
       NetworkUtils.getNodeManagerPayload(
         CoreManagerMethods.configurationUpdatePlugins,
         { content: JSON.stringify(content) }
+      ),
+      { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+    );
+  }
+
+  snapshotsList(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerSnapshotsListResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.snapshotsList),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  snapshotDelete(
+    name: string,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient.post(
+      url,
+      NetworkUtils.getNodeManagerPayload(CoreManagerMethods.snapshotsDelete, {
+        name,
+      }),
+      { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+    );
+  }
+
+  snapshotsCreate(
+    payload: SnapshotsCreatePayload,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient.post(
+      url,
+      NetworkUtils.getNodeManagerPayload(
+        CoreManagerMethods.snapshotsCreate,
+        payload
+      ),
+      { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+    );
+  }
+
+  snapshotsRestore(
+    payload: SnapshotsRestorePayload,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient.post(
+      url,
+      NetworkUtils.getNodeManagerPayload(
+        CoreManagerMethods.snapshotsRestore,
+        payload
       ),
       { ...NetworkUtils.getNodeManagerDefaultHeaders() }
     );

@@ -6,6 +6,7 @@ import { NodeDetailsComponent } from '@app/dashboard/pages/nodes/components/node
 import {
   NzBadgeModule,
   NzButtonModule,
+  NzCheckboxModule,
   NzDescriptionsModule,
   NzDividerModule,
   NzDropDownModule,
@@ -14,6 +15,7 @@ import {
   NzIconModule,
   NzInputModule,
   NzModalModule,
+  NzPopconfirmModule,
   NzSpinModule,
   NzTypographyModule,
 } from 'ng-zorro-antd';
@@ -28,10 +30,14 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NgxsModule } from '@ngxs/store';
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 import { TextViewModalComponent } from './components/text-view-modal/text-view-modal.component';
+import { ManagerSnapshotsState } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.state';
+import { SnapshotsTableComponent } from '@app/dashboard/pages/nodes/components/snapshots-table/snapshots-table.component';
+import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-create-modal/snapshot-create-modal.component';
+import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapshot-restore-modal/snapshot-restore-modal.component';
 
 @NgModule({
   imports: [
-    NgxsModule.forFeature([ManagerProcessesState]),
+    NgxsModule.forFeature([ManagerProcessesState, ManagerSnapshotsState]),
     NodesRoutingModule,
     CommonModule,
     SharedModule,
@@ -52,6 +58,8 @@ import { TextViewModalComponent } from './components/text-view-modal/text-view-m
     NzBadgeModule,
     NzSpaceModule,
     NzDropDownModule,
+    NzCheckboxModule,
+    NzPopconfirmModule,
   ],
   providers: [],
   declarations: [
@@ -61,6 +69,9 @@ import { TextViewModalComponent } from './components/text-view-modal/text-view-m
     LogArchivedTableComponent,
     TextViewModalComponent,
     ProcessListTableComponent,
+    SnapshotsTableComponent,
+    SnapshotCreateModalComponent,
+    SnapshotRestoreModalComponent,
   ],
   exports: [],
 })

@@ -24,7 +24,7 @@
   </div>
 
   <nz-descriptions nzBordered [nzColumn]="descriptionColumns">
-    <nz-descriptions-item nzTitle="Version">
+    <nz-descriptions-item nzTitle="Core version">
       {{ nodeCoreVersion?.currentVersion }}
     </nz-descriptions-item>
     <nz-descriptions-item nzTitle="Latest version">
@@ -80,6 +80,19 @@
 
 <nz-divider nzText="Processes"></nz-divider>
 <app-process-list-table [rows]="processList$"></app-process-list-table>
+
+<nz-divider nzText="Snapshots"></nz-divider>
+<div class="snapshots-actions">
+  <button
+    nzType="primary"
+    nz-button
+    (click)="onCreateSnapshot($event)"
+    [nzLoading]="isSnapshotsLoading$ | async"
+  >
+    Create snapshot
+  </button>
+</div>
+<app-snapshots-table [rows]="snapshots$"></app-snapshots-table>
 
 <ng-template #nodeManagerTitle>
   <nz-space nzDirection="horizontal" nzSize="middle">
