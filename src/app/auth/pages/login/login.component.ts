@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { StoreUtilsService } from '@app/@core/store/store-utils.service';
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
-import { distinctUntilChanged, finalize, map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, map, take, tap } from 'rxjs/operators';
 import { AddPinAction } from '@core/store/pins/pins.actions';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
@@ -34,10 +34,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private store: Store,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private actions$: Actions
   ) {
     this.createForm();
     this.registerFormListeners();
+
+    this.actions$
+      .pipe(
+        untilDestroyed(this),
+        ofActionSuccessful(AddPinAction),
+        take(1),
+        tap(() => this.router.navigate(['/dashboard']))
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -68,7 +78,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         tap((isValidPin) => {
           if (isValidPin) {
             this.store.dispatch(new AddPinAction(profileId, pin));
-            this.router.navigate(['/dashboard']);
           } else {
             this.isPinInvalid = true;
           }

@@ -20,6 +20,7 @@ import {
   LogArchivedItem,
   ProcessListItem,
   ProcessStatus,
+  SnapshotsListItem,
 } from '@core/interfaces/core-manager.types';
 import {
   distinctUntilChanged,
@@ -37,6 +38,9 @@ import { Logger } from '@core/services/logger.service';
 import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
 import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
 import { NzModalRef } from 'ng-zorro-antd/modal/modal-ref';
+import { ManagerSnapshotsState } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.state';
+import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-create-modal/snapshot-create-modal.component';
+import { LoadManagerSnapshots } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -56,6 +60,10 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   managerProcessesIds$: Observable<
     ReturnType<typeof ManagerProcessesState.getManagerProcessesIds>
   >;
+  @Select(ManagerSnapshotsState.getManagerSnapshotsIds)
+  managerSnapshotsIds$: Observable<
+    ReturnType<typeof ManagerSnapshotsState.getManagerSnapshotsIds>
+  >;
 
   infoCoreVersion$: Observable<InfoCoreVersion> = of(null);
   infoCoreStatus$: BehaviorSubject<InfoCoreStatus> = new BehaviorSubject(null);
@@ -70,12 +78,14 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   > = new BehaviorSubject(null);
   logArchived$: Observable<LogArchivedItem[]> = of([]);
   processList$: Observable<ProcessListItem[]> = of([]);
+  snapshots$: Observable<SnapshotsListItem[]> = of([]);
 
   isLastForgedBlockLoading$: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
   isConfigurationLoading$ = new BehaviorSubject<boolean>(false);
   isUpdatePluginsLoading$ = new BehaviorSubject<boolean>(false);
+  isSnapshotsLoading$ = new BehaviorSubject<boolean>(false);
 
   @ViewChild('updatePluginsModalFooter', { static: true })
   updatePluginsModalFooter!: TemplateRef<{
@@ -103,6 +113,15 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       switchMap((processIds) =>
         this.store.select(
           ManagerProcessesState.getManagerProcessesByIds(processIds)
+        )
+      )
+    );
+
+    this.snapshots$ = this.managerSnapshotsIds$.pipe(
+      distinctUntilChanged(),
+      switchMap((snapshotsIds) =>
+        this.store.select(
+          ManagerSnapshotsState.getManagerSnapshotsByIds(snapshotsIds)
         )
       )
     );
@@ -153,6 +172,13 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
             tap((height) => this.blockchainHeight$.next(height))
           )
         )
+      )
+      .subscribe();
+
+    timer(0, 10000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() => this.store.dispatch(new LoadManagerSnapshots()))
       )
       .subscribe();
   }
@@ -318,5 +344,16 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         finalize(() => this.isUpdatePluginsLoading$.next(false))
       )
       .subscribe();
+  }
+
+  onCreateSnapshot(event: MouseEvent) {
+    event.preventDefault();
+
+    this.nzModalService.create({
+      nzTitle: 'Create snapshot',
+      nzContent: SnapshotCreateModalComponent,
+      nzFooter: null,
+      nzWidth: '25vw',
+    });
   }
 }
