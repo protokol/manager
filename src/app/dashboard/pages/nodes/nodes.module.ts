@@ -36,10 +36,15 @@ import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/compone
 import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapshot-restore-modal/snapshot-restore-modal.component';
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 import { NgTerminalModule } from 'ng-terminal';
+import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
 
 @NgModule({
   imports: [
-    NgxsModule.forFeature([ManagerProcessesState, ManagerSnapshotsState]),
+    NgxsModule.forFeature([
+      ManagerProcessesState,
+      ManagerSnapshotsState,
+      ManagerLogsState,
+    ]),
     NodesRoutingModule,
     CommonModule,
     SharedModule,

@@ -16,7 +16,7 @@ import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { MemoryUtils } from '@core/utils/memory-utils';
-import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
+import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
 
 @Component({
   selector: 'app-log-archived-table',
@@ -98,9 +98,9 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
           (logs) => {
             this.nzModalService.create({
               nzTitle: `"${row.name}" log`,
-              nzContent: TerminalViewModalComponent,
+              nzContent: TextViewModalComponent,
               nzComponentParams: {
-                input: logs,
+                text: logs,
               },
               nzFooter: null,
               nzWidth: '75vw',

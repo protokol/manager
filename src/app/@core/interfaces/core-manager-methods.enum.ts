@@ -6,6 +6,7 @@ export enum CoreManagerMethods {
   infoCurrentDelegate = 'info.currentDelegate',
   infoLastForgedBlock = 'info.lastForgedBlock',
   logArchived = 'log.archived',
+  logLog = 'log.log',
   processList = 'process.list',
   processRestart = 'process.restart',
   processStop = 'process.stop',
