@@ -15,8 +15,8 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
-import { TextViewModalComponent } from '../text-view-modal/text-view-modal.component';
 import { MemoryUtils } from '@core/utils/memory-utils';
+import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 
 @Component({
   selector: 'app-log-archived-table',
@@ -98,9 +98,9 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
           (logs) => {
             this.nzModalService.create({
               nzTitle: `"${row.name}" log`,
-              nzContent: TextViewModalComponent,
+              nzContent: TerminalViewModalComponent,
               nzComponentParams: {
-                text: logs,
+                input: logs,
               },
               nzFooter: null,
               nzWidth: '75vw',

@@ -34,6 +34,8 @@ import { ManagerSnapshotsState } from '@app/dashboard/pages/nodes/state/manager-
 import { SnapshotsTableComponent } from '@app/dashboard/pages/nodes/components/snapshots-table/snapshots-table.component';
 import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-create-modal/snapshot-create-modal.component';
 import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapshot-restore-modal/snapshot-restore-modal.component';
+import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
+import { NgTerminalModule } from 'ng-terminal';
 
 @NgModule({
   imports: [
@@ -60,6 +62,7 @@ import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapsh
     NzDropDownModule,
     NzCheckboxModule,
     NzPopconfirmModule,
+    NgTerminalModule,
   ],
   providers: [],
   declarations: [
@@ -72,6 +75,7 @@ import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapsh
     SnapshotsTableComponent,
     SnapshotCreateModalComponent,
     SnapshotRestoreModalComponent,
+    TerminalViewModalComponent,
   ],
   exports: [],
 })
