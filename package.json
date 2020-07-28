@@ -12,7 +12,7 @@
 	"license": "CC BY-NC-SA 4.0",
 	"version": "0.0.0",
 	"scripts": {
-    "postinstall": "electron-builder install-app-deps",
+		"postinstall": "electron-builder install-app-deps",
 		"ng": "ng",
 		"start": "npm-run-all -p electron:serve ng:serve",
 		"build": "npm run electron:serve-tsc && ng build --base-href ./",
@@ -55,6 +55,7 @@
 		"bip38": "^3.0.0",
 		"bip39": "^3.0.0",
 		"jsoneditor": "^9.0.0",
+		"ng-terminal": "~3.0.0-alpha",
 		"ng-zorro-antd": "^9.1.2",
 		"ngx-clipboard": "^13.0.1",
 		"rxjs": "~6.5.4",

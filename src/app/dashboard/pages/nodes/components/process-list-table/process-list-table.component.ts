@@ -18,13 +18,14 @@ import {
 import { TextUtils } from '@core/utils/text-utils';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Store } from '@ngxs/store';
 import {
   StartManagerProcess,
   StopManagerProcess,
 } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.actions';
 import { MemoryUtils } from '@core/utils/memory-utils';
+import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 
 @Component({
   selector: 'app-process-list-table',
@@ -78,7 +79,8 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   constructor(
     private nodeManagerService: NodeManagerService,
     private nzMessageService: NzMessageService,
-    private store: Store
+    private store: Store,
+    private nzModalService: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -192,4 +194,18 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  logProcess(event: MouseEvent, { name }: ProcessListItem) {
+    event.preventDefault();
+
+    this.nzModalService.create({
+      nzTitle: `"${name}" log`,
+      nzContent: TerminalViewModalComponent,
+      nzComponentParams: {
+        logName: name,
+      },
+      nzFooter: null,
+      nzWidth: '75vw',
+    });
+  }
 }

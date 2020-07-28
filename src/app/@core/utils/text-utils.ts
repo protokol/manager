@@ -12,4 +12,11 @@ export abstract class TextUtils {
     }
     return str;
   }
+
+  static replaceWithTerminalBr(str: string) {
+    if (!str) {
+      return '';
+    }
+    return str.replace(/\n/g, '\n\r');
+  }
 }

@@ -13,11 +13,13 @@ import {
   CoreManagerCurrentDelegateResponse,
   CoreManagerLastForgedBlockResponse,
   CoreManagerLogArchivedResponse,
+  CoreManagerLogLogResponse,
   CoreManagerNextForgingSlotResponse,
   CoreManagerProcessListResponse,
   CoreManagerProcessResponse,
   CoreManagerSnapshotsListResponse,
   CoreManagerVersionResponse,
+  LogLogPayload,
   SnapshotsCreatePayload,
   SnapshotsRestorePayload,
 } from '@core/interfaces/core-manager.types';
@@ -116,6 +118,19 @@ export class NodeManagerService {
       .post<CoreManagerLogArchivedResponse>(
         url,
         NetworkUtils.getNodeManagerPayload(CoreManagerMethods.logArchived),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  logLog(
+    payload: LogLogPayload,
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerLogLogResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.logLog, payload),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
       .pipe(map((response) => response.result));

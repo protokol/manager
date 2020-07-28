@@ -132,3 +132,17 @@ export interface SnapshotsRestorePayload {
   truncate?: boolean;
   verify?: boolean;
 }
+
+export interface LogLogPayload {
+  name: string;
+  fromLine?: number;
+  range?: number;
+  showError?: boolean;
+}
+
+export interface LogLogResponse {
+  totalLines: number;
+  lines: string;
+}
+
+export type CoreManagerLogLogResponse = CoreManagerResponse<LogLogResponse>;
