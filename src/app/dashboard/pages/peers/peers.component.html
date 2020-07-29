@@ -22,6 +22,18 @@
   </ng-container>
 </ng-template>
 
+<ng-template #latencyTpl let-row="row">
+  <ng-container *ngIf="row?.latency as latency">
+    <app-text-animate [value]="latency"></app-text-animate>
+  </ng-container>
+</ng-template>
+
+<ng-template #heightTpl let-row="row">
+  <ng-container *ngIf="row?.height as height">
+    <app-text-animate [value]="height"></app-text-animate>
+  </ng-container>
+</ng-template>
+
 <ng-template #actionsTpl let-row="row">
   <button nz-button nzType="default" (click)="showConfig($event, row)">
     Config
