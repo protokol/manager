@@ -1,6 +1,7 @@
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { v4 as uuid } from 'uuid';
 import { CoreManagerMethods } from '@core/interfaces/core-manager-methods.enum';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 export abstract class NetworkUtils {
   static isNodeCryptoConfiguration(
@@ -8,6 +9,14 @@ export abstract class NetworkUtils {
   ): node is NodeCryptoConfiguration {
     return (
       node && node.network && !!node.network.wif && !!node.network.pubKeyHash
+    );
+  }
+
+  static isConfigurationsResource(
+    configurations: BaseResourcesTypes.BaseConfigurations | undefined
+  ): configurations is BaseResourcesTypes.BaseConfigurations {
+    return (
+      configurations && configurations.package && !!configurations.package.name
     );
   }
 

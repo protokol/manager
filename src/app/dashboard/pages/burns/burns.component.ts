@@ -21,6 +21,7 @@ import { BaseResourcesTypes } from '@protokol/nft-client';
 import { Router } from '@angular/router';
 import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
 import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-burns',
@@ -49,7 +50,16 @@ export class BurnsComponent implements OnInit, OnDestroy {
   rows$: Observable<BaseResourcesTypes.Burns[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Burns>[];
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     this.tableColumns = [

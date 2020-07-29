@@ -16,6 +16,9 @@ export class DashboardShellComponent implements OnInit {
   @Select(ProfilesState.getSelectedProfile) selectedProfile$: Observable<
     ProfileWithId
   >;
+  @Select(NetworksState.hasNftPluginsLoaded) hasNftPluginsLoaded$: Observable<
+    ReturnType<typeof NetworksState.hasNftPluginsLoaded>
+  >;
   isCollapsed = false;
 
   constructor(private store: Store, private router: Router) {}

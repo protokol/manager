@@ -31,6 +31,7 @@ import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/c
 import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-collections',
@@ -66,8 +67,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private nzModalService: NzModalService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     this.tableColumns = [

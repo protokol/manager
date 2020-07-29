@@ -147,7 +147,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         [this.profileNameAsyncValidator],
       ],
       passphrase: ['', Validators.required],
-      address: ['', Validators.required],
+      address: [''],
       pin: ['', Validators.required],
       pinConfirm: ['', [Validators.required, this.pinValidator]],
       agree: [false, Validators.required],

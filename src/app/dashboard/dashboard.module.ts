@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NzAvatarModule, NzDropDownModule, NzIconModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   declarations: [DashboardShellComponent],
@@ -22,6 +23,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     DashboardRoutingModule,
     NzAvatarModule,
     NzDropDownModule,
+    NgLetModule,
   ],
 })
 export class DashboardModule {}
