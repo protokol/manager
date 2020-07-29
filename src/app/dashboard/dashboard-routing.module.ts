@@ -4,7 +4,7 @@ import { DashboardShell } from './dashboard.service';
 
 const routes: Routes = [
   DashboardShell.childRoutes([
-    { path: '', pathMatch: 'full', redirectTo: 'collections' },
+    { path: '', pathMatch: 'full', redirectTo: 'peers' },
     {
       path: 'collections',
       loadChildren: () =>
@@ -63,7 +63,12 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/trades/trades.module').then((m) => m.TradesModule),
     },
-    { path: '**', redirectTo: 'collections' },
+    {
+      path: 'peers',
+      loadChildren: () =>
+        import('./pages/peers/peers.module').then((m) => m.PeersModule),
+    },
+    { path: '**', redirectTo: 'peers' },
   ]),
 ];
 

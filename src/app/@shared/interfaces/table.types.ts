@@ -9,6 +9,7 @@ export interface TableColumnConfig<T = any> {
   columnTransformTpl?: TemplateRef<{ row: T }>;
   sortBy?: boolean;
   searchBy?: boolean;
+  width?: string | null;
 }
 
 export interface PaginationMeta {

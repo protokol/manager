@@ -27,6 +27,7 @@ import { BidsService } from '@core/services/bids.service';
 import { TradesService } from '@core/services/trades.service';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { HttpClientModule } from '@angular/common/http';
+import { PeersService } from '@core/services/peers.service';
 
 @NgModule({
   declarations: [],
@@ -72,6 +73,7 @@ import { HttpClientModule } from '@angular/common/http';
     NodeManagerService,
     StoreUtilsService,
     HasProfileGuard,
+    PeersService,
     {
       provide: Bip38Service,
       useFactory: bip38Factory,
