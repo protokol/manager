@@ -1,0 +1,29 @@
+<app-table
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="paginationChange($event)"
+  scrollY="75vh"
+>
+</app-table>
+
+<ng-template #pluginsTpl let-row="row">
+  <ng-container *ngIf="row.plugins">
+    <ng-container *ngFor="let plugin of row.plugins | keyvalue">
+      <ng-container *ngLet="plugin.value as pluginOpt">
+        <div class="plugin-item">
+          <label nz-checkbox nzDisabled [ngModel]="pluginOpt.enabled"></label>
+          &nbsp;<b>{{ plugin.key }}</b
+          >: {{ plugin.value?.port }}<br />
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #actionsTpl let-row="row">
+  <button nz-button nzType="default" (click)="showConfig($event, row)">
+    Config
+  </button>
+</ng-template>

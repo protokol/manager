@@ -22,6 +22,7 @@
             [nzColumnKey]="header.propertyName"
             [nzSortFn]="true"
             nzCustomFilter
+            [nzWidth]="header.width || null"
           >
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
@@ -36,7 +37,11 @@
           </th>
         </ng-container>
         <ng-template #headerWithoutSortTpl>
-          <th [nzColumnKey]="header.propertyName" nzCustomFilter>
+          <th
+            [nzColumnKey]="header.propertyName"
+            nzCustomFilter
+            [nzWidth]="header.width || null"
+          >
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
             >
