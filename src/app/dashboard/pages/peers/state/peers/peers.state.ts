@@ -5,9 +5,11 @@ import {
   StateContext,
   createSelector,
   Selector,
+  ofActionDispatched,
+  Actions,
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { exhaustMap, takeUntil, tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
@@ -15,9 +17,12 @@ import {
   LoadPeers,
   SetPeersByIds,
   PEERS_TYPE_NAME,
+  PeersStartPooling,
+  PeersStopPooling,
 } from '@app/dashboard/pages/peers/state/peers/peers.actions';
 import { PeersService } from '@core/services/peers.service';
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
+import { timer } from 'rxjs';
 
 interface PeersStateModel {
   peersIds: string[];
@@ -39,7 +44,7 @@ const PEERS_DEFAULT_STATE: PeersStateModel = {
 export class PeersState {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private peersService: PeersService) {}
+  constructor(private peersService: PeersService, private actions$: Actions) {}
 
   @Selector()
   static getPeersIds({ peersIds }: PeersStateModel) {
@@ -66,7 +71,7 @@ export class PeersState {
     { patchState, dispatch }: StateContext<PeersStateModel>,
     { tableQueryParams }: LoadPeers
   ) {
-    this.peersService
+    return this.peersService
       .getPeers(TableUtils.toTableApiQuery(tableQueryParams))
       .pipe(
         tap(({ data }) => dispatch(new SetPeersByIds(data))),
@@ -76,6 +81,19 @@ export class PeersState {
             meta,
           });
         })
+      );
+  }
+
+  @Action(PeersStartPooling)
+  peersStartPooling(
+    { dispatch }: StateContext<PeersStateModel>,
+    { tableQueryParams }: PeersStartPooling
+  ) {
+    timer(0, 8000)
+      .pipe(
+        exhaustMap(() => dispatch(new LoadPeers(tableQueryParams))),
+        takeUntil(this.actions$.pipe(ofActionDispatched(PeersStartPooling))),
+        takeUntil(this.actions$.pipe(ofActionDispatched(PeersStopPooling)))
       )
       .subscribe();
   }

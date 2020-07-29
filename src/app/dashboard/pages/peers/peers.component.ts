@@ -18,7 +18,10 @@ import {
 import { NzMessageService, NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { PeersState } from '@app/dashboard/pages/peers/state/peers/peers.state';
-import { LoadPeers } from '@app/dashboard/pages/peers/state/peers/peers.actions';
+import {
+  PeersStartPooling,
+  PeersStopPooling,
+} from '@app/dashboard/pages/peers/state/peers/peers.actions';
 import { Router } from '@angular/router';
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
 import { PeerUtils } from '@app/dashboard/pages/peers/utils/peer-utils';
@@ -35,6 +38,12 @@ export class PeersComponent implements OnInit, OnDestroy {
   @Select(PeersState.getPeersIds) peerIds$: Observable<string[]>;
   @Select(PeersState.getMeta) meta$: Observable<PaginationMeta>;
 
+  @ViewChild('heightTpl', { static: true }) heightTpl!: TemplateRef<{
+    row: Peers;
+  }>;
+  @ViewChild('latencyTpl', { static: true }) latencyTpl!: TemplateRef<{
+    row: Peers;
+  }>;
   @ViewChild('pluginsTpl', { static: true }) pluginsTpl!: TemplateRef<{
     row: Peers;
   }>;
@@ -75,10 +84,13 @@ export class PeersComponent implements OnInit, OnDestroy {
         propertyName: 'height',
         headerName: 'Height',
         width: '120px',
+        columnTransformTpl: this.heightTpl,
       },
       {
         propertyName: 'latency',
         headerName: 'Latency',
+        columnTransformTpl: this.latencyTpl,
+        width: '80px',
       },
       {
         headerName: 'Plugins',
@@ -105,16 +117,14 @@ export class PeersComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         filter((baseUrl) => !!baseUrl),
         tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadPeers()))
+        tap(() => this.store.dispatch(new PeersStartPooling()))
       )
       .subscribe();
   }
 
   paginationChange(params: NzTableQueryParams) {
-    this.store.dispatch(new LoadPeers(params));
+    this.store.dispatch(new PeersStartPooling(params));
   }
-
-  ngOnDestroy() {}
 
   showConfig(event: MouseEvent, peer: Peers) {
     event.preventDefault();
@@ -127,5 +137,9 @@ export class PeersComponent implements OnInit, OnDestroy {
     }
 
     this.router.navigate(['/dashboard/nodes', peerCoreApiUrl]);
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(new PeersStopPooling());
   }
 }

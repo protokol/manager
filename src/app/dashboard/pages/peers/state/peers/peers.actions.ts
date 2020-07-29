@@ -9,6 +9,18 @@ export class LoadPeers {
   constructor(public tableQueryParams?: NzTableQueryParams) {}
 }
 
+export class PeersStartPooling {
+  static type = `[${PEERS_TYPE_NAME}] PeersStartPooling`;
+
+  constructor(public tableQueryParams?: NzTableQueryParams) {}
+}
+
+export class PeersStopPooling {
+  static type = `[${PEERS_TYPE_NAME}] PeersStopPooling`;
+
+  constructor() {}
+}
+
 export class SetPeersByIds {
   static type = `[${PEERS_TYPE_NAME}] SetPeersByIds`;
 
