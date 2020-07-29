@@ -17,11 +17,14 @@ import {
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 interface NetworksStateModel {
   baseUrl: string | null;
   coreManagerPort: number;
   isValidNetwork: boolean | null;
+  hasNftPluginsLoaded: boolean | null;
+  nftBaseConfigurations: BaseResourcesTypes.BaseConfigurations | null;
   nodeCryptoConfiguration: NodeCryptoConfiguration | null;
 }
 
@@ -29,6 +32,8 @@ const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   baseUrl: null,
   coreManagerPort: 4005,
   isValidNetwork: null,
+  hasNftPluginsLoaded: null,
+  nftBaseConfigurations: null,
   nodeCryptoConfiguration: null,
 };
 
@@ -70,6 +75,11 @@ export class NetworksState {
   }
 
   @Selector()
+  static hasNftPluginsLoaded({ hasNftPluginsLoaded }: NetworksStateModel) {
+    return hasNftPluginsLoaded;
+  }
+
+  @Selector()
   static getNodeCryptoConfig({ nodeCryptoConfiguration }: NetworksStateModel) {
     return nodeCryptoConfiguration;
   }
@@ -105,6 +115,31 @@ export class NetworksState {
           () => {
             patchState({
               isValidNetwork: false,
+            });
+          }
+        )
+      )
+      .subscribe();
+
+    this.nodeClientService
+      .getNftBaseConfigurations(baseUrl)
+      .pipe(
+        tap(
+          (nftBaseConfigurations) => {
+            if (NetworkUtils.isConfigurationsResource(nftBaseConfigurations)) {
+              patchState({
+                nftBaseConfigurations,
+                hasNftPluginsLoaded: true,
+              });
+            } else {
+              patchState({
+                hasNftPluginsLoaded: false,
+              });
+            }
+          },
+          () => {
+            patchState({
+              hasNftPluginsLoaded: false,
             });
           }
         )

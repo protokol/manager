@@ -20,6 +20,7 @@ import { Logger } from '@app/@core/services/logger.service';
 import { ExchangeResourcesTypes } from '@protokol/nft-client';
 import { BidsState } from './state/bids/bids.state';
 import { LoadBids } from './state/bids/bids.actions';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-bids',
@@ -54,7 +55,15 @@ export class BidsComponent implements OnInit, OnDestroy {
   rows$: Observable<ExchangeResourcesTypes.Bids[]> = of([]);
   tableColumns: TableColumnConfig[];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     combineLatest([

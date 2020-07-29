@@ -6,7 +6,7 @@ import {
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { NFTConnection } from '@protokol/nft-client';
+import { BaseResourcesTypes, NFTConnection } from '@protokol/nft-client';
 import {
   ApiResponse,
   ApiResponseWithPagination,
@@ -95,6 +95,20 @@ export class NodeClientService {
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('node')
         .configuration()
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
+    );
+  }
+
+  getNftBaseConfigurations(
+    baseUrl: string,
+    connectionOptions?: ConnectionOptions
+  ): Observable<BaseResourcesTypes.BaseConfigurations> {
+    return from(
+      NodeClientService.getConnection(baseUrl, connectionOptions)
+        .NFTBaseApi('configurations')
+        .index()
     ).pipe(
       map((response) => response.body.data),
       NodeClientService.genericErrorHandler(this.log)

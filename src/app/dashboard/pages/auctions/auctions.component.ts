@@ -28,6 +28,7 @@ import { ExchangeResourcesTypes } from '@protokol/nft-client';
 import { Router } from '@angular/router';
 import { AuctionsState } from '@app/dashboard/pages/auctions/state/auctions/auctions.state';
 import { LoadAuctions } from '@app/dashboard/pages/auctions/state/auctions/auctions.actions';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-auctions',
@@ -67,7 +68,16 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   rows$: Observable<ExchangeResourcesTypes.Auctions[]> = of([]);
   tableColumns: TableColumnConfig<ExchangeResourcesTypes.Auctions>[];
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     this.isCanceled$

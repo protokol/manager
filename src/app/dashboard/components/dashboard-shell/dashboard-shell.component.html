@@ -13,44 +13,58 @@
         <h1>Protokol Manager</h1>
       </a>
     </div>
-    <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Assets" nzIcon="block">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/collections">Collections</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/assets">Assets</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/transfers">Transfers</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/burns">Burns</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Exchange" nzIcon="fund">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/auctions">Auctions</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/bids">Bids</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/trades">Trades</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Network" nzIcon="cluster">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/dashboard/peers">Peers</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <ng-container *ngLet="hasNftPluginsLoaded$ | async as hasNftPluginsLoaded">
+      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li
+          nz-submenu
+          nzOpen
+          nzTitle="Assets"
+          nzIcon="block"
+          *ngIf="hasNftPluginsLoaded"
+        >
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/collections">Collections</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/assets">Assets</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/transfers">Transfers</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/burns">Burns</a>
+            </li>
+          </ul>
+        </li>
+        <li
+          nz-submenu
+          nzOpen
+          nzTitle="Exchange"
+          nzIcon="fund"
+          *ngIf="hasNftPluginsLoaded"
+        >
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/auctions">Auctions</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/bids">Bids</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/trades">Trades</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Network" nzIcon="cluster">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/peers">Peers</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-container>
   </nz-sider>
   <nz-layout>
     <nz-header>

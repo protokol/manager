@@ -5,13 +5,19 @@ import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { Observable, of } from 'rxjs';
 import { Bip38Service } from '@core/services/bip38.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, filter, map, share, tap } from 'rxjs/operators';
+import { NetworksState } from '@core/store/network/networks.state';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class StoreUtilsService {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private bip38Service: Bip38Service, private store: Store) {}
+  constructor(
+    private bip38Service: Bip38Service,
+    private store: Store,
+    private router: Router
+  ) {}
 
   isPinForProfileValid(
     profileId: string,
@@ -27,5 +33,13 @@ export class StoreUtilsService {
         return of(false);
       })
     );
+  }
+
+  nftConfigurationGuard(): Observable<void> {
+    return this.store.select(NetworksState.hasNftPluginsLoaded).pipe(
+      filter((conf) => !conf),
+      tap(() => this.router.navigate(['/dashboard'])),
+      share()
+    ) as Observable<void>;
   }
 }

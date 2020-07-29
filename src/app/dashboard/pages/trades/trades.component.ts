@@ -20,6 +20,7 @@ import { Logger } from '@app/@core/services/logger.service';
 import { ExchangeResourcesTypes } from '@protokol/nft-client';
 import { TradesState } from '@app/dashboard/pages/trades/state/trades/trades.state';
 import { LoadTrades } from '@app/dashboard/pages/trades/state/trades/trades.actions';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-trades',
@@ -51,7 +52,15 @@ export class TradesComponent implements OnInit, OnDestroy {
   rows$: Observable<ExchangeResourcesTypes.Trades[]> = of([]);
   tableColumns: TableColumnConfig[];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     this.tableColumns = [

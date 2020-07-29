@@ -29,6 +29,7 @@ import { AssetWithCollection } from '@app/dashboard/pages/assets/interfaces/asse
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 import { TextUtils } from '@core/utils/text-utils';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StoreUtilsService } from '@core/store/store-utils.service';
 
 @Component({
   selector: 'app-assets',
@@ -68,8 +69,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
     private store: Store,
     private nzModalService: NzModalService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private storeUtilsService: StoreUtilsService
+  ) {
+    this.storeUtilsService
+      .nftConfigurationGuard()
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
 
   ngOnInit() {
     this.tableColumns = [
