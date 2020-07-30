@@ -80,6 +80,11 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   processList$: Observable<ProcessListItem[]> = of([]);
   snapshots$: Observable<SnapshotsListItem[]> = of([]);
 
+  timer1$;
+  timer3$;
+  timer8$;
+  timer10$;
+
   isLastForgedBlockLoading$: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
@@ -97,7 +102,63 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     private store: Store,
     private nzModalService: NzModalService,
     private nzMessageService: NzMessageService
-  ) {}
+  ) {
+    this.timer1$ = timer(0, 1000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() =>
+          this.nodeManagerService.infoNextForgingSlot().pipe(
+            untilDestroyed(this),
+            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService.infoCoreStatus().pipe(
+            untilDestroyed(this),
+            tap((status) => this.infoCoreStatus$.next(status))
+          )
+        )
+      )
+      .subscribe();
+
+    this.timer3$ = timer(0, 3000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() => this.store.dispatch(new LoadManagerProcesses())),
+        exhaustMap(() =>
+          this.nodeManagerService.infoNextForgingSlot().pipe(
+            untilDestroyed(this),
+            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService.infoCurrentDelegate().pipe(
+            untilDestroyed(this),
+            tap((delegate) => this.infoCurrentDelegate$.next(delegate))
+          )
+        )
+      )
+      .subscribe();
+
+    this.timer8$ = timer(0, 8000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() =>
+          this.nodeManagerService.infoBlockchainHeight().pipe(
+            untilDestroyed(this),
+            tap((height) => this.blockchainHeight$.next(height))
+          )
+        )
+      )
+      .subscribe();
+
+    this.timer10$ = timer(0, 10000)
+      .pipe(
+        untilDestroyed(this),
+        exhaustMap(() => this.store.dispatch(new LoadManagerSnapshots()))
+      )
+      .subscribe();
+  }
 
   ngOnInit(): void {
     this.infoCoreVersion$ = this.nodeManagerService
@@ -125,62 +186,6 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         )
       )
     );
-
-    timer(0, 1000)
-      .pipe(
-        untilDestroyed(this),
-        exhaustMap(() =>
-          this.nodeManagerService.infoNextForgingSlot().pipe(
-            untilDestroyed(this),
-            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
-          )
-        ),
-        exhaustMap(() =>
-          this.nodeManagerService.infoCoreStatus().pipe(
-            untilDestroyed(this),
-            tap((status) => this.infoCoreStatus$.next(status))
-          )
-        )
-      )
-      .subscribe();
-
-    timer(0, 3000)
-      .pipe(
-        untilDestroyed(this),
-        exhaustMap(() => this.store.dispatch(new LoadManagerProcesses())),
-        exhaustMap(() =>
-          this.nodeManagerService.infoNextForgingSlot().pipe(
-            untilDestroyed(this),
-            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
-          )
-        ),
-        exhaustMap(() =>
-          this.nodeManagerService.infoCurrentDelegate().pipe(
-            untilDestroyed(this),
-            tap((delegate) => this.infoCurrentDelegate$.next(delegate))
-          )
-        )
-      )
-      .subscribe();
-
-    timer(0, 8000)
-      .pipe(
-        untilDestroyed(this),
-        exhaustMap(() =>
-          this.nodeManagerService.infoBlockchainHeight().pipe(
-            untilDestroyed(this),
-            tap((height) => this.blockchainHeight$.next(height))
-          )
-        )
-      )
-      .subscribe();
-
-    timer(0, 10000)
-      .pipe(
-        untilDestroyed(this),
-        exhaustMap(() => this.store.dispatch(new LoadManagerSnapshots()))
-      )
-      .subscribe();
   }
 
   transformText(status: ProcessStatus) {
@@ -216,8 +221,6 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
-  ngOnDestroy(): void {}
 
   onGetEnv(event: MouseEvent) {
     event.preventDefault();
@@ -355,5 +358,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       nzFooter: null,
       nzWidth: '25vw',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.timer1$.unsubscribe();
+    this.timer3$.unsubscribe();
+    this.timer8$.unsubscribe();
+    this.timer10$.unsubscribe();
   }
 }
