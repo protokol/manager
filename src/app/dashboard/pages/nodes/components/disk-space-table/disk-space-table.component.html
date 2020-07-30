@@ -1,0 +1,16 @@
+<app-table [rows]="rows$" [tableColumns]="tableColumns" scrollY="15vh">
+</app-table>
+
+<ng-template #usedTpl let-row="row">
+  {{ formatMemory(row?.used) }} GB
+</ng-template>
+<ng-template #availableTpl let-row="row">
+  {{ formatMemory(row?.available) }} GB
+</ng-template>
+<ng-template #sizeTpl let-row="row">
+  {{ formatMemory(row?.size) }} GB
+</ng-template>
+
+<ng-template #capacityTpl let-row="row">
+  {{ formatCapacity(row?.capacity) }}%
+</ng-template>

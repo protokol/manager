@@ -37,6 +37,8 @@ import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapsh
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 import { NgTerminalModule } from 'ng-terminal';
 import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
+import { ManagerDiskSpaceState } from '@app/dashboard/pages/nodes/state/manager-disk-space/manager-disk-space.state';
+import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/disk-space-table/disk-space-table.component';
 
 @NgModule({
   imports: [
@@ -44,6 +46,7 @@ import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/
       ManagerProcessesState,
       ManagerSnapshotsState,
       ManagerLogsState,
+      ManagerDiskSpaceState,
     ]),
     NodesRoutingModule,
     CommonModule,
@@ -81,6 +84,7 @@ import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/
     SnapshotCreateModalComponent,
     SnapshotRestoreModalComponent,
     TerminalViewModalComponent,
+    DiskSpaceTableComponent,
   ],
   exports: [],
 })

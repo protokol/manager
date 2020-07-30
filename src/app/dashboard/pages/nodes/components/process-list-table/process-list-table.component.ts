@@ -88,14 +88,17 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       {
         propertyName: 'name',
         headerName: 'Name',
+        width: '120px',
       },
       {
         headerName: 'Status',
         columnTransformTpl: this.statusTpl,
+        width: '150px',
       },
       {
         headerName: 'CPU',
         columnTransformTpl: this.cpuTpl,
+        width: '80px',
       },
       {
         headerName: 'Memory',

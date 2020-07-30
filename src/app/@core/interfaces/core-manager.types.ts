@@ -146,3 +146,16 @@ export interface LogLogResponse {
 }
 
 export type CoreManagerLogLogResponse = CoreManagerResponse<LogLogResponse>;
+
+export interface InfoDiskSpaceItem {
+  filesystem: string;
+  size: number;
+  used: number;
+  available: number;
+  capacity: number;
+  mountpoint: string;
+}
+
+export type CoreManagerInfoDiskSpaceResponse = CoreManagerResponse<
+  InfoDiskSpaceItem[]
+>;
