@@ -11,6 +11,7 @@ import {
   CoreManagerConfigGetPluginsResponse,
   CoreManagerCoreStatusResponse,
   CoreManagerCurrentDelegateResponse,
+  CoreManagerInfoDiskSpaceResponse,
   CoreManagerLastForgedBlockResponse,
   CoreManagerLogArchivedResponse,
   CoreManagerLogLogResponse,
@@ -106,6 +107,20 @@ export class NodeManagerService {
         NetworkUtils.getNodeManagerPayload(
           CoreManagerMethods.infoCurrentDelegate
         ),
+        { ...NetworkUtils.getNodeManagerDefaultHeaders() }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  infoDiskSpace(
+    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl())
+  ) {
+    return this.httpClient
+      .post<CoreManagerInfoDiskSpaceResponse>(
+        url,
+        NetworkUtils.getNodeManagerPayload(CoreManagerMethods.infoDiskSpace, {
+          showAllDisks: true,
+        }),
         { ...NetworkUtils.getNodeManagerDefaultHeaders() }
       )
       .pipe(map((response) => response.result));

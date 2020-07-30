@@ -5,6 +5,7 @@ export enum CoreManagerMethods {
   infoBlockchainHeight = 'info.blockchainHeight',
   infoCurrentDelegate = 'info.currentDelegate',
   infoLastForgedBlock = 'info.lastForgedBlock',
+  infoDiskSpace = 'info.diskSpace',
   logArchived = 'log.archived',
   logLog = 'log.log',
   processList = 'process.list',

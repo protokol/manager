@@ -27,7 +27,7 @@
     <nz-descriptions-item nzTitle="Core version">
       {{ nodeCoreVersion?.currentVersion }}
     </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Latest version">
+    <nz-descriptions-item nzTitle="Latest core version">
       {{ nodeCoreVersion?.latestVersion }}
     </nz-descriptions-item>
 
@@ -75,11 +75,11 @@
   </nz-descriptions>
 </ng-container>
 
-<nz-divider nzText="Logs"></nz-divider>
-<app-log-archived-table [rows]="logArchived$"></app-log-archived-table>
-
 <nz-divider nzText="Processes"></nz-divider>
 <app-process-list-table [rows]="processList$"></app-process-list-table>
+
+<nz-divider nzText="Logs"></nz-divider>
+<app-log-archived-table [rows]="logArchived$"></app-log-archived-table>
 
 <nz-divider nzText="Snapshots"></nz-divider>
 <div class="snapshots-actions">
@@ -127,6 +127,9 @@
     </nz-space-item>
   </nz-space>
 </ng-template>
+
+<nz-divider nzText="Disk space"></nz-divider>
+<app-disk-space-table></app-disk-space-table>
 
 <ng-template #loading>
   <nz-spin nzSimple></nz-spin>
