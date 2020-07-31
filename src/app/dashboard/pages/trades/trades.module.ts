@@ -11,6 +11,7 @@ import { TradesState } from '@app/dashboard/pages/trades/state/trades/trades.sta
 import { TradesComponent } from './trades.component';
 import { TradesRoutingModule } from '@app/dashboard/pages/trades/trades-routing.module';
 import { TradeDetailsComponent } from './components/trade-details/trade-details.component';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { TradeDetailsComponent } from './components/trade-details/trade-details.
     NzSpinModule,
     NzDescriptionsModule,
     NzTypographyModule,
+    NgLetModule,
   ],
   providers: [],
   declarations: [TradesComponent, TradeDetailsComponent],

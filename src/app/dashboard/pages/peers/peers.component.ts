@@ -95,6 +95,7 @@ export class PeersComponent implements OnInit, OnDestroy {
       {
         headerName: 'Plugins',
         columnTransformTpl: this.pluginsTpl,
+        width: 'auto',
       },
       {
         headerName: 'Actions',

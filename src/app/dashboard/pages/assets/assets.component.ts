@@ -64,6 +64,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   rows$: Observable<AssetWithCollection[]> = of([]);
   tableColumns: TableColumnConfig<AssetWithCollection>[];
+  getBaseUrl$: Observable<string>;
 
   constructor(
     private store: Store,
@@ -125,19 +126,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading$.next(false))
     );
 
-    this.store
-      .select(NetworksState.getBaseUrl)
-      .pipe(
-        untilDestroyed(this),
-        filter((baseUrl) => !!baseUrl),
-        tap(() => this.isLoading$.next(true)),
-        tap(() =>
-          this.store.dispatch(
-            new LoadAssets(undefined, { withCollection: true })
-          )
-        )
+    this.getBaseUrl$ = this.store.select(NetworksState.getBaseUrl).pipe(
+      filter((baseUrl) => !!baseUrl),
+      tap(() => this.isLoading$.next(true)),
+      tap(() =>
+        this.store.dispatch(new LoadAssets(undefined, { withCollection: true }))
       )
-      .subscribe();
+    );
 
     const assetId: string = this.route.snapshot.paramMap.get('id');
     if (assetId) {

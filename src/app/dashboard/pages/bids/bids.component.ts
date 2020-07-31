@@ -50,8 +50,9 @@ export class BidsComponent implements OnInit, OnDestroy {
   }>;
 
   isLoading$ = new BehaviorSubject(false);
-  isCanceled$ = new BehaviorSubject(false);
+  isCanceled$ = new BehaviorSubject<boolean>(false);
 
+  load$;
   rows$: Observable<ExchangeResourcesTypes.Bids[]> = of([]);
   tableColumns: TableColumnConfig[];
 
@@ -66,49 +67,46 @@ export class BidsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    combineLatest([
+    this.load$ = combineLatest([
       this.isCanceled$,
       this.store.select(NetworksState.getBaseUrl),
-    ])
-      .pipe(
-        untilDestroyed(this),
-        tap(() => this.isLoading$.next(true)),
-        tap(([canceled]) => {
-          this.tableColumns = [
-            {
-              propertyName: 'id',
-              headerName: 'Id',
-              columnTransformTpl: this.idTpl,
-            },
-            {
-              propertyName: 'auctionId',
-              headerName: 'Auction id',
-              columnTransformTpl: this.auctionIdTpl,
-              searchBy: !canceled,
-            },
-            {
-              propertyName: 'bidAmount',
-              headerName: 'Bid Amount',
-              columnTransformTpl: this.bidAmountTpl,
-              searchBy: !canceled,
-            },
-            {
-              propertyName: 'senderPublicKey',
-              headerName: 'Sender',
-              columnTransformTpl: this.senderTpl,
-              searchBy: true,
-            },
-          ];
+    ]).pipe(
+      tap(() => this.isLoading$.next(true)),
+      tap(([canceled]) => {
+        this.tableColumns = [
+          {
+            propertyName: 'id',
+            headerName: 'Id',
+            columnTransformTpl: this.idTpl,
+          },
+          {
+            propertyName: 'auctionId',
+            headerName: 'Auction id',
+            columnTransformTpl: this.auctionIdTpl,
+            searchBy: !canceled,
+          },
+          {
+            propertyName: 'bidAmount',
+            headerName: 'Bid Amount',
+            columnTransformTpl: this.bidAmountTpl,
+            searchBy: !canceled,
+          },
+          {
+            propertyName: 'senderPublicKey',
+            headerName: 'Sender',
+            columnTransformTpl: this.senderTpl,
+            searchBy: true,
+          },
+        ];
 
-          this.store.dispatch(
-            new LoadBids({
-              tableQueryParams: this.tableQueryParams,
-              canceled,
-            })
-          );
-        })
-      )
-      .subscribe();
+        this.store.dispatch(
+          new LoadBids({
+            tableQueryParams: this.tableQueryParams,
+            canceled,
+          })
+        );
+      })
+    );
 
     this.rows$ = this.bidsIds$.pipe(
       distinctUntilChanged(),

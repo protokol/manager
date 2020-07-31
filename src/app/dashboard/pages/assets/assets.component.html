@@ -37,3 +37,5 @@
     (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"
   ></app-text-clipper>
 </ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>

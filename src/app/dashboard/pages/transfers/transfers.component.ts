@@ -50,6 +50,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
 
   isLoading$ = new BehaviorSubject(false);
 
+  getBaseUrl$: Observable<string>;
   rows$: Observable<BaseResourcesTypes.Transfers[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Transfers>[];
 
@@ -95,15 +96,11 @@ export class TransfersComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading$.next(false))
     );
 
-    this.store
-      .select(NetworksState.getBaseUrl)
-      .pipe(
-        untilDestroyed(this),
-        filter((baseUrl) => !!baseUrl),
-        tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadTransfers()))
-      )
-      .subscribe();
+    this.getBaseUrl$ = this.store.select(NetworksState.getBaseUrl).pipe(
+      filter((baseUrl) => !!baseUrl),
+      tap(() => this.isLoading$.next(true)),
+      tap(() => this.store.dispatch(new LoadTransfers()))
+    );
   }
 
   ngOnDestroy() {}

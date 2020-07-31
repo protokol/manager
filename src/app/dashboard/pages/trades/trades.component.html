@@ -33,3 +33,5 @@
 <ng-template #senderTpl let-row="row">
   <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
 </ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>
