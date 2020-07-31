@@ -2,49 +2,55 @@
 </app-table>
 
 <ng-template #actionsTpl let-row="row">
-  <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
-    <ng-container *ngLet="rowsLoading[row.name].isLoading as isRowLoading">
-      <ng-container *ngLet="rowsLoading[row.name].type as loadingActionType">
-        <nz-space>
-          <nz-space-item>
-            <button
-              nz-button
-              nzType="primary"
-              (click)="startProcess($event, row)"
-              [disabled]="isRowLoading || row.status === 'online'"
-              [nzLoading]="loadingActionType === 'start'"
-            >
-              Start
-            </button>
-          </nz-space-item>
-          <nz-space-item>
-            <button
-              nz-button
-              nzType="dashed"
-              (click)="restartProcess($event, row)"
-              [disabled]="isRowLoading"
-              [nzLoading]="loadingActionType === 'restart'"
-            >
-              Restart
-            </button>
-          </nz-space-item>
-          <nz-space-item>
-            <button
-              nz-button
-              nzType="danger"
-              (click)="processStop($event, row)"
-              [disabled]="isRowLoading || row.status !== 'online'"
-              [nzLoading]="loadingActionType === 'stop'"
-            >
-              Stop
-            </button>
-          </nz-space-item>
-          <nz-space-item>
-            <button nz-button nzType="dashed" (click)="logProcess($event, row)">
-              Log
-            </button>
-          </nz-space-item>
-        </nz-space>
+  <ng-container *ngLet="isXxlScreen$ | async as isXxlScreen">
+    <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
+      <ng-container *ngLet="rowsLoading[row.name].isLoading as isRowLoading">
+        <ng-container *ngLet="rowsLoading[row.name].type as loadingActionType">
+          <nz-space [nzDirection]="isXxlScreen ? 'horizontal' : 'vertical'">
+            <nz-space-item>
+              <button
+                nz-button
+                nzType="primary"
+                (click)="startProcess($event, row)"
+                [disabled]="isRowLoading || row.status === 'online'"
+                [nzLoading]="loadingActionType === 'start'"
+              >
+                Start
+              </button>
+            </nz-space-item>
+            <nz-space-item>
+              <button
+                nz-button
+                nzType="dashed"
+                (click)="restartProcess($event, row)"
+                [disabled]="isRowLoading"
+                [nzLoading]="loadingActionType === 'restart'"
+              >
+                Restart
+              </button>
+            </nz-space-item>
+            <nz-space-item>
+              <button
+                nz-button
+                nzType="danger"
+                (click)="processStop($event, row)"
+                [disabled]="isRowLoading || row.status !== 'online'"
+                [nzLoading]="loadingActionType === 'stop'"
+              >
+                Stop
+              </button>
+            </nz-space-item>
+            <nz-space-item>
+              <button
+                nz-button
+                nzType="dashed"
+                (click)="logProcess($event, row)"
+              >
+                Log
+              </button>
+            </nz-space-item>
+          </nz-space>
+        </ng-container>
       </ng-container>
     </ng-container>
   </ng-container>

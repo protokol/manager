@@ -18,7 +18,11 @@ import {
 import { TextUtils } from '@core/utils/text-utils';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import {
+  NzBreakpointService,
+  NzMessageService,
+  NzModalService,
+} from 'ng-zorro-antd';
 import { Store } from '@ngxs/store';
 import {
   StartManagerProcess,
@@ -40,6 +44,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   rowsLoading$: BehaviorSubject<{
     [name: string]: { isLoading: boolean; type: string };
   }> = new BehaviorSubject({});
+  isXxlScreen$ = new BehaviorSubject(true);
 
   tableColumns: TableColumnConfig<ProcessListItem>[];
 
@@ -80,8 +85,35 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     private nodeManagerService: NodeManagerService,
     private nzMessageService: NzMessageService,
     private store: Store,
-    private nzModalService: NzModalService
-  ) {}
+    private nzModalService: NzModalService,
+    private nzBreakpointService: NzBreakpointService
+  ) {
+    this.nzBreakpointService
+      .subscribe({
+        xs: '(max-width: 575px)',
+        sm: '(min-width: 576px)',
+        md: '(min-width: 768px)',
+        lg: '(min-width: 992px)',
+        xl: '(min-width: 1200px)',
+        xxl: '(min-width: 1600px)',
+      })
+      .pipe(
+        untilDestroyed(this),
+        tap((breakpoint) => {
+          switch (breakpoint) {
+            case 'xs':
+            case 'sm':
+            case 'md':
+            case 'lg':
+            case 'xl':
+              return this.isXxlScreen$.next(false);
+            default:
+              return this.isXxlScreen$.next(true);
+          }
+        })
+      )
+      .subscribe();
+  }
 
   ngOnInit(): void {
     this.tableColumns = [
@@ -103,6 +135,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       {
         headerName: 'Memory',
         columnTransformTpl: this.memoryTpl,
+        width: '200px',
       },
       {
         propertyName: 'pid',
@@ -111,6 +144,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       {
         headerName: 'Actions',
         columnTransformTpl: this.actionsTpl,
+        width: 'auto',
       },
     ];
   }

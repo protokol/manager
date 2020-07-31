@@ -13,7 +13,7 @@
   <thead>
     <tr>
       <ng-container *ngIf="isExpandable$ | async">
-        <th></th>
+        <th nzWidth="50px"></th>
       </ng-container>
 
       <ng-container *ngFor="let header of headers">
@@ -22,7 +22,7 @@
             [nzColumnKey]="header.propertyName"
             [nzSortFn]="true"
             nzCustomFilter
-            [nzWidth]="header.width || null"
+            [nzWidth]="header.width || '100px'"
           >
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
@@ -40,7 +40,7 @@
           <th
             [nzColumnKey]="header.propertyName"
             nzCustomFilter
-            [nzWidth]="header.width || null"
+            [nzWidth]="header.width || '100px'"
           >
             <ng-container
               *ngTemplateOutlet="headerTpl; context: { header: header }"
