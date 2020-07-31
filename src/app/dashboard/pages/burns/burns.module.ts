@@ -7,6 +7,7 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { BurnsRoutingModule } from '@app/dashboard/pages/burns/burns-routing.module';
 import { BurnsComponent } from '@app/dashboard/pages/burns/burns.component';
 import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
     NzModalModule,
     NgJsonEditorModule,
     NzGridModule,
+    NgLetModule,
   ],
   providers: [],
   declarations: [BurnsComponent],

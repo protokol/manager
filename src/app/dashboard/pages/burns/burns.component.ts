@@ -47,6 +47,7 @@ export class BurnsComponent implements OnInit, OnDestroy {
 
   isLoading$ = new BehaviorSubject(false);
 
+  getBaseUrl$: Observable<string>;
   rows$: Observable<BaseResourcesTypes.Burns[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Burns>[];
 
@@ -88,15 +89,11 @@ export class BurnsComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading$.next(false))
     );
 
-    this.store
-      .select(NetworksState.getBaseUrl)
-      .pipe(
-        untilDestroyed(this),
-        filter((baseUrl) => !!baseUrl),
-        tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadBurns()))
-      )
-      .subscribe();
+    this.getBaseUrl$ = this.store.select(NetworksState.getBaseUrl).pipe(
+      filter((baseUrl) => !!baseUrl),
+      tap(() => this.isLoading$.next(true)),
+      tap(() => this.store.dispatch(new LoadBurns()))
+    );
   }
 
   ngOnDestroy() {}

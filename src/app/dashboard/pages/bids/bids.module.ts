@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { BidsRoutingModule } from '@app/dashboard/pages/bids/bids-routing.module';
 import { BidsComponent } from '@app/dashboard/pages/bids/bids.component';
 import { BidsState } from '@app/dashboard/pages/bids/state/bids/bids.state';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { BidsState } from '@app/dashboard/pages/bids/state/bids/bids.state';
     NzSwitchModule,
     FormsModule,
     NzTypographyModule,
+    NgLetModule,
   ],
   providers: [],
   declarations: [BidsComponent],

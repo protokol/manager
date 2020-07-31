@@ -75,8 +75,10 @@ export class ManagerSnapshotsState {
     dispatch,
   }: StateContext<ManagerSnapshotsStateModel>) {
     return this.nodeManagerService.snapshotsList().pipe(
-      tap((snapshots) => dispatch(new SetManagerSnapshotsByIds(snapshots))),
-      tap((snapshots) => {
+      tap((snapshots = []) =>
+        dispatch(new SetManagerSnapshotsByIds(snapshots))
+      ),
+      tap((snapshots = []) => {
         patchState({
           managerSnapshotsIds: snapshots.map((p) => p.name),
         });

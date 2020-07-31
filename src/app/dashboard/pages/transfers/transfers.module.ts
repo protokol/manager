@@ -7,6 +7,7 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
 import { TransfersRoutingModule } from './transfers-routing.module';
 import { TransfersComponent } from './transfers.component';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { TransfersComponent } from './transfers.component';
     NzModalModule,
     NgJsonEditorModule,
     NzGridModule,
+    NgLetModule,
   ],
   providers: [],
   declarations: [TransfersComponent],

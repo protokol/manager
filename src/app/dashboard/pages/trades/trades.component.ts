@@ -49,6 +49,7 @@ export class TradesComponent implements OnInit, OnDestroy {
 
   isLoading$ = new BehaviorSubject(false);
 
+  getBaseUrl$: Observable<string>;
   rows$: Observable<ExchangeResourcesTypes.Trades[]> = of([]);
   tableColumns: TableColumnConfig[];
 
@@ -97,15 +98,11 @@ export class TradesComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading$.next(false))
     );
 
-    this.store
-      .select(NetworksState.getBaseUrl)
-      .pipe(
-        untilDestroyed(this),
-        filter((baseUrl) => !!baseUrl),
-        tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadTrades()))
-      )
-      .subscribe();
+    this.getBaseUrl$ = this.store.select(NetworksState.getBaseUrl).pipe(
+      filter((baseUrl) => !!baseUrl),
+      tap(() => this.isLoading$.next(true)),
+      tap(() => this.store.dispatch(new LoadTrades()))
+    );
   }
 
   paginationChange(tableQueryParams: NzTableQueryParams) {

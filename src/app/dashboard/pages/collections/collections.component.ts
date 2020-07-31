@@ -61,6 +61,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
 
+  getBaseUrl$: Observable<string>;
   rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
 
@@ -117,15 +118,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading$.next(false))
     );
 
-    this.store
-      .select(NetworksState.getBaseUrl)
-      .pipe(
-        untilDestroyed(this),
-        filter((baseUrl) => !!baseUrl),
-        tap(() => this.isLoading$.next(true)),
-        tap(() => this.store.dispatch(new LoadCollections()))
-      )
-      .subscribe();
+    this.getBaseUrl$ = this.store.select(NetworksState.getBaseUrl).pipe(
+      filter((baseUrl) => !!baseUrl),
+      tap(() => this.isLoading$.next(true)),
+      tap(() => this.store.dispatch(new LoadCollections()))
+    );
 
     this.searchTerm$
       .pipe(

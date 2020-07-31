@@ -17,6 +17,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { CollectionViewModalComponent } from './components/collection-view-modal/collection-view-modal.component';
 import { CollectionCreateModalComponent } from './components/collection-create-modal/collection-create-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NzInputModule,
     NzDividerModule,
     FormsModule,
+    NgLetModule,
   ],
   declarations: [
     CollectionsComponent,

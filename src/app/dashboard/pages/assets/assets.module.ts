@@ -8,6 +8,7 @@ import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgLetModule } from '@core/directives/ngLet.module';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     JsonSchemaFormModule,
     ReactiveFormsModule,
     NzButtonModule,
+    NgLetModule,
   ],
   providers: [],
   declarations: [AssetsComponent, AssetViewModalComponent],
