@@ -48,12 +48,34 @@
 </ng-container>
 
 <ng-template #nodeTitle>
-  <div class="node-title">
-    <div>
-      Node <a>{{ nodeUrl$ | async }}</a> configuration
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="8">
+      <nz-space nzDirection="horizontal" nzSize="small">
+        <nz-space-item>
+          <button nz-button nzSize="small" nzType="primary">
+            <i nz-icon nzType="edit"></i>Change
+          </button>
+        </nz-space-item>
+        <nz-space-item>
+          <button
+            nz-button
+            nzSize="small"
+            nzType="primary"
+            [disabled]="isAddedToMyNodes$ | async"
+            (click)="onAddToMyNodesClick($event)"
+          >
+            <i nz-icon nzType="book"></i>Add to My nodes
+          </button>
+        </nz-space-item>
+      </nz-space>
     </div>
-    <div>
+    <div class="node-title" nz-col [nzSpan]="8">
+      Node&nbsp;<a>{{ nodeUrl$ | async }}</a
+      >&nbsp;configuration
+    </div>
+    <div nz-col [nzSpan]="8">
       <button
+        class="node-manager-btn"
         nz-button
         nzSize="small"
         nzType="primary"

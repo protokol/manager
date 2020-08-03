@@ -5,7 +5,7 @@ import { NodeManagerDetailsComponent } from './components/node-manager-details/n
 
 const routes: Routes = [
   {
-    path: 'manager',
+    path: 'manager/:url',
     component: NodeManagerDetailsComponent,
   },
   {

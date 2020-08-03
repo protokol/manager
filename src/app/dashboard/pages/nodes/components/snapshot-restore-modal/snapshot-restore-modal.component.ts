@@ -35,6 +35,7 @@ export class SnapshotRestoreModalComponent implements OnDestroy {
   snapshotForm!: FormGroup;
 
   @Input() snapshotName;
+  @Input() managerUrl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -103,7 +104,9 @@ export class SnapshotRestoreModalComponent implements OnDestroy {
     );
 
     this.store
-      .dispatch(new ManagerRestoreSnapshot(nonEmptySnapshotFormValues))
+      .dispatch(
+        new ManagerRestoreSnapshot(nonEmptySnapshotFormValues, this.managerUrl)
+      )
       .pipe(
         untilDestroyed(this),
         tap(FuncUtils.noop, (err) => {

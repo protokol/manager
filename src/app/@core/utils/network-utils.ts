@@ -2,6 +2,7 @@ import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesType
 import { v4 as uuid } from 'uuid';
 import { CoreManagerMethods } from '@core/interfaces/core-manager-methods.enum';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 
 export abstract class NetworkUtils {
   static isNodeCryptoConfiguration(
@@ -24,7 +25,10 @@ export abstract class NetworkUtils {
     return new RegExp(/:(?<port>[0-9]+)/g);
   }
 
-  static buildNodeManagerUrl(baseUrl: string, port: number = 4005) {
+  static buildNodeManagerUrl(
+    baseUrl: string,
+    port: number = DEFAULT_CORE_MANAGER_PORT
+  ) {
     if (NetworkUtils.getPortRegex().test(baseUrl)) {
       return baseUrl.replace(NetworkUtils.getPortRegex(), `:${port}`);
     } else if (baseUrl.indexOf('/', 8) > 0) {

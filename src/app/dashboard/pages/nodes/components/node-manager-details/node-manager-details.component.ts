@@ -9,7 +9,6 @@ import {
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { Select, Store } from '@ngxs/store';
-import { NetworksState } from '@core/store/network/networks.state';
 import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import {
   InfoBlockchainHeight,
@@ -41,6 +40,8 @@ import { NzModalRef } from 'ng-zorro-antd/modal/modal-ref';
 import { ManagerSnapshotsState } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.state';
 import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-create-modal/snapshot-create-modal.component';
 import { LoadManagerSnapshots } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -55,7 +56,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
 
-  @Select(NetworksState.getNodeManagerUrl()) nodeManagerUrl$;
+  managerUrl$ = new BehaviorSubject('');
   @Select(ManagerProcessesState.getManagerProcessesIds)
   managerProcessesIds$: Observable<
     ReturnType<typeof ManagerProcessesState.getManagerProcessesIds>
@@ -101,22 +102,36 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     private nodeManagerService: NodeManagerService,
     private store: Store,
     private nzModalService: NzModalService,
-    private nzMessageService: NzMessageService
+    private nzMessageService: NzMessageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location
   ) {
+    const managerUrl: string = this.route.snapshot.paramMap.get('url');
+    if (managerUrl) {
+      this.managerUrl$.next(managerUrl);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
+
     this.timer1$ = timer(0, 1000)
       .pipe(
         untilDestroyed(this),
         exhaustMap(() =>
-          this.nodeManagerService.infoNextForgingSlot().pipe(
-            untilDestroyed(this),
-            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
-          )
+          this.nodeManagerService
+            .infoNextForgingSlot(this.managerUrl$.getValue())
+            .pipe(
+              untilDestroyed(this),
+              tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+            )
         ),
         exhaustMap(() =>
-          this.nodeManagerService.infoCoreStatus().pipe(
-            untilDestroyed(this),
-            tap((status) => this.infoCoreStatus$.next(status))
-          )
+          this.nodeManagerService
+            .infoCoreStatus(this.managerUrl$.getValue())
+            .pipe(
+              untilDestroyed(this),
+              tap((status) => this.infoCoreStatus$.next(status))
+            )
         )
       )
       .subscribe();
@@ -124,18 +139,26 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.timer3$ = timer(0, 3000)
       .pipe(
         untilDestroyed(this),
-        exhaustMap(() => this.store.dispatch(new LoadManagerProcesses())),
         exhaustMap(() =>
-          this.nodeManagerService.infoNextForgingSlot().pipe(
-            untilDestroyed(this),
-            tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+          this.store.dispatch(
+            new LoadManagerProcesses(this.managerUrl$.getValue())
           )
         ),
         exhaustMap(() =>
-          this.nodeManagerService.infoCurrentDelegate().pipe(
-            untilDestroyed(this),
-            tap((delegate) => this.infoCurrentDelegate$.next(delegate))
-          )
+          this.nodeManagerService
+            .infoNextForgingSlot(this.managerUrl$.getValue())
+            .pipe(
+              untilDestroyed(this),
+              tap((nextSlot) => this.infoNextForgingSlot$.next(nextSlot))
+            )
+        ),
+        exhaustMap(() =>
+          this.nodeManagerService
+            .infoCurrentDelegate(this.managerUrl$.getValue())
+            .pipe(
+              untilDestroyed(this),
+              tap((delegate) => this.infoCurrentDelegate$.next(delegate))
+            )
         )
       )
       .subscribe();
@@ -144,10 +167,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         untilDestroyed(this),
         exhaustMap(() =>
-          this.nodeManagerService.infoBlockchainHeight().pipe(
-            untilDestroyed(this),
-            tap((height) => this.blockchainHeight$.next(height))
-          )
+          this.nodeManagerService
+            .infoBlockchainHeight(this.managerUrl$.getValue())
+            .pipe(
+              untilDestroyed(this),
+              tap((height) => this.blockchainHeight$.next(height))
+            )
         )
       )
       .subscribe();
@@ -155,18 +180,22 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.timer10$ = timer(0, 10000)
       .pipe(
         untilDestroyed(this),
-        exhaustMap(() => this.store.dispatch(new LoadManagerSnapshots()))
+        exhaustMap(() =>
+          this.store.dispatch(
+            new LoadManagerSnapshots(this.managerUrl$.getValue())
+          )
+        )
       )
       .subscribe();
   }
 
   ngOnInit(): void {
     this.infoCoreVersion$ = this.nodeManagerService
-      .infoCoreVersion()
+      .infoCoreVersion(this.managerUrl$.getValue())
       .pipe(untilDestroyed(this));
 
     this.logArchived$ = this.nodeManagerService
-      .logArchived()
+      .logArchived(this.managerUrl$.getValue())
       .pipe(untilDestroyed(this));
 
     this.processList$ = this.managerProcessesIds$.pipe(
@@ -197,7 +226,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
 
     this.isLastForgedBlockLoading$.next(true);
     this.nodeManagerService
-      .infoLastForgedBlock()
+      .infoLastForgedBlock(this.managerUrl$.getValue())
       .pipe(
         untilDestroyed(this),
         tap(
@@ -228,7 +257,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.isConfigurationLoading$.next(true);
 
     this.nodeManagerService
-      .configurationGetEnv()
+      .configurationGetEnv(this.managerUrl$.getValue())
       .pipe(
         untilDestroyed(this),
         tap(
@@ -258,11 +287,13 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   getConfigurationPlugins() {
     this.isConfigurationLoading$.next(true);
 
-    return this.nodeManagerService.configurationGetPlugins().pipe(
-      untilDestroyed(this),
-      map((env) => JSON.parse(env)),
-      finalize(() => this.isConfigurationLoading$.next(false))
-    );
+    return this.nodeManagerService
+      .configurationGetPlugins(this.managerUrl$.getValue())
+      .pipe(
+        untilDestroyed(this),
+        map((env) => JSON.parse(env)),
+        finalize(() => this.isConfigurationLoading$.next(false))
+      );
   }
 
   onGetPlugins(event: MouseEvent) {
@@ -324,7 +355,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.isUpdatePluginsLoading$.next(true);
 
     this.nodeManagerService
-      .configurationUpdatePlugins(data)
+      .configurationUpdatePlugins(data, this.managerUrl$.getValue())
       .pipe(
         untilDestroyed(this),
         tap(
@@ -355,6 +386,9 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.nzModalService.create({
       nzTitle: 'Create snapshot',
       nzContent: SnapshotCreateModalComponent,
+      nzComponentParams: {
+        managerUrl: this.managerUrl$.getValue(),
+      },
       nzFooter: null,
       nzWidth: '25vw',
     });
@@ -365,5 +399,11 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.timer3$.unsubscribe();
     this.timer8$.unsubscribe();
     this.timer10$.unsubscribe();
+  }
+
+  onNavigateBackClick(event: MouseEvent) {
+    event.preventDefault();
+
+    this.location.back();
   }
 }

@@ -34,6 +34,8 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
 
   tableColumns: TableColumnConfig[];
 
+  @Input() managerUrl;
+
   @Input('rows')
   set _rows(rows$: Observable<LogArchivedItem[]>) {
     this.rows$ = rows$.pipe(
@@ -91,7 +93,7 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
     });
 
     this.nodeManagerService
-      .logDownload(row.downloadLink)
+      .logDownload(row.downloadLink, this.managerUrl)
       .pipe(
         untilDestroyed(this),
         tap(

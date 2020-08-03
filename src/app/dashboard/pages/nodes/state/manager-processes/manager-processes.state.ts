@@ -70,11 +70,11 @@ export class ManagerProcessesState {
   }
 
   @Action(LoadManagerProcesses)
-  loadManagerProcesses({
-    patchState,
-    dispatch,
-  }: StateContext<ManagerProcessesStateModel>) {
-    return this.nodeManagerService.processList().pipe(
+  loadManagerProcesses(
+    { patchState, dispatch }: StateContext<ManagerProcessesStateModel>,
+    { managerUrl }: LoadManagerProcesses
+  ) {
+    return this.nodeManagerService.processList(managerUrl).pipe(
       tap((processes) => dispatch(new SetManagerProcessesByIds(processes))),
       tap((processes) => {
         patchState({
@@ -87,9 +87,9 @@ export class ManagerProcessesState {
   @Action(StartManagerProcess)
   startManagerProcess(
     { setState, dispatch }: StateContext<ManagerProcessesStateModel>,
-    { processName }: StartManagerProcess
+    { processName, managerUrl }: StartManagerProcess
   ) {
-    return this.nodeManagerService.processStart(processName).pipe(
+    return this.nodeManagerService.processStart(processName, managerUrl).pipe(
       tap(
         (process) => dispatch(new SetManagerProcessesByIds(process)),
         () => {
@@ -106,9 +106,9 @@ export class ManagerProcessesState {
   @Action(RestartManagerProcess)
   restartManagerProcess(
     { setState, dispatch }: StateContext<ManagerProcessesStateModel>,
-    { processName }: RestartManagerProcess
+    { processName, managerUrl }: RestartManagerProcess
   ) {
-    return this.nodeManagerService.processRestart(processName).pipe(
+    return this.nodeManagerService.processRestart(processName, managerUrl).pipe(
       tap(
         (process) => dispatch(new SetManagerProcessesByIds(process)),
         () => {
@@ -125,9 +125,9 @@ export class ManagerProcessesState {
   @Action(StopManagerProcess)
   stopManagerProcess(
     { setState, dispatch }: StateContext<ManagerProcessesStateModel>,
-    { processName }: StopManagerProcess
+    { processName, managerUrl }: StopManagerProcess
   ) {
-    return this.nodeManagerService.processStop(processName).pipe(
+    return this.nodeManagerService.processStop(processName, managerUrl).pipe(
       tap(
         (process) => dispatch(new SetManagerProcessesByIds(process)),
         () => {

@@ -14,7 +14,7 @@ import { finalize, tap } from 'rxjs/operators';
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { SnapshotsListItem } from '@core/interfaces/core-manager.types';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapshot-restore-modal/snapshot-restore-modal.component';
+import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-restore-modal/snapshot-restore-modal.component';
 import { untilDestroyed } from '@core/until-destroyed';
 import { ManagerDeleteSnapshot } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
 import { Store } from '@ngxs/store';
@@ -27,6 +27,8 @@ import { Store } from '@ngxs/store';
 })
 export class SnapshotsTableComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
+
+  @Input() managerUrl;
 
   rows$: Observable<SnapshotsListItem[]>;
   rowsLoading$: BehaviorSubject<{
@@ -112,6 +114,7 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
       nzContent: SnapshotRestoreModalComponent,
       nzComponentParams: {
         snapshotName: row.name,
+        managerUrl: this.managerUrl,
       },
       nzWidth: '25vw',
       nzFooter: null,
@@ -129,7 +132,7 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
     this.setRowLoading(name, true, 'delete');
 
     this.store
-      .dispatch(new ManagerDeleteSnapshot(name))
+      .dispatch(new ManagerDeleteSnapshot(name, this.managerUrl))
       .pipe(
         untilDestroyed(this),
         tap(

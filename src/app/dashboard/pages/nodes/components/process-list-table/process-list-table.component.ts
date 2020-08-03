@@ -48,6 +48,8 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
 
   tableColumns: TableColumnConfig<ProcessListItem>[];
 
+  @Input() managerUrl;
+
   @Input('rows')
   set _rows(rows$: Observable<ProcessListItem[]>) {
     this.rows$ = rows$.pipe(
@@ -169,7 +171,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     this.setRowLoading(name, true, 'start');
 
     this.store
-      .dispatch(new StartManagerProcess(name))
+      .dispatch(new StartManagerProcess(name, this.managerUrl))
       .pipe(
         untilDestroyed(this),
         tap(
@@ -211,7 +213,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     this.setRowLoading(name, true, 'stop');
 
     this.store
-      .dispatch(new StopManagerProcess(name))
+      .dispatch(new StopManagerProcess(name, this.managerUrl))
       .pipe(
         untilDestroyed(this),
         tap(
@@ -240,6 +242,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       nzContent: TerminalViewModalComponent,
       nzComponentParams: {
         logName: name,
+        managerUrl: this.managerUrl,
       },
       nzFooter: null,
       nzWidth: '75vw',

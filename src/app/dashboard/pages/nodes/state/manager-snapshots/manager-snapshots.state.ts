@@ -70,11 +70,11 @@ export class ManagerSnapshotsState {
   }
 
   @Action(LoadManagerSnapshots)
-  loadManagerSnapshots({
-    patchState,
-    dispatch,
-  }: StateContext<ManagerSnapshotsStateModel>) {
-    return this.nodeManagerService.snapshotsList().pipe(
+  loadManagerSnapshots(
+    { patchState, dispatch }: StateContext<ManagerSnapshotsStateModel>,
+    { managerUrl }: LoadManagerSnapshots
+  ) {
+    return this.nodeManagerService.snapshotsList(managerUrl).pipe(
       tap((snapshots = []) =>
         dispatch(new SetManagerSnapshotsByIds(snapshots))
       ),
@@ -113,34 +113,36 @@ export class ManagerSnapshotsState {
   @Action(ManagerCreateSnapshot)
   managerCreateSnapshot(
     {}: StateContext<ManagerSnapshotsStateModel>,
-    { payload }: ManagerCreateSnapshot
+    { payload, managerUrl }: ManagerCreateSnapshot
   ) {
-    return this.nodeManagerService.snapshotsCreate(payload);
+    return this.nodeManagerService.snapshotsCreate(payload, managerUrl);
   }
 
   @Action(ManagerRestoreSnapshot)
   managerRestoreSnapshot(
     {}: StateContext<ManagerSnapshotsStateModel>,
-    { payload }: ManagerRestoreSnapshot
+    { payload, managerUrl }: ManagerRestoreSnapshot
   ) {
-    return this.nodeManagerService.snapshotsRestore(payload);
+    return this.nodeManagerService.snapshotsRestore(payload, managerUrl);
   }
 
   @Action(ManagerDeleteSnapshot)
   managerDeleteSnapshot(
     { setState }: StateContext<ManagerSnapshotsStateModel>,
-    { snapshotName }: ManagerDeleteSnapshot
+    { snapshotName, managerUrl }: ManagerDeleteSnapshot
   ) {
-    return this.nodeManagerService.snapshotDelete(snapshotName).pipe(
-      tap(() => {
-        setState(
-          patch({
-            managerSnapshotsIds: removeItem<string>(
-              (id) => id === snapshotName
-            ),
-          })
-        );
-      })
-    );
+    return this.nodeManagerService
+      .snapshotDelete(snapshotName, managerUrl)
+      .pipe(
+        tap(() => {
+          setState(
+            patch({
+              managerSnapshotsIds: removeItem<string>(
+                (id) => id === snapshotName
+              ),
+            })
+          );
+        })
+      );
   }
 }

@@ -34,6 +34,8 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
   linesTo = -1;
   subscribedLogName: string;
 
+  @Input() managerUrl;
+
   @Input('input')
   set input(input: string) {
     this.logs$.next(input);
@@ -63,7 +65,7 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe();
 
-    this.store.dispatch(new ManagerLogsStartPooling(logName));
+    this.store.dispatch(new ManagerLogsStartPooling(logName, this.managerUrl));
   }
 
   @ViewChild('ngTerminal', { static: true }) child: NgTerminal;

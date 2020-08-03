@@ -115,7 +115,7 @@ export class ManagerLogsState {
   @Action(ManagerLogsStartPooling)
   managerLogsStartPooling(
     { setState }: StateContext<ManagerLogsStateModel>,
-    { logName: name }: ManagerLogsStartPooling
+    { logName: name, managerUrl }: ManagerLogsStartPooling
   ) {
     setState(
       patch({
@@ -133,7 +133,7 @@ export class ManagerLogsState {
       .pipe(
         // Check if there are any new lines available
         exhaustMap(() => {
-          return this.nodeManagerService.logLog({ name }).pipe(
+          return this.nodeManagerService.logLog({ name }, managerUrl).pipe(
             tap(({ totalLines }) => {
               setState(
                 patch({
@@ -182,11 +182,14 @@ export class ManagerLogsState {
           }
 
           return this.nodeManagerService
-            .logLog({
-              name,
-              fromLine,
-              range,
-            })
+            .logLog(
+              {
+                name,
+                fromLine,
+                range,
+              },
+              managerUrl
+            )
             .pipe(
               tap(({ lines }) => {
                 setState(
