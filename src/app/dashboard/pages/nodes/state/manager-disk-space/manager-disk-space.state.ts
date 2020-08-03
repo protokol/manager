@@ -45,13 +45,14 @@ export class ManagerDiskSpaceState {
   }
 
   @Action(ManagerDiskSpaceStartPooling)
-  managerDiskSpaceStartPooling({
-    patchState,
-  }: StateContext<ManagerDiskSpaceStateModel>) {
+  managerDiskSpaceStartPooling(
+    { patchState }: StateContext<ManagerDiskSpaceStateModel>,
+    { managerUrl }: ManagerDiskSpaceStartPooling
+  ) {
     timer(0, 60000)
       .pipe(
         exhaustMap(() => {
-          return this.nodeManagerService.infoDiskSpace().pipe(
+          return this.nodeManagerService.infoDiskSpace(managerUrl).pipe(
             tap((diskSpace) => {
               patchState({
                 diskSpace,

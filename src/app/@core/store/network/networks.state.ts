@@ -18,6 +18,7 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 
 interface NetworksStateModel {
   baseUrl: string | null;
@@ -30,7 +31,7 @@ interface NetworksStateModel {
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   baseUrl: null,
-  coreManagerPort: 4005,
+  coreManagerPort: DEFAULT_CORE_MANAGER_PORT,
   isValidNetwork: null,
   hasNftPluginsLoaded: null,
   nftBaseConfigurations: null,

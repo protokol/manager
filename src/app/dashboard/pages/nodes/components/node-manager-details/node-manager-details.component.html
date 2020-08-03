@@ -76,10 +76,16 @@
 </ng-container>
 
 <nz-divider nzText="Processes"></nz-divider>
-<app-process-list-table [rows]="processList$"></app-process-list-table>
+<app-process-list-table
+  [rows]="processList$"
+  [managerUrl]="managerUrl$ | async"
+></app-process-list-table>
 
 <nz-divider nzText="Logs"></nz-divider>
-<app-log-archived-table [rows]="logArchived$"></app-log-archived-table>
+<app-log-archived-table
+  [rows]="logArchived$"
+  [managerUrl]="managerUrl$ | async"
+></app-log-archived-table>
 
 <nz-divider nzText="Snapshots"></nz-divider>
 <div class="snapshots-actions">
@@ -92,14 +98,18 @@
     Create snapshot
   </button>
 </div>
-<app-snapshots-table [rows]="snapshots$"></app-snapshots-table>
+<app-snapshots-table
+  [rows]="snapshots$"
+  [managerUrl]="managerUrl$ | async"
+></app-snapshots-table>
 
 <ng-template #nodeManagerTitle>
   <nz-space nzDirection="horizontal" nzSize="middle">
     <nz-space-item>
+      <i nz-icon nzType="left" (click)="onNavigateBackClick($event)"></i>&nbsp;
       <span nz-typography>
         <strong
-          >Node manager @ <a>{{ nodeManagerUrl$ | async }}</a></strong
+          >Node manager @ <a>{{ managerUrl$ | async }}</a></strong
         >
       </span>
     </nz-space-item>
@@ -129,7 +139,7 @@
 </ng-template>
 
 <nz-divider nzText="Disk space"></nz-divider>
-<app-disk-space-table></app-disk-space-table>
+<app-disk-space-table [managerUrl]="managerUrl$ | async"></app-disk-space-table>
 
 <ng-template #loading>
   <nz-spin nzSimple></nz-spin>

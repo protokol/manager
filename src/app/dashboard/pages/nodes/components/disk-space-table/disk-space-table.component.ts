@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -27,6 +28,8 @@ import {
 export class DiskSpaceTableComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
+  @Input() managerUrl;
+
   @Select(ManagerDiskSpaceState.getManagerDiskSpace) rows$: Observable<
     InfoDiskSpaceItem[]
   >;
@@ -49,7 +52,7 @@ export class DiskSpaceTableComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.store.dispatch(new ManagerDiskSpaceStartPooling());
+    this.store.dispatch(new ManagerDiskSpaceStartPooling(this.managerUrl));
 
     this.tableColumns = [
       {

@@ -1,0 +1,1 @@
+export const DEFAULT_CORE_MANAGER_PORT = 4005;

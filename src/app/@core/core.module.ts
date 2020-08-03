@@ -28,6 +28,7 @@ import { TradesService } from '@core/services/trades.service';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PeersService } from '@core/services/peers.service';
+import { NodesState } from '@core/store/nodes/nodes.state';
 
 @NgModule({
   declarations: [],
@@ -40,6 +41,7 @@ import { PeersService } from '@core/services/peers.service';
         CollectionsState,
         WalletsState,
         AssetsState,
+        NodesState,
       ],
       {
         developmentMode: !environment.production,
@@ -49,6 +51,7 @@ import { PeersService } from '@core/services/peers.service';
       key: [
         ProfilesState,
         NetworksState,
+        NodesState,
         // Preserve pins for development
         ...(environment.production ? [] : [PinsState]),
       ],

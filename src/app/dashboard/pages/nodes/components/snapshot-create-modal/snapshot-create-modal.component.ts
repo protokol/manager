@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Logger } from '@core/services/logger.service';
 import { BehaviorSubject } from 'rxjs';
@@ -23,6 +28,8 @@ import { FormUtils } from '@core/utils/form-utils';
 })
 export class SnapshotCreateModalComponent implements OnDestroy {
   readonly log = new Logger(this.constructor.name);
+
+  @Input() managerUrl;
 
   isFormDirty$ = new BehaviorSubject(false);
   isLoading$ = new BehaviorSubject(false);
@@ -94,7 +101,9 @@ export class SnapshotCreateModalComponent implements OnDestroy {
     );
 
     this.store
-      .dispatch(new ManagerCreateSnapshot(nonEmptySnapshotFormValues))
+      .dispatch(
+        new ManagerCreateSnapshot(nonEmptySnapshotFormValues, this.managerUrl)
+      )
       .pipe(
         untilDestroyed(this),
         tap(FuncUtils.noop, (err) => {

@@ -9,7 +9,7 @@ export const MANAGER_SNAPSHOTS_TYPE_NAME = 'manager_snapshots';
 export class LoadManagerSnapshots {
   static type = `[${MANAGER_SNAPSHOTS_TYPE_NAME}] LoadManagerSnapshots`;
 
-  constructor() {}
+  constructor(public managerUrl?: string) {}
 }
 
 export class SetManagerSnapshotsByIds {
@@ -21,17 +21,23 @@ export class SetManagerSnapshotsByIds {
 export class ManagerCreateSnapshot {
   static type = `[${MANAGER_SNAPSHOTS_TYPE_NAME}] ManagerCreateSnapshot`;
 
-  constructor(public payload: SnapshotsCreatePayload) {}
+  constructor(
+    public payload: SnapshotsCreatePayload,
+    public managerUrl?: string
+  ) {}
 }
 
 export class ManagerRestoreSnapshot {
   static type = `[${MANAGER_SNAPSHOTS_TYPE_NAME}] ManagerRestoreSnapshot`;
 
-  constructor(public payload: SnapshotsRestorePayload) {}
+  constructor(
+    public payload: SnapshotsRestorePayload,
+    public managerUrl?: string
+  ) {}
 }
 
 export class ManagerDeleteSnapshot {
   static type = `[${MANAGER_SNAPSHOTS_TYPE_NAME}] ManagerDeleteSnapshot`;
 
-  constructor(public snapshotName: string) {}
+  constructor(public snapshotName: string, public managerUrl?: string) {}
 }

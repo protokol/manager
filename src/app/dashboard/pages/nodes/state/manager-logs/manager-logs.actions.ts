@@ -3,7 +3,7 @@ export const MANAGER_LOGS_TYPE_NAME = 'manager_logs';
 export class ManagerLogsStartPooling {
   static type = `[${MANAGER_LOGS_TYPE_NAME}] ManagerLogsStartPooling`;
 
-  constructor(public logName: string) {}
+  constructor(public logName: string, public managerUrl?: string) {}
 }
 
 export class ManagerLogsStopPooling {

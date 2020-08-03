@@ -17,6 +17,11 @@ import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
+import { Actions, ofActionErrored, Store } from '@ngxs/store';
+import { AddMyNode } from '@core/store/nodes/nodes.actions';
+import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
+import { NodesState } from '@core/store/nodes/nodes.state';
+import { NetworksState } from '@core/store/network/networks.state';
 
 @Component({
   selector: 'app-node-details',
@@ -27,6 +32,8 @@ import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/co
 export class NodeDetailsComponent implements OnInit, OnDestroy {
   readonly configurationEditorOptions: JsonEditorOptions;
   readonly cryptoEditorOptions: JsonEditorOptions;
+
+  isAddedToMyNodes$ = new BehaviorSubject(false);
 
   nodeConfiguration$: Observable<(NodeConfiguration & any) | null> = of(null);
   nodeCryptoConfiguration$: Observable<NodeCryptoConfiguration | null> = of(
@@ -43,7 +50,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     private nodeClientService: NodeClientService,
     private nodeManagerService: NodeManagerService,
     private nzMessageService: NzMessageService,
-    private nzModalService: NzModalService
+    private nzModalService: NzModalService,
+    private store: Store,
+    private actions$: Actions
   ) {
     this.cryptoEditorOptions = new JsonEditorOptions();
     this.cryptoEditorOptions.mode = 'view';
@@ -58,6 +67,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     const nodeUrl: string = this.route.snapshot.paramMap.get('url');
     if (nodeUrl) {
       this.nodeUrl$.next(nodeUrl);
+      this.isAddedToMyNodes$.next(
+        !!this.store.selectSnapshot(NodesState.getNodeByUrl(nodeUrl))
+      );
 
       this.nodeConfiguration$ = this.nodeClientService.getNodeConfiguration(
         nodeUrl
@@ -80,14 +92,24 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const managerUrl = this.isAddedToMyNodes$.getValue()
+      ? this.store.selectSnapshot(
+          NodesState.getNodeManagerUrl(this.nodeUrl$.getValue())
+        )
+      : undefined;
+
     this.isLoadingNodeManager$.next(true);
     this.nodeManagerService
-      .infoCoreVersion()
+      .infoCoreVersion(managerUrl)
       .pipe(
         untilDestroyed(this),
         tap(
           () => {
-            this.router.navigate(['/dashboard/nodes/manager']);
+            this.router.navigate([
+              '/dashboard/nodes/manager',
+              managerUrl ||
+                this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+            ]);
           },
           () => {
             this.nzMessageService.error('Core manager not available!');
@@ -95,6 +117,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             this.nzModalService.create({
               nzTitle: 'Node manager settings',
               nzContent: NodeManagerSettingsModalComponent,
+              nzComponentParams: {
+                managerUrl,
+              },
               nzFooter: null,
               nzWidth: '35vw',
             });
@@ -103,5 +128,26 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         finalize(() => this.isLoadingNodeManager$.next(false))
       )
       .subscribe();
+  }
+
+  onAddToMyNodesClick(event: MouseEvent) {
+    event.preventDefault();
+
+    this.isAddedToMyNodes$.next(true);
+
+    const nodeUrl = this.nodeUrl$.getValue();
+    this.store.dispatch(
+      new AddMyNode({
+        nodeUrl,
+        coreManagerPort: DEFAULT_CORE_MANAGER_PORT,
+        coreManagerAuth: false,
+      })
+    );
+
+    this.actions$.pipe(
+      untilDestroyed(this),
+      ofActionErrored(AddMyNode),
+      tap(() => this.isAddedToMyNodes$.next(false))
+    );
   }
 }

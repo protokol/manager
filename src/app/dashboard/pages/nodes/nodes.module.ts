@@ -33,7 +33,7 @@ import { TextViewModalComponent } from './components/text-view-modal/text-view-m
 import { ManagerSnapshotsState } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.state';
 import { SnapshotsTableComponent } from '@app/dashboard/pages/nodes/components/snapshots-table/snapshots-table.component';
 import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-create-modal/snapshot-create-modal.component';
-import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/snapshot-restore-modal/snapshot-restore-modal.component';
+import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-restore-modal/snapshot-restore-modal.component';
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 import { NgTerminalModule } from 'ng-terminal';
 import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';

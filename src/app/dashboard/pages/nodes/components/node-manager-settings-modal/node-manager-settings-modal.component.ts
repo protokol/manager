@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -13,6 +14,7 @@ import { tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
+import { UpdateMyNode } from '@core/store/nodes/nodes.actions';
 
 @Component({
   selector: 'app-node-manager-settings-modal',
@@ -21,6 +23,8 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeManagerSettingsModalComponent implements OnInit, OnDestroy {
+  @Input() managerUrl: string = undefined;
+
   managerSettingsForm!: FormGroup;
 
   isLoading$ = new BehaviorSubject(false);
@@ -56,7 +60,16 @@ export class NodeManagerSettingsModalComponent implements OnInit, OnDestroy {
 
     const { port } = this.managerSettingsForm.value;
 
-    this.store.dispatch(new SetCoreManagerPort(port));
+    if (!this.managerUrl) {
+      this.store.dispatch(new SetCoreManagerPort(port));
+    } else {
+      this.store.dispatch(
+        new UpdateMyNode(
+          { coreManagerPort: port },
+          { nodeUrl: this.managerUrl }
+        )
+      );
+    }
 
     this.isLoading$.next(true);
     this.nodeManagerService
