@@ -16,6 +16,7 @@ import {
   NzInputModule,
   NzModalModule,
   NzPopconfirmModule,
+  NzSelectModule,
   NzSpinModule,
   NzTypographyModule,
 } from 'ng-zorro-antd';
@@ -39,6 +40,7 @@ import { NgTerminalModule } from 'ng-terminal';
 import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
 import { ManagerDiskSpaceState } from '@app/dashboard/pages/nodes/state/manager-disk-space/manager-disk-space.state';
 import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/disk-space-table/disk-space-table.component';
+import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
 
 @NgModule({
   imports: [
@@ -71,6 +73,7 @@ import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/d
     NzCheckboxModule,
     NzPopconfirmModule,
     NgTerminalModule,
+    NzSelectModule,
   ],
   providers: [],
   declarations: [
@@ -85,6 +88,7 @@ import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/d
     SnapshotRestoreModalComponent,
     TerminalViewModalComponent,
     DiskSpaceTableComponent,
+    MyNodesUpdateModalComponent,
   ],
   exports: [],
 })
