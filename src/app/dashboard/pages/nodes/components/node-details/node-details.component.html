@@ -52,7 +52,12 @@
     <div nz-col [nzSpan]="8">
       <nz-space nzDirection="horizontal" nzSize="small">
         <nz-space-item>
-          <button nz-button nzSize="small" nzType="primary">
+          <button
+            nz-button
+            nzSize="small"
+            nzType="primary"
+            (click)="onUpdateMyNodesClick($event)"
+          >
             <i nz-icon nzType="edit"></i>Change
           </button>
         </nz-space-item>

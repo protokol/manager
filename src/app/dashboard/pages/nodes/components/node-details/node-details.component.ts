@@ -22,6 +22,7 @@ import { AddMyNode } from '@core/store/nodes/nodes.actions';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { NetworksState } from '@core/store/network/networks.state';
+import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
 
 @Component({
   selector: 'app-node-details',
@@ -149,5 +150,19 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
       ofActionErrored(AddMyNode),
       tap(() => this.isAddedToMyNodes$.next(false))
     );
+  }
+
+  onUpdateMyNodesClick(event: MouseEvent) {
+    event.preventDefault();
+
+    this.nzModalService.create({
+      nzTitle: 'Select node',
+      nzContent: MyNodesUpdateModalComponent,
+      nzComponentParams: {
+        managerUrl: this.nodeUrl$.getValue(),
+      },
+      nzFooter: null,
+      nzWidth: '35vw',
+    });
   }
 }
