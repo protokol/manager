@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { CoreManagerMethods } from '@core/interfaces/core-manager-methods.enum';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
+import { NodeManagerAuthentication } from '@core/interfaces/node.types';
 
 export abstract class NetworkUtils {
   static isNodeCryptoConfiguration(
@@ -53,11 +54,38 @@ export abstract class NetworkUtils {
     };
   }
 
-  static getNodeManagerDefaultHeaders() {
+  static getNodeManagerDefaultHeaders(
+    authentication?: NodeManagerAuthentication
+  ) {
     return {
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-      },
+      headers: Object.assign(
+        {
+          'Content-Type': 'application/vnd.api+json',
+        },
+        {
+          ...(authentication && authentication.token
+            ? this.getNodeManagerTokenAuthentication(authentication.token)
+            : {}),
+          ...(authentication && authentication.basic
+            ? this.getNodeManagerBasicAuthentication(authentication.basic)
+            : {}),
+        }
+      ),
+    };
+  }
+
+  static getNodeManagerTokenAuthentication(secretToken: string) {
+    return {
+      Authorization: `Bearer ${secretToken}`,
+    };
+  }
+
+  static getNodeManagerBasicAuthentication(
+    basicAuth: NodeManagerAuthentication['basic']
+  ) {
+    const encoded = btoa(`${basicAuth.username}:${basicAuth.password}`);
+    return {
+      Authorization: `Basic ${encoded}`,
     };
   }
 }

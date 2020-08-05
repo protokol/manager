@@ -23,6 +23,7 @@ import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { NetworksState } from '@core/store/network/networks.state';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
+import { ManagerAuthenticationSet } from '@core/store/manager-authentication/manager-authentication.actions';
 
 @Component({
   selector: 'app-node-details',
@@ -68,9 +69,15 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     const nodeUrl: string = this.route.snapshot.paramMap.get('url');
     if (nodeUrl) {
       this.nodeUrl$.next(nodeUrl);
-      this.isAddedToMyNodes$.next(
-        !!this.store.selectSnapshot(NodesState.getNodeByUrl(nodeUrl))
+      const myNode = this.store.selectSnapshot(
+        NodesState.getNodeByUrl(nodeUrl)
       );
+      if (myNode) {
+        this.isAddedToMyNodes$.next(!!myNode);
+        this.store.dispatch(
+          new ManagerAuthenticationSet(myNode.coreManagerAuth)
+        );
+      }
 
       this.nodeConfiguration$ = this.nodeClientService.getNodeConfiguration(
         nodeUrl
@@ -120,6 +127,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
               nzContent: NodeManagerSettingsModalComponent,
               nzComponentParams: {
                 managerUrl,
+                nodeUrl: this.nodeUrl$.getValue(),
               },
               nzFooter: null,
               nzWidth: '35vw',
@@ -141,7 +149,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
       new AddMyNode({
         nodeUrl,
         coreManagerPort: DEFAULT_CORE_MANAGER_PORT,
-        coreManagerAuth: false,
       })
     );
 
