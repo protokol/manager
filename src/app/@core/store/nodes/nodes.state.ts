@@ -91,11 +91,11 @@ export class NodesState {
     { setState, getState }: StateContext<NodesStateModel>,
     { node, updateBy: { nodeUrl, nodeId } }: UpdateMyNode
   ) {
+    const { nodes } = getState();
     const updateNodeId = (() => {
       if (nodeId) {
         return nodeId;
       }
-      const { nodes } = getState();
       const foundNodeId = Object.keys(nodes).find(
         (k) => nodes[k].nodeUrl === nodeUrl
       );
@@ -108,7 +108,12 @@ export class NodesState {
     if (updateNodeId) {
       setState(
         patch({
-          nodes: patch({ [updateNodeId]: node }),
+          nodes: patch({
+            [updateNodeId]: {
+              ...nodes[updateNodeId],
+              ...node,
+            },
+          }),
         })
       );
     } else {

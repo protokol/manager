@@ -16,6 +16,7 @@ import {
   NzInputModule,
   NzModalModule,
   NzPopconfirmModule,
+  NzRadioModule,
   NzSelectModule,
   NzSpinModule,
   NzTypographyModule,
@@ -74,6 +75,7 @@ import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/componen
     NzPopconfirmModule,
     NgTerminalModule,
     NzSelectModule,
+    NzRadioModule,
   ],
   providers: [],
   declarations: [

@@ -29,6 +29,7 @@ import { NodeManagerService } from '@core/services/node-manager.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PeersService } from '@core/services/peers.service';
 import { NodesState } from '@core/store/nodes/nodes.state';
+import { ManagerAuthenticationState } from '@core/store/manager-authentication/manager-authentication.state';
 
 @NgModule({
   declarations: [],
@@ -42,6 +43,7 @@ import { NodesState } from '@core/store/nodes/nodes.state';
         WalletsState,
         AssetsState,
         NodesState,
+        ManagerAuthenticationState,
       ],
       {
         developmentMode: !environment.production,
