@@ -67,9 +67,7 @@ export abstract class NetworkUtils {
             ? this.getNodeManagerTokenAuthentication(authentication.token)
             : {}),
           ...(authentication && authentication.basic
-            ? this.getNodeManagerTokenAuthentication(
-                authentication.basic.username
-              )
+            ? this.getNodeManagerBasicAuthentication(authentication.basic)
             : {}),
         }
       ),
@@ -79,6 +77,15 @@ export abstract class NetworkUtils {
   static getNodeManagerTokenAuthentication(secretToken: string) {
     return {
       Authorization: `Bearer ${secretToken}`,
+    };
+  }
+
+  static getNodeManagerBasicAuthentication(
+    basicAuth: NodeManagerAuthentication['basic']
+  ) {
+    const encoded = btoa(`${basicAuth.username}:${basicAuth.password}`);
+    return {
+      Authorization: `Basic ${encoded}`,
     };
   }
 }
