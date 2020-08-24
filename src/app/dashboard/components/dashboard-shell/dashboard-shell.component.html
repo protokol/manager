@@ -23,36 +23,34 @@
           *ngIf="hasNftPluginsLoaded"
         >
           <ul>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/collections">Collections</a>
+            <li nz-submenu nzOpen [nzTitle]="managementTitleTpl">
+              <ul>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/collections">Collections</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/assets">Assets</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/transfers">Transfers</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/burns">Burns</a>
+                </li>
+              </ul>
             </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/assets">Assets</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/transfers">Transfers</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/burns">Burns</a>
-            </li>
-          </ul>
-        </li>
-        <li
-          nz-submenu
-          nzOpen
-          nzTitle="Exchange"
-          nzIcon="fund"
-          *ngIf="hasNftPluginsLoaded"
-        >
-          <ul>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/auctions">Auctions</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/bids">Bids</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/dashboard/trades">Trades</a>
+            <li nz-submenu nzOpen [nzTitle]="exchangeTitleTpl">
+              <ul>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/auctions">Auctions</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/bids">Bids</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/trades">Trades</a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>
@@ -106,3 +104,15 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+
+<ng-template #managementTitleTpl>
+  <span nz-typography nzType="secondary">
+    Management
+  </span>
+</ng-template>
+
+<ng-template #exchangeTitleTpl>
+  <span nz-typography nzType="secondary">
+    Exchange
+  </span>
+</ng-template>
