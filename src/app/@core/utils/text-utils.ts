@@ -19,4 +19,11 @@ export abstract class TextUtils {
     }
     return str.replace(/\n/g, '\n\r');
   }
+
+  static strStart(str: string, length: number) {
+    if (!str || str.length < length) {
+      return str || '';
+    }
+    return `${str.substring(0, 6)}…`;
+  }
 }

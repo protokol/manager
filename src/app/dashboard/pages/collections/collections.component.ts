@@ -11,6 +11,7 @@ import { LoadCollections } from '@app/@core/store/collections/collections.action
 import { NetworksState } from '@core/store/network/networks.state';
 import {
   debounceTime,
+  delay,
   distinctUntilChanged,
   filter,
   skip,
@@ -32,6 +33,7 @@ import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
+import { CreateCollectionResponseInterface } from '@app/dashboard/pages/collections/interfaces/create-collection-response.interface';
 
 @Component({
   selector: 'app-collections',
@@ -185,11 +187,31 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   showAddCollectionModal(event: MouseEvent) {
     event.preventDefault();
 
-    this.nzModalService.create({
-      nzTitle: 'Create new collection',
+    const createCollectionModalRef = this.nzModalService.create<
+      CollectionCreateModalComponent,
+      CreateCollectionResponseInterface
+    >({
+      nzTitle: 'Create collection',
       nzContent: CollectionCreateModalComponent,
       nzWidth: '75vw',
     });
+
+    createCollectionModalRef.afterClose
+      .pipe(
+        delay(8000),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            this.store.dispatch(
+              new LoadCollections({
+                ...this.params,
+              })
+            );
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   onWalletDetailsClick(addressOrPublicKey: string, collectionId: string) {

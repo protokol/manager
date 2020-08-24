@@ -30,6 +30,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { PeersService } from '@core/services/peers.service';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { ManagerAuthenticationState } from '@core/store/manager-authentication/manager-authentication.state';
+import { CryptoService } from '@core/services/crypto.service';
+import { TransactionsService } from '@core/services/transactions.service';
 
 @NgModule({
   declarations: [],
@@ -77,8 +79,10 @@ import { ManagerAuthenticationState } from '@core/store/manager-authentication/m
     WalletService,
     NodeManagerService,
     StoreUtilsService,
+    CryptoService,
     HasProfileGuard,
     PeersService,
+    TransactionsService,
     {
       provide: Bip38Service,
       useFactory: bip38Factory,
