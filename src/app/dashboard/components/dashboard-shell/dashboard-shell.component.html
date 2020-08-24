@@ -14,7 +14,12 @@
       </a>
     </div>
     <ng-container *ngLet="hasNftPluginsLoaded$ | async as hasNftPluginsLoaded">
-      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <ul
+        nz-menu
+        nzMode="inline"
+        class="menu-ul"
+        [nzInlineCollapsed]="isCollapsed"
+      >
         <li
           nz-submenu
           nzOpen
