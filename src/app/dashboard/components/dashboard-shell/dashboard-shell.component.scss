@@ -27,6 +27,10 @@
   transition: all 0.3s, padding 0s;
 }
 
+.trigger {
+  color: #fff;
+}
+
 .trigger:hover {
   color: #1890ff;
 }
@@ -67,7 +71,7 @@ nz-header {
   position: relative;
   height: 64px;
   padding: 0;
-  background: #fff;
+  background: #1d4174;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 
