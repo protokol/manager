@@ -59,7 +59,6 @@
 		"ng-terminal": "~3.0.0-alpha",
 		"ng-zorro-antd": "^9.3.0",
 		"ngx-clipboard": "^13.0.1",
-		"pm2": "^4.4.1",
 		"rxjs": "~6.6.2",
 		"tslib": "^2.0.1",
 		"uuid": "^8.3.0",
@@ -124,16 +123,5 @@
 			"pre-commit": "npm run format-staged",
 			"pre-push": "npm run lint"
 		}
-	},
-	"browser": {
-		"crypto": false,
-		"http": false,
-		"https": false,
-		"fs": false,
-		"path": false,
-		"@protokol/utils": false,
-		"process-es6": false,
-		"stream": false,
-		"os": false
 	}
 }
