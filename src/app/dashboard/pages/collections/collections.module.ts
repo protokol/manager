@@ -11,6 +11,8 @@ import {
   NzGridModule,
   NzInputModule,
   NzModalModule,
+  NzNotificationModule,
+  NzTypographyModule,
 } from 'ng-zorro-antd';
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -36,6 +38,8 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NzDividerModule,
     FormsModule,
     NgLetModule,
+    NzNotificationModule,
+    NzTypographyModule,
   ],
   declarations: [
     CollectionsComponent,

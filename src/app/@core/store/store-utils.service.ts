@@ -8,6 +8,7 @@ import { Bip38Service } from '@core/services/bip38.service';
 import { catchError, filter, map, share, tap } from 'rxjs/operators';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
+import { PinsState } from '@core/store/pins/pins.state';
 
 @Injectable()
 export class StoreUtilsService {
@@ -33,6 +34,20 @@ export class StoreUtilsService {
         return of(false);
       })
     );
+  }
+
+  getSelectedProfileWif(): Observable<{ wif: string }> {
+    const profile = this.store.selectSnapshot(ProfilesState.getSelectedProfile);
+    const pin = this.store.selectSnapshot(
+      PinsState.getPinByProfileId(profile.id)
+    );
+    const networkConfig = this.store.selectSnapshot(
+      NetworksState.getNodeCryptoConfig
+    );
+
+    return this.bip38Service
+      .decrypt(profile.encodedWif, pin, networkConfig.network)
+      .pipe(map((wif) => ({ wif })));
   }
 
   nftConfigurationGuard(): Observable<void> {

@@ -186,7 +186,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: 'Create new collection',
+      nzTitle: 'Create collection',
       nzContent: CollectionCreateModalComponent,
       nzWidth: '75vw',
     });
