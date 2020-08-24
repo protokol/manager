@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { NzModalRef, NzNotificationService } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
+import { CreateCollectionResponseInterface } from '@app/dashboard/pages/collections/interfaces/create-collection-response.interface';
 
 @Component({
   selector: 'app-collection-create-modal',
@@ -31,7 +32,10 @@ export class CollectionCreateModalComponent implements OnDestroy {
     private formBuilder: FormBuilder,
     private cryptoService: CryptoService,
     private nzNotificationService: NzNotificationService,
-    private modalRef: NzModalRef
+    private modalRef: NzModalRef<
+      CollectionCreateModalComponent,
+      CreateCollectionResponseInterface
+    >
   ) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
@@ -74,7 +78,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
       .pipe(
         tap(
           () => {
-            this.modalRef.destroy();
+            this.modalRef.destroy({ refresh: true });
           },
           (err) => {
             this.nzNotificationService.create(
