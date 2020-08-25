@@ -6,13 +6,15 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
+  delay,
   distinctUntilChanged,
   filter,
   first,
   switchMap,
+  takeUntil,
   tap,
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
@@ -30,6 +32,9 @@ import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/
 import { TextUtils } from '@core/utils/text-utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
+import { AssetCreateModalComponent } from '@shared/components/asset-create-modal/asset-create-modal.component';
+import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { TableUtils } from '@shared/utils/table-utils';
 
 @Component({
   selector: 'app-assets',
@@ -39,6 +44,8 @@ import { StoreUtilsService } from '@core/store/store-utils.service';
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
+
+  private params: NzTableQueryParams = TableUtils.getDefaultNzTableQueryParams();
 
   @Select(AssetsState.getAssetsIds) assetIds$: Observable<string[]>;
   @Select(AssetsState.getMeta) meta$: Observable<PaginationMeta>;
@@ -71,7 +78,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
     private nzModalService: NzModalService,
     private route: ActivatedRoute,
     private router: Router,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private actions$: Actions
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -173,6 +181,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   paginationChange(params: NzTableQueryParams) {
+    this.params = params;
     this.store.dispatch(new LoadAssets(params, { withCollection: true }));
   }
 
@@ -182,5 +191,36 @@ export class AssetsComponent implements OnInit, OnDestroy {
         assetId,
       },
     });
+  }
+
+  showCreateAssetModal(event: MouseEvent) {
+    event.preventDefault();
+
+    const createAssetModalRef = this.nzModalService.create<
+      AssetCreateModalComponent,
+      CreateModalResponseInterface
+    >({
+      nzTitle: 'Create asset',
+      nzContent: AssetCreateModalComponent,
+      nzWidth: '75vw',
+    });
+
+    createAssetModalRef.afterClose
+      .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadAssets))),
+        delay(8000),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            this.store.dispatch(
+              new LoadAssets({
+                ...this.params,
+              })
+            );
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

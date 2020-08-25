@@ -9,6 +9,7 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from '@core/directives/ngLet.module';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     ReactiveFormsModule,
     NzButtonModule,
     NgLetModule,
+    NzSpaceModule,
   ],
   providers: [],
   declarations: [AssetsComponent, AssetViewModalComponent],

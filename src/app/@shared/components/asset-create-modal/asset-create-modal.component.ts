@@ -1,62 +1,59 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
 import { environment } from '@env/environment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Logger } from '@core/services/logger.service';
-import { CryptoService } from '@app/@core/services/crypto.service';
-import { FormUtils } from '@core/utils/form-utils';
 import { BehaviorSubject } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
 import {
   NzMessageService,
   NzModalRef,
   NzNotificationService,
 } from 'ng-zorro-antd';
+import { FormUtils } from '@core/utils/form-utils';
+import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
-import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { CryptoService } from '@core/services/crypto.service';
+import { Logger } from '@core/services/logger.service';
 
 @Component({
-  selector: 'app-collection-create-modal',
-  templateUrl: './collection-create-modal.component.html',
-  styleUrls: ['./collection-create-modal.component.scss'],
+  selector: 'app-asset-create-modal',
+  templateUrl: './asset-create-modal.component.html',
+  styleUrls: ['./asset-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionCreateModalComponent implements OnDestroy {
-  readonly log = new Logger(this.constructor.name);
+export class AssetCreateModalComponent implements OnDestroy {
+  log: Logger = new Logger(this.constructor.name);
+
   readonly editorOptions: JsonEditorOptions;
 
   collectionForm!: FormGroup;
+  assetForm!: FormGroup;
+
   framework = WidgetConfigService.getFramework();
   isProduction = environment.production;
 
   isLoading$ = new BehaviorSubject(false);
+  isAssetValid$ = new BehaviorSubject(false);
+
+  asset = {};
 
   constructor(
     private formBuilder: FormBuilder,
+    private modalRef: NzModalRef,
     private cryptoService: CryptoService,
-    private nzNotificationService: NzNotificationService,
-    private modalRef: NzModalRef<
-      CollectionCreateModalComponent,
-      CreateModalResponseInterface
-    >,
+    private notificationService: NzNotificationService,
     private messageService: NzMessageService
   ) {
     this.editorOptions = new JsonEditorOptions();
-    this.editorOptions.mode = 'code';
+    this.editorOptions.mode = 'view';
+    this.editorOptions.expandAll = true;
 
     this.createForm();
   }
 
-  private createForm() {
+  createForm() {
     this.collectionForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      maximumSupply: [
-        '',
-        [Validators.min(0), Validators.max(Number.MAX_SAFE_INTEGER)],
-      ],
-      jsonSchema: ['', Validators.required],
+      collection: ['', Validators.required],
     });
   }
 
@@ -64,10 +61,19 @@ export class CollectionCreateModalComponent implements OnDestroy {
     return this.collectionForm.controls[controlName];
   }
 
-  async createCollection(event: any) {
+  get collection() {
+    return this.c('collection').value;
+  }
+
+  onCancel(event: MouseEvent) {
+    event.preventDefault();
+    this.modalRef.destroy();
+  }
+
+  createAsset(event: MouseEvent) {
     event.preventDefault();
 
-    if (this.isLoading$.getValue()) {
+    if (this.isLoading$.getValue() || !this.isAssetValid$.getValue()) {
       return;
     }
 
@@ -78,18 +84,24 @@ export class CollectionCreateModalComponent implements OnDestroy {
 
     this.isLoading$.next(true);
 
+    const {
+      collection: { id: collectionId },
+    } = this.collectionForm.value;
     this.cryptoService
-      .registerCollection(this.collectionForm.value)
+      .registerAsset({
+        collectionId,
+        attributes: this.asset,
+      })
       .pipe(
         tap(
           () => {
-            this.messageService.success('Collection registered!');
+            this.messageService.success('Token registered!');
             this.modalRef.destroy({ refresh: true });
           },
           (err) => {
-            this.nzNotificationService.create(
+            this.notificationService.create(
               'error',
-              'Register collection failed!',
+              'Register asset failed!',
               err
             );
           }
@@ -102,11 +114,13 @@ export class CollectionCreateModalComponent implements OnDestroy {
       .subscribe();
   }
 
-  onCancel(event: MouseEvent) {
-    event.preventDefault();
-
-    this.modalRef.destroy();
+  isAssetValid(event: boolean) {
+    this.isAssetValid$.next(event);
   }
 
-  ngOnDestroy(): void {}
+  assetValidationErrors(event: any) {
+    this.log.info(event);
+  }
+
+  ngOnDestroy() {}
 }

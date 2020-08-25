@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { LoadCollections } from '@app/@core/store/collections/collections.actions';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
@@ -16,6 +16,7 @@ import {
   filter,
   skip,
   switchMap,
+  takeUntil,
   tap,
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
@@ -33,7 +34,7 @@ import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import { CreateCollectionResponseInterface } from '@app/dashboard/pages/collections/interfaces/create-collection-response.interface';
+import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
 
 @Component({
   selector: 'app-collections',
@@ -71,7 +72,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     private store: Store,
     private nzModalService: NzModalService,
     private router: Router,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private actions$: Actions
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -189,7 +191,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     const createCollectionModalRef = this.nzModalService.create<
       CollectionCreateModalComponent,
-      CreateCollectionResponseInterface
+      CreateModalResponseInterface
     >({
       nzTitle: 'Create collection',
       nzContent: CollectionCreateModalComponent,
@@ -198,6 +200,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     createCollectionModalRef.afterClose
       .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadCollections))),
         delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;

@@ -1,0 +1,61 @@
+<form nz-form [formGroup]="collectionForm" novalidate>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="collection" nzRequired
+      >Choose collection</nz-form-label
+    >
+    <nz-form-control
+      id="collection"
+      nzErrorTip="Please select a collection!"
+      nzHasFeedback
+    >
+      <app-collection-select
+        [formGroupInput]="collectionForm"
+        [formControlNameInput]="'collection'"
+      >
+      </app-collection-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container *ngIf="collection as selectedCollection">
+    <nz-divider></nz-divider>
+
+    <app-schema-container>
+      <app-schema-container-item editor>
+        <json-editor
+          [options]="editorOptions"
+          [data]="selectedCollection.jsonSchema"
+          disabled="disabled"
+        ></json-editor>
+      </app-schema-container-item>
+      <app-schema-container-item form>
+        <json-schema-form
+          loadExternalAssets="true"
+          [schema]="selectedCollection.jsonSchema"
+          [debug]="!isProduction"
+          [framework]="framework"
+          [(data)]="asset"
+          (isValid)="isAssetValid($event)"
+          (validationErrors)="assetValidationErrors($event)"
+        >
+        </json-schema-form>
+      </app-schema-container-item>
+    </app-schema-container>
+  </ng-container>
+</form>
+
+<div *nzModalFooter>
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="
+      !(isAssetValid$ | async) || (isLoading$ | async) || !collectionForm.valid
+    "
+    (click)="createAsset($event)"
+  >
+    Create
+  </button>
+  <button nz-button (click)="onCancel($event)">
+    Cancel
+  </button>
+</div>
