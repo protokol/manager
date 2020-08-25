@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Logger } from '@core/services/logger.service';
 import { ElectronUtils } from '@core/utils/electron-utils';
-import { NFTCollectionAsset } from '@protokol/nft-base-crypto/dist/interfaces';
+import {
+  NFTCollectionAsset,
+  NFTTokenAsset,
+} from '@protokol/nft-base-crypto/dist/interfaces';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { TransactionsService } from '@core/services/transactions.service';
 import { Observable } from 'rxjs';
@@ -30,6 +33,9 @@ export class CryptoService {
       this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTRegisterCollectionTransaction
       );
+      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+        this.nftBaseCrypto.Transactions.NFTCreateTransaction
+      );
     }
   }
 
@@ -53,6 +59,39 @@ export class CryptoService {
             const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTRegisterCollectionBuilder()
               .NFTRegisterCollectionAsset({
                 ...nftCollectionAsset,
+              })
+              .nonce(senderNonce)
+              .signWithWif(wif);
+
+            return this.transactionsService.createTransactions({
+              transactions: [createCollectionTrans.build().toJson()],
+            });
+          })
+        );
+      })
+    );
+  }
+
+  registerAsset(nftTokenAsset: NFTTokenAsset): Observable<any> {
+    return this.storeUtilsService.getSelectedProfileWif().pipe(
+      switchMap(({ wif }) => {
+        const address = this.nftBaseCrypto.ARKCrypto.Identities.Address.fromWIF(
+          wif
+        );
+
+        return this.walletsService.getWallet(address).pipe(
+          switchMap((senderWallet) => {
+            const senderNonce = senderWallet
+              ? this.nftBaseCrypto.ARKCrypto.Utils.BigNumber.make(
+                  senderWallet.nonce
+                )
+                  .plus(1)
+                  .toFixed()
+              : '0';
+
+            const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTCreateBuilder()
+              .NFTCreateToken({
+                ...nftTokenAsset,
               })
               .nonce(senderNonce)
               .signWithWif(wif);

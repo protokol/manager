@@ -1,0 +1,31 @@
+<ng-container *ngIf="formGroupInput && formControlNameInput">
+  <div [formGroup]="formGroupInput">
+    <nz-select
+      (nzScrollToBottom)="next()"
+      nzPlaceHolder="Select collection"
+      [nzDropdownRender]="renderTemplate"
+      [formControlName]="formControlNameInput"
+      ngDefaultControl
+      nzShowSearch
+      nzServerSearch
+      (nzOnSearch)="onSearchChanged($event)"
+    >
+      <ng-container *ngFor="let collection of collections$ | async">
+        <nz-option
+          [nzValue]="collection"
+          [nzLabel]="collection.name"
+        ></nz-option>
+      </ng-container>
+    </nz-select>
+    <ng-template #renderTemplate>
+      <ng-container *ngIf="isLoading$ | async">
+        <nz-space nzDirection="horizontal" nzSize="small">
+          <nz-space-item></nz-space-item>
+          <nz-space-item>
+            <i nz-icon nzType="loading"></i> Loading Data...
+          </nz-space-item>
+        </nz-space>
+      </ng-container>
+    </ng-template>
+  </div>
+</ng-container>

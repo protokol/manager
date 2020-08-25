@@ -1,12 +1,21 @@
-<app-table
-  [isLoading]="isLoading$ | async"
-  [rows]="rows$"
-  [tableColumns]="tableColumns"
-  [meta]="meta$ | async"
-  (paginationChange)="paginationChange($event)"
-  scrollY="75vh"
->
-</app-table>
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <button nz-button nzType="primary" (click)="showCreateAssetModal($event)">
+      Add Asset
+    </button>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+      scrollY="70vh"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
 
 <ng-template #actionsTpl let-row="row">
   <button nz-button nzType="default" (click)="showAttributes($event, row)">
