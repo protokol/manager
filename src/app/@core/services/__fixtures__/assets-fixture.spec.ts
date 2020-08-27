@@ -17,6 +17,11 @@ const assetFixture: BaseResourcesTypes.Assets = {
     def: 21,
     phy: 12,
   },
+  timestamp: {
+    epoch: 108427392,
+    human: '2020-08-27T11:43:12.000Z',
+    unix: 1598528592,
+  },
 };
 
 const getAssetFixture = (id: string = uuid()): BaseResourcesTypes.Assets => ({
