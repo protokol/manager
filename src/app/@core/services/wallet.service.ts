@@ -5,7 +5,8 @@ import { ElectronUtils } from '@core/utils/electron-utils';
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
 import * as bip39Type from 'bip39';
-import * as arkCryptoType from '@arkecosystem/crypto';
+import { ArkCryptoService } from '@core/services/ark-crypto.service';
+import { Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
 
 export enum MnemonicGenerateLanguage {
   ENGLISH = 'english',
@@ -16,26 +17,31 @@ export class WalletService {
   readonly log = new Logger(this.constructor.name);
 
   private readonly bip39: typeof bip39Type;
-  private readonly arkCrypto: typeof arkCryptoType;
 
-  constructor() {
+  constructor(private arkCryptoService: ArkCryptoService) {
     if (ElectronUtils.isElectron()) {
       this.bip39 = window.require('bip39');
-      this.arkCrypto = window.require('@arkecosystem/crypto');
     }
   }
 
-  generate(pubKeyHash, language: MnemonicGenerateLanguage) {
+  generate(
+    language: MnemonicGenerateLanguage,
+    pubKeyHash = this.arkCryptoService.arkCrypto.Managers.configManager.get<
+      ArkInterfaces.Network
+    >('network').pubKeyHash
+  ) {
     const passphrase = this.bip39.generateMnemonic(
       null,
       null,
       this.bip39.wordlists[language]
     );
-    const { publicKey } = this.arkCrypto.Identities.Keys.fromPassphrase(
+    const {
+      publicKey,
+    } = this.arkCryptoService.arkCrypto.Identities.Keys.fromPassphrase(
       passphrase
     );
     return {
-      address: this.arkCrypto.Identities.Address.fromPublicKey(
+      address: this.arkCryptoService.arkCrypto.Identities.Address.fromPublicKey(
         publicKey,
         pubKeyHash
       ),

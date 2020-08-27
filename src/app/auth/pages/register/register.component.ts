@@ -183,10 +183,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  onGenerateClick(event: MouseEvent, publicKeyHash: any) {
+  onGenerateClick(event: MouseEvent) {
     event.preventDefault();
     const { passphrase, address } = this.walletService.generate(
-      publicKeyHash,
       MnemonicGenerateLanguage.ENGLISH
     );
 

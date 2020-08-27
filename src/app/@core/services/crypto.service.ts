@@ -7,7 +7,10 @@ import { TransactionsService } from '@core/services/transactions.service';
 import { Observable } from 'rxjs';
 import * as nftBaseCryptoType from '@protokol/nft-base-crypto';
 import { WalletsService } from '@core/services/wallets.service';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
+import { NetworksState } from '@core/store/network/networks.state';
+import { Store } from '@ngxs/store';
+import { Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
 
 @Injectable()
 export class CryptoService {
@@ -18,21 +21,35 @@ export class CryptoService {
   constructor(
     private storeUtilsService: StoreUtilsService,
     private transactionsService: TransactionsService,
-    private walletsService: WalletsService
+    private walletsService: WalletsService,
+    private store: Store
   ) {
     if (ElectronUtils.isElectron()) {
       this.nftBaseCrypto = window.require('@protokol/nft-base-crypto');
-      this.nftBaseCrypto.ARKCrypto.Managers.configManager.setHeight(2);
-      this.nftBaseCrypto.ARKCrypto.Managers.configManager.setFromPreset(
-        'testnet'
-      );
 
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
-        this.nftBaseCrypto.Transactions.NFTRegisterCollectionTransaction
-      );
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
-        this.nftBaseCrypto.Transactions.NFTCreateTransaction
-      );
+      // Listen to node crypto config changes
+      this.store
+        .select(NetworksState.getNodeCryptoConfig)
+        .pipe(
+          filter((config) => !!config),
+          tap(({ exceptions, genesisBlock, network, milestones }) => {
+            this.nftBaseCrypto.ARKCrypto.Managers.configManager.setConfig({
+              exceptions: { ...exceptions },
+              genesisBlock: { ...genesisBlock },
+              network: { ...network },
+              milestones: [...milestones],
+            } as ArkInterfaces.NetworkConfig);
+            this.nftBaseCrypto.ARKCrypto.Managers.configManager.setHeight(2);
+
+            this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+              this.nftBaseCrypto.Transactions.NFTRegisterCollectionTransaction
+            );
+            this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+              this.nftBaseCrypto.Transactions.NFTCreateTransaction
+            );
+          })
+        )
+        .subscribe();
     }
   }
 
@@ -53,7 +70,7 @@ export class CryptoService {
                 )
                   .plus(1)
                   .toFixed()
-              : '0';
+              : '1';
 
             const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTRegisterCollectionBuilder()
               .NFTRegisterCollectionAsset({
