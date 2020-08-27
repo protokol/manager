@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   NzMessageService,
   NzModalRef,
+  NzModalService,
   NzNotificationService,
 } from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
@@ -14,6 +15,7 @@ import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { CryptoService } from '@core/services/crypto.service';
 import { Logger } from '@core/services/logger.service';
+import { IpfsUploadFilePinataComponent } from '@shared/components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
 
 @Component({
   selector: 'app-asset-create-modal',
@@ -42,7 +44,8 @@ export class AssetCreateModalComponent implements OnDestroy {
     private modalRef: NzModalRef,
     private cryptoService: CryptoService,
     private notificationService: NzNotificationService,
-    private messageService: NzMessageService
+    private messageService: NzMessageService,
+    private modalService: NzModalService
   ) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'view';
@@ -123,4 +126,14 @@ export class AssetCreateModalComponent implements OnDestroy {
   }
 
   ngOnDestroy() {}
+
+  onUploadFile(event: MouseEvent) {
+    event.preventDefault();
+
+    this.modalService.create({
+      nzTitle: 'Upload file to pinata',
+      nzContent: IpfsUploadFilePinataComponent,
+      nzWidth: '35vw',
+    });
+  }
 }

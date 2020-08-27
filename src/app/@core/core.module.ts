@@ -32,6 +32,7 @@ import { NodesState } from '@core/store/nodes/nodes.state';
 import { ManagerAuthenticationState } from '@core/store/manager-authentication/manager-authentication.state';
 import { CryptoService } from '@core/services/crypto.service';
 import { TransactionsService } from '@core/services/transactions.service';
+import { PinataService } from '@core/services/pinata.service';
 
 @NgModule({
   declarations: [],
@@ -83,6 +84,7 @@ import { TransactionsService } from '@core/services/transactions.service';
     HasProfileGuard,
     PeersService,
     TransactionsService,
+    PinataService,
     {
       provide: Bip38Service,
       useFactory: bip38Factory,
