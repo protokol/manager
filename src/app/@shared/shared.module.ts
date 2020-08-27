@@ -35,6 +35,7 @@ import { CollectionSelectComponent } from './components/collection-select/collec
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { IpfsUploadFilePinataComponent } from './components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
+import { DateFnsFormatPipe } from './pipes/date-fns-format.pipe';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -46,6 +47,7 @@ const declareAndExportComponents = [
   AssetCreateModalComponent,
   CollectionSelectComponent,
   IpfsUploadFilePinataComponent,
+  DateFnsFormatPipe,
 ];
 
 @NgModule({
