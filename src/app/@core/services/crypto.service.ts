@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Logger } from '@core/services/logger.service';
 import { ElectronUtils } from '@core/utils/electron-utils';
-import {
-  NFTCollectionAsset,
-  NFTTokenAsset,
-} from '@protokol/nft-base-crypto/dist/interfaces';
+import { Interfaces } from '@protokol/nft-base-crypto';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { TransactionsService } from '@core/services/transactions.service';
 import { Observable } from 'rxjs';
@@ -39,7 +36,9 @@ export class CryptoService {
     }
   }
 
-  registerCollection(nftCollectionAsset: NFTCollectionAsset): Observable<any> {
+  registerCollection(
+    nftCollectionAsset: Interfaces.NFTCollectionAsset
+  ): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWif().pipe(
       switchMap(({ wif }) => {
         const address = this.nftBaseCrypto.ARKCrypto.Identities.Address.fromWIF(
@@ -72,7 +71,7 @@ export class CryptoService {
     );
   }
 
-  registerAsset(nftTokenAsset: NFTTokenAsset): Observable<any> {
+  registerAsset(nftTokenAsset: Interfaces.NFTTokenAsset): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWif().pipe(
       switchMap(({ wif }) => {
         const address = this.nftBaseCrypto.ARKCrypto.Identities.Address.fromWIF(

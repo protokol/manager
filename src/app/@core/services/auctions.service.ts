@@ -8,7 +8,6 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { ExchangeResourcesTypes } from '@protokol/nft-client';
-import { SearchAuctionsApiQuery } from '@protokol/nft-client/dist/resourcesTypes/exchange';
 
 @Injectable()
 export class AuctionsService {
@@ -80,7 +79,7 @@ export class AuctionsService {
             ...filters,
           },
           {
-            ...(restQuery as SearchAuctionsApiQuery),
+            ...(restQuery as ExchangeResourcesTypes.SearchAuctionsApiQuery),
           }
         )
     ).pipe(

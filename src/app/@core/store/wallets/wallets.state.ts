@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
+import { Wallet } from '@arkecosystem/client';
 import {
   LoadWallet,
   LoadWallets,
@@ -22,15 +22,16 @@ import {
 import { WalletsService } from '@core/services/wallets.service';
 import { forkJoin } from 'rxjs';
 import { CollectionsService } from '@core/services/collections.service';
-import { CollectionsWallet } from '@protokol/nft-client/dist/resourcesTypes/base/collections';
-import { AssetsWallet } from '@protokol/nft-client/dist/resourcesTypes/base';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 import { AssetsService } from '@core/services/assets.service';
 
 interface WalletsStateModel {
   walletsIds: string[];
   wallets: { [name: string]: Wallet };
-  collectionsWallet: { [collectionId: string]: CollectionsWallet };
-  assetsWallet: { [assetId: string]: AssetsWallet };
+  collectionsWallet: {
+    [collectionId: string]: BaseResourcesTypes.CollectionsWallet;
+  };
+  assetsWallet: { [assetId: string]: BaseResourcesTypes.AssetsWallet };
   meta: PaginationMeta | null;
 }
 
@@ -141,7 +142,9 @@ export class WalletsState {
       )
     );
 
-    const setCollectionsWallet = (collectionWallet?: CollectionsWallet) => {
+    const setCollectionsWallet = (
+      collectionWallet?: BaseResourcesTypes.CollectionsWallet
+    ) => {
       setState(
         patch({
           collectionsWallet: patch({
@@ -164,7 +167,9 @@ export class WalletsState {
       setCollectionsWallet();
     }
 
-    const setAssetsWallet = (assetsWallet?: AssetsWallet) => {
+    const setAssetsWallet = (
+      assetsWallet?: BaseResourcesTypes.AssetsWallet
+    ) => {
       setState(
         patch({
           assetsWallet: patch({

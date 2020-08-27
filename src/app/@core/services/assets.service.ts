@@ -3,13 +3,12 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/nft-client';
-import { Pagination, TableApiQuery } from '@app/@shared/interfaces/table.types';
+import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { AssetsServiceInterface } from '@core/interfaces/assets-service.interface';
-import { AssetsWallet } from '@protokol/nft-client/dist/resourcesTypes/base/assets';
 
 @Injectable()
 export class AssetsService implements AssetsServiceInterface {
@@ -77,7 +76,7 @@ export class AssetsService implements AssetsServiceInterface {
     assetId: string,
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
-  ): Observable<AssetsWallet> {
+  ): Observable<BaseResourcesTypes.AssetsWallet> {
     return from(
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')

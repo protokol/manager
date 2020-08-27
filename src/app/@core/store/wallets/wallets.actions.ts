@@ -1,5 +1,5 @@
 import { NzTableQueryParams } from 'ng-zorro-antd';
-import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
+import { Wallet } from '@arkecosystem/client';
 
 export interface WalletLoadOptions {
   collectionId?: string;

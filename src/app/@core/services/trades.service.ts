@@ -8,7 +8,6 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { ExchangeResourcesTypes } from '@protokol/nft-client';
-import { SearchBidsApiQuery } from '@protokol/nft-client/dist/resourcesTypes/exchange';
 
 @Injectable()
 export class TradesService {
@@ -63,7 +62,7 @@ export class TradesService {
             ...filters,
           },
           {
-            ...(restQuery as SearchBidsApiQuery),
+            ...(restQuery as ExchangeResourcesTypes.SearchBidsApiQuery),
           }
         )
     ).pipe(

@@ -1,4 +1,4 @@
-import { Peer } from '@arkecosystem/client/dist/resourcesTypes/peers';
+import { Peer } from '@arkecosystem/client';
 
 interface PeerPlugin {
   enabled: boolean;
