@@ -179,7 +179,7 @@
           nzType="default"
           [nzLoading]="isLoading"
           [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
-          (click)="onGenerateClick($event, cryptoConfig.network.pubKeyHash)"
+          (click)="onGenerateClick($event)"
         >
           Generate
         </button>

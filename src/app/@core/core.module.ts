@@ -33,6 +33,7 @@ import { ManagerAuthenticationState } from '@core/store/manager-authentication/m
 import { CryptoService } from '@core/services/crypto.service';
 import { TransactionsService } from '@core/services/transactions.service';
 import { PinataService } from '@core/services/pinata.service';
+import { ArkCryptoService } from '@core/services/ark-crypto.service';
 
 @NgModule({
   declarations: [],
@@ -68,6 +69,7 @@ import { PinataService } from '@core/services/pinata.service';
     HttpClientModule,
   ],
   providers: [
+    ArkCryptoService,
     NodeClientService,
     AssetsService,
     CollectionsService,
@@ -88,7 +90,7 @@ import { PinataService } from '@core/services/pinata.service';
     {
       provide: Bip38Service,
       useFactory: bip38Factory,
-      deps: [],
+      deps: [ArkCryptoService],
     },
   ],
 })
