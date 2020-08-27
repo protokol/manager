@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Store, NgxsModule } from '@ngxs/store';
 import { v4 as uuid } from 'uuid';
-import { Profile, ProfilesState } from '@core/store/profiles/profiles.state';
+import { ProfilesState } from '@core/store/profiles/profiles.state';
 import {
   AddProfileAction,
   RemoveProfileAction,
@@ -10,6 +10,7 @@ import { Bip38Service } from '@core/services/bip38.service';
 import { of } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { Profile } from '@core/interfaces/profiles.types';
 
 describe('Profiles', () => {
   let store: Store;
@@ -19,9 +20,10 @@ describe('Profiles', () => {
     'private chase figure ribbon verify ginger fitness fee keep budget test hero';
   const pinFixture = '1234';
   const profileFixture: Profile = {
-    profileName: 'Profile 1',
-    encodedPassphrase:
-      '1wSiHh5Ku6wy9ft949uf3Co1wGn2ip2CK23DXSVBXw26PYWfAL6GnTfhpT',
+    name: 'Profile 1',
+    encodedWif: '1wSiHh5Ku6wy9ft949uf3Co1wGn2ip2CK23DXSVBXw26PYWfAL6GnTfhpT',
+    address: '1wSiHh5Ku6wy9ft949uf3Co1wGn2',
+    nodeBaseUrl: 'http://nft.protokol.com:4003',
   };
   const nodeCryptoConfigurationNetworkFixture: NodeCryptoConfiguration['network'] = {
     aip20: 0,
@@ -51,14 +53,14 @@ describe('Profiles', () => {
 
   it('should add profile', async () => {
     spyOn(bip38Service, 'encrypt').and.returnValue(
-      of(profileFixture.encodedPassphrase)
+      of(profileFixture.encodedWif)
     );
 
     await store
       .dispatch(
         new AddProfileAction(
           {
-            profileName: profileFixture.profileName,
+            ...profileFixture,
             passphrase: passphraseFixture,
           },
           pinFixture,

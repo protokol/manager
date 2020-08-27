@@ -19,6 +19,11 @@ const collectionFixture: BaseResourcesTypes.Collections = {
       phy: { type: 'number' },
     },
   },
+  timestamp: {
+    epoch: 108427392,
+    human: '2020-08-27T11:43:12.000Z',
+    unix: 1598528592,
+  },
 };
 
 const getCollectionFixture = (
