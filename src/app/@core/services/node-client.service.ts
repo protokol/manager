@@ -7,10 +7,7 @@ import {
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes, NFTConnection } from '@protokol/nft-client';
-import {
-  ApiResponse,
-  ApiResponseWithPagination,
-} from '@arkecosystem/client/dist/interfaces';
+import { ApiResponse, ApiResponseWithPagination } from '@arkecosystem/client';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 
 @Injectable()

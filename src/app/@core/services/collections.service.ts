@@ -9,7 +9,6 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import { CollectionsServiceInterface } from '@core/interfaces/collections-service.interface';
-import { CollectionsWallet } from '@protokol/nft-client/dist/resourcesTypes/base/collections';
 
 @Injectable()
 export class CollectionsService implements CollectionsServiceInterface {
@@ -77,7 +76,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     collectionId: string,
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
-  ): Observable<CollectionsWallet> {
+  ): Observable<BaseResourcesTypes.CollectionsWallet> {
     return from(
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')

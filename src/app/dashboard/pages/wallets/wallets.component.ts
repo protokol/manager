@@ -24,7 +24,7 @@ import {
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { WalletsState } from '@app/@core/store/wallets/wallets.state';
-import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
+import { Wallet } from '@arkecosystem/client';
 import { LoadWallets } from '@app/@core/store/wallets/wallets.actions';
 import { Router } from '@angular/router';
 

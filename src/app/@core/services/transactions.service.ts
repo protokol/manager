@@ -6,8 +6,10 @@ import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { switchMap } from 'rxjs/operators';
-import { ApiResponse } from '@arkecosystem/client/dist/interfaces';
-import { CreateTransactionApiResponse } from '@arkecosystem/client/dist/resourcesTypes/transactions';
+import {
+  ApiResponse,
+  CreateTransactionApiResponse,
+} from '@arkecosystem/client';
 
 @Injectable()
 export class TransactionsService {

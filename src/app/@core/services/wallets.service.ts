@@ -6,7 +6,7 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
-import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
+import { Wallet } from '@arkecosystem/client';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 
 @Injectable()

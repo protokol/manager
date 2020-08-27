@@ -13,11 +13,7 @@ import { LoadWallet } from '@app/@core/store/wallets/wallets.actions';
 import { WalletsState } from '@app/@core/store/wallets/wallets.state';
 import { untilDestroyed } from '@core/until-destroyed';
 import { filter, map } from 'rxjs/operators';
-import { Wallet } from '@arkecosystem/client/dist/resourcesTypes/wallets';
-import {
-  AssetsWallet,
-  CollectionsWallet,
-} from '@protokol/nft-client/dist/resourcesTypes/base';
+import { Wallet } from '@arkecosystem/client';
 import { TableColumnConfig } from '@shared/interfaces/table.types';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { AssetsState } from '@app/@core/store/assets/assets.state';
@@ -33,9 +29,8 @@ export class WalletDetailsComponent implements OnInit, OnDestroy {
   isLoading$ = new BehaviorSubject(true);
   wallet$: Observable<{
     wallet: Wallet;
-    // TODO: Remove after type is updated
-    collectionsWallet?: CollectionsWallet & any;
-    assetsWallet?: AssetsWallet & any;
+    collectionsWallet?: BaseResourcesTypes.CollectionsWallet;
+    assetsWallet?: BaseResourcesTypes.AssetsWallet;
   }>;
 
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
