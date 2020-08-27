@@ -45,6 +45,7 @@ const declareAndExportComponents = [
   JsonViewModalComponent,
   AssetCreateModalComponent,
   CollectionSelectComponent,
+  IpfsUploadFilePinataComponent,
 ];
 
 @NgModule({
@@ -76,7 +77,7 @@ const declareAndExportComponents = [
     NzDescriptionsModule,
     NzAlertModule,
   ],
-  declarations: [...declareAndExportComponents, IpfsUploadFilePinataComponent],
+  declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],
 })
 export class SharedModule {}
