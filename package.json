@@ -55,6 +55,7 @@
 		"ang-jsoneditor": "^1.10.0",
 		"bip38": "^3.1.1",
 		"bip39": "^3.0.2",
+		"date-fns": "^2.15.0",
 		"jsoneditor": "^9.0.4",
 		"ng-terminal": "~3.0.0-alpha",
 		"ng-zorro-antd": "^9.3.0",

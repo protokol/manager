@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuctionBidsTableComponent } from './bids-table.component';
+import { AuctionBidsTableComponent } from './auction-bids-table.component';
 
-describe('BidsTableComponent', () => {
+describe('AuctionBidsTableComponent', () => {
   let component: AuctionBidsTableComponent;
   let fixture: ComponentFixture<AuctionBidsTableComponent>;
 

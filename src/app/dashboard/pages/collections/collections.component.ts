@@ -60,6 +60,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @ViewChild('ownerTpl', { static: true }) ownerTpl!: TemplateRef<{
     row: BaseResourcesTypes.Collections;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: BaseResourcesTypes.Collections;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -106,6 +109,12 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         propertyName: 'senderPublicKey',
         headerName: 'Owner',
         columnTransformTpl: this.ownerTpl,
+        sortBy: true,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
         sortBy: true,
       },
       {
