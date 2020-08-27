@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './components/table/table.component';
 import {
+  NzAlertModule,
   NzButtonModule,
+  NzDescriptionsModule,
   NzDividerModule,
   NzDropDownModule,
   NzFormModule,
@@ -17,6 +19,7 @@ import {
   NzTableModule,
   NzToolTipModule,
   NzTypographyModule,
+  NzUploadModule,
 } from 'ng-zorro-antd';
 import { TextClipperComponent } from './components/text-clipper/text-clipper.component';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -31,6 +34,7 @@ import { AssetCreateModalComponent } from './components/asset-create-modal/asset
 import { CollectionSelectComponent } from './components/collection-select/collection-select.component';
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { IpfsUploadFilePinataComponent } from './components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -68,8 +72,11 @@ const declareAndExportComponents = [
     NzNotificationModule,
     NzModalModule,
     NzSpaceModule,
+    NzUploadModule,
+    NzDescriptionsModule,
+    NzAlertModule,
   ],
-  declarations: [...declareAndExportComponents],
+  declarations: [...declareAndExportComponents, IpfsUploadFilePinataComponent],
   exports: [...declareAndExportComponents],
 })
 export class SharedModule {}

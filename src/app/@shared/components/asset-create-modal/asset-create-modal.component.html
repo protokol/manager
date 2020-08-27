@@ -45,6 +45,15 @@
 
 <div *nzModalFooter>
   <button
+    class="upload-btn"
+    nz-button
+    nzType="dashed"
+    [disabled]="!collectionForm.valid"
+    (click)="onUploadFile($event)"
+  >
+    Upload
+  </button>
+  <button
     nz-button
     nzType="primary"
     [nzLoading]="isLoading$ | async"

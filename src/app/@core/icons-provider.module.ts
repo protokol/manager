@@ -17,6 +17,7 @@ import {
   ClusterOutline,
   BookOutline,
   LoadingOutline,
+  DeleteOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -35,6 +36,7 @@ const icons = [
   ClusterOutline,
   BookOutline,
   LoadingOutline,
+  DeleteOutline,
 ];
 
 @NgModule({

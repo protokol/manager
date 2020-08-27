@@ -175,7 +175,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
         jsonSchema: { ...assetWithCollection.collection.jsonSchema },
         formValues: { ...assetWithCollection.attributes },
       },
-      nzFooter: null,
       nzWidth: '75vw',
     });
   }
