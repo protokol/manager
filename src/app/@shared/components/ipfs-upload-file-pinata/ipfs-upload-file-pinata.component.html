@@ -8,12 +8,12 @@
     *ngIf="step === PinataModalStepper.Authenticate"
   >
     <nz-form-item>
-      <nz-form-label nzSpan="6" nzFor="apiKey" nzRequired
+      <nz-form-label nzSpan="6" nzFor="api-key" nzRequired
         >Api key
       </nz-form-label>
       <nz-form-control nzErrorTip="Please enter api key!" nzSpan="18">
         <input
-          id="apiKey"
+          id="api-key"
           type="text"
           nz-input
           formControlName="apiKey"
@@ -22,12 +22,12 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label nzSpan="6" nzFor="secretApiKey" nzRequired
+      <nz-form-label nzSpan="6" nzFor="secret-api-key" nzRequired
         >Secret api key
       </nz-form-label>
       <nz-form-control nzErrorTip="Please enter secret api key!" nzSpan="18">
         <input
-          id="secretApiKey"
+          id="secret-api-key"
           type="text"
           nz-input
           formControlName="secretApiKey"
