@@ -42,3 +42,41 @@ jobs:
         with:
           name: protokol-manager-linux-1.0.0-beta.1-${{ github.sha }}.AppImage
           path: release/protokol-manager-1.0.0-beta.1.AppImage
+
+  build-macOS:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run electron:mac
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+
+      - name: Upload .dmg
+        uses: actions/upload-artifact@v2
+        with:
+          name: protokol-manager-mac-1.0.0-beta.1-${{ github.sha }}.dmg
+          path: release/protokol-manager-1.0.0-beta.1.dmg
