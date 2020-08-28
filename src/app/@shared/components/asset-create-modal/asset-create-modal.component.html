@@ -58,7 +58,9 @@
     nzType="primary"
     [nzLoading]="isLoading$ | async"
     [disabled]="
-      !(isAssetValid$ | async) || (isLoading$ | async) || !collectionForm.valid
+      (isAssetValid$ | async) === false ||
+      (isLoading$ | async) ||
+      !collectionForm.valid
     "
     (click)="createAsset($event)"
   >
