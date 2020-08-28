@@ -115,4 +115,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: protokol-manager-win-1.0.0-beta.1-${{ github.sha }}.exe
-          path: release/protokol-manager-1.0.0-beta.1.exe
+          path: release/protokol-manager 1.0.0-beta.1.exe
