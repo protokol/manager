@@ -34,6 +34,8 @@ jobs:
 
       - name: Build
         run: npm run electron:linux
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Upload .AppImage
         uses: actions/upload-artifact@v2
