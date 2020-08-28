@@ -61,6 +61,9 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   @ViewChild('assetsTpl', { static: true }) assetsTpl!: TemplateRef<{
     row: ExchangeResourcesTypes.Auctions;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: ExchangeResourcesTypes.Auctions;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
   isCanceled$ = new BehaviorSubject(false);
@@ -120,6 +123,12 @@ export class AuctionsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Assets',
         columnTransformTpl: this.assetsTpl,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
     ];
 

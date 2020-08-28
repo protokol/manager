@@ -49,4 +49,8 @@
   </ng-container>
 </ng-template>
 
+<ng-template #timestampTpl let-row="row">
+  {{ row?.timestamp?.human | dateFnsFormat }}
+</ng-template>
+
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>

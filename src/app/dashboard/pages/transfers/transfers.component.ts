@@ -47,6 +47,9 @@ export class TransfersComponent implements OnInit, OnDestroy {
   @ViewChild('assetsTpl', { static: true }) assetsTpl!: TemplateRef<{
     row: BaseResourcesTypes.Transfers;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: BaseResourcesTypes.Transfers;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
 
@@ -85,6 +88,12 @@ export class TransfersComponent implements OnInit, OnDestroy {
       {
         headerName: 'Assets',
         columnTransformTpl: this.assetsTpl,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
     ];
 

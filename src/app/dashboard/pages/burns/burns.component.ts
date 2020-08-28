@@ -44,6 +44,9 @@ export class BurnsComponent implements OnInit, OnDestroy {
   @ViewChild('assetsTpl', { static: true }) assetsTpl!: TemplateRef<{
     row: BaseResourcesTypes.Burns;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: BaseResourcesTypes.Burns;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
 
@@ -78,6 +81,12 @@ export class BurnsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Assets',
         columnTransformTpl: this.assetsTpl,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
     ];
 
