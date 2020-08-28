@@ -1,0 +1,89 @@
+<form
+  nz-form
+  (ngSubmit)="createCollection($event)"
+  [formGroup]="collectionForm"
+  novalidate
+>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="email" nzRequired>Name</nz-form-label>
+    <nz-form-control nzErrorTip="Please enter name of collection!" nzSpan="10">
+      <input
+        id="email"
+        type="text"
+        nz-input
+        formControlName="name"
+        placeholder="Collection name"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="maximumSupply" nzRequired
+      >Maximum Supply</nz-form-label
+    >
+    <nz-form-control
+      nzErrorTip="Please enter maximum supply of collection!"
+      nzSpan="4"
+    >
+      <input
+        type="number"
+        nz-input
+        formControlName="maximumSupply"
+        placeholder="Collection maximum supply"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="description" nzRequired
+      >Description</nz-form-label
+    >
+    <nz-form-control [nzSpan]="20">
+      <textarea
+        formControlName="description"
+        nz-input
+        rows="2"
+        placeholder="Collection description"
+      ></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-divider></nz-divider>
+
+  <app-schema-container>
+    <app-schema-container-item editor>
+      <json-editor
+        class="json-schema-editor"
+        [options]="editorOptions"
+        [debug]="!isProduction"
+        formControlName="jsonSchema"
+      ></json-editor>
+    </app-schema-container-item>
+    <app-schema-container-item form>
+      <ng-container *ngIf="c('jsonSchema').valueChanges | async">
+        <json-schema-form
+          loadExternalAssets="true"
+          [schema]="c('jsonSchema').value"
+          [debug]="!isProduction"
+          [framework]="framework"
+        >
+        </json-schema-form>
+      </ng-container>
+    </app-schema-container-item>
+  </app-schema-container>
+</form>
+
+<div *nzModalFooter>
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) || !collectionForm.valid"
+    (click)="createCollection($event)"
+  >
+    Create
+  </button>
+  <button nz-button (click)="onCancel($event)">
+    Cancel
+  </button>
+</div>

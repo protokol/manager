@@ -1,0 +1,74 @@
+@import "src/theme/theme-variables";
+
+$register-form-width: 650px;
+
+.register-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-width: $register-form-width;
+}
+
+.register-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100%;
+  background-color: $bg-color-primary;
+
+  form {
+    min-width: $register-form-width;
+    padding: 20px 36px 36px;
+    background-color: $info-color;
+
+    &.form-step-1 {
+      .form-items {
+        padding: 0 12px 6px;
+        margin-bottom: 18px;
+        border-radius: 2px;
+        background-color: $white-color;
+      }
+    }
+  }
+}
+
+.top-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 64px;
+  margin: 0 auto;
+  overflow: hidden;
+  line-height: 64px;
+  transition: all 0.3s;
+
+  img {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    vertical-align: middle;
+  }
+
+  h1 {
+    display: inline-block;
+    margin: 0 0 0 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+nz-steps {
+  padding-bottom: 20px;
+}

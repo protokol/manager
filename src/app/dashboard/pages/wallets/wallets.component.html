@@ -1,0 +1,25 @@
+<app-table
+  [isLoading]="isLoading$ | async"
+  [rows]="rows$"
+  [tableColumns]="tableColumns"
+  [meta]="meta$ | async"
+  (paginationChange)="paginationChange($event)"
+  scrollY="75vh"
+>
+</app-table>
+
+<ng-template #addressTpl let-row="row">
+  <app-text-clipper
+    [text]="row.address"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.address)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #publicKeyTpl let-row="row">
+  <app-text-clipper
+    [text]="row.publicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.publicKey)"
+  ></app-text-clipper>
+</ng-template>

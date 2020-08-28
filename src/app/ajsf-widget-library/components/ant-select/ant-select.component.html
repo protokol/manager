@@ -1,0 +1,69 @@
+<div [class]="options?.htmlClass || ''">
+  <label
+    *ngIf="options?.title"
+    [attr.for]="'control' + layoutNode?._id"
+    [class]="options?.labelHtmlClass || ''"
+    [style.display]="options?.notitle ? 'none' : ''"
+    [innerHTML]="options?.title"
+  ></label>
+  <nz-select
+    *ngIf="boundControl"
+    [formControl]="formControl"
+    [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+    [attr.readonly]="options?.readonly ? 'readonly' : null"
+    [attr.required]="options?.required"
+    [class]="options?.fieldHtmlClass || ''"
+    [id]="'control' + layoutNode?._id"
+  >
+    <ng-template ngFor let-selectItem [ngForOf]="selectList">
+      <nz-option
+        *ngIf="!isArray(selectItem?.items)"
+        [nzValue]="selectItem?.value"
+        [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
+      >
+      </nz-option>
+      <nz-option-group
+        *ngIf="isArray(selectItem?.items)"
+        [nzLabel]="selectItem?.group"
+      >
+        <nz-option
+          *ngFor="let subItem of selectItem.items"
+          [nzValue]="subItem"
+          [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
+        >
+        </nz-option>
+      </nz-option-group>
+    </ng-template>
+  </nz-select>
+  <nz-select
+    *ngIf="!boundControl"
+    [(ngModel)]="selectList"
+    (ngModelChange)="updateValue($event)"
+    [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+    [attr.readonly]="options?.readonly ? 'readonly' : null"
+    [attr.required]="options?.required"
+    [class]="options?.fieldHtmlClass || ''"
+    [nzDisabled]="controlDisabled"
+    [id]="'control' + layoutNode?._id"
+  >
+    <ng-template ngFor let-selectItem [ngForOf]="selectList">
+      <nz-option
+        *ngIf="!isArray(selectItem?.items)"
+        [nzValue]="selectItem?.value"
+        [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
+      >
+      </nz-option>
+      <nz-option-group
+        *ngIf="isArray(selectItem?.items)"
+        [nzLabel]="selectItem?.group"
+      >
+        <nz-option
+          *ngFor="let subItem of selectItem.items"
+          [nzValue]="subItem"
+          [nzLabel]="isEmptyOption(selectItem?.name) ? '---' : selectItem?.name"
+        >
+        </nz-option>
+      </nz-option-group>
+    </ng-template>
+  </nz-select>
+</div>

@@ -1,0 +1,176 @@
+<ng-container *ngIf="wallet$ | async as walletObj; else loading">
+  <ng-container *ngIf="walletObj.wallet as wallet; else loading">
+    <nz-descriptions
+      [nzTitle]="walletTitle"
+      nzBordered
+      [nzColumn]="descriptionColumns"
+    >
+      <nz-descriptions-item nzTitle="Address">
+        <a nz-typography nzCopyable [nzCopyText]="wallet.address">{{
+          wallet.address
+        }}</a>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="PublicKey">
+        <a nz-typography nzCopyable [nzCopyText]="wallet.publicKey">{{
+          wallet.publicKey
+        }}</a>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Balance">{{
+        wallet.balance
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Locked balance">
+        <ng-container *ngIf="wallet.lockedBalance; else noData">
+          {{ wallet.lockedBalance }}
+        </ng-container>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Nonce">
+        {{ wallet.nonce }}
+      </nz-descriptions-item>
+    </nz-descriptions>
+
+    <ng-container *ngIf="wallet.isDelegate">
+      <nz-divider nzText="Delegate"></nz-divider>
+
+      <nz-descriptions nzBordered [nzColumn]="descriptionColumns">
+        <nz-descriptions-item nzTitle="Username">
+          <ng-container
+            *ngIf="wallet.attributes?.delegate?.username; else noData"
+          >
+            {{ wallet.attributes.delegate.username }}
+          </ng-container>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Rank">
+          <ng-container *ngIf="wallet.attributes?.delegate?.rank; else noData">
+            {{ wallet.attributes.delegate.rank }}
+          </ng-container>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Forged Fees">
+          <ng-container
+            *ngIf="wallet.attributes?.delegate?.forgedFees; else noData"
+          >
+            {{ wallet.attributes.delegate.forgedFees }}
+          </ng-container>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Forged Rewards">
+          <ng-container
+            *ngIf="wallet.attributes?.delegate?.forgedRewards; else noData"
+          >
+            {{ wallet.attributes.delegate.forgedRewards }}
+          </ng-container>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </ng-container>
+
+    <ng-template #walletTitle>
+      Wallet <a>{{ wallet.address }}</a> details
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="walletObj.collectionsWallet as collectionsWallet">
+    <ng-container
+      *ngTemplateOutlet="
+        collectionsTable;
+        context: { collections: collectionsWallet.nft.collections }
+      "
+    >
+    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        assetsTable;
+        context: { assetsIds: collectionsWallet.nft.assetsIds }
+      "
+    >
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="walletObj.assetsWallet as assetsWallet">
+    <ng-container
+      *ngTemplateOutlet="
+        collectionsTable;
+        context: { collections: assetsWallet.nft.collections }
+      "
+    >
+    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        assetsTable;
+        context: { assetsIds: assetsWallet.nft.assetsIds }
+      "
+    >
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>
+
+<ng-template #noData>--</ng-template>
+
+<ng-template #assetsTable let-assetsIds="assetsIds">
+  <nz-divider nzText="Assets"></nz-divider>
+
+  <ng-container *ngIf="getAssets(assetsIds) | async as assets">
+    <app-table
+      [rows]="assets"
+      [tableColumns]="assetsTableColumns"
+      scrollY="25vh"
+    >
+    </app-table>
+  </ng-container>
+</ng-template>
+
+<ng-template #assetsIdTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsCollectionIdTpl let-row="row">
+  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsOwnerTpl let-row="row">
+  <app-text-clipper
+    [text]="row.ownerPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.ownerPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsSenderTpl let-row="row">
+  <app-text-clipper
+    [text]="row.senderPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #assetsActionsTpl let-row="row">
+  <a (click)="toAssetDetails($event, row)">Attributes</a>
+</ng-template>
+
+<ng-template #collectionsTable let-collections="collections">
+  <nz-divider nzText="Collections"></nz-divider>
+  <div class="collections-table">
+    <app-table
+      [rows]="collections"
+      [tableColumns]="collectionsTableColumns"
+      scrollY="25vh"
+      scrollX="hidden"
+    >
+    </app-table>
+  </div>
+</ng-template>
+
+<ng-template #collectionsIdTpl let-row="row">
+  <app-text-clipper [text]="row.collectionId"></app-text-clipper>
+</ng-template>
+
+<ng-template #collectionsNameTpl let-row="row">
+  {{ row?.nftCollectionAsset?.name }}
+</ng-template>
+
+<ng-template #collectionsDescriptionTpl let-row="row">
+  {{ row?.nftCollectionAsset?.description }}
+</ng-template>
+
+<ng-template #collectionsMaxSupplyTpl let-row="row">
+  {{ row?.nftCollectionAsset?.maximumSupply }}
+</ng-template>

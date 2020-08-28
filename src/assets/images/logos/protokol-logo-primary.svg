@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   height="148.60001"
+   width="169.17146"
+   sodipodi:docname="protokol-logo-primary.svg"
+   version="1.1"
+   viewBox="0 0 169.17146 148.6"
+   data-name="Layer 1"
+   id="Layer_1">
+  <metadata
+     id="metadata62">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:current-layer="Layer_1"
+     inkscape:window-maximized="0"
+     inkscape:window-y="970"
+     inkscape:window-x="8385"
+     inkscape:cy="63.39525"
+     inkscape:cx="269.79835"
+     inkscape:zoom="1.2224081"
+     fit-margin-bottom="0"
+     fit-margin-right="0"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     showgrid="false"
+     id="namedview60"
+     inkscape:window-height="1216"
+     inkscape:window-width="1910"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <defs
+     id="defs39">
+    <style
+       id="style37">.cls-1{fill:#142b4d;}.cls-2{fill:#439ff5;}</style>
+  </defs>
+  <path
+     id="path57"
+     d="m 1.0615031,78.23 38.3699999,66.44 a 7.85,7.85 0 0 0 6.8,3.93 H 122.9615 a 7.87,7.87 0 0 0 6.8,-3.93 l 38.36,-66.44 a 7.88,7.88 0 0 0 0,-7.86 L 129.7615,3.93 A 7.87,7.87 0 0 0 122.9615,0 H 46.231503 a 7.86,7.86 0 0 0 -6.8,3.92 L 1.0615031,70.33 a 7.88,7.88 0 0 0 0,7.9 z M 113.0615,24.99 l 28.44,49.24 -28.47,49.31 -26.169997,-45.31 a 7.85,7.85 0 0 0 -6.8,-3.93 h -52.4 l 28.47,-49.31 z"
+     class="cls-2" />
+</svg>

@@ -1,0 +1,66 @@
+<form
+  nz-form
+  (ngSubmit)="createSnapshot($event)"
+  [formGroup]="snapshotForm"
+  novalidate
+>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="codec" nzRequired>Codec</nz-form-label>
+    <nz-form-control nzErrorTip="Please enter codec!" nzSpan="10">
+      <input
+        id="codec"
+        type="text"
+        nz-input
+        formControlName="codec"
+        placeholder="Codec"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="start">Start</nz-form-label>
+    <nz-form-control nzErrorTip="Start should be a valid integer!" nzSpan="4">
+      <input
+        id="start"
+        type="number"
+        nz-input
+        formControlName="start"
+        placeholder="Start"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzFor="end">End</nz-form-label>
+    <nz-form-control nzErrorTip="End should be a valid integer!" nzSpan="4">
+      <input
+        id="end"
+        type="number"
+        nz-input
+        formControlName="end"
+        placeholder="End"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control [nzOffset]="4">
+      <label nz-checkbox formControlName="skipCompression">
+        <span nz-typography>Skip compression</span>
+      </label>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container *ngLet="isLoading$ | async as isLoading">
+    <button
+      nz-button
+      class="submit-btn"
+      nzType="primary"
+      [nzLoading]="isLoading"
+      [disabled]="isLoading || ((isFormDirty$ | async) && !snapshotForm.valid)"
+      (click)="createSnapshot($event)"
+    >
+      Create
+    </button>
+  </ng-container>
+</form>

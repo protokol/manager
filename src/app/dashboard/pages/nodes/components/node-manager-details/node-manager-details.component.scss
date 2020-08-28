@@ -1,0 +1,15 @@
+.height-description-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.snapshots-actions,
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+[nzType="left"] {
+  cursor: pointer;
+}

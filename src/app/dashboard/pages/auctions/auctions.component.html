@@ -1,0 +1,78 @@
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <div class="top-header">
+      <nz-space nzDirection="horizontal" nzSize="small">
+        <nz-space-item>
+          <span nz-typography>Canceled</span>
+        </nz-space-item>
+        <nz-space-item>
+          <nz-switch
+            [ngModel]="isCanceled$ | async"
+            (ngModelChange)="isCanceled$.next($event)"
+            [nzLoading]="isLoading$ | async"
+          ></nz-switch>
+        </nz-space-item>
+      </nz-space>
+    </div>
+  </nz-space-item>
+  <nz-space-item>
+    <ng-container *ngIf="rows$ | async as rows">
+      <app-table
+        [isLoading]="isLoading$ | async"
+        [rows]="rows"
+        [tableColumns]="tableColumns"
+        [meta]="meta$ | async"
+        (paginationChange)="paginationChange($event)"
+        [isExpandable]="(isCanceled$ | async) === false"
+        scrollY="70vh"
+      >
+        <ng-template let-row="row">
+          <app-auction-bids-table
+            [auctionId]="row.id"
+            [assetId]="(row?.nftAuction?.nftIds)[0]"
+          ></app-auction-bids-table>
+        </ng-template>
+      </app-table>
+    </ng-container>
+  </nz-space-item>
+</nz-space>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper
+    [copy]="false"
+    (clicked)="
+      onWalletDetailsClick(row.senderPublicKey, row.nftAuction.nftIds[0])
+    "
+    [text]="row.senderPublicKey"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #startAmountTpl let-row="row">
+  {{ row?.nftAuction?.startAmount }}
+</ng-template>
+
+<ng-template #expirationTpl let-row="row">
+  {{ row?.nftAuction?.expiration?.blockHeight }}
+</ng-template>
+
+<ng-template #assetsTpl let-row="row">
+  <ng-container *ngIf="row.nftAuction && row.nftAuction.nftIds">
+    <ng-container *ngFor="let nftId of row.nftAuction.nftIds">
+      <app-text-clipper
+        [copy]="false"
+        (clicked)="onAssetClick(nftId)"
+        [text]="nftId"
+      ></app-text-clipper>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #timestampTpl let-row="row">
+  {{ row?.timestamp?.human | dateFnsFormat }}
+</ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>

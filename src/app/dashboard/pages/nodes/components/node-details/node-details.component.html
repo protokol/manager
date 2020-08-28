@@ -1,0 +1,98 @@
+<ng-container
+  *ngIf="nodeConfiguration$ | async as nodeConfiguration; else loading"
+>
+  <nz-descriptions
+    [nzTitle]="nodeTitle"
+    nzBordered
+    [nzColumn]="descriptionColumns"
+  >
+    <nz-descriptions-item nzTitle="Url">
+      <a nz-typography nzCopyable [nzCopyText]="nodeUrl$ | async">
+        {{ nodeUrl$ | async }}
+      </a>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Version">
+      {{ nodeConfiguration?.core?.version }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Symbol">
+      {{ nodeConfiguration.symbol }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Token">
+      {{ nodeConfiguration.token }}
+    </nz-descriptions-item>
+  </nz-descriptions>
+
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="12">
+      <nz-divider nzText="Configuration"></nz-divider>
+      <json-editor
+        [options]="cryptoEditorOptions"
+        [data]="nodeConfiguration"
+      ></json-editor>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <ng-container
+        *ngIf="
+          nodeCryptoConfiguration$ | async as nodeCryptoConfiguration;
+          else loading
+        "
+      >
+        <nz-divider nzText="Crypto Configuration"></nz-divider>
+        <json-editor
+          [options]="cryptoEditorOptions"
+          [data]="nodeCryptoConfiguration"
+        ></json-editor>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #nodeTitle>
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="8">
+      <nz-space nzDirection="horizontal" nzSize="small">
+        <nz-space-item>
+          <button
+            nz-button
+            nzSize="small"
+            nzType="primary"
+            (click)="onUpdateMyNodesClick($event)"
+          >
+            <i nz-icon nzType="edit"></i>Change
+          </button>
+        </nz-space-item>
+        <nz-space-item>
+          <button
+            nz-button
+            nzSize="small"
+            nzType="primary"
+            [disabled]="isAddedToMyNodes$ | async"
+            (click)="onAddToMyNodesClick($event)"
+          >
+            <i nz-icon nzType="book"></i>Add to My nodes
+          </button>
+        </nz-space-item>
+      </nz-space>
+    </div>
+    <div class="node-title" nz-col [nzSpan]="8">
+      Node&nbsp;<a>{{ nodeUrl$ | async }}</a
+      >&nbsp;configuration
+    </div>
+    <div nz-col [nzSpan]="8">
+      <button
+        class="node-manager-btn"
+        nz-button
+        nzSize="small"
+        nzType="primary"
+        [nzLoading]="isLoadingNodeManager$ | async"
+        (click)="onNodeManagerClick($event)"
+      >
+        Node manager<i nz-icon nzType="right"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

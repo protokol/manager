@@ -1,0 +1,41 @@
+<ng-container *ngIf="rows$ | async as rows">
+  <app-table
+    [isLoading]="isLoading$ | async"
+    [rows]="rows"
+    [tableColumns]="tableColumns"
+    [meta]="meta$ | async"
+    (paginationChange)="paginationChange($event)"
+    [isExpandable]="true"
+    scrollY="75vh"
+  >
+    <ng-template let-row="row">
+      <app-trade-details [tradeId]="row.id"></app-trade-details>
+    </ng-template>
+  </app-table>
+</ng-container>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #auctionIdTpl let-row="row">
+  <ng-container *ngIf="row?.completedTrade?.auctionId">
+    <app-text-clipper [text]="row.completedTrade.auctionId"></app-text-clipper>
+  </ng-container>
+</ng-template>
+
+<ng-template #bidIdTpl let-row="row">
+  <ng-container *ngIf="row?.completedTrade?.bidId">
+    <app-text-clipper [text]="row.completedTrade.bidId"></app-text-clipper>
+  </ng-container>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper [text]="row.senderPublicKey"></app-text-clipper>
+</ng-template>
+
+<ng-template #timestampTpl let-row="row">
+  {{ row?.timestamp?.human | dateFnsFormat }}
+</ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>

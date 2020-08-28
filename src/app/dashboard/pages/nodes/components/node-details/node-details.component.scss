@@ -1,0 +1,16 @@
+:host ::ng-deep {
+  .jsoneditor-tree-inner {
+    min-height: 63vh;
+    max-height: 63vh;
+  }
+}
+
+.node-title {
+  display: flex;
+  justify-content: center;
+}
+
+.node-manager-btn {
+  display: block;
+  margin-left: auto;
+}

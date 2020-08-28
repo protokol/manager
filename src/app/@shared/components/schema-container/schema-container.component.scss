@@ -1,0 +1,38 @@
+$container-height: 500px;
+
+[nz-row] {
+  position: relative;
+  min-height: $container-height;
+  height: $container-height;
+  max-height: $container-height;
+  overflow-y: auto;
+}
+
+:host ::ng-deep {
+  .ace-jsoneditor,
+  textarea.jsoneditor-text {
+    min-height: calc(#{$container-height} - 90px);
+  }
+
+  .jsoneditor-tree-inner {
+    height: calc(#{$container-height} - 95px);
+  }
+
+  json-editor {
+    > div {
+      position: sticky;
+      top: 6px;
+    }
+  }
+}
+
+:host:not(.single-item) ::ng-deep {
+  .ace-jsoneditor,
+  textarea.jsoneditor-text {
+    min-height: calc(#{$container-height} - 75px);
+  }
+
+  .jsoneditor-tree-inner {
+    height: calc(#{$container-height} - 80px);
+  }
+}

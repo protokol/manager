@@ -1,0 +1,155 @@
+<ng-container *ngLet="step$ | async as step">
+  <form
+    nz-form
+    (ngSubmit)="authenticatePinata()"
+    [formGroup]="authenticationForm"
+    novalidate
+    nzLayout="horizontal"
+    *ngIf="step === PinataModalStepper.Authenticate"
+  >
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzFor="apiKey" nzRequired
+        >Api key
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please enter api key!" nzSpan="18">
+        <input
+          id="apiKey"
+          type="text"
+          nz-input
+          formControlName="apiKey"
+          placeholder="Api key"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzFor="secretApiKey" nzRequired
+        >Secret api key
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please enter secret api key!" nzSpan="18">
+        <input
+          id="secretApiKey"
+          type="text"
+          nz-input
+          formControlName="secretApiKey"
+          placeholder="Secret api key"
+        />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <form
+    nz-form
+    (ngSubmit)="uploadFile()"
+    [formGroup]="uploadForm"
+    novalidate
+    nzLayout="horizontal"
+    *ngIf="step === PinataModalStepper.Upload"
+  >
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzFor="name">File name </nz-form-label>
+      <nz-form-control nzSpan="18">
+        <input
+          id="name"
+          type="text"
+          nz-input
+          formControlName="name"
+          placeholder="Name"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzFor="file" nzRequired>File </nz-form-label>
+      <nz-form-control nzErrorTip="Please enter secret api key!" nzSpan="18">
+        <nz-upload
+          [nzBeforeUpload]="beforeUpload"
+          [nzFileList]="fileList$ | async"
+        >
+          <button id="file" nz-button>
+            <i nz-icon nzType="upload"></i>Select File
+          </button>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <ng-container *ngIf="ipfsUploadResponse$ | async as ipfsUploadResponse">
+    <nz-space nzDirection="vertical" nzSize="middle">
+      <nz-space-item>
+        <nz-alert
+          nzType="warning"
+          nzMessage="Please copy hash!"
+          nzDescription="Copy the hash to clipboard, after closing the modal it will be lost!"
+          nzShowIcon
+        ></nz-alert>
+      </nz-space-item>
+
+      <nz-space-item>
+        <nz-descriptions nzBordered [nzColumn]="1">
+          <nz-descriptions-item nzTitle="Hash">
+            <a
+              nz-typography
+              nzCopyable
+              [nzCopyText]="ipfsUploadResponse.IpfsHash"
+            >
+              {{ ipfsUploadResponse.IpfsHash }}
+            </a>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Preview url">
+            <a
+              nz-typography
+              nzCopyable
+              [nzCopyText]="PinataGatewayUrl + ipfsUploadResponse.IpfsHash"
+            >
+              {{
+                TextUtils.strStart(
+                  PinataGatewayUrl + ipfsUploadResponse.IpfsHash
+                )
+              }}
+            </a>
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </nz-space-item>
+    </nz-space>
+  </ng-container>
+</ng-container>
+
+<div *nzModalFooter class="footer">
+  <ng-container *ngLet="step$ | async as step">
+    <ng-container *ngIf="step === PinataModalStepper.Authenticate">
+      <button nz-button (click)="onCancel($event)">
+        Cancel
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        [nzLoading]="isAuthLoading$ | async"
+        [disabled]="(isAuthLoading$ | async) || !authenticationForm.valid"
+        (click)="authenticatePinata($event)"
+      >
+        Authenticate<i nz-icon nzType="right"></i>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="step === PinataModalStepper.Upload">
+      <button
+        nz-button
+        [disabled]="isUploading$ | async"
+        (click)="onBack($event)"
+      >
+        <i nz-icon nzType="left"></i>&nbsp;Back
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        [nzLoading]="isUploading$ | async"
+        [disabled]="
+          (isUploading$ | async) ||
+          !uploadForm.valid ||
+          !(fileList$ | async).length
+        "
+        (click)="uploadFile($event)"
+      >
+        Upload
+      </button>
+    </ng-container>
+  </ng-container>
+</div>

@@ -1,0 +1,12 @@
+<div class="add-reference">
+  <button
+    *ngIf="showAddButton"
+    nz-button
+    [class]="options?.fieldHtmlClass || ''"
+    [disabled]="options?.readonly"
+    (click)="addItem($event)"
+  >
+    <span *ngIf="options?.icon" [class]="options?.icon"></span>
+    <span *ngIf="options?.title" [innerHTML]="buttonText"></span>
+  </button>
+</div>

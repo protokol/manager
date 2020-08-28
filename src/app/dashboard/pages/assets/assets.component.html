@@ -1,0 +1,54 @@
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <button nz-button nzType="primary" (click)="showCreateAssetModal($event)">
+      Add Asset
+    </button>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+      scrollY="70vh"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
+
+<ng-template #actionsTpl let-row="row">
+  <button nz-button nzType="default" (click)="showAttributes($event, row)">
+    Attributes
+  </button>
+</ng-template>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #collectionNameTpl let-row="row">
+  {{ row.collection.name }}
+</ng-template>
+
+<ng-template #ownerTpl let-row="row">
+  <app-text-clipper
+    [text]="row.ownerPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.ownerPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #senderTpl let-row="row">
+  <app-text-clipper
+    [text]="row.senderPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #timestampTpl let-row="row">
+  {{ row?.timestamp?.human | dateFnsFormat }}
+</ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>

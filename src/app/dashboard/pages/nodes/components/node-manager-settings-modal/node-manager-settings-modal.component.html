@@ -1,0 +1,118 @@
+<form nz-form [formGroup]="managerSettingsForm" nzLayout="vertical" novalidate>
+  <nz-form-item>
+    <nz-form-control [nzErrorTip]="portErrorTpl" nzSpan="10">
+      <nz-input-group nzPrefixIcon="api">
+        <input
+          type="number"
+          nz-input
+          formControlName="port"
+          placeholder="Port"
+        />
+        <ng-template #portErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please input port number!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Port number should be bigger than 0!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Port number should be smaller or equal 65535!
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzFor="login-type"
+      >Manager authentication</nz-form-label
+    >
+    <nz-form-control [nzSpan]="10" nzErrorTip="Choose login type!">
+      <nz-radio-group id="login-type" formControlName="loginType">
+        <label nz-radio [nzValue]="NodeManagerLoginSettingsEnum.None"
+          >None</label
+        >
+        <label nz-radio [nzValue]="NodeManagerLoginSettingsEnum.Token"
+          >Token</label
+        >
+        <label nz-radio [nzValue]="NodeManagerLoginSettingsEnum.Basic"
+          >Basic</label
+        >
+      </nz-radio-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container
+    *ngIf="c('loginType').value === NodeManagerLoginSettingsEnum.Token"
+  >
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="token">Secret token</nz-form-label>
+      <nz-form-control
+        [nzSpan]="10"
+        nzErrorTip="Please enter your secret token!"
+      >
+        <nz-input-group>
+          <input
+            id="token"
+            type="text"
+            nz-input
+            formControlName="secretToken"
+            placeholder="Secret token"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+
+  <ng-container
+    *ngIf="c('loginType').value === NodeManagerLoginSettingsEnum.Basic"
+  >
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="username">Username</nz-form-label>
+      <nz-form-control [nzSpan]="10" nzErrorTip="Please enter your username!">
+        <nz-input-group>
+          <input
+            id="username"
+            type="text"
+            nz-input
+            formControlName="loginUsername"
+            placeholder="Username"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="password">Password</nz-form-label>
+      <nz-form-control [nzSpan]="10" nzErrorTip="Please enter your password!">
+        <nz-input-group>
+          <input
+            id="password"
+            type="password"
+            nz-input
+            formControlName="loginPassword"
+            placeholder="Password"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+
+  <div class="button-wrapper">
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isLoading$ | async"
+      [disabled]="(isLoading$ | async) || !managerSettingsForm.valid"
+      (click)="onManagerSettingsFormSubmit($event)"
+    >
+      Update settings
+    </button>
+  </div>
+</form>

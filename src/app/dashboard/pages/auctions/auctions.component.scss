@@ -1,0 +1,41 @@
+:host ::ng-deep {
+  .ant-table-body {
+    min-height: 70vh;
+    overflow-x: hidden;
+
+    .ant-table-body {
+      min-height: 20vh;
+      overflow-x: hidden;
+    }
+  }
+}
+
+:host:not(.canceled) ::ng-deep {
+  .ant-table-body {
+    table {
+      th,
+      tr {
+        td:first-child {
+          width: 50px;
+        }
+      }
+    }
+
+    .ant-table-body {
+      table {
+        th,
+        tr {
+          td:first-child {
+            width: unset;
+          }
+        }
+      }
+    }
+  }
+}
+
+.top-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

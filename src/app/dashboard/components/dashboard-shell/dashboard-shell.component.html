@@ -1,0 +1,123 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="xl"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a routerLink="/dashboard">
+        <img src="assets/images/logos/protokol-logo-primary.svg" alt="logo" />
+        <h1>Protokol Manager</h1>
+      </a>
+    </div>
+    <ng-container *ngLet="hasNftPluginsLoaded$ | async as hasNftPluginsLoaded">
+      <ul
+        nz-menu
+        nzMode="inline"
+        class="menu-ul"
+        [nzInlineCollapsed]="isCollapsed"
+      >
+        <li
+          nz-submenu
+          nzOpen
+          nzTitle="Assets"
+          nzIcon="block"
+          *ngIf="hasNftPluginsLoaded"
+        >
+          <ul>
+            <li nz-submenu nzOpen [nzTitle]="managementTitleTpl">
+              <ul>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/collections">Collections</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/assets">Assets</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/transfers">Transfers</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/burns">Burns</a>
+                </li>
+              </ul>
+            </li>
+            <li nz-submenu nzOpen [nzTitle]="exchangeTitleTpl">
+              <ul>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/auctions">Auctions</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/bids">Bids</a>
+                </li>
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="/dashboard/trades">Trades</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Network" nzIcon="cluster">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/peers">Peers</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-container>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <i
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></i>
+        </span>
+        <ng-container *ngIf="selectedProfile$ | async as selectedProfile">
+          <nz-avatar
+            nz-dropdown
+            nzPlacement="bottomRight"
+            [nzDropdownMenu]="menu"
+            [nzText]="selectedProfile.name.charAt(0)"
+          ></nz-avatar>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>
+                <a routerLink="/dashboard/profiles">Switch profile</a>
+              </li>
+              <li nz-menu-item>
+                <a (click)="goToNodeConfiguration($event)"
+                  >Node configuration</a
+                >
+              </li>
+              <li nz-menu-item (click)="onSignOut($event)">Sign out</li>
+            </ul>
+          </nz-dropdown-menu>
+        </ng-container>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+<ng-template #managementTitleTpl>
+  <span nz-typography nzType="secondary">
+    Management
+  </span>
+</ng-template>
+
+<ng-template #exchangeTitleTpl>
+  <span nz-typography nzType="secondary">
+    Exchange
+  </span>
+</ng-template>

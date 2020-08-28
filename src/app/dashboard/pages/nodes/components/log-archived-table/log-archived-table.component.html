@@ -1,0 +1,19 @@
+<app-table [rows]="rows$" [tableColumns]="tableColumns" scrollY="15vh">
+</app-table>
+
+<ng-template #actionsTpl let-row="row">
+  <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
+    <ng-container *ngLet="rowsLoading[row.name] as isRowLoading">
+      <button
+        nz-button
+        nzType="default"
+        (click)="viewLog($event, row)"
+        [nzLoading]="isRowLoading"
+      >
+        View
+      </button>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #sizeTpl let-row="row"> {{ row?.size }} KB </ng-template>

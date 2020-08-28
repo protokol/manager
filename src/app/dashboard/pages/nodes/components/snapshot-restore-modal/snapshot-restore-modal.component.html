@@ -1,0 +1,35 @@
+<form
+  nz-form
+  (ngSubmit)="snapshotRestore($event)"
+  [formGroup]="snapshotForm"
+  novalidate
+>
+  <nz-form-item>
+    <nz-form-control [nzOffset]="4">
+      <label nz-checkbox formControlName="truncate">
+        <span nz-typography>Truncate</span>
+      </label>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control [nzOffset]="4">
+      <label nz-checkbox formControlName="verify">
+        <span nz-typography>Verify</span>
+      </label>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container *ngLet="isLoading$ | async as isLoading">
+    <button
+      nz-button
+      class="submit-btn"
+      nzType="primary"
+      [nzLoading]="isLoading"
+      [disabled]="isLoading || ((isFormDirty$ | async) && !snapshotForm.valid)"
+      (click)="snapshotRestore($event)"
+    >
+      Restore
+    </button>
+  </ng-container>
+</form>

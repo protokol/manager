@@ -1,0 +1,157 @@
+<ng-container *ngIf="infoCoreVersion$ | async as nodeCoreVersion; else loading">
+  <ng-container *ngTemplateOutlet="nodeManagerTitle"></ng-container>
+
+  <div class="actions">
+    <button
+      nzType="primary"
+      nz-button
+      nz-dropdown
+      [nzLoading]="isConfigurationLoading$ | async"
+      [nzDropdownMenu]="configurationMenu"
+      nzPlacement="bottomRight"
+    >
+      Configuration
+    </button>
+    <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item (click)="onGetEnv($event)">Get environment</li>
+        <li nz-menu-item (click)="onGetPlugins($event)">Get plugins</li>
+        <li nz-menu-item (click)="onUpdatePlugins($event)">
+          Update plugins configuration
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+  </div>
+
+  <nz-descriptions nzBordered [nzColumn]="descriptionColumns">
+    <nz-descriptions-item nzTitle="Core version">
+      {{ nodeCoreVersion?.currentVersion }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Latest core version">
+      {{ nodeCoreVersion?.latestVersion }}
+    </nz-descriptions-item>
+
+    <nz-descriptions-item nzTitle="Height">
+      <ng-container *ngLet="blockchainHeight$ | async as blockchainHeight">
+        <div class="height-description-item">
+          <app-text-animate
+            [value]="blockchainHeight?.height"
+          ></app-text-animate>
+          <button
+            nz-button
+            nzType="default"
+            (click)="viewLastForgedBlock($event)"
+            [disabled]="!blockchainHeight"
+            [nzLoading]="isLastForgedBlockLoading$ | async"
+          >
+            Last forged block
+          </button>
+        </div>
+      </ng-container>
+    </nz-descriptions-item>
+
+    <nz-descriptions-item nzTitle="Next slot in(ms)">
+      <ng-container *ngIf="infoNextForgingSlot$ | async as infoNextForgingSlot">
+        <app-text-animate
+          [value]="infoNextForgingSlot?.remainingTime"
+        ></app-text-animate>
+      </ng-container>
+    </nz-descriptions-item>
+
+    <nz-descriptions-item nzTitle="Delegate username">
+      <ng-container *ngIf="infoCurrentDelegate$ | async as infoCurrentDelegate">
+        <app-text-animate
+          [value]="infoCurrentDelegate?.username"
+        ></app-text-animate>
+      </ng-container>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Delegate rank">
+      <ng-container *ngIf="infoCurrentDelegate$ | async as infoCurrentDelegate">
+        <app-text-animate
+          [value]="infoCurrentDelegate?.rank"
+        ></app-text-animate>
+      </ng-container>
+    </nz-descriptions-item>
+  </nz-descriptions>
+</ng-container>
+
+<nz-divider nzText="Processes"></nz-divider>
+<app-process-list-table
+  [rows]="processList$"
+  [managerUrl]="managerUrl$ | async"
+></app-process-list-table>
+
+<nz-divider nzText="Logs"></nz-divider>
+<app-log-archived-table
+  [rows]="logArchived$"
+  [managerUrl]="managerUrl$ | async"
+></app-log-archived-table>
+
+<nz-divider nzText="Snapshots"></nz-divider>
+<div class="snapshots-actions">
+  <button
+    nzType="primary"
+    nz-button
+    (click)="onCreateSnapshot($event)"
+    [nzLoading]="isSnapshotsLoading$ | async"
+  >
+    Create snapshot
+  </button>
+</div>
+<app-snapshots-table
+  [rows]="snapshots$"
+  [managerUrl]="managerUrl$ | async"
+></app-snapshots-table>
+
+<ng-template #nodeManagerTitle>
+  <nz-space nzDirection="horizontal" nzSize="middle">
+    <nz-space-item>
+      <i nz-icon nzType="left" (click)="onNavigateBackClick($event)"></i>&nbsp;
+      <span nz-typography>
+        <strong
+          >Node manager @ <a>{{ managerUrl$ | async }}</a></strong
+        >
+      </span>
+    </nz-space-item>
+
+    <nz-space-item>
+      <ng-container *ngIf="infoCoreStatus$ | async as infoCoreStatus">
+        <nz-badge
+          [nzStatus]="
+            infoCoreStatus?.processStatus === 'online' ? 'success' : 'error'
+          "
+          [nzText]="'Core ' + transformText(infoCoreStatus?.processStatus)"
+        ></nz-badge>
+      </ng-container>
+    </nz-space-item>
+
+    <nz-space-item>
+      <ng-container *ngIf="infoCoreStatus$ | async as infoCoreStatus">
+        <nz-badge
+          [nzStatus]="infoCoreStatus?.syncing ? 'success' : 'error'"
+          [nzText]="
+            'Core ' + (infoCoreStatus?.syncing ? 'syncing' : 'not syncing')
+          "
+        ></nz-badge>
+      </ng-container>
+    </nz-space-item>
+  </nz-space>
+</ng-template>
+
+<nz-divider nzText="Disk space"></nz-divider>
+<app-disk-space-table [managerUrl]="managerUrl$ | async"></app-disk-space-table>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>
+
+<ng-template #updatePluginsModalFooter let-data="data">
+  <button
+    nz-button
+    nzType="primary"
+    (click)="onUpdatePluginsSubmit($event, data)"
+    [nzLoading]="isUpdatePluginsLoading$ | async"
+  >
+    Update plugins
+  </button>
+</ng-template>

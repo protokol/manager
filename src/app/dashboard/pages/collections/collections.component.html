@@ -1,0 +1,58 @@
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <div class="top-header">
+      <button
+        nz-button
+        nzType="primary"
+        (click)="showAddCollectionModal($event)"
+      >
+        Add Collection
+      </button>
+      <nz-form-control [nzSpan]="4">
+        <nz-input-group nzPrefixIcon="search">
+          <input
+            type="text"
+            nz-input
+            placeholder="Search schema..."
+            [ngModel]="searchTerm$ | async"
+            (ngModelChange)="searchTerm$.next($event)"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </div>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+      scrollY="70vh"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
+<ng-template #actionsTpl let-row="row">
+  <button nz-button nzType="default" (click)="showJsonSchema($event, row)">
+    Schema
+  </button>
+</ng-template>
+
+<ng-template #idTpl let-row="row">
+  <app-text-clipper [text]="row.id"></app-text-clipper>
+</ng-template>
+
+<ng-template #ownerTpl let-row="row">
+  <app-text-clipper
+    [text]="row.senderPublicKey"
+    [copy]="false"
+    (clicked)="onWalletDetailsClick(row.senderPublicKey, row.id)"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #timestampTpl let-row="row">
+  {{ row?.timestamp?.human | dateFnsFormat }}
+</ng-template>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>

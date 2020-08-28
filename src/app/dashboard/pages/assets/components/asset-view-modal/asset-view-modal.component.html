@@ -1,0 +1,17 @@
+<app-schema-container>
+  <app-schema-container-item editor>
+    <json-editor [options]="editorOptions" [data]="jsonSchema"></json-editor>
+  </app-schema-container-item>
+  <app-schema-container-item form>
+    <fieldset [disabled]="true">
+      <json-schema-form
+        loadExternalAssets="true"
+        [schema]="jsonSchema"
+        [data]="formValues"
+        [debug]="!isProduction"
+        [framework]="framework"
+      >
+      </json-schema-form>
+    </fieldset>
+  </app-schema-container-item>
+</app-schema-container>
