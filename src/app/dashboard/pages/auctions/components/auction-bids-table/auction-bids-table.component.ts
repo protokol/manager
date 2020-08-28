@@ -50,6 +50,9 @@ export class AuctionBidsTableComponent implements OnInit, OnDestroy {
   senderPublicKeyTpl!: TemplateRef<{
     row: ExchangeResourcesTypes.Auctions;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: ExchangeResourcesTypes.Auctions;
+  }>;
 
   tableColumns: TableColumnConfig<ExchangeResourcesTypes.Auctions>[];
 
@@ -70,6 +73,12 @@ export class AuctionBidsTableComponent implements OnInit, OnDestroy {
       {
         headerName: 'Sender',
         columnTransformTpl: this.senderPublicKeyTpl,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
     ];
   }

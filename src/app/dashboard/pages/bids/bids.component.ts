@@ -48,6 +48,9 @@ export class BidsComponent implements OnInit, OnDestroy {
   @ViewChild('senderTpl', { static: true }) senderTpl!: TemplateRef<{
     row: ExchangeResourcesTypes.Bids;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: ExchangeResourcesTypes.Bids;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
   isCanceled$ = new BehaviorSubject<boolean>(false);
@@ -96,6 +99,12 @@ export class BidsComponent implements OnInit, OnDestroy {
             headerName: 'Sender',
             columnTransformTpl: this.senderTpl,
             searchBy: true,
+          },
+          {
+            propertyName: 'timestamp',
+            headerName: 'Timestamp',
+            columnTransformTpl: this.timestampTpl,
+            sortBy: true,
           },
         ];
 

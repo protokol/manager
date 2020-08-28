@@ -46,6 +46,9 @@ export class TradesComponent implements OnInit, OnDestroy {
   @ViewChild('senderTpl', { static: true }) senderTpl!: TemplateRef<{
     row: ExchangeResourcesTypes.Trades;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: ExchangeResourcesTypes.Trades;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
 
@@ -87,6 +90,12 @@ export class TradesComponent implements OnInit, OnDestroy {
         headerName: 'Sender',
         columnTransformTpl: this.senderTpl,
         searchBy: true,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
     ];
 

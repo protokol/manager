@@ -66,6 +66,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
   @ViewChild('senderTpl', { static: true }) senderTpl!: TemplateRef<{
     row: AssetWithCollection;
   }>;
+  @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
+    row: AssetWithCollection;
+  }>;
 
   isLoading$ = new BehaviorSubject(true);
 
@@ -108,6 +111,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
         propertyName: 'senderPublicKey',
         headerName: 'Sender',
         columnTransformTpl: this.ownerTpl,
+      },
+      {
+        propertyName: 'timestamp',
+        headerName: 'Timestamp',
+        columnTransformTpl: this.timestampTpl,
+        sortBy: true,
       },
       {
         headerName: 'Actions',
