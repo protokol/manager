@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Store, NgxsModule } from '@ngxs/store';
 import { PinsState } from './pins.state';
-import { AddPinAction, ClearPinsAction } from './pins.actions';
+import { SetPinAction, ClearPinsAction } from './pins.actions';
 import { v4 as uuid } from 'uuid';
 
 describe('Pins', () => {
@@ -19,7 +19,7 @@ describe('Pins', () => {
   });
 
   it('should add pin', () => {
-    store.dispatch(new AddPinAction(profileIdFixture, pin1Fixture));
+    store.dispatch(new SetPinAction(profileIdFixture, pin1Fixture));
 
     const pins = store.selectSnapshot((state) => state.pins.pins);
     expect(pins).toEqual({ [profileIdFixture]: pin1Fixture });

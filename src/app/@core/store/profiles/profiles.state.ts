@@ -13,7 +13,7 @@ import {
   createSelector,
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { AddPinAction } from '@core/store/pins/pins.actions';
+import { SetPinAction } from '@core/store/pins/pins.actions';
 import { Bip38Service } from '@core/services/bip38.service';
 import { tap } from 'rxjs/operators';
 import { Profile, ProfileWithId } from '@core/interfaces/profiles.types';
@@ -93,7 +93,7 @@ export class ProfilesState {
           )
         );
       }),
-      tap(() => dispatch(new AddPinAction(profileId, pin)))
+      tap(() => dispatch(new SetPinAction(profileId, pin)))
     );
   }
 

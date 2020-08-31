@@ -14,7 +14,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { NodeClientService } from '@core/services/node-client.service';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { SetNetwork } from '@core/store/network/networks.actions';
-import { AddPinAction } from '@core/store/pins/pins.actions';
+import { SetPinAction } from '@core/store/pins/pins.actions';
 import { Router } from '@angular/router';
 import { SetSelectedProfile } from '@core/store/profiles/profiles.actions';
 import { NetworkUtils } from '@core/utils/network-utils';
@@ -96,7 +96,7 @@ export class ProfilesComponent implements OnInit, OnDestroy {
                 if (isValidPin) {
                   this.store.dispatch([
                     new SetNetwork(nodeBaseUrl),
-                    new AddPinAction(profileId, pin),
+                    new SetPinAction(profileId, pin),
                     new SetSelectedProfile(profileId),
                   ]);
                   this.router.navigate(['/dashboard']);

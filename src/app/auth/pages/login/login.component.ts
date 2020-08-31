@@ -7,12 +7,13 @@ import { StoreUtilsService } from '@app/@core/store/store-utils.service';
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { distinctUntilChanged, finalize, map, take, tap } from 'rxjs/operators';
-import { AddPinAction } from '@core/store/pins/pins.actions';
+import { SetPinAction } from '@core/store/pins/pins.actions';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
 import { untilDestroyed } from '@core/until-destroyed';
 import { ClearNetwork, SetNetwork } from '@core/store/network/networks.actions';
 import { FormUtils } from '@core/utils/form-utils';
+import { SetSelectedProfile } from '@core/store/profiles/profiles.actions';
 
 @Component({
   selector: 'app-login',
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.actions$
       .pipe(
         untilDestroyed(this),
-        ofActionSuccessful(AddPinAction),
+        ofActionSuccessful(SetPinAction),
         take(1),
         tap(() => this.router.navigate(['/dashboard']))
       )
@@ -77,7 +78,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         }),
         tap((isValidPin) => {
           if (isValidPin) {
-            this.store.dispatch(new AddPinAction(profileId, pin));
+            this.store.dispatch(new SetSelectedProfile(profileId));
+            this.store.dispatch(new SetPinAction(profileId, pin));
           } else {
             this.isPinInvalid = true;
           }
