@@ -4,4 +4,18 @@
       display: none;
     }
   }
+
+  .ant-input-number.ant-input-number {
+    width: 100%;
+  }
+
+  textarea {
+    resize: none;
+    height: 100%;
+    width: 100%;
+  }
+
+  nz-divider {
+    margin-top: 0;
+  }
 }

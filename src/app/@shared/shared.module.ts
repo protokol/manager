@@ -14,6 +14,7 @@ import {
   NzMessageModule,
   NzModalModule,
   NzNotificationModule,
+  NzPopoverModule,
   NzSelectModule,
   NzSpinModule,
   NzTableModule,
@@ -36,6 +37,9 @@ import { JsonSchemaFormModule } from '@ajsf/core';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { IpfsUploadFilePinataComponent } from './components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
 import { DateFnsFormatPipe } from './pipes/date-fns-format.pipe';
+import { ModalHeaderComponent } from './components/modal-header/modal-header.component';
+import { PopoverHelperComponent } from './components/popover-helper/popover-helper.component';
+import { FormLabelComponent } from './components/form-label/form-label.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -48,6 +52,9 @@ const declareAndExportComponents = [
   CollectionSelectComponent,
   IpfsUploadFilePinataComponent,
   DateFnsFormatPipe,
+  ModalHeaderComponent,
+  PopoverHelperComponent,
+  FormLabelComponent,
 ];
 
 @NgModule({
@@ -78,6 +85,7 @@ const declareAndExportComponents = [
     NzUploadModule,
     NzDescriptionsModule,
     NzAlertModule,
+    NzPopoverModule,
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

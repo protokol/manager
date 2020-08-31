@@ -85,6 +85,24 @@ export class NetworksState {
     return nodeCryptoConfiguration;
   }
 
+  @Selector()
+  static getNodeCryptoBaseConfig({
+    nftBaseConfigurations,
+  }: NetworksStateModel) {
+    return nftBaseConfigurations;
+  }
+
+  static getCryptoDefaults() {
+    return createSelector(
+      [NetworksState.getNodeCryptoBaseConfig],
+      ({
+        crypto: { defaults },
+      }: ReturnType<typeof NetworksState.getNodeCryptoBaseConfig>) => {
+        return defaults;
+      }
+    );
+  }
+
   @Action(SetNetwork)
   setNetwork(
     { patchState }: StateContext<NetworksStateModel>,

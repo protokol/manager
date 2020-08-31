@@ -10,6 +10,7 @@ import {
   NzFormModule,
   NzGridModule,
   NzInputModule,
+  NzInputNumberModule,
   NzModalModule,
   NzNotificationModule,
   NzTypographyModule,
@@ -40,6 +41,7 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NgLetModule,
     NzNotificationModule,
     NzTypographyModule,
+    NzInputNumberModule,
   ],
   declarations: [
     CollectionsComponent,

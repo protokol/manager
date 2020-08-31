@@ -18,6 +18,7 @@ import {
   BookOutline,
   LoadingOutline,
   DeleteOutline,
+  QuestionCircleOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -37,6 +38,7 @@ const icons = [
   BookOutline,
   LoadingOutline,
   DeleteOutline,
+  QuestionCircleOutline,
 ];
 
 @NgModule({

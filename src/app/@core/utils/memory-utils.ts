@@ -14,4 +14,8 @@ export abstract class MemoryUtils {
 
     return (bytes / 1024 / 1024 / 1024).toFixed(2);
   }
+
+  static getBytesFromString(str: string) {
+    return new Blob([str]).size;
+  }
 }
