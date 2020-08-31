@@ -2,7 +2,7 @@ import { Logger } from '@core/services/logger.service';
 import { State, Action, StateContext, createSelector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
-  AddPinAction,
+  SetPinAction,
   PINS_TYPE_NAME,
   ClearPinsAction,
 } from '@core/store/pins/pins.actions';
@@ -31,15 +31,14 @@ export class PinsState {
     });
   }
 
-  @Action(AddPinAction)
-  addPin(
-    { getState, patchState }: StateContext<PinsStateModel>,
-    { profileId, pin }: AddPinAction,
+  @Action(SetPinAction)
+  setPin(
+    { setState }: StateContext<PinsStateModel>,
+    { profileId, pin }: SetPinAction,
     {}
   ) {
-    patchState({
+    setState({
       pins: {
-        ...getState().pins,
         [profileId]: pin,
       },
     });
