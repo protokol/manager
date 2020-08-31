@@ -63,6 +63,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
     row: BaseResourcesTypes.Collections;
   }>;
+  @ViewChild('createCollectionTpl', { static: true })
+  createCollectionTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -202,7 +204,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       CollectionCreateModalComponent,
       CreateModalResponseInterface
     >({
-      nzTitle: 'Create collection',
+      nzTitle: this.createCollectionTpl,
       nzContent: CollectionCreateModalComponent,
       nzWidth: '75vw',
     });

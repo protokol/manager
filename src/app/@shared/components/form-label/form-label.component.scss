@@ -1,0 +1,18 @@
+:host {
+  width: 100%;
+}
+
+:host ::ng-deep {
+  nz-form-label {
+    text-transform: uppercase;
+    overflow: visible;
+    /* stylelint-disable declaration-no-important */
+    padding-bottom: 0 !important;
+  }
+
+  .ant-form-item-label > label.ant-form-item-required::before {
+    position: absolute;
+    right: -9px;
+    margin: 0;
+  }
+}

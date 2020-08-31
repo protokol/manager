@@ -1,0 +1,21 @@
+:host ::ng-deep {
+  h4 {
+    display: inline-block;
+    margin: 0;
+    font-weight: 300;
+    text-transform: capitalize;
+  }
+
+  i {
+    margin-top: 3px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+}
+
+::ng-deep {
+  .ant-modal-close-x {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+  }
+}

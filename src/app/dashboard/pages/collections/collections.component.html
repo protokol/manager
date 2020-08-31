@@ -56,3 +56,22 @@
 </ng-template>
 
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>
+
+<ng-template #createCollectionTpl>
+  <app-modal-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Register new collection</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="createCollectionHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #createCollectionHelperTpl>
+    Collection represents a template structure for creating assets
+  </ng-template>
+</ng-template>

@@ -1,0 +1,15 @@
+<ng-container *ngIf="popoverContent || popoverTitle; else noPopoverContentTpl">
+  <i
+    nz-icon
+    nzType="question-circle"
+    nzTheme="outline"
+    nz-popover
+    [nzPopoverTitle]="popoverTitle"
+    [nzPlacement]="placement"
+    [nzPopoverContent]="popoverContent"
+    nzPopoverTrigger="hover"
+  ></i>
+</ng-container>
+<ng-template #noPopoverContentTpl>
+  <i nz-icon nzType="question-circle" nzTheme="outline"></i>
+</ng-template>

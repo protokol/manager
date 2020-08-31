@@ -2,53 +2,120 @@
   nz-form
   (ngSubmit)="createCollection($event)"
   [formGroup]="collectionForm"
+  nzLayout="vertical"
   novalidate
 >
-  <nz-form-item>
-    <nz-form-label [nzSpan]="4" nzFor="email" nzRequired>Name</nz-form-label>
-    <nz-form-control nzErrorTip="Please enter name of collection!" nzSpan="10">
-      <input
-        id="email"
-        type="text"
-        nz-input
-        formControlName="name"
-        placeholder="Collection name"
-      />
-    </nz-form-control>
-  </nz-form-item>
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label nzFor="email" nzRequired>Name</nz-form-label>
+        </app-form-label>
+        <nz-form-control [nzErrorTip]="nameErrorTpl">
+          <input
+            id="email"
+            nzSize="default"
+            type="text"
+            nz-input
+            formControlName="name"
+            placeholder="Insert collection name"
+          />
+        </nz-form-control>
+        <ng-template #nameErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter name of collection!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Name of collection should be at least
+              {{ maximumSupplyMin }} characters long
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Name of collection should be at most
+              {{ maximumSupplyMax }} characters long
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-form-item>
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label nzFor="maximumSupply" nzRequired
+            >Maximum Supply</nz-form-label
+          >
+        </app-form-label>
+        <nz-form-control [nzErrorTip]="maximumSupplyErrorTpl">
+          <nz-input-number
+            [nzMin]="maximumSupplyMin"
+            [nzMax]="maximumSupplyMax"
+            [nzStep]="1"
+            formControlName="maximumSupply"
+            nzPlaceHolder="Insert maximum supply"
+            nzPrecisionMode="cut"
+          >
+          </nz-input-number>
+        </nz-form-control>
+        <ng-template #maximumSupplyErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter maximum supply of collection!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Maximum supply should be at least {{ maximumSupplyMin }}
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Maximum supply should be at most {{ maximumSupplyMax }}
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label nzFor="description" nzRequired
+            >Description</nz-form-label
+          >
+        </app-form-label>
+        <nz-form-control [nzErrorTip]="descriptionErrorTpl">
+          <textarea
+            formControlName="description"
+            nz-input
+            placeholder="Insert collection description"
+            rows="5"
+          ></textarea>
+        </nz-form-control>
+        <ng-template #descriptionErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter description!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Description should be at least {{ maximumSupplyMin }} characters
+              long
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Description should be at most {{ maximumSupplyMax }} characters
+              long
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-form-item>
+    </div>
+  </div>
 
-  <nz-form-item>
-    <nz-form-label [nzSpan]="4" nzFor="maximumSupply" nzRequired
-      >Maximum Supply</nz-form-label
-    >
-    <nz-form-control
-      nzErrorTip="Please enter maximum supply of collection!"
-      nzSpan="4"
-    >
-      <input
-        type="number"
-        nz-input
-        formControlName="maximumSupply"
-        placeholder="Collection maximum supply"
-      />
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-label [nzSpan]="4" nzFor="description" nzRequired
-      >Description</nz-form-label
-    >
-    <nz-form-control [nzSpan]="20">
-      <textarea
-        formControlName="description"
-        nz-input
-        rows="2"
-        placeholder="Collection description"
-      ></textarea>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-divider></nz-divider>
+  <nz-divider nzDashed></nz-divider>
 
   <app-schema-container>
     <app-schema-container-item editor>
@@ -71,7 +138,12 @@
       </ng-container>
     </app-schema-container-item>
   </app-schema-container>
+  <span nz-typography nzType="danger" *ngIf="c('jsonSchema').errors?.maxSize">
+    Json schema size is over the limit!
+  </span>
 </form>
+
+<div></div>
 
 <div *nzModalFooter>
   <button
