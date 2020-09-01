@@ -35,6 +35,7 @@ import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { ModalUtils } from '@core/utils/modal-utils';
 
 @Component({
   selector: 'app-collections',
@@ -63,8 +64,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
     row: BaseResourcesTypes.Collections;
   }>;
-  @ViewChild('createCollectionTpl', { static: true })
-  createCollectionTpl!: TemplateRef<{}>;
+  @ViewChild('createCollectionModalTitleTpl', { static: true })
+  createCollectionModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -204,9 +205,10 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       CollectionCreateModalComponent,
       CreateModalResponseInterface
     >({
-      nzTitle: this.createCollectionTpl,
+      nzTitle: this.createCollectionModalTitleTpl,
       nzContent: CollectionCreateModalComponent,
       nzWidth: '75vw',
+      ...ModalUtils.getCreateModalDefaultConfig(),
     });
 
     createCollectionModalRef.afterClose

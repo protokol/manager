@@ -106,11 +106,10 @@ export class CollectionCreateModalComponent implements OnDestroy {
   }
 
   schemaSizeValidator = (control: FormControl): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
-
-    if (MemoryUtils.getBytesFromString(control.value) > this.schemaMaxSize) {
+    if (
+      control.value &&
+      MemoryUtils.getBytesFromString(control.value) > this.schemaMaxSize
+    ) {
       return { maxSize: true, error: true };
     }
 
@@ -125,14 +124,16 @@ export class CollectionCreateModalComponent implements OnDestroy {
         [
           Validators.required,
           Validators.min(this.nameMinLength),
-          Validators.min(this.nameMaxLength),
+          Validators.max(this.nameMaxLength),
         ],
       ],
       description: [
         '',
-        Validators.required,
-        Validators.min(this.descriptionMinLength),
-        Validators.max(this.descriptionMaxLength),
+        [
+          Validators.required,
+          Validators.min(this.descriptionMinLength),
+          Validators.max(this.descriptionMaxLength),
+        ],
       ],
       maximumSupply: [
         '',
@@ -151,7 +152,6 @@ export class CollectionCreateModalComponent implements OnDestroy {
 
   async createCollection(event: any) {
     event.preventDefault();
-
     if (this.isLoading$.getValue()) {
       return;
     }
@@ -187,9 +187,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
       .subscribe();
   }
 
-  onCancel(event: MouseEvent) {
-    event.preventDefault();
-
+  onCancel() {
     this.modalRef.destroy();
   }
 
