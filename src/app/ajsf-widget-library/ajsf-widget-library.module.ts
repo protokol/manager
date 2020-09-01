@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzButtonModule, NzInputModule, NzSelectModule } from 'ng-zorro-antd';
+import {
+  NzButtonModule,
+  NzFormModule,
+  NzInputModule,
+  NzSelectModule,
+} from 'ng-zorro-antd';
 import { WidgetConfigService } from './services/widget-config.service';
 import { JsonSchemaFormModule } from '@ajsf/core';
 import { AntInputComponent } from '@app/ajsf-widget-library/components/ant-input/ant-input.component';
@@ -11,6 +16,7 @@ import { AntButtonComponent } from './components/ant-button/ant-button.component
 import { AntSubmitComponent } from './components/ant-submit/ant-submit.component';
 import { AntSelectComponent } from './components/ant-select/ant-select.component';
 import { AntFrameworkComponent } from './components/ant-framework/ant-framework.component';
+import { SharedModule } from '@shared/shared.module';
 
 const declareAndExportComponents = [
   AntInputComponent,
@@ -33,6 +39,8 @@ const declareAndExportComponents = [
     NzButtonModule,
     NzSelectModule,
     FormsModule,
+    SharedModule,
+    NzFormModule,
   ],
   exports: [...declareAndExportComponents],
 })

@@ -1,9 +1,12 @@
-<form nz-form [formGroup]="collectionForm" novalidate>
+<form nz-form [formGroup]="collectionForm" nzLayout="vertical" novalidate>
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="collection" nzRequired
-      >Choose collection</nz-form-label
-    >
+    <app-form-label>
+      <nz-form-label nzSpan="12" nzFor="collection" nzRequired
+        >Choose collection</nz-form-label
+      >
+    </app-form-label>
     <nz-form-control
+      nzSpan="12"
       id="collection"
       nzErrorTip="Please select a collection!"
       nzHasFeedback
@@ -66,7 +69,10 @@
   >
     Create
   </button>
-  <button nz-button (click)="onCancel($event)">
-    Cancel
-  </button>
 </div>
+
+<ng-template #ipfsPinataModalTitleTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">Upload file - Pinata</h4>
+  </app-modal-header>
+</ng-template>

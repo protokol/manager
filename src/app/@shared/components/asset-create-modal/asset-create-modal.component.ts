@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
@@ -16,6 +22,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { CryptoService } from '@core/services/crypto.service';
 import { Logger } from '@core/services/logger.service';
 import { IpfsUploadFilePinataComponent } from '@shared/components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
+import { ModalUtils } from '@core/utils/modal-utils';
 
 @Component({
   selector: 'app-asset-create-modal',
@@ -38,6 +45,9 @@ export class AssetCreateModalComponent implements OnDestroy {
   isAssetValid$ = new BehaviorSubject(false);
 
   asset = {};
+
+  @ViewChild('ipfsPinataModalTitleTpl', { static: true })
+  ipfsPinataModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -68,8 +78,7 @@ export class AssetCreateModalComponent implements OnDestroy {
     return this.c('collection').value;
   }
 
-  onCancel(event: MouseEvent) {
-    event.preventDefault();
+  onCancel() {
     this.modalRef.destroy();
   }
 
@@ -131,9 +140,11 @@ export class AssetCreateModalComponent implements OnDestroy {
     event.preventDefault();
 
     this.modalService.create({
-      nzTitle: 'Upload file to pinata',
+      nzTitle: this.ipfsPinataModalTitleTpl,
       nzContent: IpfsUploadFilePinataComponent,
       nzWidth: '35vw',
+      ...ModalUtils.getCreateModalDefaultConfig(),
+      nzClosable: false,
     });
   }
 }

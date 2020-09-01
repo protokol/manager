@@ -187,9 +187,5 @@ export class CollectionCreateModalComponent implements OnDestroy {
       .subscribe();
   }
 
-  onCancel() {
-    this.modalRef.destroy();
-  }
-
   ngOnDestroy(): void {}
 }

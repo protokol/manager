@@ -1,11 +1,12 @@
 <div [class]="options?.htmlClass || ''">
-  <label
-    *ngIf="options?.title"
-    [attr.for]="'control' + layoutNode?._id"
-    [class]="options?.labelHtmlClass || ''"
-    [style.display]="options?.notitle ? 'none' : ''"
-    [innerHTML]="options?.title"
-  ></label>
+  <app-form-label *ngIf="options?.title">
+    <nz-form-label
+      [attr.nzFor]="'control' + layoutNode?._id"
+      [innerHTML]="options?.title"
+      [class]="options?.labelHtmlClass || ''"
+      [style.display]="options?.notitle ? 'none' : ''"
+    ></nz-form-label>
+  </app-form-label>
   <input
     *ngIf="boundControl"
     nz-input

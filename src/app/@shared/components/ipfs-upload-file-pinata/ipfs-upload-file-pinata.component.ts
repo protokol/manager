@@ -67,8 +67,7 @@ export class IpfsUploadFilePinataComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCancel(event: MouseEvent) {
-    event.preventDefault();
+  onCancel() {
     this.modalRef.destroy();
   }
 
