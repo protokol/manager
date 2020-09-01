@@ -66,6 +66,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }>;
   @ViewChild('createCollectionModalTitleTpl', { static: true })
   createCollectionModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('collectionSchemaModalTitleTpl', { static: true })
+  collectionSchemaModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -73,6 +75,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   getBaseUrl$: Observable<string>;
   rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
+
+  openSchemaName$ = new BehaviorSubject('');
 
   constructor(
     private store: Store,
@@ -182,8 +186,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   showJsonSchema(event: MouseEvent, row: BaseResourcesTypes.Collections) {
     event.preventDefault();
 
+    this.openSchemaName$.next(row.name);
     this.nzModalService.create({
-      nzTitle: `"${row.name}" json schema`,
+      nzTitle: this.collectionSchemaModalTitleTpl,
       nzContent: CollectionViewModalComponent,
       nzComponentParams: {
         jsonSchema: row.jsonSchema,

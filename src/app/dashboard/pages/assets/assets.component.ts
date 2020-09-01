@@ -35,6 +35,7 @@ import { StoreUtilsService } from '@core/store/store-utils.service';
 import { AssetCreateModalComponent } from '@shared/components/asset-create-modal/asset-create-modal.component';
 import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
 import { TableUtils } from '@shared/utils/table-utils';
+import { ModalUtils } from '@core/utils/modal-utils';
 
 @Component({
   selector: 'app-assets',
@@ -69,12 +70,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
   @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
     row: AssetWithCollection;
   }>;
+  @ViewChild('createAssetModalTitleTpl', { static: true })
+  createAssetModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('assetAttributesModalTitleTpl', { static: true })
+  assetAttributesModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(true);
 
   rows$: Observable<AssetWithCollection[]> = of([]);
   tableColumns: TableColumnConfig<AssetWithCollection>[];
   getBaseUrl$: Observable<string>;
+  assetDetailId$ = new BehaviorSubject('');
 
   constructor(
     private store: Store,
@@ -177,14 +183,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   showAssetDetail(assetWithCollection: AssetWithCollection) {
+    this.assetDetailId$.next(TextUtils.clip(assetWithCollection.id));
+
     this.nzModalService.create({
-      nzTitle: `"${TextUtils.clip(assetWithCollection.id)}" preview`,
+      nzTitle: this.assetAttributesModalTitleTpl,
       nzContent: AssetViewModalComponent,
       nzComponentParams: {
         jsonSchema: { ...assetWithCollection.collection.jsonSchema },
         formValues: { ...assetWithCollection.attributes },
       },
       nzWidth: '75vw',
+      nzFooter: null,
     });
   }
 
@@ -208,9 +217,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
       AssetCreateModalComponent,
       CreateModalResponseInterface
     >({
-      nzTitle: 'Create asset',
+      nzTitle: this.createAssetModalTitleTpl,
       nzContent: AssetCreateModalComponent,
       nzWidth: '75vw',
+      ...ModalUtils.getCreateModalDefaultConfig(),
     });
 
     createAssetModalRef.afterClose

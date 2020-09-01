@@ -13,7 +13,6 @@ import {
   NzInputNumberModule,
   NzModalModule,
   NzNotificationModule,
-  NzPopconfirmModule,
   NzTypographyModule,
 } from 'ng-zorro-antd';
 import { JsonSchemaFormModule } from '@ajsf/core';
@@ -43,7 +42,6 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NzNotificationModule,
     NzTypographyModule,
     NzInputNumberModule,
-    NzPopconfirmModule,
   ],
   declarations: [
     CollectionsComponent,
