@@ -155,7 +155,13 @@
   >
     Create
   </button>
-  <button nz-button (click)="onCancel($event)">
+  <button
+    nz-button
+    nz-popconfirm
+    nzPopconfirmTitle="Are you sure you want to discard your changes?"
+    [nzCondition]="!collectionForm.valid"
+    (nzOnConfirm)="onCancel()"
+  >
     Cancel
   </button>
 </div>
