@@ -50,6 +50,8 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild('nodeDetailsModalTitleTpl', { static: true })
   nodeDetailsModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('nodeManagerSettingsModalTitleTpl', { static: true })
+  nodeManagerSettingsModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private route: ActivatedRoute,
@@ -128,7 +130,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             this.nzMessageService.error('Core manager not available!');
 
             this.nzModalService.create({
-              nzTitle: 'Node manager settings',
+              nzTitle: this.nodeManagerSettingsModalTitleTpl,
               nzContent: NodeManagerSettingsModalComponent,
               nzComponentParams: {
                 managerUrl,

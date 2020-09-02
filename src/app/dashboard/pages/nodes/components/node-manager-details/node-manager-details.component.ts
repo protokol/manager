@@ -97,6 +97,16 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   updatePluginsModalFooter!: TemplateRef<{
     data: any;
   }>;
+  @ViewChild('confEnvModalTitleTpl', { static: true })
+  confEnvModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('configurationPluginsModalTitleTpl', { static: true })
+  configurationPluginsModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('updateConfigurationPluginsModalTitleTpl', { static: true })
+  updateConfigurationPluginsModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('createSnapshotPluginsModalTitleTpl', { static: true })
+  createSnapshotPluginsModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('lastForgedBlockModalTitleTpl', { static: true })
+  lastForgedBlockModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -232,7 +242,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (block) => {
             this.nzModalService.create({
-              nzTitle: 'Last forged block',
+              nzTitle: this.lastForgedBlockModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: block,
@@ -263,7 +273,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.nzModalService.create({
-              nzTitle: 'Configuration environment',
+              nzTitle: this.confEnvModalTitleTpl,
               nzContent: TextViewModalComponent,
               nzComponentParams: {
                 text: env,
@@ -304,7 +314,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.nzModalService.create({
-              nzTitle: 'Plugins environment',
+              nzTitle: this.configurationPluginsModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: env,
@@ -330,7 +340,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.updatePluginsRef = this.nzModalService.create({
-              nzTitle: 'Update plugins',
+              nzTitle: this.updateConfigurationPluginsModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: env,
@@ -384,7 +394,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: 'Create snapshot',
+      nzTitle: this.createSnapshotPluginsModalTitleTpl,
       nzContent: SnapshotCreateModalComponent,
       nzComponentParams: {
         managerUrl: this.managerUrl$.getValue(),

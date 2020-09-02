@@ -63,6 +63,8 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: SnapshotsListItem;
   }>;
+  @ViewChild('restoreSnapshotModalTitleTpl', { static: true })
+  restoreSnapshotModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nzModalService: NzModalService,
@@ -110,7 +112,7 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
     this.setRowLoading(name, true, 'create');
 
     const modalRef = this.nzModalService.create({
-      nzTitle: 'Restore snapshot',
+      nzTitle: this.restoreSnapshotModalTitleTpl,
       nzContent: SnapshotRestoreModalComponent,
       nzComponentParams: {
         snapshotName: row.name,

@@ -9,7 +9,7 @@
 </app-schema-container>
 
 <ng-container *ngIf="footer">
-  <div class="modal-footer">
+  <div class="modal-footer" *nzModalFooter>
     <ng-container
       *ngTemplateOutlet="footer; context: { data: jsonData || inputData }"
     ></ng-container>

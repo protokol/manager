@@ -40,3 +40,11 @@
 <ng-template #sizeTpl let-row="row">
   {{ formatMemory(row?.size) }} MB
 </ng-template>
+
+<ng-template #restoreSnapshotModalTitleTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">
+      Restore snapshot
+    </h4>
+  </app-modal-header>
+</ng-template>

@@ -31,6 +31,7 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   rowsLoading$: BehaviorSubject<{
     [name: string]: boolean;
   }> = new BehaviorSubject({});
+  logName$ = new BehaviorSubject('');
 
   tableColumns: TableColumnConfig[];
 
@@ -59,6 +60,8 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   @ViewChild('sizeTpl', { static: true }) sizeTpl!: TemplateRef<{
     row: LogArchivedItem;
   }>;
+  @ViewChild('logArchivedModalTitleTpl', { static: true })
+  logArchivedModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nzModalService: NzModalService,
@@ -98,8 +101,10 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         tap(
           (logs) => {
+            this.logName$.next(row.name);
+
             this.nzModalService.create({
-              nzTitle: `"${row.name}" log`,
+              nzTitle: this.logArchivedModalTitleTpl,
               nzContent: TextViewModalComponent,
               nzComponentParams: {
                 text: logs,
