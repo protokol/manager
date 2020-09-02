@@ -3,6 +3,8 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -45,6 +47,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
   isLoadingNodeManager$ = new BehaviorSubject(false);
 
   descriptionColumns = { xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 };
+
+  @ViewChild('nodeDetailsModalTitleTpl', { static: true })
+  nodeDetailsModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private route: ActivatedRoute,
@@ -163,7 +168,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: 'Select node',
+      nzTitle: this.nodeDetailsModalTitleTpl,
       nzContent: MyNodesUpdateModalComponent,
       nzComponentParams: {
         managerUrl: this.nodeUrl$.getValue(),

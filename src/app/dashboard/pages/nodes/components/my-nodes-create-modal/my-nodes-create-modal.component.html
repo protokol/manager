@@ -1,0 +1,79 @@
+<form
+  nz-form
+  (ngSubmit)="addNode($event)"
+  [formGroup]="addMyNodeForm"
+  nzLayout="vertical"
+  novalidate
+>
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="node-url" nzRequired>Node url</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="nodeUrlErrorTpl">
+      <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+        <input type="text" nz-input formControlName="nodeUrl" />
+      </nz-input-group>
+
+      <ng-template #addOnBeforeTemplate>
+        <nz-select formControlName="nodeUrlProtocol">
+          <nz-option nzLabel="Http://" nzValue="http://"></nz-option>
+          <nz-option nzLabel="Https://" nzValue="https://"></nz-option>
+        </nz-select>
+      </ng-template>
+    </nz-form-control>
+    <ng-template #nodeUrlErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">
+        <span nz-typography nzType="danger">Node url is required!</span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('duplicated')">
+        <span nz-typography nzType="danger">Node url should be unique!</span>
+      </ng-container>
+    </ng-template>
+  </nz-form-item>
+
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="port" nzRequired>Manager port</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="portErrorTpl">
+      <nz-input-group>
+        <input
+          id="port"
+          type="number"
+          nz-input
+          formControlName="port"
+          placeholder="Port"
+        />
+        <ng-template #portErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please input manager port number!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Manager port number should be bigger than 0!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Manager port number should be smaller or equal 65535!
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div *nzModalFooter class="footer">
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) && !addMyNodeForm.valid"
+    (click)="addNode($event)"
+  >
+    Add
+  </button>
+</div>

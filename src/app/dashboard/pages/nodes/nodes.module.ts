@@ -42,6 +42,7 @@ import { ManagerLogsState } from '@app/dashboard/pages/nodes/state/manager-logs/
 import { ManagerDiskSpaceState } from '@app/dashboard/pages/nodes/state/manager-disk-space/manager-disk-space.state';
 import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/disk-space-table/disk-space-table.component';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
+import { MyNodesCreateModalComponent } from './components/my-nodes-create-modal/my-nodes-create-modal.component';
 
 @NgModule({
   imports: [
@@ -91,6 +92,7 @@ import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/componen
     TerminalViewModalComponent,
     DiskSpaceTableComponent,
     MyNodesUpdateModalComponent,
+    MyNodesCreateModalComponent,
   ],
   exports: [],
 })
