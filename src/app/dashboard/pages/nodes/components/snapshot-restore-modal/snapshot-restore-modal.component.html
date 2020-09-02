@@ -2,10 +2,11 @@
   nz-form
   (ngSubmit)="snapshotRestore($event)"
   [formGroup]="snapshotForm"
+  nzLayout="vertical"
   novalidate
 >
   <nz-form-item>
-    <nz-form-control [nzOffset]="4">
+    <nz-form-control>
       <label nz-checkbox formControlName="truncate">
         <span nz-typography>Truncate</span>
       </label>
@@ -13,13 +14,15 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-control [nzOffset]="4">
+    <nz-form-control>
       <label nz-checkbox formControlName="verify">
         <span nz-typography>Verify</span>
       </label>
     </nz-form-control>
   </nz-form-item>
+</form>
 
+<div *nzModalFooter>
   <ng-container *ngLet="isLoading$ | async as isLoading">
     <button
       nz-button
@@ -32,4 +35,4 @@
       Restore
     </button>
   </ng-container>
-</form>
+</div>

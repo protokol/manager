@@ -11,9 +11,13 @@
               <button
                 nz-button
                 nzType="primary"
-                (click)="startProcess($event, row)"
                 [disabled]="isRowLoading || row.status === 'online'"
                 [nzLoading]="loadingActionType === 'start'"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure?"
+                (nzOnConfirm)="startProcess(row)"
+                nzOkText="Yes"
+                nzCancelText="No"
               >
                 Start
               </button>
@@ -22,9 +26,13 @@
               <button
                 nz-button
                 nzType="dashed"
-                (click)="restartProcess($event, row)"
                 [disabled]="isRowLoading"
                 [nzLoading]="loadingActionType === 'restart'"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure?"
+                (nzOnConfirm)="restartProcess(row)"
+                nzOkText="Yes"
+                nzCancelText="No"
               >
                 Restart
               </button>
@@ -33,9 +41,13 @@
               <button
                 nz-button
                 nzType="danger"
-                (click)="processStop($event, row)"
                 [disabled]="isRowLoading || row.status !== 'online'"
                 [nzLoading]="loadingActionType === 'stop'"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure?"
+                (nzOnConfirm)="processStop(row)"
+                nzOkText="Yes"
+                nzCancelText="No"
               >
                 Stop
               </button>
@@ -68,3 +80,13 @@
 </ng-template>
 
 <ng-template #cpuTpl let-row="row"> {{ row?.monit?.cpu }}% </ng-template>
+
+<ng-template #assetAttributesModalTitleTpl>
+  <app-modal-header>
+    <ng-container *ngIf="terminalViewName$ | async as terminalViewName">
+      <h4 nz-typography nzType="secondary">
+        Log process "{{ terminalViewName }}"
+      </h4>
+    </ng-container>
+  </app-modal-header>
+</ng-template>

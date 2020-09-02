@@ -45,6 +45,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     [name: string]: { isLoading: boolean; type: string };
   }> = new BehaviorSubject({});
   isXxlScreen$ = new BehaviorSubject(true);
+  terminalViewName$ = new BehaviorSubject('');
 
   tableColumns: TableColumnConfig<ProcessListItem>[];
 
@@ -82,6 +83,9 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: ProcessListItem;
   }>;
+
+  @ViewChild('assetAttributesModalTitleTpl', { static: true })
+  assetAttributesModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -165,9 +169,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     return TextUtils.capitalizeFirst(status);
   }
 
-  startProcess(event: MouseEvent, { name }: ProcessListItem) {
-    event.preventDefault();
-
+  startProcess({ name }: ProcessListItem) {
     this.setRowLoading(name, true, 'start');
 
     this.store
@@ -186,9 +188,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  restartProcess(event: MouseEvent, { name }: ProcessListItem) {
-    event.preventDefault();
-
+  restartProcess({ name }: ProcessListItem) {
     this.setRowLoading(name, true, 'restart');
 
     this.nodeManagerService
@@ -207,9 +207,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  processStop(event: MouseEvent, { name }: ProcessListItem) {
-    event.preventDefault();
-
+  processStop({ name }: ProcessListItem) {
     this.setRowLoading(name, true, 'stop');
 
     this.store
@@ -237,8 +235,9 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   logProcess(event: MouseEvent, { name }: ProcessListItem) {
     event.preventDefault();
 
+    this.terminalViewName$.next(name);
     this.nzModalService.create({
-      nzTitle: `"${name}" log`,
+      nzTitle: this.assetAttributesModalTitleTpl,
       nzContent: TerminalViewModalComponent,
       nzComponentParams: {
         logName: name,

@@ -17,3 +17,13 @@
 </ng-template>
 
 <ng-template #sizeTpl let-row="row"> {{ row?.size }} KB </ng-template>
+
+<ng-template #logArchivedModalTitleTpl>
+  <app-modal-header>
+    <ng-container *ngIf="logName$ | async as logName">
+      <h4 nz-typography nzType="secondary">
+        {{ logName }}
+      </h4>
+    </ng-container>
+  </app-modal-header>
+</ng-template>
