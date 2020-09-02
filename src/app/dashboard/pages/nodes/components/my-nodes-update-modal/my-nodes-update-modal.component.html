@@ -2,125 +2,69 @@
   nz-form
   (ngSubmit)="selectNode($event)"
   [formGroup]="selectMyNodeForm"
-  nzLayout="inline"
+  nzLayout="vertical"
   novalidate
 >
-  <div nz-row [nzGutter]="[24, 12]">
-    <div nz-col [nzSpan]="16">
-      <nz-form-item>
-        <nz-form-label [nzSpan]="10" nzFor="node" nzRequired
-          >Select my node:</nz-form-label
-        >
-        <nz-form-control [nzSpan]="14" nzErrorTip="Please select node!">
-          <ng-container *ngLet="selectedNodeUrl$ | async as selectedNodeUrl">
-            <ng-container *ngLet="myNodes$ | async as myNodes">
-              <nz-select formControlName="nodeUrl">
-                <ng-container *ngFor="let node of myNodes">
-                  <nz-option
-                    [nzValue]="node.nodeUrl"
-                    [nzLabel]="node.nodeUrl"
-                    [nzDisabled]="selectedNodeUrl === node.nodeUrl"
-                  >
-                  </nz-option>
-                </ng-container>
-              </nz-select>
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="node" nzRequired>Select my node</nz-form-label>
+    </app-form-label>
+    <nz-form-control nzErrorTip="Please select node!">
+      <ng-container *ngLet="selectedNodeUrl$ | async as selectedNodeUrl">
+        <ng-container *ngLet="myNodes$ | async as myNodes">
+          <nz-select formControlName="nodeUrl">
+            <ng-container *ngFor="let node of myNodes">
+              <nz-option
+                [nzValue]="node.nodeUrl"
+                [nzLabel]="node.nodeUrl"
+                [nzDisabled]="selectedNodeUrl === node.nodeUrl"
+              >
+              </nz-option>
             </ng-container>
-          </ng-container>
-        </nz-form-control>
-      </nz-form-item>
-    </div>
-
-    <div nz-col [nzSpan]="8">
-      <button
-        nz-button
-        nzType="primary"
-        [disabled]="
-          (isLoading$ | async) ||
-          ((isSelectMyNodeFormDirty$ | async) && !selectMyNodeForm.valid)
-        "
-        (click)="selectNode($event)"
-      >
-        Select
-      </button>
-    </div>
-  </div>
+          </nz-select>
+        </ng-container>
+      </ng-container>
+    </nz-form-control>
+  </nz-form-item>
 </form>
 
-<nz-divider nzText="Add my node"></nz-divider>
-
-<form
-  nz-form
-  (ngSubmit)="addNode($event)"
-  [formGroup]="addMyNodeForm"
-  novalidate
->
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="node-url" nzRequired
-      >Node url</nz-form-label
-    >
-    <nz-form-control [nzErrorTip]="nodeUrlErrorTpl" nzSpan="18">
-      <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
-        <input type="text" nz-input formControlName="nodeUrl" />
-      </nz-input-group>
-
-      <ng-template #addOnBeforeTemplate>
-        <nz-select formControlName="nodeUrlProtocol">
-          <nz-option nzLabel="Http://" nzValue="http://"></nz-option>
-          <nz-option nzLabel="Https://" nzValue="https://"></nz-option>
-        </nz-select>
-      </ng-template>
-    </nz-form-control>
-    <ng-template #nodeUrlErrorTpl let-control>
-      <ng-container *ngIf="control.hasError('required')">
-        <span nz-typography nzType="danger">Node url is required!</span>
-      </ng-container>
-      <ng-container *ngIf="control.hasError('duplicated')">
-        <span nz-typography nzType="danger">Node url should be unique!</span>
-      </ng-container>
-    </ng-template>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="port" nzRequired
-      >Manager port</nz-form-label
-    >
-    <nz-form-control [nzErrorTip]="portErrorTpl" nzSpan="4">
-      <nz-input-group>
-        <input
-          id="port"
-          type="number"
-          nz-input
-          formControlName="port"
-          placeholder="Port"
-        />
-        <ng-template #portErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('required')">
-            <span nz-typography nzType="danger">
-              Please input manager port number!
-            </span>
-          </ng-container>
-          <ng-container *ngIf="control.hasError('min')">
-            <span nz-typography nzType="danger">
-              Manager port number should be bigger than 0!
-            </span>
-          </ng-container>
-          <ng-container *ngIf="control.hasError('max')">
-            <span nz-typography nzType="danger">
-              Manager port number should be smaller or equal 65535!
-            </span>
-          </ng-container>
-        </ng-template>
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-
+<div *nzModalFooter class="footer">
   <button
     nz-button
     nzType="primary"
     [nzLoading]="isLoading$ | async"
     [disabled]="(isLoading$ | async) && !addMyNodeForm.valid"
-    (click)="addNode($event)"
+    (click)="addNewNode($event)"
   >
-    Add to my nodes
+    Add my node
   </button>
-</form>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="(isLoading$ | async) || !selectMyNodeForm.valid"
+    (click)="selectNode($event)"
+  >
+    Select
+  </button>
+</div>
+
+<ng-template #myNodeCreateModalTitleTpl>
+  <app-modal-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">
+          Add my node
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="myNodeCreateHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #myNodeCreateHelperTpl>
+    Add new node to manage it
+  </ng-template>
+</ng-template>
