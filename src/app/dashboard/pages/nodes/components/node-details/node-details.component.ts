@@ -26,6 +26,7 @@ import { NodesState } from '@core/store/nodes/nodes.state';
 import { NetworksState } from '@core/store/network/networks.state';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
 import { ManagerAuthenticationSet } from '@core/store/manager-authentication/manager-authentication.actions';
+import { NetworkUtils } from '@core/utils/network-utils';
 
 @Component({
   selector: 'app-node-details',
@@ -100,6 +101,20 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
+  private getManagerUrl(): string {
+    const nodeUrl = this.nodeUrl$.getValue();
+    const networkManagerUrl = this.store.selectSnapshot(
+      NetworksState.getBaseUrl
+    );
+    if (nodeUrl === networkManagerUrl) {
+      return this.store.selectSnapshot(NetworksState.getNodeManagerUrl());
+    }
+    if (this.isAddedToMyNodes$.getValue()) {
+      return this.store.selectSnapshot(NodesState.getNodeManagerUrl(nodeUrl));
+    }
+    return NetworkUtils.buildNodeManagerUrl(nodeUrl);
+  }
+
   onNodeManagerClick(event: MouseEvent) {
     event.preventDefault();
 
@@ -107,11 +122,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const managerUrl = this.isAddedToMyNodes$.getValue()
-      ? this.store.selectSnapshot(
-          NodesState.getNodeManagerUrl(this.nodeUrl$.getValue())
-        )
-      : undefined;
+    const managerUrl = this.getManagerUrl();
 
     this.isLoadingNodeManager$.next(true);
     this.nodeManagerService
@@ -120,11 +131,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         tap(
           () => {
-            this.router.navigate([
-              '/dashboard/nodes/manager',
-              managerUrl ||
-                this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
-            ]);
+            this.router.navigate(['/dashboard/nodes/manager', managerUrl]);
           },
           () => {
             this.nzMessageService.error('Core manager not available!');
