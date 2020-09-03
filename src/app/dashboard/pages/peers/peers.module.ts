@@ -5,7 +5,9 @@ import { CommonModule } from '@angular/common';
 import {
   NzButtonModule,
   NzCheckboxModule,
+  NzDropDownModule,
   NzGridModule,
+  NzIconModule,
   NzModalModule,
 } from 'ng-zorro-antd';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
@@ -28,6 +30,8 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     FormsModule,
     NgLetModule,
     NzButtonModule,
+    NzDropDownModule,
+    NzIconModule,
   ],
   providers: [],
   declarations: [PeersComponent],

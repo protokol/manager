@@ -5,12 +5,14 @@ import {
   Action,
   StateContext,
   createSelector,
+  Store,
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
   AddMyNode,
   NODES_TYPE_NAME,
   RemoveMyNode,
+  RemoveMyNodeByUrl,
   UpdateMyNode,
 } from './nodes.actions';
 import { MyNode } from '../../interfaces/node.types';
@@ -33,7 +35,7 @@ const NODES_DEFAULT_STATE: NodesStateModel = {
 export class NodesState {
   readonly log = new Logger(this.constructor.name);
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   @Selector()
   static getNodes({ nodes }: NodesStateModel): MyNode[] {
@@ -70,6 +72,15 @@ export class NodesState {
           node.nodeUrl,
           node.coreManagerPort
         );
+      }
+    );
+  }
+
+  static isFavNode(nodeUrl: string) {
+    return createSelector(
+      [NodesState.getNodes],
+      (nodes: ReturnType<typeof NodesState.getNodes>) => {
+        return nodes.some((n) => n.nodeUrl.includes(nodeUrl));
       }
     );
   }
@@ -136,6 +147,26 @@ export class NodesState {
       });
     } else {
       this.log.error(`Node with id: ${nodeId} not found!`);
+    }
+  }
+
+  @Action(RemoveMyNodeByUrl)
+  removeMyNodeByUrl(
+    { patchState, getState }: StateContext<NodesStateModel>,
+    { nodeUrl }: RemoveMyNodeByUrl
+  ) {
+    const nodesArray = this.store.selectSnapshot(NodesState.getNodes);
+    const node = nodesArray.find((n) => n.nodeUrl === nodeUrl);
+
+    if (node) {
+      const nodes = { ...getState().nodes };
+      delete nodes[node.id];
+
+      patchState({
+        nodes,
+      });
+    } else {
+      this.log.error(`Node with id: ${node.id} not found!`);
     }
   }
 }
