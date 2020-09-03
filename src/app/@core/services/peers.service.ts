@@ -31,15 +31,18 @@ export class PeersService {
   }
 
   getPeers(
-    query: TableApiQuery | {} = {},
+    query: TableApiQuery = { filters: {} },
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<Peers>> {
+    const { filters, ...restQuery } = query;
+
     return from(
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('peers')
         .all({
-          ...query,
+          ...restQuery,
+          ...filters,
         })
     ).pipe(
       map((response) => response.body),

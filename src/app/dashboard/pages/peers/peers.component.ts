@@ -88,30 +88,34 @@ export class PeersComponent implements OnInit, OnDestroy {
       {
         propertyName: 'ip',
         headerName: 'Ip',
-        sortBy: true,
         width: '150px',
       },
       {
         propertyName: 'port',
         headerName: 'Port',
-        width: '80px',
+        width: '100px',
+        sortBy: true,
       },
       {
         propertyName: 'version',
         headerName: 'Version',
-        width: '120px',
+        width: '200px',
+        sortBy: true,
+        searchBy: true,
       },
       {
         propertyName: 'height',
         headerName: 'Height',
         width: '120px',
         columnTransformTpl: this.heightTpl,
+        sortBy: true,
       },
       {
         propertyName: 'latency',
         headerName: 'Latency',
         columnTransformTpl: this.latencyTpl,
-        width: '80px',
+        width: '100px',
+        sortBy: true,
       },
       {
         headerName: 'Plugins',
