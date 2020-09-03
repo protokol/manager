@@ -3,6 +3,7 @@ export interface ConnectionOptions {
 }
 
 export interface MyNode {
+  id?: string;
   nodeUrl: string;
   coreManagerPort: number;
   coreManagerAuth?: NodeManagerAuthentication;

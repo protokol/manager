@@ -1,5 +1,13 @@
+@import "../../../../theme/theme-variables";
+
 :host ::ng-deep {
   .ant-table-body {
     min-height: 75vh;
+  }
+
+  .fav-icon {
+    // color: #429ef5;
+
+    color: #66cfdb;
   }
 }

@@ -23,3 +23,9 @@ export class RemoveMyNode {
 
   constructor(public nodeId: string) {}
 }
+
+export class RemoveMyNodeByUrl {
+  static type = `[${NODES_TYPE_NAME}] RemoveMyNodeByUrl`;
+
+  constructor(public nodeUrl: string) {}
+}

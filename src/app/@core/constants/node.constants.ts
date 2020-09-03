@@ -1,1 +1,2 @@
 export const DEFAULT_CORE_MANAGER_PORT = 4005;
+export const DEFAULT_CORE_API_PORT = 4003;

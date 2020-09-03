@@ -8,6 +8,16 @@
 >
 </app-table>
 
+<ng-template #myNodeTpl let-row="row">
+  <ng-container *ngIf="isFavNode$(row) | async; else notFavIconTpl">
+    <i class="fav-icon" nz-icon nzType="star" nzTheme="fill"></i>
+  </ng-container>
+</ng-template>
+
+<ng-template #notFavIconTpl>
+  <i class="fav-icon" nz-icon nzType="star"></i>
+</ng-template>
+
 <ng-template #pluginsTpl let-row="row">
   <ng-container *ngIf="row.plugins">
     <ng-container *ngFor="let plugin of row.plugins | keyvalue">
@@ -35,7 +45,38 @@
 </ng-template>
 
 <ng-template #actionsTpl let-row="row">
-  <button nz-button nzType="default" (click)="showConfig($event, row)">
-    Config
+  <button
+    nzType="default"
+    nz-button
+    nz-dropdown
+    [nzDropdownMenu]="configurationMenu"
+    nzPlacement="bottomRight"
+  >
+    Manage
   </button>
+  <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item (click)="showConfig($event, row)">Config</li>
+      <ng-container *ngLet="isAddingToMyNodesLoading$ | async as isLoading">
+        <ng-container *ngIf="isFavNode$(row) | async as isFavNode; else favTpl">
+          <li
+            nz-menu-item
+            [nzDisabled]="isLoading"
+            (click)="removeMyNode($event, row)"
+          >
+            Remove my node
+          </li>
+        </ng-container>
+        <ng-template #favTpl>
+          <li
+            nz-menu-item
+            [nzDisabled]="isLoading"
+            (click)="addToMyNodes($event, row)"
+          >
+            Add to My nodes
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </nz-dropdown-menu>
 </ng-template>
