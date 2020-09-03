@@ -131,11 +131,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         tap(
           () => {
-            this.router.navigate([
-              '/dashboard/nodes/manager',
-              managerUrl ||
-                this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
-            ]);
+            this.router.navigate(['/dashboard/nodes/manager', managerUrl]);
           },
           () => {
             this.nzMessageService.error('Core manager not available!');
