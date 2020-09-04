@@ -15,12 +15,13 @@ import {
   ManagerLogsStopPooling,
 } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.actions';
 import { untilDestroyed } from '@core/until-destroyed';
-import { tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import {
   LogListItem,
   ManagerLogsState,
 } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
 import { NzModalRef } from 'ng-zorro-antd';
+import { SearchAddon } from 'xterm-addon-search';
 
 @Component({
   selector: 'app-terminal-view-modal',
@@ -29,7 +30,10 @@ import { NzModalRef } from 'ng-zorro-antd';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
+  private termSearch = new SearchAddon();
   logs$ = new BehaviorSubject('');
+  searchTerm$ = new BehaviorSubject('');
+  isSearching$ = new BehaviorSubject(false);
   linesFrom = -1;
   linesTo = -1;
   subscribedLogName: string;
@@ -68,7 +72,7 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
     this.store.dispatch(new ManagerLogsStartPooling(logName, this.managerUrl));
   }
 
-  @ViewChild('ngTerminal', { static: true }) child: NgTerminal;
+  @ViewChild('ngTerminal', { static: true }) terminal: NgTerminal;
 
   constructor(private store: Store, private nzModalRef: NzModalRef) {
     this.nzModalRef.afterClose
@@ -82,17 +86,52 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.searchTerm$
+      .pipe(
+        debounceTime(750),
+        distinctUntilChanged(),
+        tap((value) => this.isSearching$.next(!!value)),
+        tap((value) => {
+          if (!value) {
+            this.getCoreTerminal.scrollToBottom();
+          } else {
+            this.termSearch.findNext(value);
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   writeToTerminal(logEntity: LogListItem) {
-    this.child.write(`\n\r${TextUtils.replaceWithTerminalBr(logEntity.lines)}`);
+    const lines = `\n\r${TextUtils.replaceWithTerminalBr(logEntity.lines)}`;
+    this.terminal.write(lines);
+    this.logs$.next(`${this.logs$.getValue()}${lines}`);
     this.linesFrom = logEntity.from;
     this.linesTo = logEntity.to;
   }
 
+  get getCoreTerminal() {
+    return this.terminal.underlying;
+  }
+
   ngAfterViewInit() {
-    this.child.write(TextUtils.replaceWithTerminalBr(this.logs$.getValue()));
+    this.getCoreTerminal.loadAddon(this.termSearch);
+    this.terminal.write(TextUtils.replaceWithTerminalBr(this.logs$.getValue()));
   }
 
   ngOnDestroy(): void {}
+
+  onSearchPrevious(event: MouseEvent) {
+    event.preventDefault();
+
+    this.termSearch.findPrevious(this.searchTerm$.getValue());
+  }
+
+  onSearchNext(event: MouseEvent) {
+    event.preventDefault();
+
+    this.termSearch.findNext(this.searchTerm$.getValue());
+  }
 }

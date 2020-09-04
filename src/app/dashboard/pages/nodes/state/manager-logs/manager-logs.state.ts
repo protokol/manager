@@ -129,7 +129,7 @@ export class ManagerLogsState {
       })
     );
 
-    timer(0, 3000)
+    timer(0, 5000)
       .pipe(
         // Check if there are any new lines available
         exhaustMap(() => {

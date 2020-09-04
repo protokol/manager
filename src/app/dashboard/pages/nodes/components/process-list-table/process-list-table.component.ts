@@ -84,8 +84,8 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     row: ProcessListItem;
   }>;
 
-  @ViewChild('assetAttributesModalTitleTpl', { static: true })
-  assetAttributesModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('terminalModalTitleTpl', { static: true })
+  terminalModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -237,7 +237,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
 
     this.terminalViewName$.next(name);
     this.nzModalService.create({
-      nzTitle: this.assetAttributesModalTitleTpl,
+      nzTitle: this.terminalModalTitleTpl,
       nzContent: TerminalViewModalComponent,
       nzComponentParams: {
         logName: name,

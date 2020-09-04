@@ -81,7 +81,7 @@
 
 <ng-template #cpuTpl let-row="row"> {{ row?.monit?.cpu }}% </ng-template>
 
-<ng-template #assetAttributesModalTitleTpl>
+<ng-template #terminalModalTitleTpl>
   <app-modal-header>
     <ng-container *ngIf="terminalViewName$ | async as terminalViewName">
       <h4 nz-typography nzType="secondary">
