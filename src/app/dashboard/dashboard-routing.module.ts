@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardShell } from './dashboard.service';
+import { NzDropDownModule, NzIconModule } from 'ng-zorro-antd';
 
 const routes: Routes = [
   DashboardShell.childRoutes([
@@ -73,7 +74,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes), NzDropDownModule, NzIconModule],
   exports: [RouterModule],
   providers: [],
 })

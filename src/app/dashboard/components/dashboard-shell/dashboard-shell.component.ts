@@ -46,12 +46,5 @@ export class DashboardShellComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClearPinsAction());
   }
 
-  goToNodeConfiguration(event: MouseEvent) {
-    event.preventDefault();
-
-    const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
-    this.router.navigate(['/dashboard/nodes', baseUrl]);
-  }
-
   ngOnDestroy(): void {}
 }

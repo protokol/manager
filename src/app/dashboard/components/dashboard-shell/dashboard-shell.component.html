@@ -91,11 +91,6 @@
               <li nz-menu-item>
                 <a routerLink="/dashboard/profiles">Switch profile</a>
               </li>
-              <li nz-menu-item>
-                <a (click)="goToNodeConfiguration($event)"
-                  >Node configuration</a
-                >
-              </li>
               <li nz-menu-item (click)="onSignOut($event)">Sign out</li>
             </ul>
           </nz-dropdown-menu>
@@ -107,6 +102,9 @@
         <router-outlet></router-outlet>
       </div>
     </nz-content>
+    <nz-footer>
+      <app-dashboard-status-bar></app-dashboard-status-bar>
+    </nz-footer>
   </nz-layout>
 </nz-layout>
 
