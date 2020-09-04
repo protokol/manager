@@ -20,6 +20,8 @@ import {
   DeleteOutline,
   QuestionCircleOutline,
   StarOutline,
+  UpOutline,
+  DownOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -41,6 +43,8 @@ const icons = [
   DeleteOutline,
   QuestionCircleOutline,
   StarOutline,
+  UpOutline,
+  DownOutline,
 ];
 
 @NgModule({
