@@ -5,3 +5,11 @@
   background: #fff;
   overflow: hidden;
 }
+
+nz-space-item {
+  /* stylelint-disable declaration-no-important */
+  &:last-child {
+    margin: 0 !important;
+  }
+  /* stylelint-enable declaration-no-important */
+}
