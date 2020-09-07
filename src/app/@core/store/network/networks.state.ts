@@ -11,18 +11,15 @@ import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesType
 import {
   ClearNetwork,
   NETWORKS_TYPE_NAME,
-  SetCoreManagerPort,
   SetNetwork,
 } from '@core/store/network/networks.actions';
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { BaseResourcesTypes } from '@protokol/nft-client';
-import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 
 interface NetworksStateModel {
   baseUrl: string | null;
-  coreManagerPort: number;
   isValidNetwork: boolean | null;
   hasNftPluginsLoaded: boolean | null;
   nftBaseConfigurations: BaseResourcesTypes.BaseConfigurations | null;
@@ -31,7 +28,6 @@ interface NetworksStateModel {
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   baseUrl: null,
-  coreManagerPort: DEFAULT_CORE_MANAGER_PORT,
   isValidNetwork: null,
   hasNftPluginsLoaded: null,
   nftBaseConfigurations: null,
@@ -51,23 +47,6 @@ export class NetworksState {
   @Selector()
   static getBaseUrl({ baseUrl }: NetworksStateModel) {
     return baseUrl;
-  }
-
-  @Selector()
-  static getCoreManagerPort({ coreManagerPort }: NetworksStateModel) {
-    return coreManagerPort;
-  }
-
-  static getNodeManagerUrl() {
-    return createSelector(
-      [NetworksState.getBaseUrl, NetworksState.getCoreManagerPort],
-      (
-        baseUrl: ReturnType<typeof NetworksState.getBaseUrl>,
-        port: ReturnType<typeof NetworksState.getCoreManagerPort>
-      ) => {
-        return NetworkUtils.buildNodeManagerUrl(baseUrl, port);
-      }
-    );
   }
 
   @Selector()
@@ -170,16 +149,6 @@ export class NetworksState {
   clearNetwork({ setState }: StateContext<NetworksStateModel>) {
     setState({
       ...NETWORKS_DEFAULT_STATE,
-    });
-  }
-
-  @Action(SetCoreManagerPort)
-  setCoreManagerPort(
-    { patchState }: StateContext<NetworksStateModel>,
-    { coreManagerPort }: SetCoreManagerPort
-  ) {
-    patchState({
-      coreManagerPort,
     });
   }
 }

@@ -31,39 +31,9 @@
     </ng-template>
   </nz-form-item>
 
-  <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="port" nzRequired>Manager port</nz-form-label>
-    </app-form-label>
-    <nz-form-control [nzErrorTip]="portErrorTpl">
-      <nz-input-group>
-        <input
-          id="port"
-          type="number"
-          nz-input
-          formControlName="port"
-          placeholder="Port"
-        />
-        <ng-template #portErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('required')">
-            <span nz-typography nzType="danger">
-              Please input manager port number!
-            </span>
-          </ng-container>
-          <ng-container *ngIf="control.hasError('min')">
-            <span nz-typography nzType="danger">
-              Manager port number should be bigger than 0!
-            </span>
-          </ng-container>
-          <ng-container *ngIf="control.hasError('max')">
-            <span nz-typography nzType="danger">
-              Manager port number should be smaller or equal 65535!
-            </span>
-          </ng-container>
-        </ng-template>
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
+  <app-node-manager-form
+    formControlName="coreManagerAuth"
+  ></app-node-manager-form>
 </form>
 
 <div *nzModalFooter class="footer">

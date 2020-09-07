@@ -26,10 +26,12 @@ import { MyNode } from '@core/interfaces/node.types';
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { untilDestroyed } from '@core/until-destroyed';
-import { catchError, finalize, first, map, switchMap } from 'rxjs/operators';
+import { catchError, finalize, first, map, tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { NodeClientService } from '@core/services/node-client.service';
 import { AddMyNode } from '@core/store/nodes/nodes.actions';
+import { NodeManagerLoginSettingsEnum } from '@app/dashboard/pages/nodes/interfaces/node.types';
+import { NodeManagerFormInterface } from '@shared/interfaces/node-shared.types';
 
 @Component({
   selector: 'app-my-nodes-create-modal',
@@ -85,14 +87,18 @@ export class MyNodesCreateModalComponent implements OnDestroy {
     this.addMyNodeForm = this.formBuilder.group({
       nodeUrl: ['', [Validators.required], [this.nodeAsyncValidator]],
       nodeUrlProtocol: ['http://', Validators.required],
-      port: [
-        DEFAULT_CORE_MANAGER_PORT,
-        [Validators.required, Validators.min(1), Validators.max(65535)],
-      ],
+      coreManagerAuth: [],
     });
+    this.c('coreManagerAuth').setValue({
+      loginType: NodeManagerLoginSettingsEnum.None,
+      port: DEFAULT_CORE_MANAGER_PORT,
+      loginPassword: '',
+      loginUsername: '',
+      secretToken: '',
+    } as NodeManagerFormInterface);
   }
 
-  an(controlName: string) {
+  c(controlName: string) {
     return this.addMyNodeForm.controls[controlName];
   }
 
@@ -114,13 +120,38 @@ export class MyNodesCreateModalComponent implements OnDestroy {
 
     this.isLoading$.next(true);
 
-    const { nodeUrl, nodeUrlProtocol, port } = this.addMyNodeForm.value;
+    const {
+      nodeUrl,
+      nodeUrlProtocol,
+      coreManagerAuth: {
+        port,
+        secretToken,
+        loginUsername,
+        loginPassword,
+        loginType,
+      },
+    } = this.addMyNodeForm.value;
+
+    const coreManagerAuth = {
+      ...(loginType === NodeManagerLoginSettingsEnum.Token
+        ? { token: secretToken }
+        : {}),
+      ...(loginType === NodeManagerLoginSettingsEnum.Basic
+        ? {
+            basic: {
+              username: loginUsername,
+              password: loginPassword,
+            },
+          }
+        : {}),
+    };
+
     const nodeBaseUrl = `${nodeUrlProtocol}${nodeUrl}`;
 
     this.nodeClientService
       .getNodeCryptoConfiguration(nodeBaseUrl)
       .pipe(
-        switchMap((cryptoConfig) => {
+        tap((cryptoConfig) => {
           if (!NetworkUtils.isNodeCryptoConfiguration(cryptoConfig)) {
             return throwError(
               'Invalid node crypto configuration, check if node is online!'
@@ -128,14 +159,13 @@ export class MyNodesCreateModalComponent implements OnDestroy {
           }
 
           this.store.dispatch(
-            new AddMyNode({ nodeUrl: nodeBaseUrl, coreManagerPort: port })
+            new AddMyNode({
+              nodeUrl: nodeBaseUrl,
+              coreManagerPort: port,
+              coreManagerAuth,
+            })
           );
-          this.an('nodeUrl').reset();
-          this.an('port').reset(DEFAULT_CORE_MANAGER_PORT);
-
           this.nzModalRef.close();
-
-          return of(cryptoConfig);
         }),
         catchError((err) => {
           this.log.error(err);

@@ -42,7 +42,7 @@ import { SnapshotCreateModalComponent } from '@app/dashboard/pages/nodes/compone
 import { LoadManagerSnapshots } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { ManagerAuthenticationUnset } from '@core/store/manager-authentication/manager-authentication.actions';
+import { ManagerCurrUnset } from '@core/store/manager-authentication/manager-authentication.actions';
 
 @Component({
   selector: 'app-node-manager-details',
@@ -411,7 +411,7 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     this.timer8$.unsubscribe();
     this.timer10$.unsubscribe();
 
-    this.store.dispatch(new ManagerAuthenticationUnset());
+    this.store.dispatch(new ManagerCurrUnset());
   }
 
   onNavigateBackClick(event: MouseEvent) {

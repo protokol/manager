@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { HttpClient } from '@angular/common/http';
 import { NetworkUtils } from '@core/utils/network-utils';
@@ -46,7 +45,7 @@ export class NodeManagerService {
   }
 
   infoCoreVersion(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -63,7 +62,7 @@ export class NodeManagerService {
   }
 
   infoCoreStatus(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -78,7 +77,7 @@ export class NodeManagerService {
   }
 
   infoNextForgingSlot(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -95,7 +94,7 @@ export class NodeManagerService {
   }
 
   infoLastForgedBlock(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -112,7 +111,7 @@ export class NodeManagerService {
   }
 
   infoBlockchainHeight(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -129,7 +128,7 @@ export class NodeManagerService {
   }
 
   infoCurrentDelegate(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -146,7 +145,7 @@ export class NodeManagerService {
   }
 
   infoDiskSpace(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -163,7 +162,7 @@ export class NodeManagerService {
   }
 
   logArchived(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -179,7 +178,7 @@ export class NodeManagerService {
 
   logLog(
     payload: LogLogPayload,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -195,7 +194,7 @@ export class NodeManagerService {
 
   logDownload(
     logFileName: string,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -209,7 +208,7 @@ export class NodeManagerService {
   }
 
   processList(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -226,7 +225,7 @@ export class NodeManagerService {
   processStart(
     processName: string,
     args: string = '--network=testnet --env=test',
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -245,7 +244,7 @@ export class NodeManagerService {
 
   processRestart(
     processName: string,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -263,7 +262,7 @@ export class NodeManagerService {
 
   processStop(
     processName: string,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -280,7 +279,7 @@ export class NodeManagerService {
   }
 
   configurationGetEnv(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -297,7 +296,7 @@ export class NodeManagerService {
   }
 
   configurationGetPlugins(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -315,7 +314,7 @@ export class NodeManagerService {
 
   configurationUpdatePlugins(
     content: any,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -331,7 +330,7 @@ export class NodeManagerService {
   }
 
   snapshotsList(
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -347,7 +346,7 @@ export class NodeManagerService {
 
   snapshotDelete(
     name: string,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -363,7 +362,7 @@ export class NodeManagerService {
 
   snapshotsCreate(
     payload: SnapshotsCreatePayload,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
@@ -380,7 +379,7 @@ export class NodeManagerService {
 
   snapshotsRestore(
     payload: SnapshotsRestorePayload,
-    url: string = this.store.selectSnapshot(NetworksState.getNodeManagerUrl()),
+    url: string,
     authentication: NodeManagerAuthentication = this.store.selectSnapshot(
       ManagerAuthenticationState.getAuthentication
     )
