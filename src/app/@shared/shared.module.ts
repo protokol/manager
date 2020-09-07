@@ -16,6 +16,7 @@ import {
   NzNotificationModule,
   NzPopconfirmModule,
   NzPopoverModule,
+  NzRadioModule,
   NzSelectModule,
   NzSpinModule,
   NzTableModule,
@@ -42,6 +43,7 @@ import { ModalHeaderComponent } from './components/modal-header/modal-header.com
 import { PopoverHelperComponent } from './components/popover-helper/popover-helper.component';
 import { FormLabelComponent } from './components/form-label/form-label.component';
 import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
+import { NodeManagerFormComponent } from './components/node-manager-form/node-manager-form.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -90,8 +92,9 @@ const declareAndExportComponents = [
     NzAlertModule,
     NzPopoverModule,
     NzPopconfirmModule,
+    NzRadioModule,
   ],
-  declarations: [...declareAndExportComponents],
-  exports: [...declareAndExportComponents],
+  declarations: [...declareAndExportComponents, NodeManagerFormComponent],
+  exports: [...declareAndExportComponents, NodeManagerFormComponent],
 })
 export class SharedModule {}

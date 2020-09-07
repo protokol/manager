@@ -5,15 +5,18 @@ import { patch } from '@ngxs/store/operators';
 import { NodeManagerAuthentication } from '@core/interfaces/node.types';
 import {
   MANAGER_AUTHENTICATION_TYPE_NAME,
-  ManagerAuthenticationSet,
-  ManagerAuthenticationUnset,
+  ManagerCurrSet,
+  ManagerCurrUnset,
 } from './manager-authentication.actions';
+import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 
 interface ManagerAuthenticationStateModel {
+  port?: number;
   authentication?: NodeManagerAuthentication;
 }
 
 const MANAGER_AUTHENTICATION_DEFAULT_STATE: ManagerAuthenticationStateModel = {
+  port: DEFAULT_CORE_MANAGER_PORT,
   authentication: null,
 };
 
@@ -34,24 +37,26 @@ export class ManagerAuthenticationState {
     return authentication;
   }
 
-  @Action(ManagerAuthenticationSet)
-  managerAuthenticationSet(
+  @Action(ManagerCurrSet)
+  managerCurrSet(
     { setState }: StateContext<ManagerAuthenticationStateModel>,
-    { authentication }: ManagerAuthenticationSet
+    { authentication, port }: ManagerCurrSet
   ) {
     setState(
       patch({
+        port,
         authentication,
       })
     );
   }
 
-  @Action(ManagerAuthenticationUnset)
-  managerAuthenticationUnset({
+  @Action(ManagerCurrUnset)
+  managerCurrUnset({
     setState,
   }: StateContext<ManagerAuthenticationStateModel>) {
     setState(
       patch({
+        port: null,
         authentication: null,
       })
     );

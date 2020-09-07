@@ -23,9 +23,8 @@ import { Actions, ofActionErrored, Store } from '@ngxs/store';
 import { AddMyNode } from '@core/store/nodes/nodes.actions';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodesState } from '@core/store/nodes/nodes.state';
-import { NetworksState } from '@core/store/network/networks.state';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
-import { ManagerAuthenticationSet } from '@core/store/manager-authentication/manager-authentication.actions';
+import { ManagerCurrSet } from '@core/store/manager-authentication/manager-authentication.actions';
 import { NetworkUtils } from '@core/utils/network-utils';
 
 @Component({
@@ -83,7 +82,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
       if (myNode) {
         this.isAddedToMyNodes$.next(!!myNode);
         this.store.dispatch(
-          new ManagerAuthenticationSet(myNode.coreManagerAuth)
+          new ManagerCurrSet(myNode.coreManagerAuth, myNode.coreManagerPort)
         );
       }
 
@@ -103,12 +102,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
   private getManagerUrl(): string {
     const nodeUrl = this.nodeUrl$.getValue();
-    const networkManagerUrl = this.store.selectSnapshot(
-      NetworksState.getBaseUrl
-    );
-    if (nodeUrl === networkManagerUrl) {
-      return this.store.selectSnapshot(NetworksState.getNodeManagerUrl());
-    }
     if (this.isAddedToMyNodes$.getValue()) {
       return this.store.selectSnapshot(NodesState.getNodeManagerUrl(nodeUrl));
     }

@@ -192,7 +192,7 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     this.setRowLoading(name, true, 'restart');
 
     this.nodeManagerService
-      .processRestart(name)
+      .processRestart(name, this.managerUrl)
       .pipe(
         untilDestroyed(this),
         tap(

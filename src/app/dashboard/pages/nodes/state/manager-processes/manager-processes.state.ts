@@ -89,18 +89,21 @@ export class ManagerProcessesState {
     { setState, dispatch }: StateContext<ManagerProcessesStateModel>,
     { processName, managerUrl }: StartManagerProcess
   ) {
-    return this.nodeManagerService.processStart(processName, managerUrl).pipe(
-      tap(
-        (process) => dispatch(new SetManagerProcessesByIds(process)),
-        () => {
-          setState(
-            patch({
-              managerProcesses: patch({ [processName]: undefined }),
-            })
-          );
-        }
-      )
-    );
+    // TODO: create start manager process args
+    return this.nodeManagerService
+      .processStart(processName, '', managerUrl)
+      .pipe(
+        tap(
+          (process) => dispatch(new SetManagerProcessesByIds(process)),
+          () => {
+            setState(
+              patch({
+                managerProcesses: patch({ [processName]: undefined }),
+              })
+            );
+          }
+        )
+      );
   }
 
   @Action(RestartManagerProcess)
