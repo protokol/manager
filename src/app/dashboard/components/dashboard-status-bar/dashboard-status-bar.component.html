@@ -3,7 +3,7 @@
     <nz-space nzSize="large">
       <nz-space-item>
         <ng-container *ngLet="getBaseUrl$ | async as getBaseUrl">
-          Network:&nbsp;
+          <i nz-icon nzType="api"></i>&nbsp;
           <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="top">
             {{ getBaseUrl }}
             <i nz-icon nzType="up"></i>
@@ -18,7 +18,7 @@
         </ng-container>
       </nz-space-item>
       <nz-space-item>
-        Profile:&nbsp;
+        <i nz-icon nzType="user-switch"></i>&nbsp;
         <a nz-dropdown [nzDropdownMenu]="profileMenu" nzPlacement="top">
           {{ selectedProfile.name }}
           <i nz-icon nzType="up"></i>
@@ -28,7 +28,10 @@
             <ng-container *ngLet="profiles$ | async as profiles">
               <ng-container *ngFor="let profile of profiles">
                 <ng-container *ngIf="profile.id !== selectedProfile.id">
-                  <li nz-menu-item (click)="onProfileSelect($event)">
+                  <li
+                    nz-menu-item
+                    (click)="onProfileSelect($event, profile.id)"
+                  >
                     {{ profile.name }}
                   </li>
                 </ng-container>
@@ -40,3 +43,11 @@
     </nz-space>
   </ng-container>
 </div>
+
+<ng-template #profileSelectModalTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">
+      Switch profile
+    </h4>
+  </app-modal-header>
+</ng-template>

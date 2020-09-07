@@ -41,6 +41,7 @@ import { DateFnsFormatPipe } from './pipes/date-fns-format.pipe';
 import { ModalHeaderComponent } from './components/modal-header/modal-header.component';
 import { PopoverHelperComponent } from './components/popover-helper/popover-helper.component';
 import { FormLabelComponent } from './components/form-label/form-label.component';
+import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -56,6 +57,7 @@ const declareAndExportComponents = [
   ModalHeaderComponent,
   PopoverHelperComponent,
   FormLabelComponent,
+  ProfileSelectModalComponent,
 ];
 
 @NgModule({

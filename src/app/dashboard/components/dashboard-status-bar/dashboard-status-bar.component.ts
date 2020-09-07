@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Select } from '@ngxs/store';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { Observable } from 'rxjs';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
+import { NzModalService } from 'ng-zorro-antd';
+import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
 
 @Component({
   selector: 'app-dashboard-status-bar',
@@ -19,10 +26,23 @@ export class DashboardStatusBarComponent {
     ProfileWithId
   >;
 
-  constructor(private router: Router) {}
+  @ViewChild('profileSelectModalTpl', { static: true })
+  profileSelectModalTpl!: TemplateRef<{}>;
 
-  onProfileSelect(event: MouseEvent /*, id: string*/) {
+  constructor(private router: Router, private nzModalService: NzModalService) {}
+
+  onProfileSelect(event: MouseEvent, profileId: string) {
     event.preventDefault();
+
+    this.nzModalService.create({
+      nzTitle: this.profileSelectModalTpl,
+      nzContent: ProfileSelectModalComponent,
+      nzComponentParams: {
+        profileId,
+      },
+      nzWidth: '30vw',
+      nzFooter: null,
+    });
   }
 
   manageNode(event: MouseEvent, baseUrl: string) {

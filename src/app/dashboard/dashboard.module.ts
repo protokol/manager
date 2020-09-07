@@ -16,6 +16,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { DashboardStatusBarComponent } from '@app/dashboard/components/dashboard-status-bar/dashboard-status-bar.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
   declarations: [DashboardStatusBarComponent, DashboardShellComponent],
@@ -33,6 +34,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     NgLetModule,
     NzTypographyModule,
     NzSpaceModule,
+    SharedModule,
   ],
 })
 export class DashboardModule {}
