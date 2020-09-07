@@ -1,0 +1,53 @@
+<div class="status-bar">
+  <ng-container *ngIf="selectedProfile$ | async as selectedProfile">
+    <nz-space nzSize="large">
+      <nz-space-item>
+        <ng-container *ngLet="getBaseUrl$ | async as getBaseUrl">
+          <i nz-icon nzType="api"></i>&nbsp;
+          <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="top">
+            {{ getBaseUrl }}
+            <i nz-icon nzType="up"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="manageNode($event, getBaseUrl)">
+                Manage
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </ng-container>
+      </nz-space-item>
+      <nz-space-item>
+        <i nz-icon nzType="user-switch"></i>&nbsp;
+        <a nz-dropdown [nzDropdownMenu]="profileMenu" nzPlacement="top">
+          {{ selectedProfile.name }}
+          <i nz-icon nzType="up"></i>
+        </a>
+        <nz-dropdown-menu #profileMenu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <ng-container *ngLet="profiles$ | async as profiles">
+              <ng-container *ngFor="let profile of profiles">
+                <ng-container *ngIf="profile.id !== selectedProfile.id">
+                  <li
+                    nz-menu-item
+                    (click)="onProfileSelect($event, profile.id)"
+                  >
+                    {{ profile.name }}
+                  </li>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ul>
+        </nz-dropdown-menu>
+      </nz-space-item>
+    </nz-space>
+  </ng-container>
+</div>
+
+<ng-template #profileSelectModalTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">
+      Switch profile
+    </h4>
+  </app-modal-header>
+</ng-template>

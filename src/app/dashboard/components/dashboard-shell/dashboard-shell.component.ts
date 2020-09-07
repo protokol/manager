@@ -1,6 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ClearPinsAction } from '@core/store/pins/pins.actions';
 import { Router } from '@angular/router';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
@@ -13,6 +18,7 @@ import { take, tap } from 'rxjs/operators';
   selector: 'app-dashboard-shell',
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardShellComponent implements OnInit, OnDestroy {
   @Select(ProfilesState.getSelectedProfile) selectedProfile$: Observable<
@@ -21,7 +27,7 @@ export class DashboardShellComponent implements OnInit, OnDestroy {
   @Select(NetworksState.hasNftPluginsLoaded) hasNftPluginsLoaded$: Observable<
     ReturnType<typeof NetworksState.hasNftPluginsLoaded>
   >;
-  isCollapsed = false;
+  isCollapsed$ = new BehaviorSubject(false);
 
   constructor(
     private store: Store,
@@ -46,12 +52,9 @@ export class DashboardShellComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClearPinsAction());
   }
 
-  goToNodeConfiguration(event: MouseEvent) {
-    event.preventDefault();
-
-    const baseUrl = this.store.selectSnapshot(NetworksState.getBaseUrl);
-    this.router.navigate(['/dashboard/nodes', baseUrl]);
-  }
-
   ngOnDestroy(): void {}
+
+  toggleCollapsed() {
+    this.isCollapsed$.next(!this.isCollapsed$.getValue());
+  }
 }

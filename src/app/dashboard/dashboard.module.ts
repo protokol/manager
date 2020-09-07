@@ -14,9 +14,12 @@ import {
 import { RouterModule } from '@angular/router';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { NgLetModule } from '@core/directives/ngLet.module';
+import { DashboardStatusBarComponent } from '@app/dashboard/components/dashboard-status-bar/dashboard-status-bar.component';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
-  declarations: [DashboardShellComponent],
+  declarations: [DashboardStatusBarComponent, DashboardShellComponent],
   imports: [
     CommonModule,
     NzLayoutModule,
@@ -30,6 +33,8 @@ import { NgLetModule } from '@core/directives/ngLet.module';
     NzDropDownModule,
     NgLetModule,
     NzTypographyModule,
+    NzSpaceModule,
+    SharedModule,
   ],
 })
 export class DashboardModule {}

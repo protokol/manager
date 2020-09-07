@@ -107,9 +107,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }),
         distinctUntilChanged(),
         tap((baseUrl) => {
-          this.store.dispatch(
-            new SetNetwork(baseUrl || 'http://nft.protokol.com:4003')
-          );
+          this.store.dispatch(new SetNetwork(baseUrl));
         })
       )
       .subscribe();

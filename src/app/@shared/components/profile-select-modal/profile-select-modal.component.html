@@ -1,0 +1,66 @@
+<form
+  nz-form
+  [formGroup]="profileForm"
+  nzLayout="vertical"
+  novalidate
+  *ngIf="profileForm"
+>
+  <ng-container *ngLet="profiles$ | async as profiles">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="collection" nzRequired
+          >Choose profile</nz-form-label
+        >
+      </app-form-label>
+      <nz-form-control
+        nzErrorTip="Please select a profile!"
+        nzHasFeedback
+        nzValidatingTip="Validating..."
+      >
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="Select a profile"
+          formControlName="profileId"
+        >
+          <ng-container *ngFor="let profile of profiles">
+            <nz-option
+              [nzLabel]="profile.name"
+              [nzValue]="profile.id"
+            ></nz-option>
+          </ng-container>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="pin" nzRequired>Profile PIN</nz-form-label>
+      </app-form-label>
+      <nz-form-control nzErrorTip="Please enter your PIN!">
+        <nz-input-group nzPrefixIcon="lock">
+          <input
+            type="password"
+            nz-input
+            formControlName="pin"
+            placeholder="PIN"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+</form>
+
+<div *nzModalFooter>
+  <ng-container *ngLet="cryptoConfig$ | async as cryptoConfig">
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isLoading$ | async"
+      [disabled]="(isLoading$ | async) || !profileForm.valid || !cryptoConfig"
+      (click)="selectProfile($event, cryptoConfig)"
+    >
+      Switch
+    </button>
+  </ng-container>
+</div>

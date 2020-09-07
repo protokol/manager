@@ -4,7 +4,8 @@
     nzCollapsible
     nzWidth="256px"
     nzBreakpoint="xl"
-    [(nzCollapsed)]="isCollapsed"
+    [nzCollapsed]="isCollapsed$ | async"
+    (nzCollapsedChange)="isCollapsed$.next($event)"
     [nzTrigger]="null"
   >
     <div class="sidebar-logo">
@@ -18,7 +19,7 @@
         nz-menu
         nzMode="inline"
         class="menu-ul"
-        [nzInlineCollapsed]="isCollapsed"
+        [nzInlineCollapsed]="isCollapsed$ | async"
       >
         <li
           nz-submenu
@@ -72,11 +73,11 @@
   <nz-layout>
     <nz-header>
       <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+        <span class="header-trigger" (click)="toggleCollapsed()">
           <i
             class="trigger"
             nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            [nzType]="isCollapsed$ ? 'menu-unfold' : 'menu-fold'"
           ></i>
         </span>
         <ng-container *ngIf="selectedProfile$ | async as selectedProfile">
@@ -89,12 +90,7 @@
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
               <li nz-menu-item>
-                <a routerLink="/dashboard/profiles">Switch profile</a>
-              </li>
-              <li nz-menu-item>
-                <a (click)="goToNodeConfiguration($event)"
-                  >Node configuration</a
-                >
+                <a routerLink="/dashboard/profiles">Manage profiles</a>
               </li>
               <li nz-menu-item (click)="onSignOut($event)">Sign out</li>
             </ul>
@@ -107,6 +103,9 @@
         <router-outlet></router-outlet>
       </div>
     </nz-content>
+    <nz-footer>
+      <app-dashboard-status-bar></app-dashboard-status-bar>
+    </nz-footer>
   </nz-layout>
 </nz-layout>
 

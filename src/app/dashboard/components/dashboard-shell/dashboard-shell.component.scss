@@ -76,7 +76,14 @@ nz-header {
 }
 
 nz-content {
-  margin: 24px;
+  margin: 24px 24px 0;
+}
+
+nz-footer {
+  padding: 0;
+  margin-top: 12px;
+  z-index: 20;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
 }
 
 .inner-content {
