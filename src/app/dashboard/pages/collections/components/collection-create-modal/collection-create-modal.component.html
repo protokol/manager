@@ -136,14 +136,26 @@
         >
         </json-schema-form>
       </ng-container>
+      <nz-form-item>
+        <nz-form-control>
+          <button
+            nz-button
+            nzType="dashed"
+            nzBlock
+            class="text-capitalize"
+            (click)="addNewAttribute($event)"
+          >
+            <i nz-icon nzType="plus"></i>
+            New attribute
+          </button>
+        </nz-form-control>
+      </nz-form-item>
     </app-schema-container-item>
   </app-schema-container>
   <span nz-typography nzType="danger" *ngIf="c('jsonSchema').errors?.maxSize">
     Json schema size is over the limit!
   </span>
 </form>
-
-<div></div>
 
 <div *nzModalFooter>
   <button
@@ -156,3 +168,24 @@
     Create
   </button>
 </div>
+
+<ng-template #attributeCreateModalTitleTpl>
+  <app-modal-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">
+          Add attribute
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="attributeCreateModalHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #attributeCreateModalHelperTpl>
+    Add attribute to existing schema
+  </ng-template>
+</ng-template>

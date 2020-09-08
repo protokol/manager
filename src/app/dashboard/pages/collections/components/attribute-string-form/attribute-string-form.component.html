@@ -1,0 +1,76 @@
+<form nz-form [formGroup]="form" nzLayout="vertical" novalidate>
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="pattern">Pattern</nz-form-label>
+    </app-form-label>
+    <nz-form-control>
+      <nz-input-group>
+        <input
+          id="pattern"
+          type="text"
+          nz-input
+          formControlName="pattern"
+          placeholder="Insert pattern"
+        />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="minLength">Min length</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="minLengthErrorTpl">
+      <nz-input-number
+        [nzMin]="minLength"
+        [nzMax]="maxLength"
+        [nzStep]="1"
+        formControlName="minLength"
+        nzPlaceHolder="Insert min length"
+        nzPrecisionMode="cut"
+      >
+      </nz-input-number>
+    </nz-form-control>
+    <ng-template #minLengthErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('min')">
+        <span nz-typography nzType="danger">
+          Min length should be at least {{ minLength }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('max')">
+        <span nz-typography nzType="danger">
+          Min length should be at most {{ maxLength }}
+        </span>
+      </ng-container>
+    </ng-template>
+  </nz-form-item>
+
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="maxLength">Max length</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="maxLengthErrorTpl">
+      <nz-input-number
+        [nzMin]="minLength"
+        [nzMax]="maxLength"
+        [nzStep]="1"
+        formControlName="maxLength"
+        nzPlaceHolder="Insert max length"
+        nzPrecisionMode="cut"
+      >
+      </nz-input-number>
+    </nz-form-control>
+    <ng-template #maxLengthErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('min')">
+        <span nz-typography nzType="danger">
+          Max length should be at least {{ minLength }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('max')">
+        <span nz-typography nzType="danger">
+          Max length should be at most {{ maxLength }}
+        </span>
+      </ng-container>
+    </ng-template>
+  </nz-form-item>
+</form>

@@ -26,4 +26,8 @@ export abstract class TextUtils {
     }
     return `${str.substring(0, length)}…`;
   }
+
+  static getAttributeRegex() {
+    return /^(?!\d)[\w$]+$/;
+  }
 }
