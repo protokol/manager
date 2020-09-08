@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
 import { environment } from '@env/environment';
@@ -13,18 +19,23 @@ import { Logger } from '@core/services/logger.service';
 import { CryptoService } from '@app/@core/services/crypto.service';
 import { FormUtils } from '@core/utils/form-utils';
 import { BehaviorSubject } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, first, tap } from 'rxjs/operators';
 import {
   NzMessageService,
   NzModalRef,
+  NzModalService,
   NzNotificationService,
 } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
-import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { MemoryUtils } from '@core/utils/memory-utils';
+import { CollectionsUtils } from '@app/dashboard/pages/collections/utils/collections-utils';
+import { AttributeCreateModalComponent } from '@app/dashboard/pages/collections/components/attribute-create-modal/attribute-create-modal.component';
+import { ModalUtils } from '@core/utils/modal-utils';
+import { CreateAttributeModalResponse } from '@app/dashboard/pages/collections/interfaces/collection.types';
 
 @Component({
   selector: 'app-collection-create-modal',
@@ -44,16 +55,20 @@ export class CollectionCreateModalComponent implements OnDestroy {
 
   cryptoDefaults!: BaseResourcesTypes.BaseConfigurations['crypto']['defaults'];
 
+  @ViewChild('attributeCreateModalTitleTpl', { static: true })
+  attributeCreateModalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
     private cryptoService: CryptoService,
     private nzNotificationService: NzNotificationService,
     private modalRef: NzModalRef<
       CollectionCreateModalComponent,
-      CreateModalResponseInterface
+      CreateModalResponse
     >,
     private messageService: NzMessageService,
-    private store: Store
+    private store: Store,
+    private nzModalService: NzModalService
   ) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
@@ -142,7 +157,10 @@ export class CollectionCreateModalComponent implements OnDestroy {
           Validators.max(this.maximumSupplyMax),
         ],
       ],
-      jsonSchema: ['', [Validators.required, this.schemaSizeValidator]],
+      jsonSchema: [
+        CollectionsUtils.getDefaultJsonSchema(),
+        [Validators.required, this.schemaSizeValidator],
+      ],
     });
   }
 
@@ -188,4 +206,33 @@ export class CollectionCreateModalComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  addNewAttribute(event: MouseEvent) {
+    event.preventDefault();
+
+    if (!this.c('jsonSchema').valid) {
+      this.messageService.error('Invalid schema! Make schema valid');
+      return;
+    }
+
+    const attributeCreateModalRef = this.nzModalService.create<
+      AttributeCreateModalComponent,
+      CreateAttributeModalResponse
+    >({
+      nzTitle: this.attributeCreateModalTitleTpl,
+      nzContent: AttributeCreateModalComponent,
+      nzWidth: '35vw',
+      ...ModalUtils.getCreateModalDefaultConfig(),
+    });
+
+    attributeCreateModalRef.afterClose
+      .pipe(
+        first(),
+        tap(({ name, required, type, attribute }) => {
+          this.c('jsonSchema');
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
+  }
 }

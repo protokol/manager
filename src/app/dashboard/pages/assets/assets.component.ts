@@ -33,7 +33,7 @@ import { TextUtils } from '@core/utils/text-utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { AssetCreateModalComponent } from '@shared/components/asset-create-modal/asset-create-modal.component';
-import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { TableUtils } from '@shared/utils/table-utils';
 import { ModalUtils } from '@core/utils/modal-utils';
 
@@ -215,7 +215,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
     const createAssetModalRef = this.nzModalService.create<
       AssetCreateModalComponent,
-      CreateModalResponseInterface
+      CreateModalResponse
     >({
       nzTitle: this.createAssetModalTitleTpl,
       nzContent: AssetCreateModalComponent,

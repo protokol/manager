@@ -1,0 +1,74 @@
+<form nz-form [formGroup]="attributeForm" novalidate nzLayout="vertical">
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="name" nzRequired>Attribute name</nz-form-label>
+    </app-form-label>
+    <nz-form-control nzErrorTip="Please enter name of attribute!">
+      <input
+        id="name"
+        type="text"
+        nz-input
+        formControlName="name"
+        placeholder="Insert attribute name"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <!--<app-form-label>
+      <nz-form-label nzFor="required">Attribute required</nz-form-label>
+    </app-form-label>-->
+    <nz-form-control>
+      <label nz-checkbox formControlName="required">
+        <!--<span nz-typography>Required</span>-->
+        <app-form-label>
+          <nz-form-label nzFor="required">Attribute required</nz-form-label>
+        </app-form-label>
+      </label>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="type" nzRequired>Attribute type</nz-form-label>
+    </app-form-label>
+    <nz-form-control nzErrorTip="Please select an attribute type!">
+      <nz-select
+        nzShowSearch
+        nzAllowClear
+        nzPlaceHolder="Select an attribute type"
+        formControlName="type"
+      >
+        <ng-container *ngFor="let attrType of AttributeTypes">
+          <nz-option
+            class="text-capitalize"
+            [nzLabel]="TextUtils.capitalizeFirst(attrType)"
+            [nzValue]="attrType"
+          ></nz-option>
+        </ng-container>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container *ngIf="c('type').value">
+    <nz-divider></nz-divider>
+  </ng-container>
+
+  <ng-container *ngIf="c('type').value === AttributeType.String">
+    <app-attribute-string-form
+      formControlName="attribute"
+    ></app-attribute-string-form>
+  </ng-container>
+</form>
+
+<div *nzModalFooter>
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) || !attributeForm.valid"
+    (click)="addAttribute($event)"
+  >
+    Add
+  </button>
+</div>

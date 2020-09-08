@@ -34,7 +34,7 @@ import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import { CreateModalResponseInterface } from '@core/interfaces/create-modal-response.interface';
+import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { ModalUtils } from '@core/utils/modal-utils';
 
 @Component({
@@ -208,7 +208,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     const createCollectionModalRef = this.nzModalService.create<
       CollectionCreateModalComponent,
-      CreateModalResponseInterface
+      CreateModalResponse
     >({
       nzTitle: this.createCollectionModalTitleTpl,
       nzContent: CollectionCreateModalComponent,
