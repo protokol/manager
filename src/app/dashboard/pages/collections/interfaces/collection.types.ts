@@ -1,22 +1,35 @@
 export enum AttributeType {
   String = 'string',
   Number = 'number',
+  Integer = 'integer',
 }
 
-export interface AttributeString {
+export interface AttributesString {
   pattern: string | RegExp;
   minLength?: number;
   maxLength?: number;
 }
 
+export interface AttributesNumber {
+  minimum?: number;
+  maximum?: number;
+}
+
 export interface CreateAttributeModalResponseBase {
   name: string;
-  required?: boolean;
+  isRequired?: boolean;
 }
 
 export interface AttributeModalString extends CreateAttributeModalResponseBase {
   type: AttributeType.String;
-  attribute: AttributeString;
+  attributes: AttributesString;
 }
 
-export type CreateAttributeModalResponse = AttributeModalString;
+export interface AttributeModalNumber extends CreateAttributeModalResponseBase {
+  type: AttributeType.Number;
+  attributes: AttributesNumber;
+}
+
+export type CreateAttributeModalResponse =
+  | AttributeModalString
+  | AttributeModalNumber;

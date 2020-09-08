@@ -1,0 +1,59 @@
+<form nz-form [formGroup]="form" nzLayout="vertical" novalidate>
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="minimum">Minimum</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="minimumErrorTpl">
+      <nz-input-number
+        [nzMin]="min"
+        [nzMax]="max"
+        [nzStep]="1"
+        formControlName="minimum"
+        nzPlaceHolder="Insert minimum"
+        nzPrecisionMode="cut"
+      >
+      </nz-input-number>
+    </nz-form-control>
+    <ng-template #minimumErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('min')">
+        <span nz-typography nzType="danger">
+          Minimum should be at least {{ min }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('max')">
+        <span nz-typography nzType="danger">
+          Minimum should be at most {{ max }}
+        </span>
+      </ng-container>
+    </ng-template>
+  </nz-form-item>
+
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="maximum">Maximum</nz-form-label>
+    </app-form-label>
+    <nz-form-control [nzErrorTip]="maximumErrorTpl">
+      <nz-input-number
+        [nzMin]="min"
+        [nzMax]="max"
+        [nzStep]="1"
+        formControlName="maximum"
+        nzPlaceHolder="Insert maximum"
+        nzPrecisionMode="cut"
+      >
+      </nz-input-number>
+    </nz-form-control>
+    <ng-template #maximumErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('min')">
+        <span nz-typography nzType="danger">
+          Maximum should be at least {{ min }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('max')">
+        <span nz-typography nzType="danger">
+          Maximum should be at most {{ max }}
+        </span>
+      </ng-container>
+    </ng-template>
+  </nz-form-item>
+</form>

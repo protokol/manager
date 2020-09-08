@@ -228,8 +228,21 @@ export class CollectionCreateModalComponent implements OnDestroy {
     attributeCreateModalRef.afterClose
       .pipe(
         first(),
-        tap(({ name, required, type, attribute }) => {
-          this.c('jsonSchema');
+        tap(({ name, isRequired, type, attributes }) => {
+          const { properties, required, ...restSchema } = this.c(
+            'jsonSchema'
+          ).value;
+          this.c('jsonSchema').setValue({
+            ...restSchema,
+            properties: {
+              ...(properties || {}),
+              [name]: {
+                type,
+                ...attributes,
+              },
+            },
+            required: [...(required || []), ...(isRequired ? [name] : [])],
+          });
         }),
         untilDestroyed(this)
       )

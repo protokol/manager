@@ -3,7 +3,7 @@
     <app-form-label>
       <nz-form-label nzFor="name" nzRequired>Attribute name</nz-form-label>
     </app-form-label>
-    <nz-form-control nzErrorTip="Please enter name of attribute!">
+    <nz-form-control [nzErrorTip]="nameErrorTpl">
       <input
         id="name"
         type="text"
@@ -12,17 +12,26 @@
         placeholder="Insert attribute name"
       />
     </nz-form-control>
+    <ng-template #nameErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">
+        <span nz-typography nzType="danger">
+          Please enter name of attribute!
+        </span>
+      </ng-container>
+      <ng-container *ngIf="control.hasError('pattern')">
+        <span nz-typography nzType="danger">
+          Name of attribute needs to be only one word, without a number in the
+          beginning!
+        </span>
+      </ng-container>
+    </ng-template>
   </nz-form-item>
 
   <nz-form-item>
-    <!--<app-form-label>
-      <nz-form-label nzFor="required">Attribute required</nz-form-label>
-    </app-form-label>-->
     <nz-form-control>
-      <label nz-checkbox formControlName="required">
-        <!--<span nz-typography>Required</span>-->
+      <label nz-checkbox formControlName="isRequired">
         <app-form-label>
-          <nz-form-label nzFor="required">Attribute required</nz-form-label>
+          <nz-form-label>Attribute required</nz-form-label>
         </app-form-label>
       </label>
     </nz-form-control>
@@ -50,14 +59,25 @@
     </nz-form-control>
   </nz-form-item>
 
-  <ng-container *ngIf="c('type').value">
+  <ng-container *ngIf="type$ | async">
     <nz-divider></nz-divider>
   </ng-container>
 
-  <ng-container *ngIf="c('type').value === AttributeType.String">
+  <ng-container *ngIf="(type$ | async) === AttributeType.String">
     <app-attribute-string-form
-      formControlName="attribute"
+      formControlName="attributes"
     ></app-attribute-string-form>
+  </ng-container>
+
+  <ng-container
+    *ngIf="
+      (type$ | async) === AttributeType.Integer ||
+      (type$ | async) === AttributeType.Number
+    "
+  >
+    <app-attribute-number-form
+      formControlName="attributes"
+    ></app-attribute-number-form>
   </ng-container>
 </form>
 

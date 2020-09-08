@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CollectionsUtils } from '@app/dashboard/pages/collections/utils/collections-utils';
 import { BehaviorSubject } from 'rxjs';
@@ -9,6 +9,9 @@ import {
 } from '@app/dashboard/pages/collections/interfaces/collection.types';
 import { FormUtils } from '@core/utils/form-utils';
 import { NzModalRef } from 'ng-zorro-antd';
+import { ObjectUtils } from '@core/utils/object-utils';
+import { untilDestroyed } from '@core/until-destroyed';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-attribute-create-modal',
@@ -16,13 +19,14 @@ import { NzModalRef } from 'ng-zorro-antd';
   styleUrls: ['./attribute-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeCreateModalComponent {
+export class AttributeCreateModalComponent implements OnDestroy {
   TextUtils = TextUtils;
   AttributeType = AttributeType;
   AttributeTypes = CollectionsUtils.getAttributeTypes();
   attributeForm!: FormGroup;
 
   isLoading$ = new BehaviorSubject(false);
+  type$ = new BehaviorSubject<AttributeType | null>(null);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,11 +40,27 @@ export class AttributeCreateModalComponent {
 
   createForm() {
     this.attributeForm = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      required: [false],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(TextUtils.getAttributeRegex()),
+        ],
+      ],
+      isRequired: [false],
       type: ['', [Validators.required]],
-      attribute: [],
+      attributes: [],
     });
+
+    this.c('type')
+      .valueChanges.pipe(
+        tap((type) => {
+          this.type$.next(type);
+          this.c('attributes').reset(null);
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   c(controlName: string) {
@@ -54,8 +74,16 @@ export class AttributeCreateModalComponent {
       FormUtils.markFormGroupTouched(this.attributeForm);
       return;
     }
+    const { attributes, ...rest } = this.attributeForm.value;
+    if (attributes) {
+      ObjectUtils.removeEmpty(attributes);
+    }
+
     this.nzModalRef.destroy({
-      ...this.attributeForm.value,
+      ...rest,
+      attributes,
     });
   }
+
+  ngOnDestroy(): void {}
 }

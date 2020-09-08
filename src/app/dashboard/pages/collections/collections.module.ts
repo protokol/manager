@@ -26,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { AttributeCreateModalComponent } from './components/attribute-create-modal/attribute-create-modal.component';
 import { AttributeStringFormComponent } from '@app/dashboard/pages/collections/components/attribute-string-form/attribute-string-form.component';
+import { AttributeNumberFormComponent } from '@app/dashboard/pages/collections/components/attribute-number-form/attribute-number-form.component';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { AttributeStringFormComponent } from '@app/dashboard/pages/collections/c
     CollectionCreateModalComponent,
     AttributeCreateModalComponent,
     AttributeStringFormComponent,
+    AttributeNumberFormComponent,
   ],
   exports: [],
 })

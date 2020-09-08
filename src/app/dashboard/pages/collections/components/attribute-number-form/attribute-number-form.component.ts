@@ -17,24 +17,24 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { AttributesString } from '@app/dashboard/pages/collections/interfaces/collection.types';
 
 @Component({
-  selector: 'app-attribute-string-form',
-  templateUrl: './attribute-string-form.component.html',
-  styleUrls: ['./attribute-string-form.component.scss'],
+  selector: 'app-attribute-number-form',
+  templateUrl: './attribute-number-form.component.html',
+  styleUrls: ['./attribute-number-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AttributeStringFormComponent),
+      useExisting: forwardRef(() => AttributeNumberFormComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => AttributeStringFormComponent),
+      useExisting: forwardRef(() => AttributeNumberFormComponent),
       multi: true,
     },
   ],
 })
-export class AttributeStringFormComponent
+export class AttributeNumberFormComponent
   implements ControlValueAccessor, OnDestroy {
   form!: FormGroup;
 
@@ -42,25 +42,18 @@ export class AttributeStringFormComponent
     this.createForm();
   }
 
-  get minLength() {
-    return 1;
+  get min() {
+    return Number.MIN_SAFE_INTEGER;
   }
 
-  get maxLength() {
+  get max() {
     return Number.MAX_SAFE_INTEGER;
   }
 
   createForm() {
     this.form = this.formBuilder.group({
-      minLength: [
-        '',
-        [Validators.min(this.minLength), Validators.max(this.maxLength)],
-      ],
-      maxLength: [
-        '',
-        [Validators.min(this.minLength), Validators.max(this.maxLength)],
-      ],
-      pattern: [''],
+      minimum: ['', [Validators.min(this.min), Validators.max(this.max)]],
+      maximum: ['', [Validators.min(this.min), Validators.max(this.max)]],
     });
 
     this.form.valueChanges
@@ -110,9 +103,7 @@ export class AttributeStringFormComponent
   writeValue(value): void {
     if (
       value &&
-      (value.hasOwnProperty('minLength') ||
-        value.hasOwnProperty('maxLength') ||
-        value.hasOwnProperty('pattern'))
+      (value.hasOwnProperty('minimum') || value.hasOwnProperty('maximum'))
     ) {
       this.value = value;
     }

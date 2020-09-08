@@ -10,6 +10,6 @@ export abstract class CollectionsUtils {
   }
 
   static getAttributeTypes(): AttributeType[] {
-    return [AttributeType.String, AttributeType.Number];
+    return [AttributeType.String, AttributeType.Number, AttributeType.Integer];
   }
 }
