@@ -15,7 +15,7 @@ import {
   ManagerLogsStopPooling,
 } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.actions';
 import { untilDestroyed } from '@core/until-destroyed';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, tap } from 'rxjs/operators';
 import {
   LogListItem,
   ManagerLogsState,
@@ -31,14 +31,13 @@ import { SearchAddon } from 'xterm-addon-search';
 })
 export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
   private termSearch = new SearchAddon();
+  managerUrl$ = new BehaviorSubject('');
   logs$ = new BehaviorSubject('');
   searchTerm$ = new BehaviorSubject('');
   isSearching$ = new BehaviorSubject(false);
   linesFrom = -1;
   linesTo = -1;
   subscribedLogName: string;
-
-  @Input() managerUrl;
 
   @Input('input')
   set input(input: string) {
@@ -69,7 +68,20 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe();
 
-    this.store.dispatch(new ManagerLogsStartPooling(logName, this.managerUrl));
+    this.managerUrl$
+      .pipe(
+        first((url) => !!url),
+        tap((url) =>
+          this.store.dispatch(new ManagerLogsStartPooling(logName, url))
+        ),
+        untilDestroyed(this)
+      )
+      .subscribe();
+  }
+
+  @Input('managerUrl')
+  set managerUrl(managerUrl: string) {
+    this.managerUrl$.next(managerUrl);
   }
 
   @ViewChild('ngTerminal', { static: true }) terminal: NgTerminal;
