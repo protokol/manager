@@ -1,0 +1,34 @@
+<nz-form-item>
+  <app-form-label>
+    <nz-form-label nzFor="asset">Choose asset</nz-form-label>
+  </app-form-label>
+  <nz-form-control
+    nzSpan="20"
+    id="asset"
+    nzErrorTip="Please select an asset!"
+    nzHasFeedback
+  >
+    <app-asset-select
+      [formControl]="assetDropdownFormControl"
+    ></app-asset-select>
+  </nz-form-control>
+</nz-form-item>
+
+<nz-form-item>
+  <nz-form-control>
+    <nz-list nzBordered nzSize="small">
+      <nz-list-header>Nft ids</nz-list-header>
+      <ng-container
+        *ngFor="let item of form.controls; let formGroupIndex = index"
+      >
+        <nz-list-item class="font-monospace">
+          <ng-container
+            *ngLet="form.controls[formGroupIndex].get('nftId').value as nftId"
+          >
+            {{ nftId }}
+          </ng-container>
+        </nz-list-item>
+      </ng-container>
+    </nz-list>
+  </nz-form-control>
+</nz-form-item>

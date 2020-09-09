@@ -1,5 +1,6 @@
 <ng-container *ngIf="shouldCopy$ | async; else shouldNotCopy">
   <a
+    class="font-monospace"
     (cbOnSuccess)="copiedSuccessful($event)"
     nz-tooltip
     ngxClipboard
@@ -9,7 +10,11 @@
   >
 </ng-container>
 <ng-template #shouldNotCopy>
-  <a (click)="onClick($event)" nz-tooltip [nzTooltipTitle]="text$ | async">{{
-    textClipped$ | async
-  }}</a>
+  <a
+    class="font-monospace"
+    (click)="onClick($event)"
+    nz-tooltip
+    [nzTooltipTitle]="text$ | async"
+    >{{ textClipped$ | async }}</a
+  >
 </ng-template>

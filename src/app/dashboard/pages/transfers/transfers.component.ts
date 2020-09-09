@@ -15,13 +15,14 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzTableQueryParams } from 'ng-zorro-antd';
+import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import { LoadTransfers } from '@app/dashboard/pages/transfers/state/transfers/transfers.actions';
 import { Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
+import { TransferModalComponent } from '@app/dashboard/pages/transfers/components/transfer-modal/transfer-modal.component';
 
 @Component({
   selector: 'app-transfers',
@@ -60,7 +61,8 @@ export class TransfersComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private router: Router,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private nzModalService: NzModalService
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -127,6 +129,15 @@ export class TransfersComponent implements OnInit, OnDestroy {
       queryParams: {
         assetId,
       },
+    });
+  }
+
+  showTransferModal(event: MouseEvent) {
+    event.preventDefault();
+
+    this.nzModalService.create({
+      nzContent: TransferModalComponent,
+      nzWidth: '50vw',
     });
   }
 }
