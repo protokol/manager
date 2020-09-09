@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  forwardRef,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { CollectionsService } from '@core/services/collections.service';
@@ -22,26 +23,55 @@ import {
 import { Store } from '@ngxs/store';
 import { SetCollectionsByIds } from '@core/store/collections/collections.actions';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+import { untilDestroyed } from '@core/until-destroyed';
 
 @Component({
   selector: 'app-collection-select',
   templateUrl: './collection-select.component.html',
   styleUrls: ['./collection-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CollectionSelectComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => CollectionSelectComponent),
+      multi: true,
+    },
+  ],
 })
-export class CollectionSelectComponent implements OnInit {
+export class CollectionSelectComponent
+  implements ControlValueAccessor, OnInit, OnDestroy {
+  formControl!: FormControl;
   collections$ = new BehaviorSubject<BaseResourcesTypes.Collections[]>([]);
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
 
-  @Input() formGroupInput;
-  @Input() formControlNameInput;
-
   constructor(
     private collectionsService: CollectionsService,
     private store: Store
   ) {
+    this.formControl = new FormControl([]);
+    this.formControl.valueChanges
+      .pipe(
+        tap((formControlValue) => {
+          this.onChange(formControlValue);
+          this.onTouched();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
+
     this.queryParams$
       .asObservable()
       .pipe(
@@ -119,4 +149,49 @@ export class CollectionSelectComponent implements OnInit {
       filter: [{ key: 'name', value: event }],
     });
   }
+
+  get value(): BaseResourcesTypes.Collections {
+    return this.formControl.value;
+  }
+
+  set value(value) {
+    this.formControl.setValue(value);
+    this.onChange(value);
+    this.onTouched();
+  }
+
+  onChange: any = () => {};
+  onTouched: any = () => {};
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.formControl.disable();
+    } else {
+      this.formControl.enable();
+    }
+  }
+
+  writeValue(value): void {
+    if (value) {
+      this.value = value;
+    }
+
+    if (value === null) {
+      this.formControl.reset();
+    }
+  }
+
+  validate() {
+    return this.formControl.valid;
+  }
+
+  ngOnDestroy(): void {}
 }

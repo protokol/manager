@@ -6,20 +6,18 @@
       >
     </app-form-label>
     <nz-form-control
+      class="collection-form-control"
       nzSpan="12"
       id="collection"
       nzErrorTip="Please select a collection!"
       nzHasFeedback
     >
-      <app-collection-select
-        [formGroupInput]="collectionForm"
-        [formControlNameInput]="'collection'"
-      >
+      <app-collection-select formControlName="collection">
       </app-collection-select>
     </nz-form-control>
   </nz-form-item>
 
-  <ng-container *ngIf="collection as selectedCollection">
+  <ng-container *ngIf="collection$ | async as selectedCollection">
     <nz-divider></nz-divider>
 
     <app-schema-container>
