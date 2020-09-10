@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   forwardRef,
-  OnDestroy,
+  OnDestroy
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -17,6 +16,7 @@ import {
 import { tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { NftIdsFormItem } from '@app/dashboard/pages/transfers/interfaces/transfers.types';
+import { BaseResourcesTypes } from '@protokol/nft-client';
 
 @Component({
   selector: 'app-nft-ids-form',
@@ -40,7 +40,7 @@ export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
   form!: FormArray;
   assetDropdownFormControl = new FormControl();
 
-  constructor(private formBuilder: FormBuilder, private cd: ChangeDetectorRef) {
+  constructor(private formBuilder: FormBuilder) {
     this.createForm();
   }
 
@@ -56,15 +56,6 @@ export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
         untilDestroyed(this)
       )
       .subscribe();
-
-    setTimeout(() => {
-      this.form.push(
-        this.formBuilder.group({
-          nftId: ['123456789456456456456456456564', Validators.required],
-        })
-      );
-      this.cd.markForCheck();
-    }, 3000);
   }
 
   c(controlName: string) {
@@ -115,4 +106,20 @@ export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  onAddNft(event: MouseEvent, value: BaseResourcesTypes.Assets) {
+    event.preventDefault();
+
+    this.form.push(
+      this.formBuilder.group({
+        nftId: [value.id, Validators.required],
+      })
+    );
+  }
+
+  onRemoveNft(event: MouseEvent, index: number) {
+    event.preventDefault();
+
+    this.form.removeAt(index);
+  }
 }

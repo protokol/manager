@@ -1,13 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef,
+  forwardRef, Input,
   OnDestroy,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -31,6 +31,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { Wallet } from '@arkecosystem/client';
 import { WalletsService } from '@core/services/wallets.service';
 import { SetWalletsByIds } from '@core/store/wallets/wallets.actions';
+import { Pagination } from '@shared/interfaces/table.types';
 
 @Component({
   selector: 'app-wallet-select',
@@ -57,6 +58,17 @@ export class WalletSelectComponent
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
+  ownerPublicKey$ = new BehaviorSubject('');
+
+  @Input('ownerPublicKey')
+  set ownerPublicKey(ownerPublicKey: string) {
+    console.log('ownerPublicKey', ownerPublicKey);
+    this.ownerPublicKey$.next(ownerPublicKey);
+  }
+
+  @Input() filter = (): OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
+    return (tap());
+  }
 
   constructor(private walletsService: WalletsService, private store: Store) {
     this.formControl = new FormControl([]);
@@ -99,6 +111,7 @@ export class WalletSelectComponent
               );
 
           return loadWallets.pipe(
+            this.filter(),
             tap(({ data, meta }) => {
               this.store.dispatch(new SetWalletsByIds(data));
               this.wallets$.next([...this.wallets$.getValue(), ...data]);
@@ -117,9 +130,30 @@ export class WalletSelectComponent
   }
 
   ngOnInit() {
-    this.queryParams$.next({
-      ...TableUtils.getDefaultNzTableQueryParams(),
-    });
+    this.ownerPublicKey$.asObservable()
+      .pipe(
+        distinctUntilChanged(),
+        tap((ownerPublicKey) => {
+          const queryParams = this.queryParams$.getValue() || { filter: [] };
+          const { filter: queryFilter } = queryParams;
+          if (ownerPublicKey) {
+            this.queryParams$.next({
+              ...TableUtils.getDefaultNzTableQueryParams(),
+              filter: queryFilter ? [
+                ...queryFilter.filter(({ key }) => key !== 'ownerPublicKey'),
+                { key: 'ownerPublicKey', value: ownerPublicKey }
+              ] : []
+            });
+          } else {
+            this.queryParams$.next({
+              ...TableUtils.getDefaultNzTableQueryParams(),
+              filter: queryFilter ? [
+                ...queryFilter.filter(({ key }) => key !== 'ownerPublicKey')
+              ] : []
+            });
+          }
+        })
+      ).subscribe();
   }
 
   next() {
@@ -138,10 +172,15 @@ export class WalletSelectComponent
   onSearchChanged(event: string) {
     this.wallets$.next([]);
     this.isLastPage$.next(false);
+    const queryParams = this.queryParams$.getValue();
+    const { filter: queryFilter } = queryParams;
 
     this.queryParams$.next({
       ...TableUtils.getDefaultNzTableQueryParams(),
-      filter: [{ key: 'address', value: event }],
+      filter: queryFilter ? [
+        ...queryFilter.filter(({ key }) => key !== 'address'),
+        { key: 'address', value: event }
+      ] : []
     });
   }
 

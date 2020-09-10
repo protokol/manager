@@ -23,6 +23,7 @@ import { LoadTransfers } from '@app/dashboard/pages/transfers/state/transfers/tr
 import { Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { TransferModalComponent } from '@app/dashboard/pages/transfers/components/transfer-modal/transfer-modal.component';
+import { ModalUtils } from '@core/utils/modal-utils';
 
 @Component({
   selector: 'app-transfers',
@@ -137,7 +138,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
 
     this.nzModalService.create({
       nzContent: TransferModalComponent,
-      nzWidth: '50vw',
+      ...ModalUtils.getCreateModalDefaultConfig()
     });
   }
 }

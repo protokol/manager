@@ -11,7 +11,11 @@
       nzErrorTip="Please select a wallet address!"
       nzHasFeedback
     >
-      <app-wallet-select formControlName="wallet"> </app-wallet-select>
+      <app-wallet-select
+        [filter]="filterWallets"
+        [ownerPublicKey]="selectedProfilePubKey | async"
+        formControlName="wallet">
+      </app-wallet-select>
     </nz-form-control>
   </nz-form-item>
 

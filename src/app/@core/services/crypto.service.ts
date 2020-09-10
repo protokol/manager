@@ -107,7 +107,7 @@ export class CryptoService {
                 )
                   .plus(1)
                   .toFixed()
-              : '0';
+              : '1';
 
             const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTCreateBuilder()
               .NFTCreateToken({
@@ -140,7 +140,7 @@ export class CryptoService {
                 )
                   .plus(1)
                   .toFixed()
-              : '0';
+              : '1';
 
             const transfer = new this.nftBaseCrypto.Builders.NFTTransferBuilder()
               .NFTTransferAsset({

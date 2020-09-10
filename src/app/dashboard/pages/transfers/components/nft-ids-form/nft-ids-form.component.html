@@ -1,18 +1,35 @@
-<nz-form-item>
-  <app-form-label>
-    <nz-form-label nzFor="asset">Choose asset</nz-form-label>
-  </app-form-label>
-  <nz-form-control
-    nzSpan="20"
-    id="asset"
-    nzErrorTip="Please select an asset!"
-    nzHasFeedback
-  >
-    <app-asset-select
-      [formControl]="assetDropdownFormControl"
-    ></app-asset-select>
-  </nz-form-control>
-</nz-form-item>
+<div nz-row [nzGutter]="[24, 12]">
+  <div nz-col [nzSpan]="20" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="asset">Choose asset</nz-form-label>
+      </app-form-label>
+      <nz-form-control
+        id="asset"
+        nzErrorTip="Please select an asset!"
+        nzHasFeedback
+      >
+        <app-asset-select
+          [formControl]="assetDropdownFormControl"
+        ></app-asset-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-col [nzSpan]="4" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label>&nbsp;</nz-form-label>
+      </app-form-label>
+      <nz-form-control>
+        <ng-container *ngLet="assetDropdownFormControl.value as assetValue">
+          <button nz-button nzType="default" class="w-100" (click)="onAddNft($event, assetDropdownFormControl.value)">
+            Add asset
+          </button>
+        </ng-container>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</div>
 
 <nz-form-item>
   <nz-form-control>
@@ -27,6 +44,11 @@
           >
             {{ nftId }}
           </ng-container>
+          <ul nz-list-item-actions>
+            <nz-list-item-action>
+              <a (click)="onRemoveNft($event, formGroupIndex)">remove</a>
+            </nz-list-item-action>
+          </ul>
         </nz-list-item>
       </ng-container>
     </nz-list>

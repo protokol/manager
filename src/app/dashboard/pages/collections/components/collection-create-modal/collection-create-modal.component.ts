@@ -168,7 +168,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
     return this.collectionForm.controls[controlName];
   }
 
-  async createCollection(event: any) {
+  createCollection(event: any) {
     event.preventDefault();
     if (this.isLoading$.getValue()) {
       return;
