@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef,
+  forwardRef, Input,
   OnDestroy
 } from '@angular/core';
 import {
@@ -17,6 +17,7 @@ import { tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { NftIdsFormItem } from '@app/dashboard/pages/transfers/interfaces/transfers.types';
 import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-nft-ids-form',
@@ -39,9 +40,16 @@ import { BaseResourcesTypes } from '@protokol/nft-client';
 export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
   form!: FormArray;
   assetDropdownFormControl = new FormControl();
+  ownerAddress$ = new BehaviorSubject<string | null>(null);
+  filterOutAssets$ = new BehaviorSubject<string[]>([]);
 
   constructor(private formBuilder: FormBuilder) {
     this.createForm();
+  }
+
+  @Input()
+  set ownerAddress(ownerAddress: string) {
+    this.ownerAddress$.next(ownerAddress);
   }
 
   createForm() {
@@ -110,6 +118,12 @@ export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
   onAddNft(event: MouseEvent, value: BaseResourcesTypes.Assets) {
     event.preventDefault();
 
+    this.filterOutAssets$.next([
+      ...this.filterOutAssets$.getValue(),
+      value.id
+    ]);
+    this.assetDropdownFormControl.reset();
+
     this.form.push(
       this.formBuilder.group({
         nftId: [value.id, Validators.required],
@@ -117,8 +131,12 @@ export class NftIdsFormComponent implements ControlValueAccessor, OnDestroy {
     );
   }
 
-  onRemoveNft(event: MouseEvent, index: number) {
+  onRemoveNft(event: MouseEvent, index: number, nftId: string) {
     event.preventDefault();
+
+    this.filterOutAssets$.next([
+      ...this.filterOutAssets$.getValue().filter((assetId) => assetId !== nftId),
+    ]);
 
     this.form.removeAt(index);
   }

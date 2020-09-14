@@ -11,6 +11,8 @@
       >
         <app-asset-select
           [formControl]="assetDropdownFormControl"
+          [ownerAddress]="ownerAddress$ | async"
+          [filterOutIds]="filterOutAssets$ | async"
         ></app-asset-select>
       </nz-form-control>
     </nz-form-item>
@@ -38,18 +40,18 @@
       <ng-container
         *ngFor="let item of form.controls; let formGroupIndex = index"
       >
-        <nz-list-item class="font-monospace">
-          <ng-container
-            *ngLet="form.controls[formGroupIndex].get('nftId').value as nftId"
-          >
+        <ng-container
+          *ngLet="form.controls[formGroupIndex].get('nftId').value as nftId"
+        >
+          <nz-list-item class="font-monospace">
             {{ nftId }}
-          </ng-container>
-          <ul nz-list-item-actions>
-            <nz-list-item-action>
-              <a (click)="onRemoveNft($event, formGroupIndex)">remove</a>
-            </nz-list-item-action>
-          </ul>
-        </nz-list-item>
+            <ul nz-list-item-actions>
+              <nz-list-item-action>
+                <a (click)="onRemoveNft($event, formGroupIndex, nftId)">remove</a>
+              </nz-list-item-action>
+            </ul>
+          </nz-list-item>
+        </ng-container>
       </ng-container>
     </nz-list>
   </nz-form-control>

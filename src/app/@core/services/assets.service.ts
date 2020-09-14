@@ -9,12 +9,13 @@ import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { AssetsServiceInterface } from '@core/interfaces/assets-service.interface';
+import { WalletsService } from '@core/services/wallets.service';
 
 @Injectable()
 export class AssetsService implements AssetsServiceInterface {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private walletsService: WalletsService) {}
 
   getAsset(
     assetId: string,
@@ -85,5 +86,34 @@ export class AssetsService implements AssetsServiceInterface {
       map((response) => response.body.data),
       NodeClientService.genericListErrorHandler(this.log)
     );
+  }
+
+  getAssetsByWalletId(
+    addressOrPublicKey: string,
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<Pagination<Partial<BaseResourcesTypes.Assets>>> {
+    return this.walletsService.getWallet(addressOrPublicKey, baseUrl, connectionOptions)
+      .pipe(
+        map((wallet) => {
+          const { attributes: { nft: { base: { tokenIds } } } } = wallet;
+          const data = Object.keys(tokenIds || {}).map((id) => ({ id })) as Partial<BaseResourcesTypes.Assets>[];
+
+          return {
+            data,
+            meta: {
+              pageCount: data.length,
+              totalCount: data.length,
+              count: data.length,
+              first: '',
+              last: '',
+              next: undefined,
+              previous: undefined,
+              self: '',
+              totalCountIsEstimate: false,
+            }
+          };
+        })
+      );
   }
 }
