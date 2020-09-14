@@ -7,7 +7,7 @@ import { TransactionsService } from '@core/services/transactions.service';
 import { Observable } from 'rxjs';
 import * as nftBaseCryptoType from '@protokol/nft-base-crypto';
 import { WalletsService } from '@core/services/wallets.service';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
 import { Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
@@ -32,6 +32,7 @@ export class CryptoService {
         .select(NetworksState.getNodeCryptoConfig)
         .pipe(
           filter((config) => !!config),
+          distinctUntilChanged(),
           tap(({ exceptions, genesisBlock, network, milestones }) => {
             this.nftBaseCrypto.ARKCrypto.Managers.configManager.setConfig({
               exceptions: { ...exceptions },
@@ -46,6 +47,9 @@ export class CryptoService {
             );
             this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
               this.nftBaseCrypto.Transactions.NFTCreateTransaction
+            );
+            this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+              this.nftBaseCrypto.Transactions.NFTTransferTransaction
             );
           })
         )
@@ -103,7 +107,7 @@ export class CryptoService {
                 )
                   .plus(1)
                   .toFixed()
-              : '0';
+              : '1';
 
             const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTCreateBuilder()
               .NFTCreateToken({
@@ -114,6 +118,39 @@ export class CryptoService {
 
             return this.transactionsService.createTransactions({
               transactions: [createCollectionTrans.build().toJson()],
+            });
+          })
+        );
+      })
+    );
+  }
+
+  transfer(nftTransferAsset: Interfaces.NFTTransferAsset): Observable<any> {
+    return this.storeUtilsService.getSelectedProfileWif().pipe(
+      switchMap(({ wif }) => {
+        const address = this.nftBaseCrypto.ARKCrypto.Identities.Address.fromWIF(
+          wif
+        );
+
+        return this.walletsService.getWallet(address).pipe(
+          switchMap((senderWallet) => {
+            const senderNonce = senderWallet
+              ? this.nftBaseCrypto.ARKCrypto.Utils.BigNumber.make(
+                  senderWallet.nonce
+                )
+                  .plus(1)
+                  .toFixed()
+              : '1';
+
+            const transfer = new this.nftBaseCrypto.Builders.NFTTransferBuilder()
+              .NFTTransferAsset({
+                ...nftTransferAsset,
+              })
+              .nonce(senderNonce)
+              .signWithWif(wif);
+
+            return this.transactionsService.createTransactions({
+              transactions: [transfer.build().toJson()],
             });
           })
         );

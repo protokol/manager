@@ -7,6 +7,9 @@ import { ElectronUtils } from '@core/utils/electron-utils';
 import * as bip39Type from 'bip39';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
 import { Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
+import { StoreUtilsService } from '@core/store/store-utils.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export enum MnemonicGenerateLanguage {
   ENGLISH = 'english',
@@ -18,7 +21,7 @@ export class WalletService {
 
   private readonly bip39: typeof bip39Type;
 
-  constructor(private arkCryptoService: ArkCryptoService) {
+  constructor(private arkCryptoService: ArkCryptoService, private storeUtilsService: StoreUtilsService) {
     if (ElectronUtils.isElectron()) {
       this.bip39 = window.require('bip39');
     }
@@ -47,5 +50,23 @@ export class WalletService {
       ),
       passphrase,
     };
+  }
+
+  getSelectedProfileAddress(): Observable<string> {
+    return this.storeUtilsService.getSelectedProfileWif()
+      .pipe(
+        map(({wif}) => this.arkCryptoService.arkCrypto.Identities.Address.fromWIF(
+          wif
+        ))
+      );
+  }
+
+  getSelectedProfilePublicKey(): Observable<string> {
+    return this.storeUtilsService.getSelectedProfileWif()
+      .pipe(
+        map(({wif}) => this.arkCryptoService.arkCrypto.Identities.PublicKey.fromWIF(
+          wif
+        ))
+      );
   }
 }

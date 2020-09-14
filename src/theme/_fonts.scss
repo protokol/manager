@@ -19,3 +19,8 @@ $open-sans-italic: "assets/fonts/OpenSans-Italic.ttf";
   src: url($open-sans-italic) format("truetype");
   font-style: italic;
 }
+
+.font-monospace {
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
+}

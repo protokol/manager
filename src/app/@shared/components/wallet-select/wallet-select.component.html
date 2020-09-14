@@ -1,6 +1,6 @@
 <nz-select
   (nzScrollToBottom)="next()"
-  nzPlaceHolder="Select collection"
+  nzPlaceHolder="Select wallet address"
   [nzDropdownRender]="renderTemplate"
   [formControl]="formControl"
   ngDefaultControl
@@ -8,8 +8,10 @@
   nzServerSearch
   (nzOnSearch)="onSearchChanged($event)"
 >
-  <ng-container *ngFor="let collection of collections$ | async">
-    <nz-option [nzValue]="collection" [nzLabel]="collection.name"></nz-option>
+  <ng-container *ngFor="let wallet of wallets$ | async">
+    <nz-option [nzValue]="wallet" [nzLabel]="wallet.address" nzCustomContent>
+      <span class="font-monospace">{{ wallet.address }}</span>
+    </nz-option>
   </ng-container>
 </nz-select>
 <ng-template #renderTemplate>

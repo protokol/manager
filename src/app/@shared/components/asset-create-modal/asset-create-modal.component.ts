@@ -74,8 +74,8 @@ export class AssetCreateModalComponent implements OnDestroy {
     return this.collectionForm.controls[controlName];
   }
 
-  get collection() {
-    return this.c('collection').value;
+  get collection$() {
+    return this.c('collection').valueChanges;
   }
 
   onCancel() {

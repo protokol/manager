@@ -1,14 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef,
+  forwardRef, Input,
   OnDestroy,
-  OnInit,
+  OnInit
 } from '@angular/core';
-import { CollectionsService } from '@core/services/collections.service';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -21,7 +20,6 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { SetCollectionsByIds } from '@core/store/collections/collections.actions';
 import { BaseResourcesTypes } from '@protokol/nft-client';
 import {
   ControlValueAccessor,
@@ -30,37 +28,58 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { untilDestroyed } from '@core/until-destroyed';
+import { Wallet } from '@arkecosystem/client';
+import { WalletsService } from '@core/services/wallets.service';
+import { SetWalletsByIds } from '@core/store/wallets/wallets.actions';
+import { Pagination } from '@shared/interfaces/table.types';
 
 @Component({
-  selector: 'app-collection-select',
-  templateUrl: './collection-select.component.html',
-  styleUrls: ['./collection-select.component.scss'],
+  selector: 'app-wallet-select',
+  templateUrl: './wallet-select.component.html',
+  styleUrls: ['./wallet-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CollectionSelectComponent),
+      useExisting: forwardRef(() => WalletSelectComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => CollectionSelectComponent),
+      useExisting: forwardRef(() => WalletSelectComponent),
       multi: true,
     },
   ],
 })
-export class CollectionSelectComponent
+export class WalletSelectComponent
   implements ControlValueAccessor, OnInit, OnDestroy {
   formControl!: FormControl;
-  collections$ = new BehaviorSubject<BaseResourcesTypes.Collections[]>([]);
+  wallets$ = new BehaviorSubject<Wallet[]>([]);
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
 
-  constructor(
-    private collectionsService: CollectionsService,
-    private store: Store
-  ) {
+  @Input() filter = (): OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
+    return (tap());
+  }
+
+  @Input()
+  set ownerAddress(ownerAddress: string) {
+    this.filter = this.filterOutWallet(ownerAddress);
+  }
+
+  filterOutWallet = (ownerAddress: string): () => OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
+    return () => (map(({ data: originData, meta }) => {
+      const data = originData.filter(({ address }) => address !== ownerAddress);
+      return {
+        data,
+        meta
+      };
+    }));
+    // tslint:disable-next-line:semicolon
+  };
+
+  constructor(private walletsService: WalletsService, private store: Store) {
     this.formControl = new FormControl([]);
     this.formControl.valueChanges
       .pipe(
@@ -92,21 +111,19 @@ export class CollectionSelectComponent
           const hasFilters =
             queryParams && queryParams.filter && queryParams.filter.length;
 
-          const loadCollections = hasFilters
-            ? this.collectionsService.searchCollections(
+          const loadWallets = hasFilters
+            ? this.walletsService.searchWallets(
                 TableUtils.toTableApiQuery(queryParams)
               )
-            : this.collectionsService.getCollections(
+            : this.walletsService.getWallets(
                 TableUtils.toTableApiQuery(queryParams)
               );
 
-          return loadCollections.pipe(
+          return loadWallets.pipe(
+            this.filter(),
             tap(({ data, meta }) => {
-              this.store.dispatch(new SetCollectionsByIds(data));
-              this.collections$.next([
-                ...this.collections$.getValue(),
-                ...data,
-              ]);
+              this.store.dispatch(new SetWalletsByIds(data));
+              this.wallets$.next([...this.wallets$.getValue(), ...data]);
 
               if (!meta.next) {
                 this.isLastPage$.next(true);
@@ -141,12 +158,12 @@ export class CollectionSelectComponent
   }
 
   onSearchChanged(event: string) {
-    this.collections$.next([]);
+    this.wallets$.next([]);
     this.isLastPage$.next(false);
 
     this.queryParams$.next({
       ...TableUtils.getDefaultNzTableQueryParams(),
-      filter: [{ key: 'name', value: event }],
+      filter: [{ key: 'address', value: event }],
     });
   }
 

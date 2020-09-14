@@ -44,6 +44,8 @@ import { PopoverHelperComponent } from './components/popover-helper/popover-help
 import { FormLabelComponent } from './components/form-label/form-label.component';
 import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
 import { NodeManagerFormComponent } from './components/node-manager-form/node-manager-form.component';
+import { WalletSelectComponent } from '@shared/components/wallet-select/wallet-select.component';
+import { AssetSelectComponent } from '@shared/components/asset-select/asset-select.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -60,6 +62,8 @@ const declareAndExportComponents = [
   PopoverHelperComponent,
   FormLabelComponent,
   ProfileSelectModalComponent,
+  WalletSelectComponent,
+  AssetSelectComponent,
 ];
 
 @NgModule({
