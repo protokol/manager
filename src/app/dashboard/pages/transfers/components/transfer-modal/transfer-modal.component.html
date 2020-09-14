@@ -1,26 +1,28 @@
-<form nz-form [formGroup]="transferForm" nzLayout="vertical" novalidate>
-  <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="wallet" nzRequired
-        >Choose recipient wallet address</nz-form-label
+<ng-container *ngIf="getSelectedProfileAddress() | async as profileAddress; else loading">
+  <form nz-form [formGroup]="transferForm" nzLayout="vertical" novalidate>
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="wallet" nzRequired
+        >Choose recipient wallet address
+        </nz-form-label
+        >
+      </app-form-label>
+      <nz-form-control
+        nzSpan="12"
+        id="wallet"
+        nzErrorTip="Please select a wallet address!"
+        nzHasFeedback
       >
-    </app-form-label>
-    <nz-form-control
-      nzSpan="12"
-      id="wallet"
-      nzErrorTip="Please select a wallet address!"
-      nzHasFeedback
-    >
-      <app-wallet-select
-        [filter]="filterWallets"
-        [ownerPublicKey]="selectedProfilePubKey | async"
-        formControlName="wallet">
-      </app-wallet-select>
-    </nz-form-control>
-  </nz-form-item>
+        <app-wallet-select
+          [ownerAddress]="profileAddress"
+          formControlName="wallet">
+        </app-wallet-select>
+      </nz-form-control>
+    </nz-form-item>
 
-  <app-nft-ids-form formControlName="nftIds"></app-nft-ids-form>
-</form>
+    <app-nft-ids-form formControlName="nftIds"></app-nft-ids-form>
+  </form>
+</ng-container>
 
 <ng-template #modalTitleTpl>
   <app-modal-header>
@@ -54,3 +56,7 @@
     Transfer
   </button>
 </div>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

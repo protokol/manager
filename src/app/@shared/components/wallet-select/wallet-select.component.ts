@@ -58,17 +58,26 @@ export class WalletSelectComponent
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
-  ownerPublicKey$ = new BehaviorSubject('');
-
-  @Input('ownerPublicKey')
-  set ownerPublicKey(ownerPublicKey: string) {
-    console.log('ownerPublicKey', ownerPublicKey);
-    this.ownerPublicKey$.next(ownerPublicKey);
-  }
 
   @Input() filter = (): OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
     return (tap());
   }
+
+  @Input()
+  set ownerAddress(ownerAddress: string) {
+    this.filter = this.filterOutWallet(ownerAddress);
+  }
+
+  filterOutWallet = (ownerAddress: string): () => OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
+    return () => (map(({ data: originData, meta }) => {
+      const data = originData.filter(({ address }) => address !== ownerAddress);
+      return {
+        data,
+        meta
+      };
+    }));
+    // tslint:disable-next-line:semicolon
+  };
 
   constructor(private walletsService: WalletsService, private store: Store) {
     this.formControl = new FormControl([]);
@@ -130,30 +139,9 @@ export class WalletSelectComponent
   }
 
   ngOnInit() {
-    this.ownerPublicKey$.asObservable()
-      .pipe(
-        distinctUntilChanged(),
-        tap((ownerPublicKey) => {
-          const queryParams = this.queryParams$.getValue() || { filter: [] };
-          const { filter: queryFilter } = queryParams;
-          if (ownerPublicKey) {
-            this.queryParams$.next({
-              ...TableUtils.getDefaultNzTableQueryParams(),
-              filter: queryFilter ? [
-                ...queryFilter.filter(({ key }) => key !== 'ownerPublicKey'),
-                { key: 'ownerPublicKey', value: ownerPublicKey }
-              ] : []
-            });
-          } else {
-            this.queryParams$.next({
-              ...TableUtils.getDefaultNzTableQueryParams(),
-              filter: queryFilter ? [
-                ...queryFilter.filter(({ key }) => key !== 'ownerPublicKey')
-              ] : []
-            });
-          }
-        })
-      ).subscribe();
+    this.queryParams$.next({
+      ...TableUtils.getDefaultNzTableQueryParams(),
+    });
   }
 
   next() {
@@ -172,15 +160,10 @@ export class WalletSelectComponent
   onSearchChanged(event: string) {
     this.wallets$.next([]);
     this.isLastPage$.next(false);
-    const queryParams = this.queryParams$.getValue();
-    const { filter: queryFilter } = queryParams;
 
     this.queryParams$.next({
       ...TableUtils.getDefaultNzTableQueryParams(),
-      filter: queryFilter ? [
-        ...queryFilter.filter(({ key }) => key !== 'address'),
-        { key: 'address', value: event }
-      ] : []
+      filter: [{ key: 'address', value: event }],
     });
   }
 

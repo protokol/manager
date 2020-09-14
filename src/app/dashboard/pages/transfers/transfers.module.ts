@@ -7,8 +7,8 @@ import {
   NzFormModule,
   NzGridModule,
   NzListModule,
-  NzModalModule,
-  NzTypographyModule,
+  NzModalModule, NzSpinModule,
+  NzTypographyModule
 } from 'ng-zorro-antd';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
@@ -36,6 +36,7 @@ import { NftIdsFormComponent } from '@app/dashboard/pages/transfers/components/n
     NzSpaceModule,
     NzTypographyModule,
     NzListModule,
+    NzSpinModule
   ],
   providers: [],
   declarations: [
