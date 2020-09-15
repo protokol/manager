@@ -71,7 +71,7 @@ export class AttributeCreateModalComponent implements OnDestroy {
     event.preventDefault();
 
     if (!this.attributeForm.valid) {
-      FormUtils.markFormGroupTouched(this.attributeForm);
+      FormUtils.markFormGroupDirty(this.attributeForm);
       return;
     }
     const { attributes, ...rest } = this.attributeForm.value;

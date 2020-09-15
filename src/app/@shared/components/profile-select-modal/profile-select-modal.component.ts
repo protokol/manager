@@ -87,7 +87,7 @@ export class ProfileSelectModalComponent implements OnInit, OnDestroy {
     }
 
     if (!this.profileForm.valid) {
-      FormUtils.markFormGroupTouched(this.profileForm);
+      FormUtils.markFormGroupDirty(this.profileForm);
       return;
     }
 

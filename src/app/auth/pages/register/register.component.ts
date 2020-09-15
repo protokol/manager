@@ -10,7 +10,14 @@ import {
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { finalize, first, map, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  filter,
+  finalize,
+  first,
+  map,
+  tap,
+} from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { AddProfileAction } from '@core/store/profiles/profiles.actions';
 import { v4 as uuid } from 'uuid';
@@ -27,6 +34,7 @@ import { environment } from '@env/environment';
 import { ClearNetwork, SetNetwork } from '@core/store/network/networks.actions';
 import { FormUtils } from '@core/utils/form-utils';
 import { ProfileWithId } from '@app/@core/interfaces/profiles.types';
+import { TextUtils } from '@core/utils/text-utils';
 
 @Component({
   selector: 'app-register',
@@ -69,7 +77,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.isProfileFormDirty = false;
 
     if (!this.profileForm.valid) {
-      FormUtils.markFormGroupTouched(this.profileForm);
+      FormUtils.markFormGroupDirty(this.profileForm);
       this.isProfileFormDirty = true;
       return;
     }
@@ -146,8 +154,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
         [Validators.required],
         [this.profileNameAsyncValidator],
       ],
-      passphrase: ['', Validators.required],
-      address: [''],
+      passphrase: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(TextUtils.getPassphraseRegex()),
+        ],
+      ],
+      address: ['', Validators.required],
       pin: ['', Validators.required],
       pinConfirm: ['', [Validators.required, this.pinValidator]],
       agree: [false, Validators.required],
@@ -171,6 +185,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.pf('passphrase')
+      .valueChanges.pipe(
+        tap(() => this.pf('address').setValue('')),
+        filter((passphrase) => TextUtils.getPassphraseRegex().test(passphrase)),
+        debounceTime(500),
+        tap((passphrase) => {
+          const address = this.walletService.addressFromPassphrase(passphrase);
+          this.pf('address').setValue(address);
+        })
+      )
+      .subscribe();
   }
 
   nf(controlName: string): AbstractControl {
@@ -185,12 +211,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onGenerateClick(event: MouseEvent) {
     event.preventDefault();
-    const { passphrase, address } = this.walletService.generate(
+    const passphrase = this.walletService.generate(
       MnemonicGenerateLanguage.ENGLISH
     );
 
     this.pf('passphrase').setValue(passphrase);
-    this.pf('address').setValue(address);
   }
 
   selectNetwork() {
@@ -201,7 +226,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.isNetworkFormDirty = false;
 
     if (!this.networkForm.valid) {
-      FormUtils.markFormGroupTouched(this.networkForm);
+      FormUtils.markFormGroupDirty(this.networkForm);
       this.isNetworkFormDirty = true;
       return;
     }

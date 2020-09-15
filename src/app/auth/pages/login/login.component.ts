@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isFormDirty = false;
 
     if (!this.profileForm.valid) {
-      FormUtils.markFormGroupTouched(this.profileForm);
+      FormUtils.markFormGroupDirty(this.profileForm);
       this.isFormDirty = true;
       return;
     }
