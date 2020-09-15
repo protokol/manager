@@ -16,7 +16,7 @@ import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { MemoryUtils } from '@core/utils/memory-utils';
-import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
+import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 
 @Component({
   selector: 'app-log-archived-table',
@@ -31,7 +31,6 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   rowsLoading$: BehaviorSubject<{
     [name: string]: boolean;
   }> = new BehaviorSubject({});
-  logName$ = new BehaviorSubject('');
 
   tableColumns: TableColumnConfig[];
 
@@ -60,8 +59,6 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
   @ViewChild('sizeTpl', { static: true }) sizeTpl!: TemplateRef<{
     row: LogArchivedItem;
   }>;
-  @ViewChild('logArchivedModalTitleTpl', { static: true })
-  logArchivedModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nzModalService: NzModalService,
@@ -87,7 +84,11 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
     ];
   }
 
-  viewLog(event: MouseEvent, row: LogArchivedItem) {
+  viewLog(
+    event: MouseEvent,
+    row: LogArchivedItem,
+    terminalModalTitleTpl: TemplateRef<{}>
+  ) {
     event.preventDefault();
 
     this.rowsLoading$.next({
@@ -101,13 +102,11 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
         untilDestroyed(this),
         tap(
           (logs) => {
-            this.logName$.next(row.name);
-
             this.nzModalService.create({
-              nzTitle: this.logArchivedModalTitleTpl,
-              nzContent: TextViewModalComponent,
+              nzTitle: terminalModalTitleTpl,
+              nzContent: TerminalViewModalComponent,
               nzComponentParams: {
-                text: logs,
+                input: logs,
               },
               nzFooter: null,
               nzWidth: '75vw',
