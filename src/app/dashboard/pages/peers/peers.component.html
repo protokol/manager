@@ -52,11 +52,18 @@
     [nzDropdownMenu]="configurationMenu"
     nzPlacement="bottomRight"
   >
-    Manage
+    Actions
   </button>
   <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
     <ul nz-menu>
       <li nz-menu-item (click)="showConfig($event, row)">Config</li>
+      <li
+        nz-menu-item
+        [nzDisabled]="isLoadingNodeManager$ | async"
+        (click)="managePeer($event, row)"
+      >
+        Manage
+      </li>
       <ng-container *ngLet="isAddingToMyNodesLoading$ | async as isLoading">
         <ng-container *ngIf="isFavNode$(row) | async as isFavNode; else favTpl">
           <li
@@ -79,4 +86,12 @@
       </ng-container>
     </ul>
   </nz-dropdown-menu>
+</ng-template>
+
+<ng-template #nodeManagerSettingsModalTitleTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">
+      Node manager authorization settings
+    </h4>
+  </app-modal-header>
 </ng-template>

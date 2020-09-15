@@ -22,7 +22,11 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzMessageService, NzTableQueryParams } from 'ng-zorro-antd';
+import {
+  NzMessageService,
+  NzModalService,
+  NzTableQueryParams,
+} from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { PeersState } from '@app/dashboard/pages/peers/state/peers/peers.state';
 import {
@@ -37,6 +41,8 @@ import { NetworkUtils } from '@core/utils/network-utils';
 import { AddMyNode, RemoveMyNodeByUrl } from '@core/store/nodes/nodes.actions';
 import { DEFAULT_CORE_API_PORT } from '@core/constants/node.constants';
 import { NodeClientService } from '@core/services/node-client.service';
+import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
+import { NodeManagerService } from '@core/services/node-manager.service';
 
 @Component({
   selector: 'app-peers',
@@ -65,9 +71,12 @@ export class PeersComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: Peers;
   }>;
+  @ViewChild('nodeManagerSettingsModalTitleTpl', { static: true })
+  nodeManagerSettingsModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   isAddingToMyNodesLoading$ = new BehaviorSubject(false);
+  isLoadingNodeManager$ = new BehaviorSubject(false);
 
   rows$: Observable<Peers[]> = of([]);
   tableColumns: TableColumnConfig<Peers>[];
@@ -76,7 +85,9 @@ export class PeersComponent implements OnInit, OnDestroy {
     private store: Store,
     private router: Router,
     private nzMessageService: NzMessageService,
-    private nodeClientService: NodeClientService
+    private nodeClientService: NodeClientService,
+    private nodeManagerService: NodeManagerService,
+    private nzModalService: NzModalService
   ) {}
 
   ngOnInit() {
@@ -225,6 +236,52 @@ export class PeersComponent implements OnInit, OnDestroy {
     this.store
       .dispatch(new RemoveMyNodeByUrl(PeerUtils.getApiUrlFromPeer(peer)))
       .pipe(finalize(() => this.isAddingToMyNodesLoading$.next(false)))
+      .subscribe();
+  }
+
+  private getPeerManagerUrl(nodeUrl: string): string {
+    return (
+      this.store.selectSnapshot(NodesState.getNodeManagerUrl(nodeUrl)) ||
+      NetworkUtils.buildNodeManagerUrl(nodeUrl)
+    );
+  }
+
+  managePeer(event: MouseEvent, peer: Peers) {
+    event.preventDefault();
+
+    if (this.isLoadingNodeManager$.getValue()) {
+      return;
+    }
+
+    const nodeUrl = PeerUtils.getApiUrlFromPeer(peer);
+    const managerUrl = this.getPeerManagerUrl(nodeUrl);
+
+    this.isLoadingNodeManager$.next(true);
+    this.nodeManagerService
+      .infoCoreVersion(managerUrl)
+      .pipe(
+        untilDestroyed(this),
+        tap(
+          () => {
+            this.router.navigate(['/dashboard/nodes/manager', managerUrl]);
+          },
+          () => {
+            this.nzMessageService.error('Core manager not available!');
+
+            this.nzModalService.create({
+              nzTitle: this.nodeManagerSettingsModalTitleTpl,
+              nzContent: NodeManagerSettingsModalComponent,
+              nzComponentParams: {
+                managerUrl,
+                nodeUrl,
+              },
+              nzFooter: null,
+              nzWidth: '35vw',
+            });
+          }
+        ),
+        finalize(() => this.isLoadingNodeManager$.next(false))
+      )
       .subscribe();
   }
 }
