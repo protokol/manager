@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -20,7 +20,7 @@ export class WalletsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Wallet> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('wallets')
         .get(addressOrPublicKey)
@@ -35,7 +35,7 @@ export class WalletsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<Wallet>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('wallets')
         .all({
@@ -54,7 +54,7 @@ export class WalletsService {
   ): Observable<Pagination<Wallet>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('wallets')
         .search(

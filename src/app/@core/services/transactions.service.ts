@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of, OperatorFunction, throwError } from 'rxjs';
+import { defer, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
@@ -37,7 +37,7 @@ export class TransactionsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<CreateTransactionApiResponse> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('transactions')
         .create(payload)

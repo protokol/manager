@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/nft-client';
@@ -22,7 +22,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Assets> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .get(assetId)
@@ -37,7 +37,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Assets>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .all({
@@ -56,7 +56,7 @@ export class AssetsService implements AssetsServiceInterface {
   ): Observable<Pagination<BaseResourcesTypes.Assets>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .searchByAsset(
@@ -78,7 +78,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.AssetsWallet> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .wallet(assetId)
@@ -93,11 +93,20 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<Partial<BaseResourcesTypes.Assets>>> {
-    return this.walletsService.getWallet(addressOrPublicKey, baseUrl, connectionOptions)
+    return this.walletsService
+      .getWallet(addressOrPublicKey, baseUrl, connectionOptions)
       .pipe(
         map((wallet) => {
-          const { attributes: { nft: { base: { tokenIds } } } } = wallet;
-          const data = Object.keys(tokenIds || {}).map((id) => ({ id })) as Partial<BaseResourcesTypes.Assets>[];
+          const {
+            attributes: {
+              nft: {
+                base: { tokenIds },
+              },
+            },
+          } = wallet;
+          const data = Object.keys(tokenIds || {}).map((id) => ({
+            id,
+          })) as Partial<BaseResourcesTypes.Assets>[];
 
           return {
             data,
@@ -111,7 +120,7 @@ export class AssetsService implements AssetsServiceInterface {
               previous: undefined,
               self: '',
               totalCountIsEstimate: false,
-            }
+            },
           };
         })
       );

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/nft-client';
@@ -20,7 +20,7 @@ export class BurnsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Burns>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('burns')
         .all({

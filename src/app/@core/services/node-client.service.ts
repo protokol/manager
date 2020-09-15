@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of, OperatorFunction } from 'rxjs';
+import { defer, Observable, of, OperatorFunction } from 'rxjs';
 import {
   NodeCryptoConfiguration,
   NodeConfiguration,
@@ -74,7 +74,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<NodeCryptoConfiguration> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('node')
         .crypto()
@@ -88,7 +88,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<NodeConfiguration> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('node')
         .configuration()
@@ -102,7 +102,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.BaseConfigurations> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('configurations')
         .index()
@@ -113,13 +113,14 @@ export class NodeClientService {
   }
 
   getPeer(
+    ip: string,
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<NodeConfiguration> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('peers')
-        .get('116.203.193.15')
+        .get(ip)
     ).pipe(
       map((response) => response.body.data),
       NodeClientService.genericErrorHandler(this.log)

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -20,7 +20,7 @@ export class PeersService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Peers> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('peers')
         .get(ip)
@@ -37,7 +37,7 @@ export class PeersService {
   ): Observable<Pagination<Peers>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .api('peers')
         .all({

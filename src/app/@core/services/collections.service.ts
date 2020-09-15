@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/nft-client';
@@ -21,7 +21,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Collections> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .get(collectionId)
@@ -36,7 +36,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Collections>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .all({
@@ -55,7 +55,7 @@ export class CollectionsService implements CollectionsServiceInterface {
   ): Observable<Pagination<BaseResourcesTypes.Collections>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .searchByCollections(
@@ -77,7 +77,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.CollectionsWallet> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .wallet(collectionId)
