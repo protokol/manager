@@ -81,7 +81,7 @@ export class IpfsUploadFilePinataComponent implements OnInit, OnDestroy {
     }
 
     if (!this.authenticationForm.valid) {
-      FormUtils.markFormGroupTouched(this.authenticationForm);
+      FormUtils.markFormGroupDirty(this.authenticationForm);
       return;
     }
 
@@ -137,7 +137,7 @@ export class IpfsUploadFilePinataComponent implements OnInit, OnDestroy {
     }
 
     if (!this.uploadForm.valid) {
-      FormUtils.markFormGroupTouched(this.uploadForm);
+      FormUtils.markFormGroupDirty(this.uploadForm);
       return;
     }
 

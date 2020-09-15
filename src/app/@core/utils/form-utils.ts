@@ -1,12 +1,13 @@
 import { FormGroup } from '@angular/forms';
 
 export abstract class FormUtils {
-  static markFormGroupTouched(formGroup: FormGroup) {
+  static markFormGroupDirty(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach((control: FormGroup) => {
-      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
 
       if (control.controls) {
-        this.markFormGroupTouched(control);
+        this.markFormGroupDirty(control);
       }
     });
   }

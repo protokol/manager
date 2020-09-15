@@ -30,4 +30,8 @@ export abstract class TextUtils {
   static getAttributeRegex() {
     return /^(?!\d)[\w$]+$/;
   }
+
+  static getPassphraseRegex() {
+    return /^(\w+\s){11}(\w+)$/;
+  }
 }

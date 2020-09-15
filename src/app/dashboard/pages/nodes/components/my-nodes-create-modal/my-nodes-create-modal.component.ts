@@ -114,7 +114,7 @@ export class MyNodesCreateModalComponent implements OnDestroy {
     }
 
     if (!this.addMyNodeForm.valid) {
-      FormUtils.markFormGroupTouched(this.addMyNodeForm);
+      FormUtils.markFormGroupDirty(this.addMyNodeForm);
       return;
     }
 

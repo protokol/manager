@@ -21,52 +21,52 @@ export class WalletService {
 
   private readonly bip39: typeof bip39Type;
 
-  constructor(private arkCryptoService: ArkCryptoService, private storeUtilsService: StoreUtilsService) {
+  constructor(
+    private arkCryptoService: ArkCryptoService,
+    private storeUtilsService: StoreUtilsService
+  ) {
     if (ElectronUtils.isElectron()) {
       this.bip39 = window.require('bip39');
     }
   }
 
-  generate(
-    language: MnemonicGenerateLanguage,
-    pubKeyHash = this.arkCryptoService.arkCrypto.Managers.configManager.get<
-      ArkInterfaces.Network
-    >('network').pubKeyHash
-  ) {
-    const passphrase = this.bip39.generateMnemonic(
+  generate(language: MnemonicGenerateLanguage) {
+    return this.bip39.generateMnemonic(
       null,
       null,
       this.bip39.wordlists[language]
     );
-    const {
-      publicKey,
-    } = this.arkCryptoService.arkCrypto.Identities.Keys.fromPassphrase(
-      passphrase
-    );
-    return {
-      address: this.arkCryptoService.arkCrypto.Identities.Address.fromPublicKey(
-        publicKey,
-        pubKeyHash
-      ),
+  }
+
+  addressFromPassphrase(
+    passphrase: string,
+    pubKeyHash = this.arkCryptoService.arkCrypto.Managers.configManager.get<
+      ArkInterfaces.Network
+    >('network').pubKeyHash
+  ) {
+    return this.arkCryptoService.arkCrypto.Identities.Address.fromPassphrase(
       passphrase,
-    };
+      pubKeyHash
+    );
   }
 
   getSelectedProfileAddress(): Observable<string> {
-    return this.storeUtilsService.getSelectedProfileWif()
+    return this.storeUtilsService
+      .getSelectedProfileWif()
       .pipe(
-        map(({wif}) => this.arkCryptoService.arkCrypto.Identities.Address.fromWIF(
-          wif
-        ))
+        map(({ wif }) =>
+          this.arkCryptoService.arkCrypto.Identities.Address.fromWIF(wif)
+        )
       );
   }
 
   getSelectedProfilePublicKey(): Observable<string> {
-    return this.storeUtilsService.getSelectedProfileWif()
+    return this.storeUtilsService
+      .getSelectedProfileWif()
       .pipe(
-        map(({wif}) => this.arkCryptoService.arkCrypto.Identities.PublicKey.fromWIF(
-          wif
-        ))
+        map(({ wif }) =>
+          this.arkCryptoService.arkCrypto.Identities.PublicKey.fromWIF(wif)
+        )
       );
   }
 }

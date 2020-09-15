@@ -110,7 +110,7 @@
           nz-button
           nzType="primary"
           [nzLoading]="isLoading"
-          [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
+          [disabled]="isLoading || (isNetworkFormDirty && !networkForm.valid)"
         >
           Select network<i nz-icon nzType="right"></i>
         </button>
@@ -161,10 +161,7 @@
       </nz-form-item>
 
       <nz-form-item [nzGutter]="[24, 0]">
-        <nz-form-control
-          nzErrorTip="Please enter your passphrase or generate one!"
-          nzSpan="20"
-        >
+        <nz-form-control [nzErrorTip]="passphraseErrorTpl" nzSpan="20">
           <nz-input-group nzPrefixIcon="dash">
             <input
               type="text"
@@ -173,12 +170,25 @@
               placeholder="Passphrase"
             />
           </nz-input-group>
+          <ng-template #passphraseErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              <span nz-typography nzType="danger"
+                >Please enter your passphrase or generate one!</span
+              >
+            </ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">
+              <span nz-typography nzType="danger"
+                >Passphrase should be contain 12 words, separated by
+                spaces</span
+              >
+            </ng-container>
+          </ng-template>
         </nz-form-control>
         <button
           nz-button
           nzType="default"
           [nzLoading]="isLoading"
-          [disabled]="isLoading || (isProfileFormDirty && !profileForm.valid)"
+          [disabled]="isLoading"
           (click)="onGenerateClick($event)"
         >
           Generate

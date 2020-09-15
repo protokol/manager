@@ -175,7 +175,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
     }
 
     if (!this.collectionForm.valid) {
-      FormUtils.markFormGroupTouched(this.collectionForm);
+      FormUtils.markFormGroupDirty(this.collectionForm);
       return;
     }
 

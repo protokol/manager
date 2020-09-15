@@ -81,7 +81,7 @@ export class TransferModalComponent implements OnInit, OnDestroy {
     }
 
     if (!this.transferForm.valid) {
-      FormUtils.markFormGroupTouched(this.transferForm);
+      FormUtils.markFormGroupDirty(this.transferForm);
       return;
     }
 

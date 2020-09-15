@@ -83,7 +83,7 @@ export class SnapshotRestoreModalComponent implements OnDestroy {
     }
 
     if (!this.snapshotForm.valid) {
-      FormUtils.markFormGroupTouched(this.snapshotForm);
+      FormUtils.markFormGroupDirty(this.snapshotForm);
       this.isFormDirty$.next(true);
       return;
     }
