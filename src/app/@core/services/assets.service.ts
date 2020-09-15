@@ -97,13 +97,7 @@ export class AssetsService implements AssetsServiceInterface {
       .getWallet(addressOrPublicKey, baseUrl, connectionOptions)
       .pipe(
         map((wallet) => {
-          const {
-            attributes: {
-              nft: {
-                base: { tokenIds },
-              },
-            },
-          } = wallet;
+          const tokenIds = wallet?.attributes?.nft?.base?.tokenIds;
           const data = Object.keys(tokenIds || {}).map((id) => ({
             id,
           })) as Partial<BaseResourcesTypes.Assets>[];

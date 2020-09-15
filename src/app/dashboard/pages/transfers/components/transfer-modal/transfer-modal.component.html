@@ -1,11 +1,12 @@
-<ng-container *ngIf="getSelectedProfileAddress() | async as profileAddress; else loading">
+<ng-container
+  *ngIf="selectedProfileAddress$ | async as profileAddress; else loading"
+>
   <form nz-form [formGroup]="transferForm" nzLayout="vertical" novalidate>
     <nz-form-item>
       <app-form-label>
         <nz-form-label nzFor="wallet" nzRequired
-        >Choose recipient wallet address
-        </nz-form-label
-        >
+          >Choose recipient wallet address
+        </nz-form-label>
       </app-form-label>
       <nz-form-control
         nzSpan="12"
@@ -15,12 +16,16 @@
       >
         <app-wallet-select
           [ownerAddress]="profileAddress"
-          formControlName="wallet">
+          formControlName="wallet"
+        >
         </app-wallet-select>
       </nz-form-control>
     </nz-form-item>
 
-    <app-nft-ids-form formControlName="nftIds" [ownerAddress]="profileAddress"></app-nft-ids-form>
+    <app-nft-ids-form
+      formControlName="nftIds"
+      [ownerAddress]="profileAddress"
+    ></app-nft-ids-form>
   </form>
 </ng-container>
 

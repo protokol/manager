@@ -1,17 +1,22 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, OnDestroy,
+  Component,
+  OnDestroy,
   OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NzMessageService, NzModalRef, NzNotificationService } from 'ng-zorro-antd';
+import {
+  NzMessageService,
+  NzModalRef,
+  NzNotificationService,
+} from 'ng-zorro-antd';
 import { CryptoService } from '@core/services/crypto.service';
 import { FormUtils } from '@core/utils/form-utils';
-import { finalize, first, shareReplay, tap } from 'rxjs/operators';
+import { finalize, first, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { WalletService } from '@core/services/wallet.service';
 
@@ -24,6 +29,7 @@ import { WalletService } from '@core/services/wallet.service';
 export class TransferModalComponent implements OnInit, OnDestroy {
   transferForm!: FormGroup;
   isLoading$ = new BehaviorSubject(false);
+  selectedProfileAddress$ = new BehaviorSubject<string | null>(null);
 
   @ViewChild('modalTitleTpl', { static: true })
   modalTitleTpl!: TemplateRef<{}>;
@@ -45,10 +51,19 @@ export class TransferModalComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.nzModalRef.updateConfig({
         nzTitle: this.modalTitleTpl,
-        nzWidth: '50vw'
+        nzWidth: '50vw',
       });
       this.cd.markForCheck();
     });
+
+    this.walletService
+      .getSelectedProfileAddress()
+      .pipe(
+        first(),
+        tap((address) => this.selectedProfileAddress$.next(address)),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   createForm() {
@@ -72,13 +87,16 @@ export class TransferModalComponent implements OnInit, OnDestroy {
 
     this.isLoading$.next(true);
 
-    const { wallet: { address: recipientId }, nftIds: nftIdsObjArray } = this.transferForm.value;
+    const {
+      wallet: { address: recipientId },
+      nftIds: nftIdsObjArray,
+    } = this.transferForm.value;
     const nftIds = nftIdsObjArray.map(({ nftId }) => nftId);
 
     this.cryptoService
       .transfer({
         nftIds,
-        recipientId
+        recipientId,
       })
       .pipe(
         tap(
@@ -87,11 +105,7 @@ export class TransferModalComponent implements OnInit, OnDestroy {
             this.nzModalRef.destroy({ refresh: true });
           },
           (err) => {
-            this.nzNotificationService.create(
-              'error',
-              'Transfer failed!',
-              err
-            );
+            this.nzNotificationService.create('error', 'Transfer failed!', err);
           }
         ),
         finalize(() => {
@@ -102,14 +116,5 @@ export class TransferModalComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  getSelectedProfileAddress(): Observable<string> {
-    return this.walletService.getSelectedProfileAddress()
-      .pipe(
-        first(),
-        shareReplay()
-      );
-  }
-
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 }
