@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -20,7 +20,7 @@ export class TradesService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.TradeById> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .get(tradeId)
@@ -35,7 +35,7 @@ export class TradesService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Trades>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .all({
@@ -54,7 +54,7 @@ export class TradesService {
   ): Observable<Pagination<ExchangeResourcesTypes.Trades>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .search(

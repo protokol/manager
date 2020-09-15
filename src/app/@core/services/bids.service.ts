@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
@@ -20,7 +20,7 @@ export class BidsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.Bids> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getBidById(bidId)
@@ -35,7 +35,7 @@ export class BidsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getAllBids({
@@ -54,7 +54,7 @@ export class BidsService {
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
     const { filters, ...restQuery } = query;
 
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .searchByBid(
@@ -76,7 +76,7 @@ export class BidsService {
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
-    return from(
+    return defer(() =>
       NodeClientService.getConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getAllCanceledBids({
