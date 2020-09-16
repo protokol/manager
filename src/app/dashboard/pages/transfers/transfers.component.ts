@@ -18,7 +18,7 @@ import {
 import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { LoadTransfers } from '@app/dashboard/pages/transfers/state/transfers/transfers.actions';
 import { Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
@@ -138,7 +138,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
 
     this.nzModalService.create({
       nzContent: TransferModalComponent,
-      ...ModalUtils.getCreateModalDefaultConfig()
+      ...ModalUtils.getCreateModalDefaultConfig(),
     });
   }
 }

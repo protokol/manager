@@ -1,5 +1,5 @@
 import { NzTableQueryParams } from 'ng-zorro-antd';
-import { ExchangeResourcesTypes } from '@protokol/nft-client';
+import { ExchangeResourcesTypes } from '@protokol/client';
 
 export const BIDS_TYPE_NAME = 'bids';
 

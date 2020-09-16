@@ -30,7 +30,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { CollectionsUtils } from '@app/dashboard/pages/collections/utils/collections-utils';
 import { AttributeCreateModalComponent } from '@app/dashboard/pages/collections/components/attribute-create-modal/attribute-create-modal.component';

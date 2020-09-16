@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { defer, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
-import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
+import { PeerDiscovery } from '@protokol/client';
+import { IPeerResponse } from '@protokol/client/dist/peer-discovery/interfaces';
+import { NzTableQueryParams } from 'ng-zorro-antd';
+import { TableUtils } from '@shared/utils/table-utils';
 
 @Injectable()
 export class PeersService {
@@ -31,22 +34,53 @@ export class PeersService {
   }
 
   getPeers(
-    query: TableApiQuery = { filters: {} },
+    query: NzTableQueryParams | {} = {},
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
-  ): Observable<Pagination<Peers>> {
-    const { filters, ...restQuery } = query;
+  ): Observable<IPeerResponse[]> {
+    const { sort, filter } = query as NzTableQueryParams;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
-        .api('peers')
-        .all({
-          ...restQuery,
-          ...filters,
-        })
+      PeerDiscovery.new(
+        NodeClientService.getConnection(baseUrl, connectionOptions)
+      )
     ).pipe(
-      map((response) => response.body),
-      NodeClientService.genericListErrorHandler(this.log)
+      switchMap((peerDiscovery) =>
+        defer(() => {
+          let applyPeerDiscovery = peerDiscovery;
+
+          const versionFilter = TableUtils.getFilterValue(filter, 'version');
+          if (versionFilter) {
+            applyPeerDiscovery = applyPeerDiscovery.withVersion(versionFilter);
+          }
+
+          const latencyFilter = TableUtils.getFilterValue(filter, 'latency');
+          if (latencyFilter) {
+            try {
+              applyPeerDiscovery = applyPeerDiscovery.withLatency(
+                parseInt(latencyFilter, 10)
+              );
+            } catch (ex) {
+              this.log.error(ex);
+            }
+          }
+
+          const { key, direction } = TableUtils.getSort(sort);
+          if (key && direction) {
+            applyPeerDiscovery = applyPeerDiscovery.sortBy(key, direction);
+          }
+
+          const pluginsFilter = TableUtils.getFilterValue(filter, 'plugins');
+          if (pluginsFilter) {
+            return applyPeerDiscovery.findPeersWithPlugin(pluginsFilter, {
+              additional: ['version', 'height', 'latency', 'plugins'],
+            });
+          } else {
+            return applyPeerDiscovery.findPeers();
+          }
+        })
+      ),
+      NodeClientService.genericErrorHandler(this.log)
     );
   }
 }

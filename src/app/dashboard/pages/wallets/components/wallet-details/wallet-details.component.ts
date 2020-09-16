@@ -15,7 +15,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { filter, map } from 'rxjs/operators';
 import { Wallet } from '@arkecosystem/client';
 import { TableColumnConfig } from '@shared/interfaces/table.types';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { AssetsState } from '@app/@core/store/assets/assets.state';
 import { LoadAsset } from '@app/@core/store/assets/assets.actions';
 

@@ -1,9 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef, Input,
+  forwardRef,
+  Input,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
@@ -20,7 +21,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import {
   ControlValueAccessor,
   FormControl,
@@ -59,23 +60,32 @@ export class WalletSelectComponent
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
 
-  @Input() filter = (): OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
-    return (tap());
-  }
+  @Input() filter = (): OperatorFunction<
+    Pagination<Wallet>,
+    Pagination<Wallet>
+  > => {
+    return tap();
+    // tslint:disable-next-line:semicolon
+  };
 
   @Input()
   set ownerAddress(ownerAddress: string) {
     this.filter = this.filterOutWallet(ownerAddress);
   }
 
-  filterOutWallet = (ownerAddress: string): () => OperatorFunction<Pagination<Wallet>, Pagination<Wallet>> => {
-    return () => (map(({ data: originData, meta }) => {
-      const data = originData.filter(({ address }) => address !== ownerAddress);
-      return {
-        data,
-        meta
-      };
-    }));
+  filterOutWallet = (
+    ownerAddress: string
+  ): (() => OperatorFunction<Pagination<Wallet>, Pagination<Wallet>>) => {
+    return () =>
+      map(({ data: originData, meta }) => {
+        const data = originData.filter(
+          ({ address }) => address !== ownerAddress
+        );
+        return {
+          data,
+          meta,
+        };
+      });
     // tslint:disable-next-line:semicolon
   };
 

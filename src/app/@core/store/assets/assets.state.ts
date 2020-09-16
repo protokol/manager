@@ -18,7 +18,7 @@ import {
   LoadAssets,
   SetAssetsByIds,
 } from './assets.actions';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { LoadCollection } from '@core/store/collections/collections.actions';
 import {
   CollectionsState,

@@ -4,7 +4,7 @@ export abstract class PeerUtils {
   static coreApiPlugin = 'core-api';
 
   static getApiUrlFromPeer(peer: Peers): string | null {
-    if (Object.keys(peer.plugins).length <= 0) {
+    if (Object.keys(peer.plugins || {}).length <= 0) {
       return null;
     }
 

@@ -1,6 +1,6 @@
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { Observable } from 'rxjs';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 
 export interface AssetsServiceInterface {

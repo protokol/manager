@@ -13,6 +13,31 @@ export abstract class TableUtils {
     }
   }
 
+  static getSort(
+    sort: NzTableQueryParams['sort']
+  ): { key: string; direction: string } {
+    const currentSort =
+      sort && sort.find((item) => item && item.value !== null);
+    const key = (currentSort && currentSort.key) || null;
+    const direction = TableUtils.toApiSortOrder(
+      (currentSort && currentSort.value) || 'ascend'
+    );
+
+    return {
+      key,
+      direction,
+    };
+  }
+
+  static getFilterValue(
+    filter: NzTableQueryParams['filter'],
+    filterKey: string
+  ): string | null {
+    const filterItem =
+      filter && filter.find((item) => item && item.key === filterKey);
+    return filterItem?.value || null;
+  }
+
   static toTableApiQuery(tableQueryParams?: NzTableQueryParams): TableApiQuery {
     const { pageSize, pageIndex, sort, filter } = tableQueryParams || {
       pageIndex: 1,

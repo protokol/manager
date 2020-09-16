@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { ExchangeResourcesTypes } from '@protokol/nft-client';
+import { ExchangeResourcesTypes } from '@protokol/client';
 import { BidsService } from '@core/services/bids.service';
 import {
   BIDS_TYPE_NAME,

@@ -11,8 +11,6 @@ import {
 import { Injectable } from '@angular/core';
 import { exhaustMap, takeUntil, tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
-import { PaginationMeta } from '@shared/interfaces/table.types';
-import { TableUtils } from '@shared/utils/table-utils';
 import {
   LoadPeers,
   SetPeersByIds,
@@ -27,13 +25,11 @@ import { timer } from 'rxjs';
 interface PeersStateModel {
   peersIds: string[];
   peers: { [name: string]: Peers };
-  meta: PaginationMeta | null;
 }
 
 const PEERS_DEFAULT_STATE: PeersStateModel = {
   peersIds: [],
   peers: {},
-  meta: null,
 };
 
 @State<PeersStateModel>({
@@ -51,11 +47,6 @@ export class PeersState {
     return peersIds;
   }
 
-  @Selector()
-  static getMeta({ meta }: PeersStateModel) {
-    return meta;
-  }
-
   static getPeersByIds(peersIds: string[]) {
     return createSelector([PeersState], ({ peers }: PeersStateModel) => {
       if (!peersIds.length) {
@@ -71,17 +62,14 @@ export class PeersState {
     { patchState, dispatch }: StateContext<PeersStateModel>,
     { tableQueryParams }: LoadPeers
   ) {
-    return this.peersService
-      .getPeers(TableUtils.toTableApiQuery(tableQueryParams))
-      .pipe(
-        tap(({ data }) => dispatch(new SetPeersByIds(data))),
-        tap(({ data, meta }) => {
-          patchState({
-            peersIds: data.map((t) => t.ip),
-            meta,
-          });
-        })
-      );
+    return this.peersService.getPeers(tableQueryParams).pipe(
+      tap((peers) => dispatch(new SetPeersByIds(peers))),
+      tap((peers) => {
+        patchState({
+          peersIds: peers.map((t) => t.ip),
+        });
+      })
+    );
   }
 
   @Action(PeersStartPooling)
