@@ -65,6 +65,7 @@ export class WalletSelectComponent
     Pagination<Wallet>
   > => {
     return tap();
+    // tslint:disable-next-line:semicolon
   };
 
   @Input()
