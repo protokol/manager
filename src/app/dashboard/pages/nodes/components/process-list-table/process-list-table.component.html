@@ -8,16 +8,21 @@
         <ng-container *ngLet="rowsLoading[row.name].type as loadingActionType">
           <nz-space [nzDirection]="isXxlScreen ? 'horizontal' : 'vertical'">
             <nz-space-item>
+              <ng-template #argsProcessStartModalTitleTpl>
+                <app-modal-header>
+                  <h4 nz-typography nzType="secondary">
+                    Process start "{{ row.name }}" args
+                  </h4>
+                </app-modal-header>
+              </ng-template>
               <button
                 nz-button
                 nzType="primary"
                 [disabled]="isRowLoading || row.status === 'online'"
                 [nzLoading]="loadingActionType === 'start'"
-                nz-popconfirm
-                nzPopconfirmTitle="Are you sure?"
-                (nzOnConfirm)="startProcess(row)"
-                nzOkText="Yes"
-                nzCancelText="No"
+                (click)="
+                  startProcess($event, row, argsProcessStartModalTitleTpl)
+                "
               >
                 Start
               </button>

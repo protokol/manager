@@ -87,11 +87,10 @@ export class ManagerProcessesState {
   @Action(StartManagerProcess)
   startManagerProcess(
     { setState, dispatch }: StateContext<ManagerProcessesStateModel>,
-    { processName, managerUrl }: StartManagerProcess
+    { processName, args, managerUrl }: StartManagerProcess
   ) {
-    // TODO: create start manager process args
     return this.nodeManagerService
-      .processStart(processName, '', managerUrl)
+      .processStart(processName, args, managerUrl)
       .pipe(
         tap(
           (process) => dispatch(new SetManagerProcessesByIds(process)),
