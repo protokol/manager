@@ -18,10 +18,7 @@ import {
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import {
-  PaginationMeta,
-  TableColumnConfig,
-} from '@app/@shared/interfaces/table.types';
+import { TableColumnConfig } from '@app/@shared/interfaces/table.types';
 import {
   NzMessageService,
   NzModalService,
@@ -54,7 +51,6 @@ export class PeersComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
   @Select(PeersState.getPeersIds) peerIds$: Observable<string[]>;
-  @Select(PeersState.getMeta) meta$: Observable<PaginationMeta>;
 
   @ViewChild('myNodeTpl', { static: true }) myNodeTpl!: TemplateRef<{
     row: Peers;
@@ -125,13 +121,16 @@ export class PeersComponent implements OnInit, OnDestroy {
         propertyName: 'latency',
         headerName: 'Latency',
         columnTransformTpl: this.latencyTpl,
-        width: '100px',
+        width: '150px',
         sortBy: true,
+        searchBy: true,
       },
       {
+        propertyName: 'plugins',
         headerName: 'Plugins',
         columnTransformTpl: this.pluginsTpl,
         width: 'auto',
+        searchBy: true,
       },
       {
         headerName: 'Actions',

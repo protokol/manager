@@ -2,8 +2,8 @@
   [isLoading]="isLoading$ | async"
   [rows]="rows$"
   [tableColumns]="tableColumns"
-  [meta]="meta$ | async"
   (paginationChange)="paginationChange($event)"
+  [isFrontPagination]="true"
   scrollY="75vh"
 >
 </app-table>

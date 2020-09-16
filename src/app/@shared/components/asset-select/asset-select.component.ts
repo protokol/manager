@@ -1,9 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef, Input,
+  forwardRef,
+  Input,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
@@ -26,7 +27,7 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { untilDestroyed } from '@core/until-destroyed';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { AssetsService } from '@core/services/assets.service';
 import { LoadAssetsSelectFunc } from '@app/@shared/interfaces/asset-select.types';
 
@@ -56,19 +57,13 @@ export class AssetSelectComponent
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
   filterOutIds$ = new BehaviorSubject<string[]>([]);
-  loadFunc$ = new BehaviorSubject<LoadAssetsSelectFunc>(
-    (queryParams) => {
-      const hasFilters = !!queryParams?.filter?.length;
+  loadFunc$ = new BehaviorSubject<LoadAssetsSelectFunc>((queryParams) => {
+    const hasFilters = !!queryParams?.filter?.length;
 
-      return hasFilters
-        ? this.assetsService.searchAssets(
-          TableUtils.toTableApiQuery(queryParams)
-        )
-        : this.assetsService.getAssets(
-          TableUtils.toTableApiQuery(queryParams)
-        );
-    }
-  );
+    return hasFilters
+      ? this.assetsService.searchAssets(TableUtils.toTableApiQuery(queryParams))
+      : this.assetsService.getAssets(TableUtils.toTableApiQuery(queryParams));
+  });
 
   @Input()
   set filterOutIds(filterOutIds: string[]) {
@@ -90,24 +85,21 @@ export class AssetSelectComponent
       return;
     }
 
-    this.loadFunc$.next((
-      (queryParams) => {
-        return this.assetsService.getAssetsByWalletId(ownerAddress)
-          .pipe(
-            map(({data, meta}) => {
-              const hasFilters = !!queryParams?.filter?.length;
-              const idFilter = hasFilters
-                ? queryParams.filter.find(({ key }) => key === 'id')?.value
-                : null;
+    this.loadFunc$.next((queryParams) => {
+      return this.assetsService.getAssetsByWalletId(ownerAddress).pipe(
+        map(({ data, meta }) => {
+          const hasFilters = !!queryParams?.filter?.length;
+          const idFilter = hasFilters
+            ? queryParams.filter.find(({ key }) => key === 'id')?.value
+            : null;
 
-              return {
-                data: idFilter ? data.filter(({id}) => id === idFilter) : data,
-                meta
-              };
-            })
-          );
-      }
-    ));
+          return {
+            data: idFilter ? data.filter(({ id }) => id === idFilter) : data,
+            meta,
+          };
+        })
+      );
+    });
   }
 
   constructor(private assetsService: AssetsService) {
@@ -122,7 +114,8 @@ export class AssetSelectComponent
       )
       .subscribe();
 
-    this.queryParams$.asObservable()
+    this.queryParams$
+      .asObservable()
       .pipe(
         filter((queryParams) => !!queryParams),
         map((queryParams) => {
@@ -138,21 +131,25 @@ export class AssetSelectComponent
         tap(() => this.isLoading$.next(true)),
         debounceTime(1000),
         switchMap((queryParams) => {
-          return this.loadFunc$.getValue().apply(this, queryParams).pipe(
-            tap(({ data, meta }) => {
-              this.assets$.next(
-                [...this.assets$.getValue(), ...data]
-                  .filter(({ id }) => !this.filterOutIds$.getValue().includes(id))
-              );
+          return this.loadFunc$
+            .getValue()
+            .apply(this, queryParams)
+            .pipe(
+              tap(({ data, meta }) => {
+                this.assets$.next(
+                  [...this.assets$.getValue(), ...data].filter(
+                    ({ id }) => !this.filterOutIds$.getValue().includes(id)
+                  )
+                );
 
-              if (!meta.next) {
-                this.isLastPage$.next(true);
-              }
-            }),
-            // Cancel previous
-            takeUntil(this.queryParams$.asObservable().pipe(skip(1))),
-            finalize(() => this.isLoading$.next(false))
-          );
+                if (!meta.next) {
+                  this.isLastPage$.next(true);
+                }
+              }),
+              // Cancel previous
+              takeUntil(this.queryParams$.asObservable().pipe(skip(1))),
+              finalize(() => this.isLoading$.next(false))
+            );
         }),
         untilDestroyed(this)
       )
@@ -162,7 +159,7 @@ export class AssetSelectComponent
   ngOnInit() {
     combineLatest([
       this.loadFunc$.asObservable(),
-      this.filterOutIds$.asObservable()
+      this.filterOutIds$.asObservable(),
     ])
       .pipe(
         debounceTime(250),
@@ -174,7 +171,7 @@ export class AssetSelectComponent
           this.queryParams$.next({
             ...TableUtils.getDefaultNzTableQueryParams(),
             ...this.queryParams$.getValue(),
-            pageIndex: 0
+            pageIndex: 0,
           });
         }),
         untilDestroyed(this)

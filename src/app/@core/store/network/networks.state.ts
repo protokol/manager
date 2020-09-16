@@ -16,7 +16,7 @@ import {
 import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 
 interface NetworksStateModel {
   baseUrl: string | null;

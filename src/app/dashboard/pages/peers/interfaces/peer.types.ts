@@ -1,4 +1,5 @@
-import { Peer } from '@arkecosystem/client';
+// TODO: Replace import from dist
+import { IPeerResponse } from '@protokol/client/dist/peer-discovery';
 
 interface PeerPlugin {
   enabled: boolean;
@@ -6,6 +7,6 @@ interface PeerPlugin {
   port: number;
 }
 
-export interface Peers extends Peer {
+export interface Peers extends IPeerResponse {
   plugins: { [pluginName: string]: PeerPlugin };
 }

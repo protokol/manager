@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { defer, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';

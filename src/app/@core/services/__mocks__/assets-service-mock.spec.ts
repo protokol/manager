@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { Pagination } from '@app/@shared/interfaces/table.types';
 import { AssetsServiceInterface } from '@core/interfaces/assets-service.interface';
 import { getMetaFixture } from '@core/services/__fixtures__/base-fixture.spec';

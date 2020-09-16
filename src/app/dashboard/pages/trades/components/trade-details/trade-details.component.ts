@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { LoadTrade } from '@app/dashboard/pages/trades/state/trades/trades.actions';
 import { Observable } from 'rxjs';
-import { ExchangeResourcesTypes } from '@protokol/nft-client';
+import { ExchangeResourcesTypes } from '@protokol/client';
 import { TradesState } from '@app/dashboard/pages/trades/state/trades/trades.state';
 import { untilDestroyed } from '@core/until-destroyed';
 import { filter, map } from 'rxjs/operators';

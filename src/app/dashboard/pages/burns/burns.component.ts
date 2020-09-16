@@ -17,7 +17,7 @@ import {
 } from '@app/@shared/interfaces/table.types';
 import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { Router } from '@angular/router';
 import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
 import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions';

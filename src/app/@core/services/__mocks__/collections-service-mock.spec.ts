@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { Pagination } from '@app/@shared/interfaces/table.types';
 import { CollectionsServiceInterface } from '@core/interfaces/collections-service.interface';
 import {

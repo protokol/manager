@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { TableUtils } from '@shared/utils/table-utils';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import {
   LoadTransfers,
   SetTransfersByIds,

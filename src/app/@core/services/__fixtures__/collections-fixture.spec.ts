@@ -1,4 +1,4 @@
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { v4 as uuid } from 'uuid';
 
 const collectionFixture: BaseResourcesTypes.Collections = {

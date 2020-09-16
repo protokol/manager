@@ -178,7 +178,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   onQueryParamsChange(tableQueryParams: NzTableQueryParams) {
     const { pageIndex } = tableQueryParams;
-    if (pageIndex !== 0) {
+    if (pageIndex !== 0 || !!this.isFrontPagination$.getValue()) {
       this.paginationChange$.next({
         ...tableQueryParams,
         filter: this.serializeFilter(),

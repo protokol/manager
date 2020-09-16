@@ -1,7 +1,7 @@
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { v4 as uuid } from 'uuid';
 import { CoreManagerMethods } from '@core/interfaces/core-manager-methods.enum';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodeManagerAuthentication } from '@core/interfaces/node.types';
 

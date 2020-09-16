@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ExchangeResourcesTypes } from '@protokol/nft-client';
+import { ExchangeResourcesTypes } from '@protokol/client';
 import {
   PaginationMeta,
   TableColumnConfig,

@@ -22,7 +22,7 @@ import {
 } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { SetCollectionsByIds } from '@core/store/collections/collections.actions';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import {
   ControlValueAccessor,
   FormControl,

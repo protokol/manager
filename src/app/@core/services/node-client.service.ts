@@ -6,7 +6,7 @@ import {
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { BaseResourcesTypes, NFTConnection } from '@protokol/nft-client';
+import { BaseResourcesTypes, NFTConnection } from '@protokol/client';
 import { ApiResponse, ApiResponseWithPagination } from '@arkecosystem/client';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 

@@ -22,7 +22,7 @@ import {
 import { WalletsService } from '@core/services/wallets.service';
 import { forkJoin } from 'rxjs';
 import { CollectionsService } from '@core/services/collections.service';
-import { BaseResourcesTypes } from '@protokol/nft-client';
+import { BaseResourcesTypes } from '@protokol/client';
 import { AssetsService } from '@core/services/assets.service';
 
 interface WalletsStateModel {
