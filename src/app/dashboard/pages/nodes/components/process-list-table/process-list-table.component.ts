@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { TableColumnConfig } from '@shared/interfaces/table.types';
 import { Logger } from '@core/services/logger.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import {
   ProcessListItem,
   ProcessStatus,
@@ -30,6 +30,7 @@ import {
 } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.actions';
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
+import { ArgsModalComponent } from '@app/dashboard/pages/nodes/components/args-modal/args-modal.component';
 
 @Component({
   selector: 'app-process-list-table',
@@ -169,23 +170,40 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     return TextUtils.capitalizeFirst(status);
   }
 
-  startProcess({ name }: ProcessListItem) {
+  startProcess(
+    event: MouseEvent,
+    { name }: ProcessListItem,
+    argsProcessStartModalTitleTpl: TemplateRef<{}>
+  ) {
+    event.preventDefault();
+
     this.setRowLoading(name, true, 'start');
 
-    this.store
-      .dispatch(new StartManagerProcess(name, this.managerUrl))
-      .pipe(
-        untilDestroyed(this),
-        tap(
-          () => {},
-          (err) => {
+    const complete$ = (args) =>
+      this.store
+        .dispatch(new StartManagerProcess(name, args, this.managerUrl))
+        .pipe(
+          untilDestroyed(this),
+          tap(() => {
+            this.nzMessageService.success(`Process "${name}" started!`);
+          }),
+          catchError((err) => {
             this.log.error(err);
-            this.nzMessageService.error(`Start process "${name}" failed!`);
-          }
-        ),
-        finalize(() => this.setRowLoading(name, false))
-      )
-      .subscribe();
+            this.nzMessageService.error(`Process start "${name}" failed!`);
+            return of(null);
+          }),
+          finalize(() => this.setRowLoading(name, false))
+        );
+
+    this.nzModalService.create({
+      nzTitle: argsProcessStartModalTitleTpl,
+      nzContent: ArgsModalComponent,
+      nzComponentParams: {
+        complete$,
+      },
+      nzFooter: null,
+      nzWidth: '35vw',
+    });
   }
 
   restartProcess({ name }: ProcessListItem) {

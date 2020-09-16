@@ -1,0 +1,30 @@
+<form
+  nz-form
+  (ngSubmit)="addNode($event)"
+  [formGroup]="form"
+  nzLayout="vertical"
+  novalidate
+>
+  <nz-form-item>
+    <app-form-label>
+      <nz-form-label nzFor="args" nzRequired>Args</nz-form-label>
+    </app-form-label>
+    <nz-form-control nzErrorTip="Please enter args!">
+      <nz-input-group>
+        <input type="text" nz-input formControlName="args" placeholder="Args" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div *nzModalFooter class="footer">
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) && !form.valid"
+    (click)="addNode($event)"
+  >
+    Send
+  </button>
+</div>

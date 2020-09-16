@@ -11,7 +11,11 @@ export class LoadManagerProcesses {
 export class StartManagerProcess {
   static type = `[${MANAGER_PROCESSES_TYPE_NAME}] StartManagerProcess`;
 
-  constructor(public processName: string, public managerUrl?: string) {}
+  constructor(
+    public processName: string,
+    public args: string,
+    public managerUrl?: string
+  ) {}
 }
 
 export class RestartManagerProcess {
