@@ -1,0 +1,23 @@
+:host ::ng-deep {
+  .ant-table-header {
+    table {
+      tr {
+        th:last-child {
+          span {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  .ant-table-body {
+    table {
+      tr {
+        td:last-child {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

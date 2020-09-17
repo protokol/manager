@@ -111,19 +111,4 @@ export class NodeClientService {
       NodeClientService.genericErrorHandler(this.log)
     );
   }
-
-  getPeer(
-    ip: string,
-    baseUrl: string,
-    connectionOptions?: ConnectionOptions
-  ): Observable<NodeConfiguration> {
-    return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
-        .api('peers')
-        .get(ip)
-    ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
-    );
-  }
 }

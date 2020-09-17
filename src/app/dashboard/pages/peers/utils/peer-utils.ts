@@ -1,4 +1,6 @@
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
+import { NetworkUtils } from '@core/utils/network-utils';
+import { MyNode } from '@core/interfaces/node.types';
 
 export abstract class PeerUtils {
   static coreApiPlugin = 'core-api';
@@ -16,5 +18,18 @@ export abstract class PeerUtils {
     }
 
     return `http://${peer.ip}:${peer.plugins[corePluginName].port}`;
+  }
+
+  static getIpFromMyNode(myNode: MyNode) {
+    const { nodeUrl } = myNode;
+
+    const getBaseUrl = (url: string) => {
+      if (NetworkUtils.getPortRegex().test(url)) {
+        return url.replace(NetworkUtils.getPortRegex(), '');
+      }
+      return url;
+    };
+
+    return getBaseUrl(nodeUrl).replace('http://', '').replace('https://', '');
   }
 }
