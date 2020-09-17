@@ -36,7 +36,7 @@ import { PeerUtils } from '@app/dashboard/pages/peers/utils/peer-utils';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { AddMyNode, RemoveMyNodeByUrl } from '@core/store/nodes/nodes.actions';
-import { DEFAULT_CORE_API_PORT } from '@core/constants/node.constants';
+import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodeClientService } from '@core/services/node-client.service';
 import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
 import { NodeManagerService } from '@core/services/node-manager.service';
@@ -209,7 +209,7 @@ export class PeersComponent implements OnInit, OnDestroy {
           this.store.dispatch(
             new AddMyNode({
               nodeUrl: nodeBaseUrl,
-              coreManagerPort: DEFAULT_CORE_API_PORT,
+              coreManagerPort: DEFAULT_CORE_MANAGER_PORT,
             })
           );
           return of(cryptoConfig);

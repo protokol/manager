@@ -69,6 +69,11 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/peers/peers.module').then((m) => m.PeersModule),
     },
+    {
+      path: 'my-nodes',
+      loadChildren: () =>
+        import('./pages/my-nodes/my-nodes.module').then((m) => m.MyNodesModule),
+    },
     { path: '**', redirectTo: 'peers' },
   ]),
 ];

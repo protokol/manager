@@ -14,7 +14,7 @@ import { NodesState } from '@core/store/nodes/nodes.state';
 import { MyNode } from '@core/interfaces/node.types';
 import { Router } from '@angular/router';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { MyNodesCreateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-create-modal/my-nodes-create-modal.component';
+import { MyNodesCreateModalComponent } from '@app/@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
 
 @Component({
   selector: 'app-my-nodes-update-modal',

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -42,18 +37,12 @@ import { NodeManagerFormInterface } from '@shared/interfaces/node-shared.types';
 export class MyNodesCreateModalComponent implements OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  @Input()
-  set managerUrl(managerUrl: string) {
-    this.selectedNodeUrl$.next(managerUrl);
-  }
-
   isSelectMyNodeFormDirty$ = new BehaviorSubject(false);
   addMyNodeForm!: FormGroup;
 
   isLoading$ = new BehaviorSubject(false);
 
   @Select(NodesState.getNodes) myNodes$: Observable<MyNode[]>;
-  selectedNodeUrl$ = new BehaviorSubject('');
 
   constructor(
     private formBuilder: FormBuilder,

@@ -1,0 +1,80 @@
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <button nz-button nzType="primary" (click)="addMyNode($event)">
+      Add my node
+    </button>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="myNodes$ | async"
+      [tableColumns]="tableColumns"
+      (paginationChange)="paginationChange($event)"
+      [isFrontPagination]="true"
+      scrollY="75vh"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
+
+<ng-template #ipTpl let-row="row">
+  <ng-container *ngIf="row">
+    {{ PeerUtils.getIpFromMyNode(row) }}
+  </ng-container>
+</ng-template>
+
+<ng-template #actionsTpl let-row="row">
+  <button
+    nzType="default"
+    nz-button
+    nz-dropdown
+    [nzDropdownMenu]="configurationMenu"
+    nzPlacement="bottomRight"
+  >
+    Actions
+  </button>
+  <nz-dropdown-menu #configurationMenu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item (click)="showConfig($event, row)">Config</li>
+      <li
+        nz-menu-item
+        [nzDisabled]="isLoadingNodeManager$ | async"
+        (click)="managePeer($event, row)"
+      >
+        Manage
+      </li>
+      <li nz-menu-item (click)="removeMyNode($event, row)">
+        Remove my node
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+</ng-template>
+
+<ng-template #nodeManagerSettingsModalTitleTpl>
+  <app-modal-header>
+    <h4 nz-typography nzType="secondary">
+      Node manager authorization settings
+    </h4>
+  </app-modal-header>
+</ng-template>
+
+<ng-template #myNodeCreateModalTitleTpl>
+  <app-modal-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">
+          Add my node
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="myNodeCreateHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #myNodeCreateHelperTpl>
+    Add new node to manage it
+  </ng-template>
+</ng-template>

@@ -46,6 +46,7 @@ import { ProfileSelectModalComponent } from '@shared/components/profile-select-m
 import { NodeManagerFormComponent } from './components/node-manager-form/node-manager-form.component';
 import { WalletSelectComponent } from '@shared/components/wallet-select/wallet-select.component';
 import { AssetSelectComponent } from '@shared/components/asset-select/asset-select.component';
+import { MyNodesCreateModalComponent } from '@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -64,6 +65,7 @@ const declareAndExportComponents = [
   ProfileSelectModalComponent,
   WalletSelectComponent,
   AssetSelectComponent,
+  MyNodesCreateModalComponent,
 ];
 
 @NgModule({
