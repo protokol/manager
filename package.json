@@ -50,7 +50,7 @@
 		"@arkecosystem/crypto": "^3.0.0-alpha.1",
 		"@ngxs/storage-plugin": "^3.6.2",
 		"@ngxs/store": "^3.6.2",
-		"@protokol/client": "^1.0.0-beta.23",
+		"@protokol/client": "^1.0.0-beta",
 		"@protokol/nft-base-crypto": "^1.0.0-beta.23",
 		"ang-jsoneditor": "^1.10.0",
 		"bip38": "^3.1.1",
