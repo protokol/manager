@@ -78,7 +78,7 @@
 		"codelyzer": "^5.1.2",
 		"conventional-changelog-cli": "^2.0.34",
 		"devtron": "^1.4.0",
-		"electron": "^9.2.0",
+		"electron": "^10.0.0",
 		"electron-builder": "^22.8.0",
 		"electron-rebuild": "^1.11.0",
 		"electron-reload": "^1.5.0",
