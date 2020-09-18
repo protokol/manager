@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { Profile } from '@core/interfaces/profiles.types';
+import { ArkCryptoService } from '@core/services/ark-crypto.service';
 
 describe('Profiles', () => {
   let store: Store;
@@ -44,7 +45,7 @@ describe('Profiles', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([ProfilesState])],
-      providers: [Bip38Service],
+      providers: [ArkCryptoService, Bip38Service],
     });
 
     store = TestBed.inject(Store);

@@ -17,6 +17,7 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { BaseResourcesTypes } from '@protokol/client';
+import { forkJoin } from 'rxjs';
 
 interface NetworksStateModel {
   baseUrl: string | null;
@@ -92,9 +93,8 @@ export class NetworksState {
       baseUrl,
     });
 
-    this.nodeClientService
-      .getNodeCryptoConfiguration(baseUrl)
-      .pipe(
+    return forkJoin([
+      this.nodeClientService.getNodeCryptoConfiguration(baseUrl).pipe(
         tap(
           (nodeCryptoConfiguration) => {
             if (
@@ -116,12 +116,8 @@ export class NetworksState {
             });
           }
         )
-      )
-      .subscribe();
-
-    this.nodeClientService
-      .getNftBaseConfigurations(baseUrl)
-      .pipe(
+      ),
+      this.nodeClientService.getNftBaseConfigurations(baseUrl).pipe(
         tap(
           (nftBaseConfigurations) => {
             if (NetworkUtils.isConfigurationsResource(nftBaseConfigurations)) {
@@ -141,8 +137,8 @@ export class NetworksState {
             });
           }
         )
-      )
-      .subscribe();
+      ),
+    ]);
   }
 
   @Action(ClearNetwork)

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableComponent } from './table.component';
+import { NzTableModule } from 'ng-zorro-antd';
+import { CommonModule } from '@angular/common';
 
 describe('TableComponent', () => {
   let component: TableComponent;
@@ -8,6 +10,7 @@ describe('TableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [NzTableModule, CommonModule],
       declarations: [TableComponent],
     }).compileComponents();
   }));

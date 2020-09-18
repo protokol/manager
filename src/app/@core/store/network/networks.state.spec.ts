@@ -6,6 +6,8 @@ import { SetNetwork } from '@core/store/network/networks.actions';
 import { WalletService } from '@core/services/wallet.service';
 import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
+import { BaseResourcesTypes } from '@protokol/client';
+import { finalize, tap } from 'rxjs/operators';
 
 describe('Networks', () => {
   let store: Store;
@@ -22,24 +24,42 @@ describe('Networks', () => {
     nodeClientService = TestBed.inject(NodeClientService);
   });
 
-  it('should set network and load crypto', () => {
+  it('should set network and load crypto', (done) => {
     const nodeCryptoConfiguration = {
-      network: { wif: 10, name: '4382984398' },
+      network: {
+        wif: 10,
+        name: '4382984398',
+        pubKeyHash: '13910239012390',
+      },
     } as Partial<NodeCryptoConfiguration> & any;
+    const nodeNftConfiguration = {
+      crypto: {},
+      package: { name: 'node-nft' },
+      transactions: {},
+    } as Partial<BaseResourcesTypes.BaseConfigurations> & any;
     spyOn(nodeClientService, 'getNodeCryptoConfiguration').and.returnValue(
       of(nodeCryptoConfiguration)
     );
-
-    store.dispatch(new SetNetwork(baseUrlFixture));
-
-    const networkStateBaseUrl = store.selectSnapshot(
-      (state) => state.networks.baseUrl
+    spyOn(nodeClientService, 'getNftBaseConfigurations').and.returnValue(
+      of(nodeNftConfiguration)
     );
-    expect(networkStateBaseUrl).toEqual(baseUrlFixture);
 
-    const nodeCryptoConfig = store.selectSnapshot(
-      NetworksState.getNodeCryptoConfig
-    );
-    expect(nodeCryptoConfig).toEqual(nodeCryptoConfiguration);
+    store
+      .dispatch(new SetNetwork(baseUrlFixture))
+      .pipe(
+        tap(() => {
+          const networkStateBaseUrl = store.selectSnapshot(
+            (state) => state.networks.baseUrl
+          );
+          const nodeCryptoConfig = store.selectSnapshot(
+            NetworksState.getNodeCryptoConfig
+          );
+
+          expect(networkStateBaseUrl).toEqual(baseUrlFixture);
+          expect(nodeCryptoConfig).toEqual(nodeCryptoConfiguration);
+        }),
+        finalize(done)
+      )
+      .subscribe();
   });
 });
