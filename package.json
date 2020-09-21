@@ -61,7 +61,7 @@
 		"ng-zorro-antd": "^9.3.0",
 		"ngx-clipboard": "^13.0.1",
 		"rxjs": "~6.5.3",
-		"tslib": "^1.9.3",
+		"tslib": "^2.0.0",
 		"uuid": "^8.3.0",
 		"wif": "^2.0.6",
 		"xterm-addon-search": "^0.7.0",
