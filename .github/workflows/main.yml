@@ -34,16 +34,10 @@ jobs:
         run: npm run test
 
       - name: Install libgbm1 (Linux)
-        if: matrix.os == 'ubuntu-latest'
         run: "sudo apt-get install libgbm1"
 
-      - name: Test with Jest (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      - name: npm e2e (Linux)
         run: "xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' npm run e2e"
-
-      - name: npm e2e
-        if: matrix.os != 'ubuntu-latest'
-        run: npm run e2e
 
       - name: npm build
         run: npm run build
