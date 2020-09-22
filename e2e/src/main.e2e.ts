@@ -3,12 +3,12 @@ import { SpectronClient } from 'spectron';
 
 import commonSetup from '../common-setup';
 
-describe('protokol-manager App', function () {
+describe('protokol-manager App', function() {
   commonSetup.apply(this);
 
   let client: SpectronClient;
 
-  beforeEach(function () {
+  beforeEach(function() {
     client = this.app.client;
   });
 
