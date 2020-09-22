@@ -27,7 +27,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: npm lint and npm run build
-        run: |
-          npm run lint
-          npm run build
+      - name: npm lint
+        run: npm run lint
+
+      - name: npm test
+        run: npm run test
+
+      - name: Install libgbm1 (Linux)
+        run: "sudo apt-get install libgbm1"
+
+      - name: npm e2e (Linux)
+        run: "xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' npm run e2e"
+
+      - name: npm build
+        run: npm run build
