@@ -74,6 +74,11 @@ const routes: Routes = [
       loadChildren: () =>
         import('./pages/my-nodes/my-nodes.module').then((m) => m.MyNodesModule),
     },
+    {
+      path: 'guardian-groups',
+      loadChildren: () =>
+        import('./pages/guardian-groups/guardian-groups.module').then((m) => m.GuardianGroupsModule),
+    },
     { path: '**', redirectTo: 'peers' },
   ]),
 ];

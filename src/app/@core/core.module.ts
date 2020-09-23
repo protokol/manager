@@ -34,6 +34,7 @@ import { CryptoService } from '@core/services/crypto.service';
 import { TransactionsService } from '@core/services/transactions.service';
 import { PinataService } from '@core/services/pinata.service';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
+import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 
 @NgModule({
   declarations: [],
@@ -87,6 +88,7 @@ import { ArkCryptoService } from '@core/services/ark-crypto.service';
     PeersService,
     TransactionsService,
     PinataService,
+    GuardianGroupsService,
     {
       provide: Bip38Service,
       useFactory: bip38Factory,

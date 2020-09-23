@@ -24,8 +24,7 @@
         <li
           nz-submenu
           nzOpen
-          nzTitle="Assets"
-          nzIcon="block"
+          nzTitle="ASSETS"
           *ngIf="hasNftPluginsLoaded"
         >
           <ul>
@@ -60,13 +59,23 @@
             </li>
           </ul>
         </li>
-        <li nz-submenu nzOpen nzTitle="Network" nzIcon="cluster">
+        <li nz-submenu nzOpen nzTitle="NETWORK">
           <ul>
             <li nz-menu-item nzMatchRouter>
               <a routerLink="/dashboard/peers">Peers</a>
             </li>
             <li nz-menu-item nzMatchRouter>
               <a routerLink="/dashboard/my-nodes">My nodes</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="PERMISSIONS">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/users">Users</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard/guardian-groups">Groups</a>
             </li>
           </ul>
         </li>
@@ -114,12 +123,12 @@
 
 <ng-template #managementTitleTpl>
   <span nz-typography nzType="secondary">
-    Management
+    MANAGEMENT
   </span>
 </ng-template>
 
 <ng-template #exchangeTitleTpl>
   <span nz-typography nzType="secondary">
-    Exchange
+    EXCHANGE
   </span>
 </ng-template>

@@ -47,6 +47,7 @@ import { NodeManagerFormComponent } from './components/node-manager-form/node-ma
 import { WalletSelectComponent } from '@shared/components/wallet-select/wallet-select.component';
 import { AssetSelectComponent } from '@shared/components/asset-select/asset-select.component';
 import { MyNodesCreateModalComponent } from '@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -66,6 +67,8 @@ const declareAndExportComponents = [
   WalletSelectComponent,
   AssetSelectComponent,
   MyNodesCreateModalComponent,
+  PageHeaderComponent,
+  NodeManagerFormComponent
 ];
 
 @NgModule({
@@ -100,7 +103,7 @@ const declareAndExportComponents = [
     NzPopconfirmModule,
     NzRadioModule,
   ],
-  declarations: [...declareAndExportComponents, NodeManagerFormComponent],
-  exports: [...declareAndExportComponents, NodeManagerFormComponent],
+  declarations: [...declareAndExportComponents],
+  exports: [...declareAndExportComponents],
 })
 export class SharedModule {}
