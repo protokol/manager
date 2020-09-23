@@ -21,7 +21,7 @@ export class BidsService {
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.Bids> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getBidById(bidId)
     ).pipe(
@@ -36,7 +36,7 @@ export class BidsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getAllBids({
           ...query,
@@ -55,7 +55,7 @@ export class BidsService {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .searchByBid(
           {
@@ -77,7 +77,7 @@ export class BidsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('bids')
         .getAllCanceledBids({
           ...query,

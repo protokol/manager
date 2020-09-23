@@ -21,7 +21,7 @@ export class BurnsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Burns>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('burns')
         .all({
           ...query,
