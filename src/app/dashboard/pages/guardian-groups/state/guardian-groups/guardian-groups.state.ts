@@ -14,17 +14,22 @@ import { GuardianResourcesTypes } from '@protokol/client';
 import {
   GUARDIAN_GROUPS_TYPE_NAME, LoadGuardianGroups,
   SetGuardianGroupsByIds,
-  LoadGuardianGroup
+  LoadGuardianGroup, LoadTransactionTypes, LoadGuardianConfigurations
 } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
+import { TransactionTypes } from '@arkecosystem/client';
 
 interface GuardianGroupsStateModel {
+  transactionTypes?: TransactionTypes | null;
+  guardianConfigurations?: GuardianResourcesTypes.GuardianConfigurations | null;
   guardianGroupIds: string[];
   guardianGroups: { [name: string]: GuardianResourcesTypes.Group };
   meta: PaginationMeta | null;
 }
 
 const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
+  transactionTypes: undefined,
+  guardianConfigurations: undefined,
   guardianGroupIds: [],
   guardianGroups: {},
   meta: null,
@@ -50,10 +55,25 @@ export class GuardianGroupsState {
     return meta;
   }
 
+  @Selector()
+  static getGuardianGroups({ guardianGroups }: GuardianGroupsStateModel) {
+    return guardianGroups;
+  }
+
+  @Selector()
+  static getTransactionTypes({ transactionTypes }: GuardianGroupsStateModel) {
+    return transactionTypes;
+  }
+
+  @Selector()
+  static getGuardianConfigurations({ guardianConfigurations }: GuardianGroupsStateModel) {
+    return guardianConfigurations;
+  }
+
   static getGuardianGroupsByIds(guardianGroupIds: string[]) {
     return createSelector(
-      [GuardianGroupsState],
-      ({ guardianGroups }: GuardianGroupsStateModel) => {
+      [GuardianGroupsState.getGuardianGroups],
+      (guardianGroups: ReturnType<typeof GuardianGroupsState.getGuardianGroups>) => {
         if (!guardianGroupIds.length) {
           return [];
         }
@@ -61,6 +81,80 @@ export class GuardianGroupsState {
         return guardianGroupIds.map((gName) => guardianGroups[gName]);
       }
     );
+  }
+
+  @Action(LoadTransactionTypes)
+  loadTransactionTypes(
+    { getState, setState }: StateContext<GuardianGroupsStateModel>
+  ) {
+    const { transactionTypes } = getState();
+
+    if (!transactionTypes && transactionTypes !== null) {
+      setState(
+        patch({
+          transactionTypes: null
+        })
+      );
+
+      this.guardianGroupsService
+        .getTransactionTypes()
+        .pipe(
+          tap(
+            (data) => {
+              setState(
+                patch({
+                  transactionTypes: data
+                })
+              );
+            },
+            () => {
+              setState(
+                patch({
+                  transactionTypes: undefined
+                })
+              );
+            }
+          )
+        )
+        .subscribe();
+    }
+  }
+
+  @Action(LoadGuardianConfigurations)
+  loadGuardianConfigurations(
+    { getState, setState }: StateContext<GuardianGroupsStateModel>
+  ) {
+    const { guardianConfigurations } = getState();
+
+    if (!guardianConfigurations && guardianConfigurations !== null) {
+      setState(
+        patch({
+          guardianConfigurations: null
+        })
+      );
+
+      this.guardianGroupsService
+        .getConfiguration()
+        .pipe(
+          tap(
+            (data) => {
+              setState(
+                patch({
+                  guardianConfigurations: data
+                })
+              );
+            },
+            () => {
+              setState(
+                patch({
+                  guardianConfigurations: undefined
+                })
+              );
+            }
+          )
+        )
+        .subscribe();
+    }
   }
 
   @Action(LoadGuardianGroup)

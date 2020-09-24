@@ -23,13 +23,21 @@ import {
 import { Logger } from '@app/@core/services/logger.service';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import { NzMessageService, NzNotificationService, NzSwitchComponent, NzTableQueryParams } from 'ng-zorro-antd';
+import {
+  NzMessageService,
+  NzModalService,
+  NzNotificationService,
+  NzSwitchComponent,
+  NzTableQueryParams
+} from 'ng-zorro-antd';
 import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
 import {
   LoadGuardianGroup,
   LoadGuardianGroups
 } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
 import { CryptoService } from '@core/services/crypto.service';
+import { ModalUtils } from '@core/utils/modal-utils';
+import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
 
 @Component({
   selector: 'app-guardian-groups',
@@ -67,7 +75,8 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     private cryptoService: CryptoService,
     private nzMessageService: NzMessageService,
     private nzNotificationService: NzNotificationService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private nzModalService: NzModalService
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -126,11 +135,23 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
 
   showAddGroupModal(event: MouseEvent) {
     event.preventDefault();
+
+    this.nzModalService.create({
+      nzContent: GuardianGroupModalComponent,
+      ...ModalUtils.getCreateModalDefaultConfig()
+    });
   }
 
-  onPermissionsChange(event: MouseEvent, name: GuardianResourcesTypes.Group['name']) {
+  onPermissionsChange(event: MouseEvent, group: GuardianResourcesTypes.Group) {
     event.preventDefault();
-    this.log.info('name', name);
+
+    this.nzModalService.create({
+      nzContent: GuardianGroupModalComponent,
+      nzComponentParams: {
+        group
+      },
+      ...ModalUtils.getCreateModalDefaultConfig()
+    });
   }
 
   onSetRowLoading(name: string, isLoading: boolean, switchCmp?: NzSwitchComponent) {

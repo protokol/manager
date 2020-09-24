@@ -8,6 +8,12 @@ export class LoadTransactionTypes {
   constructor() {}
 }
 
+export class LoadGuardianConfigurations {
+  static type = `[${GUARDIAN_GROUPS_TYPE_NAME}] LoadGuardianConfigurations`;
+
+  constructor() {}
+}
+
 export class LoadGuardianGroups {
   static type = `[${GUARDIAN_GROUPS_TYPE_NAME}] LoadGuardianGroups`;
 

@@ -5,16 +5,18 @@ import { GuardianGroupsRoutingModule } from './guardian-groups-routing.module';
 import { GuardianGroupsComponent } from './guardian-groups.component';
 import {
   NzButtonModule,
-  NzFormModule, NzInputModule,
+  NzFormModule, NzInputModule, NzInputNumberModule, NzModalModule,
   NzSpinModule,
-  NzSwitchModule,
+  NzSwitchModule, NzTableModule,
   NzTypographyModule
 } from 'ng-zorro-antd';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
 import { NgxsModule } from '@ngxs/store';
+import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
+import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guardian-groups/components/guardian-group-permissions-form/guardian-group-permissions-form.component';
 
 @NgModule({
   imports: [
@@ -30,10 +32,15 @@ import { NgxsModule } from '@ngxs/store';
     NgLetModule,
     NzFormModule,
     NzInputModule,
-    NzButtonModule
+    NzButtonModule,
+    NzModalModule,
+    ReactiveFormsModule,
+    NzInputNumberModule,
+    NzTableModule
   ],
   providers: [],
-  declarations: [GuardianGroupsComponent],
-  exports: [],
+  declarations: [GuardianGroupsComponent, GuardianGroupModalComponent, GuardianGroupPermissionsFormComponent],
+  exports: []
 })
-export class GuardianGroupsModule {}
+export class GuardianGroupsModule {
+}

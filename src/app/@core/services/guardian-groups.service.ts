@@ -30,6 +30,20 @@ export class GuardianGroupsService {
     );
   }
 
+  getConfiguration(
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<GuardianResourcesTypes.GuardianConfigurations> {
+    return defer(() =>
+      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+        .guardianApi('configurations')
+        .index()
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
+    );
+  }
+
   getGroups(
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
@@ -55,7 +69,7 @@ export class GuardianGroupsService {
         .get(encodeURIComponent(groupName))
     ).pipe(
       map((response) => response.body.data),
-      NodeClientService.genericListErrorHandler(this.log)
+      NodeClientService.genericErrorHandler(this.log)
     );
   }
 }

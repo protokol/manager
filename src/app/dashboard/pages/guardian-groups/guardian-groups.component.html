@@ -69,7 +69,7 @@
 <ng-template #permissionsTpl let-row="row">
   <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
     <ng-container *ngIf="!isLoading; else permissionsDisabledTpl">
-      <a (click)="onPermissionsChange($event, row.name)">
+      <a (click)="onPermissionsChange($event, row)">
         Change
       </a>
     </ng-container>
