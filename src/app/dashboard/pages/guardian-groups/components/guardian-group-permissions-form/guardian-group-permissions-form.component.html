@@ -1,5 +1,4 @@
 <ng-container *ngIf="isFormReady$ | async; else formLoadingTpl">
-  {{transactionTypes$ | async | json}}
   <nz-table
     #permissionsTable
     [nzData]="transactionTypes$ | async"
@@ -7,14 +6,65 @@
   >
     <thead>
       <tr>
-        <th class="text-capitalize">Transaction group</th>
-        <th class="text-capitalize">Permissions</th>
-        <th class="text-capitalize">Deny / Allow</th>
-        <th class="text-capitalize">Details</th>
+        <th nzWidth="200px" class="text-capitalize">Transaction group</th>
+        <th nzWidth="500px" class="text-capitalize">Permissions</th>
+        <th nzWidth="100px" class="text-capitalize">Deny / Allow</th>
+        <th nzWidth="200px" class="text-capitalize">Details</th>
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let data of permissionsTable.data">
+      <ng-container *ngLet="form.valueChanges | async">
+        <ng-container *ngFor="let data of permissionsTable.data">
+          <tr>
+            <td>
+              {{ getGroupName(data[0]) }}
+            </td>
+            <td>Select all</td>
+            <td class="text-center">
+              <nz-switch
+                [disabled]="isLoading$ | async"
+                [ngModel]="isTypeGroupSelected(data[0])"
+                (ngModelChange)="selectTypeGroup($event, data[0])"
+              ></nz-switch>
+            </td>
+            <td>
+              <ng-container *ngIf="isExpanded$ | async as expanded">
+                <ng-container *ngIf="expanded[data[0]]; else notExpandedTpl">
+                  <a (click)="onExpand($event, data[0], false)">
+                    <i nz-icon nzType="up" nzTheme="outline"></i>
+                  </a>
+                </ng-container>
+              </ng-container>
+              <ng-template #notExpandedTpl>
+                <a (click)="onExpand($event, data[0], true)">
+                  <i nz-icon nzType="down" nzTheme="outline"></i>
+                </a>
+              </ng-template>
+            </td>
+          </tr>
+          <ng-container *ngIf="isExpanded$ | async as expanded">
+            <ng-container *ngIf="expanded[data[0]]">
+              <ng-container *ngFor="let transactionType of data[1] | keyvalue">
+                <tr>
+                  <td></td>
+                  <td>
+                    {{ transactionType.key }}
+                  </td>
+                  <td>
+                    <nz-switch
+                      [disabled]="isLoading$ | async"
+                      [ngModel]="isTypeSelected(data[0], transactionType.value)"
+                      (ngModelChange)="
+                        selectType($event, data[0], transactionType.value)
+                      "
+                    ></nz-switch>
+                  </td>
+                  <td></td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </ng-container>
     </tbody>
   </nz-table>

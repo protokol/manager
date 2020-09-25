@@ -5,10 +5,15 @@ import { GuardianGroupsRoutingModule } from './guardian-groups-routing.module';
 import { GuardianGroupsComponent } from './guardian-groups.component';
 import {
   NzButtonModule,
-  NzFormModule, NzInputModule, NzInputNumberModule, NzModalModule,
+  NzFormModule,
+  NzIconModule,
+  NzInputModule,
+  NzInputNumberModule,
+  NzModalModule,
   NzSpinModule,
-  NzSwitchModule, NzTableModule,
-  NzTypographyModule
+  NzSwitchModule,
+  NzTableModule,
+  NzTypographyModule,
 } from 'ng-zorro-antd';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,11 +41,15 @@ import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guar
     NzModalModule,
     ReactiveFormsModule,
     NzInputNumberModule,
-    NzTableModule
+    NzTableModule,
+    NzIconModule,
   ],
   providers: [],
-  declarations: [GuardianGroupsComponent, GuardianGroupModalComponent, GuardianGroupPermissionsFormComponent],
-  exports: []
+  declarations: [
+    GuardianGroupsComponent,
+    GuardianGroupModalComponent,
+    GuardianGroupPermissionsFormComponent,
+  ],
+  exports: [],
 })
-export class GuardianGroupsModule {
-}
+export class GuardianGroupsModule {}

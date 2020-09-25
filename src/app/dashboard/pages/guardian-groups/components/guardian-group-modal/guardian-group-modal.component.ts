@@ -1,23 +1,28 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, Input, OnDestroy,
+  Component,
+  Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  NzModalRef
+  NzMessageService,
+  NzModalRef,
+  NzNotificationService,
 } from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { Store } from '@ngxs/store';
 import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
 import { untilDestroyed } from '@core/until-destroyed';
-import { first, tap } from 'rxjs/operators';
+import { finalize, first, tap } from 'rxjs/operators';
 import { LoadGuardianConfigurations } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
+import { CryptoService } from '@core/services/crypto.service';
 
 @Component({
   selector: 'app-guardian-group-modal',
@@ -29,7 +34,9 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
   groupForm!: FormGroup;
   isFormReady$ = new BehaviorSubject(false);
   isLoading$ = new BehaviorSubject(false);
-  guardianConfigurations$ = new BehaviorSubject<GuardianResourcesTypes.GuardianConfigurations | null>(null);
+  guardianConfigurations$ = new BehaviorSubject<GuardianResourcesTypes.GuardianConfigurations | null>(
+    null
+  );
 
   @Input() group?: GuardianResourcesTypes.Group;
 
@@ -40,18 +47,23 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
     private nzModalRef: NzModalRef,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
-    private store: Store
+    private store: Store,
+    private cryptoService: CryptoService,
+    private nzMessageService: NzMessageService,
+    private nzNotificationService: NzNotificationService
   ) {
-    this.store.select(GuardianGroupsState.getGuardianConfigurations)
+    this.store
+      .select(GuardianGroupsState.getGuardianConfigurations)
       .pipe(
-        first(guardianConfigurations => !!guardianConfigurations),
+        first((guardianConfigurations) => !!guardianConfigurations),
         tap((guardianConfigurations) => {
           this.guardianConfigurations$.next(guardianConfigurations);
           this.createForm();
           this.isFormReady$.next(true);
         }),
         untilDestroyed(this)
-      ).subscribe();
+      )
+      .subscribe();
 
     this.store.dispatch(new LoadGuardianConfigurations());
   }
@@ -68,23 +80,43 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
   }
 
   get nameMinLength() {
-    const { crypto: { defaults: { guardianGroupName: { minLength } } } } = this.guardianConfigurations$.getValue();
+    const {
+      crypto: {
+        defaults: {
+          guardianGroupName: { minLength },
+        },
+      },
+    } = this.guardianConfigurations$.getValue();
     return minLength;
   }
 
   get nameMaxLength() {
-    const { crypto: { defaults: { guardianGroupName: { maxLength } } } } = this.guardianConfigurations$.getValue();
+    const {
+      crypto: {
+        defaults: {
+          guardianGroupName: { maxLength },
+        },
+      },
+    } = this.guardianConfigurations$.getValue();
     return maxLength;
   }
 
   get priorityMin() {
-    const { crypto: { defaults: { guardianGroupPriority } } } = this.guardianConfigurations$.getValue();
+    const {
+      crypto: {
+        defaults: { guardianGroupPriority },
+      },
+    } = this.guardianConfigurations$.getValue();
     const { min } = guardianGroupPriority || { min: 0 };
     return min;
   }
 
   get priorityMax() {
-    const { crypto: { defaults: { guardianGroupPriority } } } = this.guardianConfigurations$.getValue();
+    const {
+      crypto: {
+        defaults: { guardianGroupPriority },
+      },
+    } = this.guardianConfigurations$.getValue();
     const { max } = guardianGroupPriority || { max: Number.MAX_SAFE_INTEGER };
     return max;
   }
@@ -127,25 +159,24 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
 
     this.isLoading$.next(true);
 
-    /*const {
-      wallet: { address: recipientId },
-      nftIds: nftIdsObjArray,
-    } = this.transferForm.value;
-    const nftIds = nftIdsObjArray.map(({ nftId }) => nftId);
+    const guardianGroup = this.groupForm.value;
 
     this.cryptoService
-      .transfer({
-        nftIds,
-        recipientId,
-      })
+      .setGuardianGroupPermissions(guardianGroup)
       .pipe(
         tap(
           () => {
-            this.nzMessageService.success('Transfer initiated!');
+            this.nzMessageService.success(
+              'Group transaction broadcast to network!'
+            );
             this.nzModalRef.destroy({ refresh: true });
           },
           (err) => {
-            this.nzNotificationService.create('error', 'Transfer failed!', err);
+            this.nzNotificationService.create(
+              'error',
+              'Creating group transaction failed!',
+              err
+            );
           }
         ),
         finalize(() => {
@@ -153,9 +184,8 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
         }),
         untilDestroyed(this)
       )
-      .subscribe();*/
+      .subscribe();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 }

@@ -1,24 +1,30 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit, TemplateRef, ViewChild
+  OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
   defaultIfEmpty,
   delay,
   distinctUntilChanged,
-  filter, finalize, map,
+  filter,
+  finalize,
+  map,
   switchMap,
-  tap
+  takeUntil,
+  tap,
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import {
   PaginationMeta,
-  TableColumnConfig
+  TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
 import { Logger } from '@app/@core/services/logger.service';
 import { GuardianResourcesTypes } from '@protokol/client';
@@ -28,32 +34,36 @@ import {
   NzModalService,
   NzNotificationService,
   NzSwitchComponent,
-  NzTableQueryParams
+  NzTableQueryParams,
 } from 'ng-zorro-antd';
 import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
 import {
   LoadGuardianGroup,
-  LoadGuardianGroups
+  LoadGuardianGroups,
 } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
 import { CryptoService } from '@core/services/crypto.service';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
+import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 
 @Component({
   selector: 'app-guardian-groups',
   templateUrl: './guardian-groups.component.html',
   styleUrls: ['./guardian-groups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuardianGroupsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  @Select(GuardianGroupsState.getGuardianGroupIds) guardianGroupIds$: Observable<string[]>;
+  @Select(GuardianGroupsState.getGuardianGroupIds)
+  guardianGroupIds$: Observable<string[]>;
   @Select(GuardianGroupsState.getMeta) meta$: Observable<PaginationMeta>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
-  rowsLoading$: BehaviorSubject<{ [name: string]: boolean; }> = new BehaviorSubject({});
+  rowsLoading$: BehaviorSubject<{
+    [name: string]: boolean;
+  }> = new BehaviorSubject({});
 
   getBaseUrl$: Observable<string>;
   rows$: Observable<GuardianResourcesTypes.Group[]> = of([]);
@@ -76,7 +86,8 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     private nzMessageService: NzMessageService,
     private nzNotificationService: NzNotificationService,
     private cd: ChangeDetectorRef,
-    private nzModalService: NzModalService
+    private nzModalService: NzModalService,
+    private actions$: Actions
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -89,31 +100,33 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
       {
         propertyName: 'name',
         headerName: 'Group Name',
-        sortBy: true
+        sortBy: true,
       },
       {
         propertyName: 'priority',
         headerName: 'Priority',
-        sortBy: true
+        sortBy: true,
       },
       {
         headerName: 'Default',
-        columnTransformTpl: this.defaultTpl
+        columnTransformTpl: this.defaultTpl,
       },
       {
         headerName: 'Active',
-        columnTransformTpl: this.activeTpl
+        columnTransformTpl: this.activeTpl,
       },
       {
         headerName: 'Permissions',
-        columnTransformTpl: this.permissionsTpl
-      }
+        columnTransformTpl: this.permissionsTpl,
+      },
     ];
 
     this.rows$ = this.guardianGroupIds$.pipe(
       distinctUntilChanged(),
       switchMap((guardianGroupIds) =>
-        this.store.select(GuardianGroupsState.getGuardianGroupsByIds(guardianGroupIds))
+        this.store.select(
+          GuardianGroupsState.getGuardianGroupsByIds(guardianGroupIds)
+        )
       ),
       tap(() => this.isLoading$.next(false))
     );
@@ -130,16 +143,32 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new LoadGuardianGroups());
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   showAddGroupModal(event: MouseEvent) {
     event.preventDefault();
 
-    this.nzModalService.create({
+    const createGroupModalRef = this.nzModalService.create<
+      GuardianGroupModalComponent,
+      CreateModalResponse
+    >({
       nzContent: GuardianGroupModalComponent,
-      ...ModalUtils.getCreateModalDefaultConfig()
+      ...ModalUtils.getCreateModalDefaultConfig(),
     });
+
+    createGroupModalRef.afterClose
+      .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianGroups))),
+        delay(8000),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            this.store.dispatch(new LoadGuardianGroups());
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   onPermissionsChange(event: MouseEvent, group: GuardianResourcesTypes.Group) {
@@ -148,16 +177,20 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     this.nzModalService.create({
       nzContent: GuardianGroupModalComponent,
       nzComponentParams: {
-        group
+        group,
       },
-      ...ModalUtils.getCreateModalDefaultConfig()
+      ...ModalUtils.getCreateModalDefaultConfig(),
     });
   }
 
-  onSetRowLoading(name: string, isLoading: boolean, switchCmp?: NzSwitchComponent) {
+  onSetRowLoading(
+    name: string,
+    isLoading: boolean,
+    switchCmp?: NzSwitchComponent
+  ) {
     this.rowsLoading$.next({
       ...this.rowsLoading$.getValue(),
-      [name]: isLoading
+      [name]: isLoading,
     });
     if (switchCmp) {
       switchCmp.nzLoading = isLoading;
@@ -166,18 +199,24 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
   }
 
   onGetRowLoading(groupName: string): Observable<boolean> {
-    return this.rowsLoading$.asObservable()
-      .pipe(
-        map((rowsLoading) => {
-          return rowsLoading[groupName] || false;
-        })
-      );
+    return this.rowsLoading$.asObservable().pipe(
+      map((rowsLoading) => {
+        return rowsLoading[groupName] || false;
+      })
+    );
   }
 
-  onGroupDefaultUpdate(isDefault: boolean, group: GuardianResourcesTypes.Group, defaultSwitchCmp: NzSwitchComponent, isLoading: boolean) {
+  onGroupDefaultUpdate(
+    isDefault: boolean,
+    group: GuardianResourcesTypes.Group,
+    defaultSwitchCmp: NzSwitchComponent,
+    isLoading: boolean
+  ) {
     const { name } = group;
     if (isLoading) {
-      this.nzMessageService.warning(`Group “${name}” update in progress, please wait!`);
+      this.nzMessageService.warning(
+        `Group “${name}” update in progress, please wait!`
+      );
       return;
     }
 
@@ -186,28 +225,25 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     this.cryptoService
       .setGuardianGroupPermissions({
         ...group,
-        default: isDefault
+        default: isDefault,
       })
       .pipe(
         tap(
           () => {
             this.nzMessageService.success(`Group “${name}” updated!`);
 
-            EMPTY
-              .pipe(
-                defaultIfEmpty(),
-                delay(8000),
-                switchMap(() =>
-                  this.store.dispatch(new LoadGuardianGroup(name))
-                    .pipe(
-                      finalize(() => {
-                        this.onSetRowLoading(name, false, defaultSwitchCmp);
-                      })
-                    )
-                ),
-                untilDestroyed(this)
-              )
-              .subscribe();
+            EMPTY.pipe(
+              defaultIfEmpty(),
+              delay(8000),
+              switchMap(() =>
+                this.store.dispatch(new LoadGuardianGroup(name)).pipe(
+                  finalize(() => {
+                    this.onSetRowLoading(name, false, defaultSwitchCmp);
+                  })
+                )
+              ),
+              untilDestroyed(this)
+            ).subscribe();
           },
           (err) => {
             this.nzNotificationService.create(
@@ -223,11 +259,17 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
-  onGroupActiveUpdate(active: boolean, group: GuardianResourcesTypes.Group, activeSwitchCmp: NzSwitchComponent, isLoading: boolean) {
+  onGroupActiveUpdate(
+    active: boolean,
+    group: GuardianResourcesTypes.Group,
+    activeSwitchCmp: NzSwitchComponent,
+    isLoading: boolean
+  ) {
     const { name } = group;
     if (isLoading) {
-      this.nzMessageService.warning(`Group “${name}” update in progress, please wait!`);
+      this.nzMessageService.warning(
+        `Group “${name}” update in progress, please wait!`
+      );
       return;
     }
 
@@ -236,28 +278,25 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
     this.cryptoService
       .setGuardianGroupPermissions({
         ...group,
-        active
+        active,
       })
       .pipe(
         tap(
           () => {
             this.nzMessageService.success(`Group “${name}” updated!`);
 
-            EMPTY
-              .pipe(
-                defaultIfEmpty(),
-                delay(8000),
-                switchMap(() =>
-                  this.store.dispatch(new LoadGuardianGroup(name))
-                    .pipe(
-                      finalize(() => {
-                        this.onSetRowLoading(name, false, activeSwitchCmp);
-                      })
-                    )
-                ),
-                untilDestroyed(this)
-              )
-              .subscribe();
+            EMPTY.pipe(
+              defaultIfEmpty(),
+              delay(8000),
+              switchMap(() =>
+                this.store.dispatch(new LoadGuardianGroup(name)).pipe(
+                  finalize(() => {
+                    this.onSetRowLoading(name, false, activeSwitchCmp);
+                  })
+                )
+              ),
+              untilDestroyed(this)
+            ).subscribe();
           },
           (err) => {
             this.nzNotificationService.create(
