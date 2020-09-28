@@ -25,8 +25,8 @@ import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import {
   PaginationMeta,
   TableColumnConfig,
-} from '@app/@shared/interfaces/table.types';
-import { Logger } from '@app/@core/services/logger.service';
+} from '@shared/interfaces/table.types';
+import { Logger } from '@core/services/logger.service';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import {
@@ -36,14 +36,14 @@ import {
   NzSwitchComponent,
   NzTableQueryParams,
 } from 'ng-zorro-antd';
-import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
+import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import {
   LoadGuardianGroup,
   LoadGuardianGroups,
-} from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
+} from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { CryptoService } from '@core/services/crypto.service';
 import { ModalUtils } from '@core/utils/modal-utils';
-import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
+import { GuardianGroupModalComponent } from '../../components/guardian-group-modal/guardian-group-modal.component';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 
 @Component({
@@ -55,9 +55,9 @@ import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 export class GuardianGroupsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  @Select(GuardianGroupsState.getGuardianGroupIds)
+  @Select(GuardianState.getGuardianGroupIds)
   guardianGroupIds$: Observable<string[]>;
-  @Select(GuardianGroupsState.getMeta) meta$: Observable<PaginationMeta>;
+  @Select(GuardianState.getMeta) meta$: Observable<PaginationMeta>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -125,7 +125,7 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       switchMap((guardianGroupIds) =>
         this.store.select(
-          GuardianGroupsState.getGuardianGroupsByIds(guardianGroupIds)
+          GuardianState.getGuardianGroupsByIds(guardianGroupIds)
         )
       ),
       tap(() => this.isLoading$.next(false))

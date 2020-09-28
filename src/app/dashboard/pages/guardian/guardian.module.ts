@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { GuardianGroupsRoutingModule } from './guardian-groups-routing.module';
-import { GuardianGroupsComponent } from './guardian-groups.component';
+import { GuardianRoutingModule } from './guardian-routing.module';
+import { GuardianGroupsComponent } from './pages/groups/guardian-groups.component';
 import {
   NzButtonModule,
   NzFormModule,
@@ -18,15 +18,15 @@ import {
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from '@core/directives/ngLet.module';
-import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
+import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import { NgxsModule } from '@ngxs/store';
 import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
-import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guardian-groups/components/guardian-group-permissions-form/guardian-group-permissions-form.component';
+import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guardian/components/guardian-group-permissions-form/guardian-group-permissions-form.component';
 
 @NgModule({
   imports: [
-    GuardianGroupsRoutingModule,
-    NgxsModule.forFeature([GuardianGroupsState]),
+    GuardianRoutingModule,
+    NgxsModule.forFeature([GuardianState]),
     CommonModule,
     SharedModule,
     NzSpinModule,
@@ -52,4 +52,4 @@ import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guar
   ],
   exports: [],
 })
-export class GuardianGroupsModule {}
+export class GuardianModule {}

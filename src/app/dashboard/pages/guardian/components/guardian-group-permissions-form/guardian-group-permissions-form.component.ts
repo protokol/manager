@@ -16,11 +16,11 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { NftIdsFormItem } from '@app/dashboard/pages/transfers/interfaces/transfers.types';
 import { BehaviorSubject } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { LoadTransactionTypes } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
-import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
-import { GuardianUtils } from '@app/dashboard/pages/guardian-groups/utils/guardian-utils';
+import { LoadTransactionTypes } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
+import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
+import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-utils';
 import { GuardianResourcesTypes } from '@protokol/client';
-import { TransactionType } from '@app/dashboard/pages/guardian-groups/interfaces/guardian.types';
+import { TransactionType } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
 
 @Component({
   selector: 'app-guardian-group-permissions-form',
@@ -50,7 +50,7 @@ export class GuardianGroupPermissionsFormComponent
 
   constructor(private formBuilder: FormBuilder, private store: Store) {
     this.store
-      .select(GuardianGroupsState.getTransactionTypes)
+      .select(GuardianState.getTransactionTypes)
       .pipe(
         first((transactionTypes) => !!transactionTypes),
         tap((transactionTypes) => {

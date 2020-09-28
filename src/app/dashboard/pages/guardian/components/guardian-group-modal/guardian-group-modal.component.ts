@@ -18,10 +18,10 @@ import {
 import { FormUtils } from '@core/utils/form-utils';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { Store } from '@ngxs/store';
-import { GuardianGroupsState } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.state';
+import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import { untilDestroyed } from '@core/until-destroyed';
 import { finalize, first, tap } from 'rxjs/operators';
-import { LoadGuardianConfigurations } from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
+import { LoadGuardianConfigurations } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { CryptoService } from '@core/services/crypto.service';
 
 @Component({
@@ -53,7 +53,7 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
     private nzNotificationService: NzNotificationService
   ) {
     this.store
-      .select(GuardianGroupsState.getGuardianConfigurations)
+      .select(GuardianState.getGuardianConfigurations)
       .pipe(
         first((guardianConfigurations) => !!guardianConfigurations),
         tap((guardianConfigurations) => {

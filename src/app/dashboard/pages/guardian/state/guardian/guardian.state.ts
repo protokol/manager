@@ -12,10 +12,10 @@ import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { GuardianResourcesTypes } from '@protokol/client';
 import {
-  GUARDIAN_GROUPS_TYPE_NAME, LoadGuardianGroups,
+  GUARDIAN_TYPE_NAME, LoadGuardianGroups,
   SetGuardianGroupsByIds,
   LoadGuardianGroup, LoadTransactionTypes, LoadGuardianConfigurations
-} from '@app/dashboard/pages/guardian-groups/state/guardian-groups/guardian-groups.actions';
+} from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { TransactionTypes } from '@arkecosystem/client';
 
@@ -36,11 +36,11 @@ const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
 };
 
 @State<GuardianGroupsStateModel>({
-  name: GUARDIAN_GROUPS_TYPE_NAME,
+  name: GUARDIAN_TYPE_NAME,
   defaults: { ...AUCTIONS_DEFAULT_STATE },
 })
 @Injectable()
-export class GuardianGroupsState {
+export class GuardianState {
   readonly log = new Logger(this.constructor.name);
 
   constructor(private guardianGroupsService: GuardianGroupsService) {}
@@ -72,8 +72,8 @@ export class GuardianGroupsState {
 
   static getGuardianGroupsByIds(guardianGroupIds: string[]) {
     return createSelector(
-      [GuardianGroupsState.getGuardianGroups],
-      (guardianGroups: ReturnType<typeof GuardianGroupsState.getGuardianGroups>) => {
+      [GuardianState.getGuardianGroups],
+      (guardianGroups: ReturnType<typeof GuardianState.getGuardianGroups>) => {
         if (!guardianGroupIds.length) {
           return [];
         }

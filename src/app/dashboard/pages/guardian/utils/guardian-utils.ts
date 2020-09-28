@@ -1,4 +1,4 @@
-import { TRANSACTION_TYPES } from '@app/dashboard/pages/guardian-groups/constants/guardian.constants';
+import { TRANSACTION_TYPES } from '@app/dashboard/pages/guardian/constants/guardian.constants';
 
 export abstract class GuardianUtils {
   static transactionTypeIndexToGroupName(transactionIndex: string | number) {
