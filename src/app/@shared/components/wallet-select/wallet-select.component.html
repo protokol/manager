@@ -8,10 +8,12 @@
   nzServerSearch
   (nzOnSearch)="onSearchChanged($event)"
 >
-  <ng-container *ngFor="let wallet of wallets$ | async">
-    <nz-option [nzValue]="wallet" [nzLabel]="wallet.address" nzCustomContent>
-      <span class="font-monospace">{{ wallet.address }}</span>
-    </nz-option>
+  <ng-container *ngIf="labelProp$ | async as labelProp">
+    <ng-container *ngFor="let wallet of wallets$ | async">
+      <nz-option [nzValue]="wallet" [nzLabel]="wallet[labelProp]" nzCustomContent>
+        <span class="font-monospace">{{ wallet[labelProp] }}</span>
+      </nz-option>
+    </ng-container>
   </ng-container>
 </nz-select>
 <ng-template #renderTemplate>

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { GuardianRoutingModule } from './guardian-routing.module';
-import { GuardianGroupsComponent } from './pages/groups/guardian-groups.component';
+import { GroupsComponent } from './pages/groups/groups.component';
 import {
   NzButtonModule,
   NzFormModule,
@@ -22,6 +22,8 @@ import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guar
 import { NgxsModule } from '@ngxs/store';
 import { GuardianGroupModalComponent } from './components/guardian-group-modal/guardian-group-modal.component';
 import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guardian/components/guardian-group-permissions-form/guardian-group-permissions-form.component';
+import { UsersComponent } from './pages/users/users.component';
+import { GuardianUserModalComponent } from '@app/dashboard/pages/guardian/components/guardian-user-modal/guardian-user-modal.component';
 
 @NgModule({
   imports: [
@@ -46,8 +48,10 @@ import { GuardianGroupPermissionsFormComponent } from '@app/dashboard/pages/guar
   ],
   providers: [],
   declarations: [
-    GuardianGroupsComponent,
+    GroupsComponent,
+    UsersComponent,
     GuardianGroupModalComponent,
+    GuardianUserModalComponent,
     GuardianGroupPermissionsFormComponent,
   ],
   exports: [],

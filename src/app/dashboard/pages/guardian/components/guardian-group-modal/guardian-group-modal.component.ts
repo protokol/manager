@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -20,8 +19,11 @@ import { GuardianResourcesTypes } from '@protokol/client';
 import { Store } from '@ngxs/store';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import { untilDestroyed } from '@core/until-destroyed';
-import { finalize, first, tap } from 'rxjs/operators';
-import { LoadGuardianConfigurations } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
+import { defaultIfEmpty, finalize, first, tap } from 'rxjs/operators';
+import {
+  LoadGuardianConfigurations,
+  LoadTransactionTypes
+} from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { CryptoService } from '@core/services/crypto.service';
 
 @Component({
@@ -33,12 +35,15 @@ import { CryptoService } from '@core/services/crypto.service';
 export class GuardianGroupModalComponent implements OnInit, OnDestroy {
   groupForm!: FormGroup;
   isFormReady$ = new BehaviorSubject(false);
+  isPermissionFormGroupReady$ = new BehaviorSubject(false);
   isLoading$ = new BehaviorSubject(false);
+  isEditMode$ = new BehaviorSubject(false);
   guardianConfigurations$ = new BehaviorSubject<GuardianResourcesTypes.GuardianConfigurations | null>(
     null
   );
 
-  @Input() group?: GuardianResourcesTypes.Group;
+  // use to fill out initial form values
+  group?: GuardianResourcesTypes.Group;
 
   @ViewChild('modalTitleTpl', { static: true })
   modalTitleTpl!: TemplateRef<{}>;
@@ -52,23 +57,13 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
     private nzMessageService: NzMessageService,
     private nzNotificationService: NzNotificationService
   ) {
-    this.store
-      .select(GuardianState.getGuardianConfigurations)
-      .pipe(
-        first((guardianConfigurations) => !!guardianConfigurations),
-        tap((guardianConfigurations) => {
-          this.guardianConfigurations$.next(guardianConfigurations);
-          this.createForm();
-          this.isFormReady$.next(true);
-        }),
-        untilDestroyed(this)
-      )
-      .subscribe();
-
-    this.store.dispatch(new LoadGuardianConfigurations());
   }
 
   ngOnInit(): void {
+    if (this.group) {
+      this.isEditMode$.next(true);
+    }
+
     // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
     setTimeout(() => {
       this.nzModalRef.updateConfig({
@@ -77,6 +72,29 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
       });
       this.cd.markForCheck();
     });
+
+    this.store
+      .select(GuardianState.getGuardianConfigurations)
+      .pipe(
+        first((guardianConfigurations) => !!guardianConfigurations),
+        tap((guardianConfigurations) => {
+          this.guardianConfigurations$.next(guardianConfigurations);
+          this.createForm(this.group);
+          this.isFormReady$.next(true);
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
+
+    this.store.dispatch(new LoadGuardianConfigurations());
+    this.store.dispatch(new LoadTransactionTypes())
+      .pipe(
+        defaultIfEmpty(),
+        tap(() => {
+          this.isPermissionFormGroupReady$.next(true);
+        }),
+        untilDestroyed(this)
+      ).subscribe();
   }
 
   get nameMinLength() {
@@ -121,10 +139,10 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
     return max;
   }
 
-  createForm() {
+  createForm(group?: GuardianResourcesTypes.Group) {
     this.groupForm = this.formBuilder.group({
       name: [
-        '',
+        group?.name || '',
         [
           Validators.required,
           Validators.min(this.nameMinLength),
@@ -132,16 +150,16 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
         ],
       ],
       priority: [
-        this.priorityMin,
+        group?.priority || this.priorityMin,
         [
           Validators.required,
           Validators.min(this.priorityMin),
           Validators.max(this.priorityMax),
         ],
       ],
-      active: [false],
-      default: [false],
-      permissions: [],
+      active: [group?.active || false],
+      default: [group?.default || false],
+      permissions: [this.group?.permissions || []],
     });
   }
 

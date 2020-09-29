@@ -12,27 +12,44 @@ import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { GuardianResourcesTypes } from '@protokol/client';
 import {
-  GUARDIAN_TYPE_NAME, LoadGuardianGroups,
+  GUARDIAN_TYPE_NAME,
+  LoadGuardianGroups,
   SetGuardianGroupsByIds,
-  LoadGuardianGroup, LoadTransactionTypes, LoadGuardianConfigurations
+  LoadGuardianGroup,
+  LoadTransactionTypes,
+  LoadGuardianConfigurations,
+  SetGuardianUsersByIds,
+  LoadGuardianUsers,
+  LoadGuardianUser, LoadGuardianUserGroups, GuardianUserLoadOptions
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { TransactionTypes } from '@arkecosystem/client';
+import { GuardianUsersService } from '@core/services/guardian-users.service';
+import { GuardianUserExtended } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
+import { EMPTY } from 'rxjs';
 
 interface GuardianGroupsStateModel {
   transactionTypes?: TransactionTypes | null;
-  guardianConfigurations?: GuardianResourcesTypes.GuardianConfigurations | null;
-  guardianGroupIds: string[];
-  guardianGroups: { [name: string]: GuardianResourcesTypes.Group };
-  meta: PaginationMeta | null;
+  configurations?: GuardianResourcesTypes.GuardianConfigurations | null;
+  groupIds: string[];
+  groups: { [name: string]: GuardianResourcesTypes.Group };
+  groupsMeta: PaginationMeta | null;
+  userPubKeys: string[];
+  users: { [pubKey: string]: GuardianResourcesTypes.User };
+  userGroups: { [pubKey: string]: GuardianResourcesTypes.Group[] };
+  usersMeta: PaginationMeta | null;
 }
 
 const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
   transactionTypes: undefined,
-  guardianConfigurations: undefined,
-  guardianGroupIds: [],
-  guardianGroups: {},
-  meta: null,
+  configurations: undefined,
+  groupIds: [],
+  groups: {},
+  groupsMeta: null,
+  userPubKeys: [],
+  users: {},
+  userGroups: {},
+  usersMeta: null,
 };
 
 @State<GuardianGroupsStateModel>({
@@ -43,22 +60,7 @@ const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
 export class GuardianState {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private guardianGroupsService: GuardianGroupsService) {}
-
-  @Selector()
-  static getGuardianGroupIds({ guardianGroupIds }: GuardianGroupsStateModel) {
-    return guardianGroupIds;
-  }
-
-  @Selector()
-  static getMeta({ meta }: GuardianGroupsStateModel) {
-    return meta;
-  }
-
-  @Selector()
-  static getGuardianGroups({ guardianGroups }: GuardianGroupsStateModel) {
-    return guardianGroups;
-  }
+  constructor(private guardianGroupsService: GuardianGroupsService, private guardianUsersService: GuardianUsersService) {}
 
   @Selector()
   static getTransactionTypes({ transactionTypes }: GuardianGroupsStateModel) {
@@ -66,8 +68,23 @@ export class GuardianState {
   }
 
   @Selector()
-  static getGuardianConfigurations({ guardianConfigurations }: GuardianGroupsStateModel) {
-    return guardianConfigurations;
+  static getGuardianConfigurations({ configurations }: GuardianGroupsStateModel) {
+    return configurations;
+  }
+
+  @Selector()
+  static getGuardianGroupIds({ groupIds }: GuardianGroupsStateModel) {
+    return groupIds;
+  }
+
+  @Selector()
+  static getGuardianGroupsMeta({ groupsMeta }: GuardianGroupsStateModel) {
+    return groupsMeta;
+  }
+
+  @Selector()
+  static getGuardianGroups({ groups }: GuardianGroupsStateModel) {
+    return groups;
   }
 
   static getGuardianGroupsByIds(guardianGroupIds: string[]) {
@@ -79,6 +96,62 @@ export class GuardianState {
         }
 
         return guardianGroupIds.map((gName) => guardianGroups[gName]);
+      }
+    );
+  }
+
+  @Selector()
+  static getGuardianUserPubKeys({ userPubKeys }: GuardianGroupsStateModel) {
+    return userPubKeys;
+  }
+
+  @Selector()
+  static getGuardianUsersMeta({ usersMeta }: GuardianGroupsStateModel) {
+    return usersMeta;
+  }
+
+  @Selector()
+  static getGuardianUsers({ users }: GuardianGroupsStateModel) {
+    return users;
+  }
+
+  @Selector()
+  static getGuardianUsersGroups({ userGroups }: GuardianGroupsStateModel) {
+    return userGroups;
+  }
+
+  static getGuardianUsersByPubKeys(
+    guardianUserPubKeys: string[],
+    { withGroups }: GuardianUserLoadOptions = { withGroups: false }
+  ) {
+    return createSelector(
+      [
+        GuardianState.getGuardianUsers,
+        GuardianState.getGuardianUsersGroups
+      ],
+      (
+        guardianUsers: ReturnType<typeof GuardianState.getGuardianUsers>,
+        guardianUsersGroups: ReturnType<typeof GuardianState.getGuardianUsersGroups>
+      ): GuardianUserExtended[] => {
+        if (!guardianUserPubKeys.length) {
+          return [];
+        }
+
+        return guardianUserPubKeys.map((pubKey) => {
+          const user = guardianUsers[pubKey];
+          if (!user) {
+            return null;
+          }
+
+          if (withGroups) {
+            return Object.assign({}, user, {
+              _groups: guardianUsersGroups.hasOwnProperty(pubKey)
+                ? guardianUsersGroups[pubKey]
+                : null,
+            });
+          }
+          return user;
+        });
       }
     );
   }
@@ -96,7 +169,7 @@ export class GuardianState {
         })
       );
 
-      this.guardianGroupsService
+      return this.guardianGroupsService
         .getTransactionTypes()
         .pipe(
           tap(
@@ -115,21 +188,21 @@ export class GuardianState {
               );
             }
           )
-        )
-        .subscribe();
+        );
     }
+    return EMPTY;
   }
 
   @Action(LoadGuardianConfigurations)
   loadGuardianConfigurations(
     { getState, setState }: StateContext<GuardianGroupsStateModel>
   ) {
-    const { guardianConfigurations } = getState();
+    const { configurations } = getState();
 
-    if (!guardianConfigurations && guardianConfigurations !== null) {
+    if (!configurations && configurations !== null) {
       setState(
         patch({
-          guardianConfigurations: null
+          configurations: null
         })
       );
 
@@ -140,14 +213,14 @@ export class GuardianState {
             (data) => {
               setState(
                 patch({
-                  guardianConfigurations: data
+                  configurations: data
                 })
               );
             },
             () => {
               setState(
                 patch({
-                  guardianConfigurations: undefined
+                  configurations: undefined
                 })
               );
             }
@@ -168,7 +241,7 @@ export class GuardianState {
         () => {
           setState(
             patch({
-              guardianGroups: patch({ [groupName]: undefined })
+              groups: patch({ [groupName]: undefined })
             })
           );
         }
@@ -185,8 +258,8 @@ export class GuardianState {
         tap(({ data }) => dispatch(new SetGuardianGroupsByIds(data))),
         tap(({ data, meta }) => {
           patchState({
-            guardianGroupIds: data.map((g) => g.name),
-            meta,
+            groupIds: data.map((g) => g.name),
+            groupsMeta: meta,
           });
         })
       )
@@ -202,14 +275,103 @@ export class GuardianState {
 
     setState(
       patch({
-        guardianGroups: groupsSet.reduce(
+        groups: groupsSet.reduce(
           (acc, value) => ({
             ...acc,
             [value.name]: value,
           }),
-          { ...getState().guardianGroups }
+          { ...getState().groups }
         ),
       })
+    );
+  }
+
+  @Action(LoadGuardianUser)
+  loadGuardianUser(
+    { setState, dispatch }: StateContext<GuardianGroupsStateModel>,
+    { publicKey }: LoadGuardianUser
+  ) {
+    return this.guardianUsersService.getUser(publicKey).pipe(
+      tap(
+        (data) => dispatch(new SetGuardianUsersByIds(data)),
+        () => {
+          setState(
+            patch({
+              users: patch({ [publicKey]: undefined })
+            })
+          );
+        }
+      )
+    );
+  }
+
+  @Action(LoadGuardianUsers)
+  loadGuardianUsers(
+    { patchState, dispatch }: StateContext<GuardianGroupsStateModel>,
+    { options: { withGroups } }: LoadGuardianUsers
+  ) {
+    this.guardianUsersService.getUsers()
+      .pipe(
+        tap(({ data }) => dispatch(new SetGuardianUsersByIds(data))),
+        tap(({ data, meta }) => {
+          patchState({
+            userPubKeys: data.map((g) => g.publicKey),
+            usersMeta: meta
+          });
+        }),
+        tap(({ data }) => {
+          if (withGroups) {
+            data.forEach(({ publicKey }) => {
+              dispatch(new LoadGuardianUserGroups(publicKey));
+            });
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  @Action(SetGuardianUsersByIds)
+  setGuardianUsersByIds(
+    { setState, getState }: StateContext<GuardianGroupsStateModel>,
+    { users }: SetGuardianUsersByIds
+  ) {
+    const usersSet = Array.isArray(users) ? users : [users];
+
+    setState(
+      patch({
+        users: usersSet.reduce(
+          (acc, value) => ({
+            ...acc,
+            [value.publicKey]: value
+          }),
+          { ...getState().users }
+        )
+      })
+    );
+  }
+
+  @Action(LoadGuardianUserGroups)
+  loadGuardianUserGroups(
+    { setState }: StateContext<GuardianGroupsStateModel>,
+    { publicKey }: LoadGuardianUserGroups
+  ) {
+    return this.guardianUsersService.getUserPermissions(publicKey).pipe(
+      tap(
+        (data) => {
+          setState(
+            patch({
+              userGroups: patch({ [publicKey]: data })
+            })
+          );
+        },
+        () => {
+          setState(
+            patch({
+              userGroups: patch({ [publicKey]: undefined })
+            })
+          );
+        }
+      )
     );
   }
 }

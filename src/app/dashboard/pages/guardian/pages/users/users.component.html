@@ -12,7 +12,7 @@
                 <input
                   type="text"
                   nz-input
-                  placeholder="Find group"
+                  placeholder="Find user"
                   [ngModel]="searchTerm$ | async"
                   (ngModelChange)="searchTerm$.next($event)"
                 />
@@ -23,9 +23,9 @@
             <button
               nz-button
               nzType="primary"
-              (click)="showAddGroupModal($event)"
+              (click)="showAddUserPermissionsModal($event)"
             >
-              Add Group
+              Add User Permissions
             </button>
           </nz-space-item>
         </nz-space>
@@ -51,7 +51,7 @@
   <app-page-header>
     <nz-space>
       <nz-space-item>
-        <h4 nz-typography nzType="secondary">Groups</h4>
+        <h4 nz-typography nzType="secondary">Users</h4>
       </nz-space-item>
       <nz-space-item>
         <app-popover-helper
@@ -62,44 +62,28 @@
     </nz-space>
   </app-page-header>
   <ng-template #pageTitleHelperTpl>
-    Define groups and manage group's users
+    Define users permissions via their public key
   </ng-template>
 </ng-template>
 
 <ng-template #permissionsTpl let-row="row">
-  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
-    <ng-container *ngIf="!isLoading; else permissionsDisabledTpl">
-      <a (click)="onPermissionsChange($event, row)">
-        Change
-      </a>
-    </ng-container>
-  </ng-container>
-</ng-template>
-
-<ng-template #permissionsDisabledTpl>
-  <a class="link-muted">
+  <a (click)="onPermissionsChange($event, row)">
     Change
   </a>
 </ng-template>
 
-<ng-template #defaultTpl let-row="row">
-  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
-    <nz-switch
-      [disabled]="isLoading"
-      #defaultSwitchCmp
-      [ngModel]="row.default"
-      (ngModelChange)="onGroupDefaultUpdate($event, row, defaultSwitchCmp, isLoading)"
-    ></nz-switch>
-  </ng-container>
+<ng-template #publicKeyTpl let-row="row">
+  <app-text-clipper
+    [text]="row.publicKey"
+    [copy]="true"
+  ></app-text-clipper>
 </ng-template>
 
-<ng-template #activeTpl let-row="row">
-  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
-    <nz-switch
-      [disabled]="isLoading"
-      #activeSwitchCmp
-      [ngModel]="row.active"
-      (ngModelChange)="onGroupActiveUpdate($event, row, activeSwitchCmp, isLoading)"
-    ></nz-switch>
+<ng-template #groupsTpl let-row="row">
+  <ng-container *ngFor="let groupName of row.groups; last as isLast">
+    <a (click)="onEditGroup($event, groupName)">
+      {{groupName}}
+    </a>
+    <br *ngIf="!isLast" />
   </ng-container>
 </ng-template>

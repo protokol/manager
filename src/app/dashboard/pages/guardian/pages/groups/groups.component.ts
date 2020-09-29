@@ -47,17 +47,17 @@ import { GuardianGroupModalComponent } from '../../components/guardian-group-mod
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 
 @Component({
-  selector: 'app-guardian-groups',
-  templateUrl: './guardian-groups.component.html',
-  styleUrls: ['./guardian-groups.component.scss'],
+  selector: 'app-groups',
+  templateUrl: './groups.component.html',
+  styleUrls: ['./groups.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuardianGroupsComponent implements OnInit, OnDestroy {
+export class GroupsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
   @Select(GuardianState.getGuardianGroupIds)
   guardianGroupIds$: Observable<string[]>;
-  @Select(GuardianState.getMeta) meta$: Observable<PaginationMeta>;
+  @Select(GuardianState.getGuardianGroupsMeta) meta$: Observable<PaginationMeta>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -174,13 +174,28 @@ export class GuardianGroupsComponent implements OnInit, OnDestroy {
   onPermissionsChange(event: MouseEvent, group: GuardianResourcesTypes.Group) {
     event.preventDefault();
 
-    this.nzModalService.create({
+    const editGroupModalRef = this.nzModalService.create<GuardianGroupModalComponent,
+      CreateModalResponse>({
       nzContent: GuardianGroupModalComponent,
       nzComponentParams: {
-        group,
+        group
       },
-      ...ModalUtils.getCreateModalDefaultConfig(),
+      ...ModalUtils.getCreateModalDefaultConfig()
     });
+
+    editGroupModalRef.afterClose
+      .pipe(
+        delay(8000),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            const { name } = group;
+            this.store.dispatch(new LoadGuardianGroup(name));
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   onSetRowLoading(

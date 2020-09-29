@@ -19,12 +19,18 @@
     }
   }
 
-  nz-switch {
+  .switch-allow {
     button {
-      background-color: $switch-unchecked-color;
-
       &.ant-switch-checked {
         background-color: $switch-checked-color;
+      }
+    }
+  }
+
+  .switch-deny {
+    button {
+      &.ant-switch-checked {
+        background-color: $switch-unchecked-color;
       }
     }
   }

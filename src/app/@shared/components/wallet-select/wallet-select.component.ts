@@ -59,6 +59,12 @@ export class WalletSelectComponent
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
+  labelProp$ = new BehaviorSubject<keyof Wallet>('address');
+
+  @Input()
+  set labelProp(labelProp: keyof Wallet) {
+    this.labelProp$.next(labelProp);
+  }
 
   @Input() filter = (): OperatorFunction<
     Pagination<Wallet>,
@@ -173,7 +179,7 @@ export class WalletSelectComponent
 
     this.queryParams$.next({
       ...TableUtils.getDefaultNzTableQueryParams(),
-      filter: [{ key: 'address', value: event }],
+      filter: [{ key: this.labelProp$.getValue(), value: event }],
     });
   }
 

@@ -83,7 +83,7 @@
             <nz-form-label nzFor="active" nzRequired>Active</nz-form-label>
           </app-form-label>
           <nz-form-control>
-            <nz-switch id="active" formControlName="active"></nz-switch>
+            <nz-switch class="on-off" id="active" formControlName="active"></nz-switch>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -93,13 +93,15 @@
             <nz-form-label nzFor="default" nzRequired>Default</nz-form-label>
           </app-form-label>
           <nz-form-control>
-            <nz-switch id="default" formControlName="default"></nz-switch>
+            <nz-switch class="on-off" id="default" formControlName="default"></nz-switch>
           </nz-form-control>
         </nz-form-item>
       </div>
     </div>
-    <app-guardian-group-permissions-form formControlName="permissions">
-    </app-guardian-group-permissions-form>
+    <ng-container *ngIf="isPermissionFormGroupReady$ | async; else formLoadingTpl">
+      <app-guardian-group-permissions-form formControlName="permissions">
+      </app-guardian-group-permissions-form>
+    </ng-container>
   </form>
 </ng-container>
 
@@ -112,7 +114,12 @@
     <nz-space>
       <nz-space-item>
         <h4 nz-typography nzType="secondary" class="text-capitalize">
-          Create new group
+          <ng-container *ngIf="isEditMode$ | async; else createMode">
+            Change group permissions
+          </ng-container>
+          <ng-template #createMode>
+            Create new group
+          </ng-template>
         </h4>
       </nz-space-item>
       <nz-space-item>
@@ -124,7 +131,12 @@
     </nz-space>
   </app-modal-header>
   <ng-template #modalTitleHelperTpl>
-    Create group definition, define its permissions and add users after creating the group
+    <ng-container *ngIf="isEditMode$ | async; else createMode">
+      Update group definition
+    </ng-container>
+    <ng-template #createMode>
+      Create group definition, define permissions and add users after creating the group
+    </ng-template>
   </ng-template>
 </ng-template>
 
@@ -137,6 +149,11 @@
     [disabled]="(isFormReady$ | async) === false || (isLoading$ | async) || !groupForm.valid"
     (click)="submitForm($event)"
   >
-    Create new group
+    <ng-container *ngIf="isEditMode$ | async; else createMode">
+      Save changes
+    </ng-container>
+    <ng-template #createMode>
+      Create new group
+    </ng-template>
   </button>
 </div>

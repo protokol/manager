@@ -7,10 +7,13 @@
   }
 
   nz-switch {
-    button {
-      background-color: $switch-unchecked-color;
-      &.ant-switch-checked {
-        background-color: $switch-checked-color;
+    &.on-off {
+      button {
+        background-color: $switch-unchecked-color;
+
+        &.ant-switch-checked {
+          background-color: $switch-checked-color;
+        }
       }
     }
   }

@@ -127,10 +127,13 @@ export class CryptoService {
   setGuardianGroupPermissions(guardianGroup: GuardianInterfaces.GuardianGroupPermissionsAsset): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
+        const { permissions } = guardianGroup;
+        const filterPermissions = permissions.filter(({kind}) => kind >= 0);
 
         const transfer = new this.guardianCrypto.Builders.GuardianGroupPermissionsBuilder()
           .GuardianGroupPermissions({
-            ...guardianGroup
+            ...guardianGroup,
+            permissions: filterPermissions
           })
           .nonce(nonce)
           .signWithWif(wif);

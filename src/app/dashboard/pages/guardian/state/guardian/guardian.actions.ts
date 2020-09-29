@@ -1,5 +1,9 @@
 import { GuardianResourcesTypes } from '@protokol/client';
 
+export interface GuardianUserLoadOptions {
+  withGroups: boolean;
+}
+
 export const GUARDIAN_TYPE_NAME = 'guardian';
 
 export class LoadTransactionTypes {
@@ -34,4 +38,33 @@ export class SetGuardianGroupsByIds {
       | GuardianResourcesTypes.Group[]
       | GuardianResourcesTypes.Group
   ) {}
+}
+
+export class LoadGuardianUsers {
+  static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianUsers`;
+
+  constructor(public options: GuardianUserLoadOptions = { withGroups: false }) {}
+}
+
+export class LoadGuardianUser {
+  static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianUser`;
+
+  constructor(public publicKey: string, public options: GuardianUserLoadOptions = { withGroups: false }) {}
+}
+
+export class SetGuardianUsersByIds {
+  static type = `[${GUARDIAN_TYPE_NAME}] SetGuardianUsersByIds`;
+
+  constructor(
+    public users:
+      | GuardianResourcesTypes.User[]
+      | GuardianResourcesTypes.User
+  ) {}
+}
+
+export class LoadGuardianUserGroups {
+  static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianUserGroups`;
+
+  constructor(public publicKey: string) {
+  }
 }
