@@ -14,11 +14,12 @@ import {
   Store,
 } from '@ngxs/store';
 import { ManagerCreateSnapshot } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
 import { tap } from 'rxjs/operators';
 import { FuncUtils } from '@core/utils/func-utils';
 import { FormUtils } from '@core/utils/form-utils';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-snapshot-create-modal',

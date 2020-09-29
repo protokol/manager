@@ -1,6 +1,6 @@
-$open-sans-regular: "assets/fonts/OpenSans-Regular.ttf";
-$open-sans-body: "assets/fonts/OpenSans-Bold.ttf";
-$open-sans-italic: "assets/fonts/OpenSans-Italic.ttf";
+$open-sans-regular: "../assets/fonts/OpenSans-Regular.ttf";
+$open-sans-bold: "../assets/fonts/OpenSans-Bold.ttf";
+$open-sans-italic: "../assets/fonts/OpenSans-Italic.ttf";
 
 @font-face {
   font-family: "Open Sans";
@@ -10,7 +10,7 @@ $open-sans-italic: "assets/fonts/OpenSans-Italic.ttf";
 
 @font-face {
   font-family: "Open Sans";
-  src: url($open-sans-body) format("truetype");
+  src: url($open-sans-bold) format("truetype");
   font-weight: bold;
 }
 

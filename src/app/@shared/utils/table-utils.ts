@@ -1,5 +1,4 @@
-import { NzTableQueryParams } from 'ng-zorro-antd';
-import { NzTableSortOrder } from 'ng-zorro-antd/table/src/table.types';
+import { NzTableQueryParams, NzTableSortOrder } from 'ng-zorro-antd/table/src/table.types';
 import { TableApiQuery } from '@shared/interfaces/table.types';
 
 export abstract class TableUtils {

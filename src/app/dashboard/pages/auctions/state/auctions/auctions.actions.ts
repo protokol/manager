@@ -1,5 +1,5 @@
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { ExchangeResourcesTypes } from '@protokol/client';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export const AUCTIONS_TYPE_NAME = 'auctions';
 

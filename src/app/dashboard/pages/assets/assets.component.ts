@@ -23,7 +23,6 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { AssetsState } from '@app/@core/store/assets/assets.state';
 import { LoadAsset, LoadAssets } from '@app/@core/store/assets/assets.actions';
 import { Logger } from '@app/@core/services/logger.service';
@@ -36,6 +35,8 @@ import { AssetCreateModalComponent } from '@shared/components/asset-create-modal
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { TableUtils } from '@shared/utils/table-utils';
 import { ModalUtils } from '@core/utils/modal-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-assets',

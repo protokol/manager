@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
 import { Logger } from '@core/services/logger.service';
 import { Select, Store } from '@ngxs/store';
@@ -30,6 +29,8 @@ import { SetSelectedProfile } from '@core/store/profiles/profiles.actions';
 import { SetPinAction } from '@core/store/pins/pins.actions';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { SetNetwork } from '@core/store/network/networks.actions';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-asset-create-modal',

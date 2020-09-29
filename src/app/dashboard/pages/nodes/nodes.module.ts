@@ -3,24 +3,6 @@ import { SharedModule } from '@shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { NodesRoutingModule } from '@app/dashboard/pages/nodes/nodes-routing.module';
 import { NodeDetailsComponent } from '@app/dashboard/pages/nodes/components/node-details/node-details.component';
-import {
-  NzBadgeModule,
-  NzButtonModule,
-  NzCheckboxModule,
-  NzDescriptionsModule,
-  NzDividerModule,
-  NzDropDownModule,
-  NzFormModule,
-  NzGridModule,
-  NzIconModule,
-  NzInputModule,
-  NzModalModule,
-  NzPopconfirmModule,
-  NzRadioModule,
-  NzSelectModule,
-  NzSpinModule,
-  NzTypographyModule,
-} from 'ng-zorro-antd';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { NodeManagerSettingsModalComponent } from './components/node-manager-settings-modal/node-manager-settings-modal.component';
 import { NodeManagerDetailsComponent } from './components/node-manager-details/node-manager-details.component';
@@ -43,6 +25,22 @@ import { ManagerDiskSpaceState } from '@app/dashboard/pages/nodes/state/manager-
 import { DiskSpaceTableComponent } from '@app/dashboard/pages/nodes/components/disk-space-table/disk-space-table.component';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
 import { ArgsModalComponent } from '@app/dashboard/pages/nodes/components/args-modal/args-modal.component';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @NgModule({
   imports: [

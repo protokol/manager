@@ -8,10 +8,10 @@ import {
   CreateAttributeModalResponse,
 } from '@app/dashboard/pages/collections/interfaces/collection.types';
 import { FormUtils } from '@core/utils/form-utils';
-import { NzModalRef } from 'ng-zorro-antd';
 import { ObjectUtils } from '@core/utils/object-utils';
 import { untilDestroyed } from '@core/until-destroyed';
 import { tap } from 'rxjs/operators';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-attribute-create-modal',

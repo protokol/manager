@@ -21,12 +21,12 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { WalletsState } from '@app/@core/store/wallets/wallets.state';
 import { Wallet } from '@arkecosystem/client';
 import { LoadWallets } from '@app/@core/store/wallets/wallets.actions';
 import { Router } from '@angular/router';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-wallets',

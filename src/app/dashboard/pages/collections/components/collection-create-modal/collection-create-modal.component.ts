@@ -20,12 +20,6 @@ import { CryptoService } from '@app/@core/services/crypto.service';
 import { FormUtils } from '@core/utils/form-utils';
 import { BehaviorSubject } from 'rxjs';
 import { finalize, first, tap } from 'rxjs/operators';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzModalService,
-  NzNotificationService,
-} from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { Store } from '@ngxs/store';
@@ -36,6 +30,9 @@ import { CollectionsUtils } from '@app/dashboard/pages/collections/utils/collect
 import { AttributeCreateModalComponent } from '@app/dashboard/pages/collections/components/attribute-create-modal/attribute-create-modal.component';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { CreateAttributeModalResponse } from '@app/dashboard/pages/collections/interfaces/collection.types';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-collection-create-modal',

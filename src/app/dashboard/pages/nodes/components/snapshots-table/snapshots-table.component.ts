@@ -13,11 +13,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { SnapshotsListItem } from '@core/interfaces/core-manager.types';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { SnapshotRestoreModalComponent } from '@app/dashboard/pages/nodes/components/snapshot-restore-modal/snapshot-restore-modal.component';
 import { untilDestroyed } from '@core/until-destroyed';
 import { ManagerDeleteSnapshot } from '@app/dashboard/pages/nodes/state/manager-snapshots/manager-snapshots.actions';
 import { Store } from '@ngxs/store';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-snapshots-table',

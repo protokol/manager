@@ -6,7 +6,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { CollectionsService } from '@core/services/collections.service';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -30,6 +29,7 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { untilDestroyed } from '@core/until-destroyed';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-collection-select',

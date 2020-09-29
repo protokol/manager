@@ -11,11 +11,6 @@ import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TableColumnConfig } from '@app/@shared/interfaces/table.types';
-import {
-  NzMessageService,
-  NzModalService,
-  NzTableQueryParams,
-} from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { Router } from '@angular/router';
 import { PeerUtils } from '@app/dashboard/pages/peers/utils/peer-utils';
@@ -26,6 +21,9 @@ import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/co
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { MyNode } from '@core/interfaces/node.types';
 import { MyNodesCreateModalComponent } from '@app/@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-my-nodes',

@@ -6,7 +6,6 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import {
@@ -30,6 +29,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { BaseResourcesTypes } from '@protokol/client';
 import { AssetsService } from '@core/services/assets.service';
 import { LoadAssetsSelectFunc } from '@app/@shared/interfaces/asset-select.types';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-asset-select',

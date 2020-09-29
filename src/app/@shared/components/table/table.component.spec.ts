@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableComponent } from './table.component';
-import { NzTableModule } from 'ng-zorro-antd';
 import { CommonModule } from '@angular/common';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 describe('TableComponent', () => {
   let component: TableComponent;

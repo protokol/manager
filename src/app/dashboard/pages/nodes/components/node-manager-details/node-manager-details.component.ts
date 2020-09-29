@@ -32,7 +32,6 @@ import {
 import { ManagerProcessesState } from '@app/dashboard/pages/nodes/state/manager-processes/manager-processes.state';
 import { LoadManagerProcesses } from '../../state/manager-processes/manager-processes.actions';
 import { TextUtils } from '@core/utils/text-utils';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Logger } from '@core/services/logger.service';
 import { JsonViewModalComponent } from '@shared/components/json-view-modal/json-view-modal.component';
 import { TextViewModalComponent } from '@app/dashboard/pages/nodes/components/text-view-modal/text-view-modal.component';
@@ -43,6 +42,8 @@ import { LoadManagerSnapshots } from '@app/dashboard/pages/nodes/state/manager-s
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ManagerCurrUnset } from '@core/store/manager-authentication/manager-authentication.actions';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-node-manager-details',
