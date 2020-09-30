@@ -35,8 +35,18 @@
 							"node_modules/ng-zorro-antd/ng-zorro-antd.less",
 							"src/styles.scss"
 						],
-						"scripts": []
-					},
+						"scripts": [],
+            "allowedCommonJsDependencies": [
+              "@protokol/client",
+              "@ant-design/colors",
+              "lodash/cloneDeep",
+              "lodash/isEqual",
+              "lodash/map",
+              "lodash/uniqueId",
+              "lodash/filter",
+              "ajv"
+            ]
+          },
 					"configurations": {
 						"production": {
 							"fileReplacements": [
