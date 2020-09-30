@@ -12,7 +12,6 @@ import { SetCoreManagerPort } from '@core/store/network/networks.actions';
 import { untilDestroyed } from '@core/until-destroyed';
 import { switchMap, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 import { UpdateMyNode } from '@core/store/nodes/nodes.actions';
 import { NodeManagerLoginSettingsEnum } from '../../interfaces/node.types';
@@ -21,6 +20,8 @@ import { ManagerCurrSet } from '@core/store/manager-authentication/manager-authe
 import { NodeManagerFormInterface } from '@app/@shared/interfaces/node-shared.types';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NetworkUtils } from '@core/utils/network-utils';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-node-manager-settings-modal',

@@ -13,12 +13,12 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@shared/interfaces/table.types';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { BidsService } from '@core/services/bids.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-auction-bids-table',

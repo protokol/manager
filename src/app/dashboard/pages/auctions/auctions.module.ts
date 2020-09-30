@@ -5,15 +5,13 @@ import { CommonModule } from '@angular/common';
 import { AuctionsRoutingModule } from './auctions-routing.module';
 import { AuctionsState } from '@app/dashboard/pages/auctions/state/auctions/auctions.state';
 import { AuctionsComponent } from './auctions.component';
-import {
-  NzSpinModule,
-  NzSwitchModule,
-  NzTypographyModule,
-} from 'ng-zorro-antd';
 import { AuctionBidsTableComponent } from './components/auction-bids-table/auction-bids-table.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { FormsModule } from '@angular/forms';
 import { NgLetModule } from '@core/directives/ngLet.module';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   imports: [

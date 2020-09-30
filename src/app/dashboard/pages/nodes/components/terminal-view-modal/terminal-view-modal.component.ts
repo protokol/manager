@@ -20,8 +20,8 @@ import {
   LogListItem,
   ManagerLogsState,
 } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
-import { NzModalRef } from 'ng-zorro-antd';
 import { SearchAddon } from 'xterm-addon-search';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-terminal-view-modal',

@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy } from '@angular/core';
+import { OnInit, OnDestroy, Directive, Component } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 
 import { untilDestroyed } from './until-destroyed';
@@ -17,10 +17,15 @@ describe('untilDestroyed', () => {
     const spy = createObserver();
     const spy2 = createObserver();
 
+    @Component({
+      selector: 'app-test',
+      template: ''
+    })
     class Test implements OnDestroy {
       obs!: Subscription;
 
-      ngOnDestroy() {}
+      ngOnDestroy() {
+      }
 
       subscribe(cb: any) {
         this.obs = new Subject().pipe(untilDestroyed(this)).subscribe(cb);
@@ -47,6 +52,10 @@ describe('untilDestroyed', () => {
     const spy2 = createObserver();
     const spy3 = createObserver();
 
+    @Component({
+      selector: 'app-test',
+      template: ''
+    })
     class Test implements OnDestroy {
       obs = new Subject().pipe(untilDestroyed(this)).subscribe(spy);
       obs2 = new Subject().pipe(untilDestroyed(this)).subscribe(spy2);
@@ -88,7 +97,8 @@ describe('untilDestroyed', () => {
     const spy2 = createObserver();
     const spy3 = createObserver();
 
-    class LoginComponent implements OnInit, OnDestroy {
+    @Directive()
+class LoginComponent implements OnInit, OnDestroy {
       dummy = new Subject().pipe(untilDestroyed(this)).subscribe(spy);
 
       constructor() {
@@ -129,6 +139,10 @@ describe('untilDestroyed', () => {
     // Arrange
     const spy = createObserver();
 
+    @Component({
+      selector: 'app-test',
+      template: ''
+    })
     class A implements OnDestroy {
       ngOnDestroy() {}
     }
@@ -145,6 +159,10 @@ describe('untilDestroyed', () => {
     // Arrange
     const spy = createObserver();
 
+    @Component({
+      selector: 'app-test',
+      template: ''
+    })
     class Parent implements OnDestroy {
       ngOnDestroy() {}
     }

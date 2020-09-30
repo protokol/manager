@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NzTSType } from 'ng-zorro-antd';
+import { NzTSType } from 'ng-zorro-antd/core/types';
 
 @Component({
   selector: 'app-popover-helper',

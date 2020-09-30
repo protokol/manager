@@ -15,7 +15,6 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { TransfersState } from '@app/dashboard/pages/transfers/state/transfers/transfers.state';
 import { BaseResourcesTypes } from '@protokol/client';
@@ -24,6 +23,8 @@ import { Router } from '@angular/router';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { TransferModalComponent } from '@app/dashboard/pages/transfers/components/transfer-modal/transfer-modal.component';
 import { ModalUtils } from '@core/utils/modal-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-transfers',

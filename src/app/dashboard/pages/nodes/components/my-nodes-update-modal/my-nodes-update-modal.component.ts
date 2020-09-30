@@ -13,8 +13,8 @@ import { Select } from '@ngxs/store';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { MyNode } from '@core/interfaces/node.types';
 import { Router } from '@angular/router';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { MyNodesCreateModalComponent } from '@app/@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-my-nodes-update-modal',

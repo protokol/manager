@@ -6,7 +6,6 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import {
@@ -33,6 +32,7 @@ import { Wallet } from '@arkecosystem/client';
 import { WalletsService } from '@core/services/wallets.service';
 import { SetWalletsByIds } from '@core/store/wallets/wallets.actions';
 import { Pagination } from '@shared/interfaces/table.types';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-wallet-select',

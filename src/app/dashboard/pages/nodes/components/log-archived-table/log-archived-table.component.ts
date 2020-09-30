@@ -11,12 +11,13 @@ import { TableColumnConfig } from '@shared/interfaces/table.types';
 import { LogArchivedItem } from '@core/interfaces/core-manager.types';
 import { Logger } from '@core/services/logger.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { finalize, tap } from 'rxjs/operators';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-log-archived-table',

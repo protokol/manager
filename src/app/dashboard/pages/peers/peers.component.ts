@@ -19,11 +19,6 @@ import {
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { TableColumnConfig } from '@app/@shared/interfaces/table.types';
-import {
-  NzMessageService,
-  NzModalService,
-  NzTableQueryParams,
-} from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { PeersState } from '@app/dashboard/pages/peers/state/peers/peers.state';
 import {
@@ -40,6 +35,9 @@ import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { NodeClientService } from '@core/services/node-client.service';
 import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
 import { NodeManagerService } from '@core/services/node-manager.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-peers',

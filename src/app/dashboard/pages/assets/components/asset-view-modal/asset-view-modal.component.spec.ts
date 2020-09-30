@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AssetViewModalComponent } from '@app/dashboard/pages/assets/components/asset-view-modal/asset-view-modal.component';
 import { SharedModule } from '@shared/shared.module';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
@@ -9,7 +9,7 @@ describe('AssetViewModalComponent', () => {
   let component: AssetViewModalComponent;
   let fixture: ComponentFixture<AssetViewModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         AjsfWidgetLibraryModule,

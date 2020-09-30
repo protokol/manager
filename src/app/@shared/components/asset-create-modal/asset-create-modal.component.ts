@@ -10,12 +10,6 @@ import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
 import { environment } from '@env/environment';
 import { BehaviorSubject } from 'rxjs';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzModalService,
-  NzNotificationService,
-} from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
 import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
@@ -23,6 +17,9 @@ import { CryptoService } from '@core/services/crypto.service';
 import { Logger } from '@core/services/logger.service';
 import { IpfsUploadFilePinataComponent } from '@shared/components/ipfs-upload-file-pinata/ipfs-upload-file-pinata.component';
 import { ModalUtils } from '@core/utils/modal-utils';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-asset-create-modal',

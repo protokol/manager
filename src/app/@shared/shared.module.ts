@@ -1,29 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './components/table/table.component';
-import {
-  NzAlertModule,
-  NzButtonModule,
-  NzDescriptionsModule,
-  NzDividerModule,
-  NzDropDownModule,
-  NzFormModule,
-  NzGridModule,
-  NzIconModule,
-  NzInputModule,
-  NzMessageModule,
-  NzModalModule,
-  NzNotificationModule,
-  NzPopconfirmModule,
-  NzPopoverModule,
-  NzRadioModule,
-  NzSelectModule,
-  NzSpinModule,
-  NzTableModule,
-  NzToolTipModule,
-  NzTypographyModule,
-  NzUploadModule,
-} from 'ng-zorro-antd';
 import { TextClipperComponent } from './components/text-clipper/text-clipper.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -47,6 +24,27 @@ import { NodeManagerFormComponent } from './components/node-manager-form/node-ma
 import { WalletSelectComponent } from '@shared/components/wallet-select/wallet-select.component';
 import { AssetSelectComponent } from '@shared/components/asset-select/asset-select.component';
 import { MyNodesCreateModalComponent } from '@shared/components/my-nodes-create-modal/my-nodes-create-modal.component';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 const declareAndExportComponents = [
   TableComponent,

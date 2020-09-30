@@ -1,135 +1,135 @@
 {
-	"name": "protokol-manager",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/protokol/protokol-manager.git"
-	},
-	"author": "Protokol <info@protokol.com>",
-	"contributors": [
-		"Matej Lubej <matej@protokol.com>"
-	],
-	"description": "Manager for Protokol plugins",
-	"license": "CC BY-NC-SA 4.0",
-	"version": "1.0.0-beta.1",
-	"scripts": {
-		"postinstall": "electron-builder install-app-deps",
-		"ng": "ng",
-		"start": "npm-run-all -p electron:serve ng:serve",
-		"build": "npm run electron:serve-tsc && ng build --base-href ./",
-		"build:dev": "npm run build",
-		"build:prod": "npm run build -- -c production",
-		"ng:serve": "ng serve",
-		"electron:serve-tsc": "tsc -p tsconfig-serve.json",
-		"electron:worker-tsc": "tsc -p tsconfig.worker.json",
-		"electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && npm run electron:worker-tsc && electron . --serve",
-		"electron:local": "npm run build:prod && npm run electron:worker-tsc && electron .",
-		"electron:linux": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --linux",
-		"electron:windows": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --windows",
-		"electron:mac": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --mac",
-		"test": "ng test --watch=false",
-		"test:watch": "ng test",
-		"changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
-		"lint": "ng lint && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
-		"prettier": "prettier --write \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
-		"prettier:check": "prettier --list-different \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
-		"format-staged": "pretty-quick --staged --pattern \"**/*.*(ts|js|html|scss)\"",
-		"e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts"
-	},
-	"main": "main.js",
-	"private": true,
-	"dependencies": {
-		"@ajsf/core": "^0.1.4",
-		"@angular/animations": "~9.1.9",
-		"@angular/common": "~9.1.9",
-		"@angular/compiler": "~9.1.9",
-		"@angular/core": "~9.1.9",
-		"@angular/forms": "~9.1.9",
-		"@angular/platform-browser": "~9.1.9",
-		"@angular/platform-browser-dynamic": "~9.1.9",
-		"@angular/router": "~9.1.9",
-		"@arkecosystem/crypto": "^3.0.0-alpha.1",
-		"@ngxs/storage-plugin": "^3.6.2",
-		"@ngxs/store": "^3.6.2",
-		"@protokol/client": "^1.0.0-beta.23",
-		"@protokol/nft-base-crypto": "^1.0.0-beta.23",
-		"ang-jsoneditor": "^1.10.0",
-		"bip38": "^3.1.1",
-		"bip39": "^3.0.2",
-		"date-fns": "^2.15.0",
-		"jsoneditor": "^9.0.0",
-		"ng-terminal": "~3.0.0-alpha",
-		"ng-zorro-antd": "^9.3.0",
-		"ngx-clipboard": "^13.0.1",
-		"rxjs": "~6.5.3",
-		"tslib": "^2.0.0",
-		"uuid": "^8.3.0",
-		"wif": "^2.0.6",
-		"xterm-addon-search": "^0.7.0",
-		"zone.js": "~0.11.0"
-	},
-	"devDependencies": {
-		"@angular-builders/custom-webpack": "^9.1.0",
-		"@angular-devkit/build-angular": "^0.901.8",
-		"@angular/cli": "~9.1.7",
-		"@angular/compiler-cli": "~9.1.9",
-		"@types/jasmine": "~3.5.0",
-		"@types/jasminewd2": "~2.0.3",
-		"@types/mocha": "^8.0.3",
-		"@types/node": "^12.12.47",
-		"chai": "^4.2.0",
-		"codelyzer": "^6.0.0",
-		"conventional-changelog-cli": "^2.0.34",
-		"cross-env": "^7.0.2",
-		"devtron": "^1.4.0",
-		"electron": "^9.3.1",
-		"electron-builder": "^22.8.0",
-		"electron-rebuild": "^2.0.0",
-		"electron-reload": "^1.5.0",
-		"htmlhint": "^0.14.1",
-		"husky": "^4.2.5",
-		"jasmine-core": "~3.6.0",
-		"jasmine-spec-reporter": "~6.0.0",
-		"karma": "~5.2.0",
-		"karma-chrome-launcher": "~3.1.0",
-		"karma-coverage-istanbul-reporter": "~3.0.3",
-		"karma-jasmine": "~4.0.1",
-		"karma-jasmine-html-reporter": "^1.5.4",
-		"mocha": "^8.1.3",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^2.0.5",
-		"pretty-quick": "^3.0.0",
-		"protractor": "~7.0.0",
-		"puppeteer": "^5.3.0",
-		"spectron": "^11.1.0",
-		"stylelint": "^13.6.1",
-		"stylelint-config-prettier": "^8.0.2",
-		"stylelint-config-recommended-scss": "^4.2.0",
-		"stylelint-config-standard": "^20.0.0",
-		"stylelint-scss": "^3.18.0",
-		"ts-node": "~9.0.0",
-		"tslint": "~6.1.3",
-		"tslint-config-prettier": "^1.18.0",
-		"typescript": "~3.8.3",
-		"wait-on": "^5.0.1"
-	},
-	"engines": {
-		"node": ">=10.13.0"
-	},
-	"prettier": {
-		"singleQuote": true,
-		"overrides": [
-			{
-				"files": "*.scss",
-				"options": {
-					"singleQuote": false
-				}
-			}
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run format-staged",
-			"pre-push": "npm run lint"
-		}
-	}
+  "name": "protokol-manager",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protokol/protokol-manager.git"
+  },
+  "author": "Protokol <info@protokol.com>",
+  "contributors": [
+    "Matej Lubej <matej@protokol.com>"
+  ],
+  "description": "Manager for Protokol plugins",
+  "license": "CC BY-NC-SA 4.0",
+  "version": "1.0.0-beta.1",
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps && ngcc",
+    "ng": "ng",
+    "start": "npm-run-all -p electron:serve ng:serve",
+    "build": "npm run electron:serve-tsc && ng build --base-href ./",
+    "build:dev": "npm run build",
+    "build:prod": "npm run build -- -c production",
+    "ng:serve": "ng serve",
+    "electron:serve-tsc": "tsc -p tsconfig-serve.json",
+    "electron:worker-tsc": "tsc -p tsconfig.worker.json",
+    "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && npm run electron:worker-tsc && electron . --serve",
+    "electron:local": "npm run build:prod && npm run electron:worker-tsc && electron .",
+    "electron:linux": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --linux",
+    "electron:windows": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --windows",
+    "electron:mac": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --mac",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "lint": "ng lint && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
+    "prettier": "prettier --write \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
+    "prettier:check": "prettier --list-different \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
+    "format-staged": "pretty-quick --staged --pattern \"**/*.*(ts|js|html|scss)\"",
+    "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts"
+  },
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+    "@ajsf/core": "^0.1.4",
+    "@angular/animations": "~10.1.3",
+    "@angular/common": "~10.1.3",
+    "@angular/compiler": "~10.1.3",
+    "@angular/core": "~10.1.3",
+    "@angular/forms": "~10.1.3",
+    "@angular/platform-browser": "~10.1.3",
+    "@angular/platform-browser-dynamic": "~10.1.3",
+    "@angular/router": "~10.1.3",
+    "@arkecosystem/crypto": "^3.0.0-alpha.1",
+    "@ngxs/storage-plugin": "^3.6.2",
+    "@ngxs/store": "^3.6.2",
+    "@protokol/client": "^1.0.0-beta.23",
+    "@protokol/nft-base-crypto": "^1.0.0-beta.23",
+    "ang-jsoneditor": "^1.10.0",
+    "bip38": "^3.1.1",
+    "bip39": "^3.0.2",
+    "date-fns": "^2.15.0",
+    "jsoneditor": "^9.0.0",
+    "ng-terminal": "~3.0.0-alpha",
+    "ng-zorro-antd": "^10.0.0",
+    "ngx-clipboard": "^13.0.1",
+    "rxjs": "~6.5.3",
+    "tslib": "^2.0.0",
+    "uuid": "^8.3.0",
+    "wif": "^2.0.6",
+    "xterm-addon-search": "^0.7.0",
+    "zone.js": "~0.10.3"
+  },
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "^10.0.1",
+    "@angular-devkit/build-angular": "^0.1001.3",
+    "@angular/cli": "~10.1.3",
+    "@angular/compiler-cli": "~10.1.3",
+    "@types/jasmine": "~3.5.0",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^12.12.47",
+    "chai": "^4.2.0",
+    "codelyzer": "^6.0.0",
+    "conventional-changelog-cli": "^2.0.34",
+    "cross-env": "^7.0.2",
+    "devtron": "^1.4.0",
+    "electron": "^9.3.1",
+    "electron-builder": "^22.8.0",
+    "electron-rebuild": "^2.0.0",
+    "electron-reload": "^1.5.0",
+    "htmlhint": "^0.14.1",
+    "husky": "^4.2.5",
+    "jasmine-core": "~3.5.0",
+    "jasmine-spec-reporter": "~5.0.0",
+    "karma": "~5.0.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "mocha": "^8.1.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^3.0.0",
+    "protractor": "~7.0.0",
+    "puppeteer": "^5.3.0",
+    "spectron": "^11.1.0",
+    "stylelint": "^13.6.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recommended-scss": "^4.2.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-scss": "^3.18.0",
+    "ts-node": "~9.0.0",
+    "tslint": "~6.1.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "~4.0.3",
+    "wait-on": "^5.0.1"
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.scss",
+        "options": {
+          "singleQuote": false
+        }
+      }
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format-staged",
+      "pre-push": "npm run lint"
+    }
+  }
 }

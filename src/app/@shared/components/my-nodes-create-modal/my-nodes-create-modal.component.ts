@@ -18,7 +18,6 @@ import { Select, Store } from '@ngxs/store';
 import { FormUtils } from '@core/utils/form-utils';
 import { NodesState } from '@core/store/nodes/nodes.state';
 import { MyNode } from '@core/interfaces/node.types';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { DEFAULT_CORE_MANAGER_PORT } from '@core/constants/node.constants';
 import { untilDestroyed } from '@core/until-destroyed';
 import { catchError, finalize, first, map, tap } from 'rxjs/operators';
@@ -27,6 +26,8 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { AddMyNode } from '@core/store/nodes/nodes.actions';
 import { NodeManagerLoginSettingsEnum } from '@app/dashboard/pages/nodes/interfaces/node.types';
 import { NodeManagerFormInterface } from '@shared/interfaces/node-shared.types';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-my-nodes-create-modal',
