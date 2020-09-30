@@ -7,6 +7,7 @@
   nzShowSearch
   nzServerSearch
   (nzOnSearch)="onSearchChanged($event)"
+  [nzDisabled]="isDisabled$ | async"
 >
   <ng-container *ngIf="labelProp$ | async as labelProp">
     <ng-container *ngFor="let wallet of wallets$ | async">

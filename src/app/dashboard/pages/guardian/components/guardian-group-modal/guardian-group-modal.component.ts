@@ -9,11 +9,6 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzNotificationService,
-} from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { Store } from '@ngxs/store';
@@ -25,6 +20,9 @@ import {
   LoadTransactionTypes
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { CryptoService } from '@core/services/crypto.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-guardian-group-modal',
@@ -185,14 +183,16 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
         tap(
           () => {
             this.nzMessageService.success(
-              'Group transaction broadcast to network!'
+              'Group permissions transaction broadcast to network!'
             );
             this.nzModalRef.destroy({ refresh: true });
           },
           (err) => {
             this.nzNotificationService.create(
               'error',
-              'Creating group transaction failed!',
+              this.isEditMode$.getValue()
+                ? 'Updating group permissions transaction failed!'
+                : 'Creating group permissions transaction failed!',
               err
             );
           }

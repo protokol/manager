@@ -10,18 +10,22 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzNotificationService,
-} from 'ng-zorro-antd';
 import { FormUtils } from '@core/utils/form-utils';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { untilDestroyed } from '@core/until-destroyed';
-import { finalize, pluck, tap } from 'rxjs/operators';
+import { defaultIfEmpty, finalize, first, map, pluck, tap } from 'rxjs/operators';
 import { CryptoService } from '@core/services/crypto.service';
 import { Store } from '@ngxs/store';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
+import {
+  LoadTransactionTypes
+} from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
+import { Wallet } from '@arkecosystem/client';
+import { WalletsState } from '@core/store/wallets/wallets.state';
+import { LoadWallet } from '@core/store/wallets/wallets.actions';
 
 @Component({
   selector: 'app-guardian-user-modal',
@@ -30,10 +34,13 @@ import { ProfilesState } from '@core/store/profiles/profiles.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuardianUserModalComponent implements OnInit, OnDestroy {
-  groupForm!: FormGroup;
+  userForm!: FormGroup;
   isLoading$ = new BehaviorSubject(false);
+  isEditMode$ = new BehaviorSubject(false);
+  isFormReady$ = new BehaviorSubject(false);
+  isPermissionFormGroupReady$ = new BehaviorSubject(false);
 
-  @Input() group?: GuardianResourcesTypes.Group;
+  @Input() user?: GuardianResourcesTypes.User;
 
   @ViewChild('modalTitleTpl', { static: true })
   modalTitleTpl!: TemplateRef<{}>;
@@ -52,31 +59,75 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.user) {
+      this.isEditMode$.next(true);
+    }
+
     // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
     setTimeout(() => {
       this.nzModalRef.updateConfig({
         nzTitle: this.modalTitleTpl,
-        nzWidth: '75vw',
+        nzWidth: '75vw'
       });
       this.cd.markForCheck();
     });
+
+    if (this.isEditMode$.getValue()) {
+      const { publicKey } = this.user;
+
+      this.store
+        .select(WalletsState.getWalletsByIds([publicKey]))
+        .pipe(
+          map(([wallet]) => wallet),
+          first((wallet) => !!(wallet && wallet.wallet)),
+          map(({ wallet }) => wallet),
+          tap((wallet) => {
+            this.createForm(this.user, wallet);
+            this.isFormReady$.next(true);
+          }),
+          untilDestroyed(this)
+        )
+        .subscribe();
+      this.store.dispatch(new LoadWallet(publicKey));
+    } else {
+      this.createForm();
+      this.isFormReady$.next(true);
+    }
+
+    this.store.dispatch(new LoadTransactionTypes())
+      .pipe(
+        defaultIfEmpty(),
+        tap(() => {
+          this.isPermissionFormGroupReady$.next(true);
+        }),
+        untilDestroyed(this)
+      ).subscribe();
   }
 
-  createForm() {
-    this.groupForm = this.formBuilder.group({
-      wallet: ['', [Validators.required]],
-      groups: [[]],
-      permissions: []
+  createForm(user: GuardianResourcesTypes.User = {
+               groups: [],
+               permissions: [],
+               publicKey: ''
+             },
+             wallet: Wallet = null) {
+
+    this.userForm = this.formBuilder.group({
+      wallet: [wallet, [Validators.required]],
+      groupNames: [user.groups],
+      permissions: [user.permissions]
     });
   }
 
   c(controlName: string) {
-    return this.groupForm.controls[controlName];
+    return this.userForm.controls[controlName];
   }
 
   registerFormListeners() {
     this.c('wallet').valueChanges
       .pipe(
+        tap(() => {
+          this.c('permissions').setValue(null);
+        }),
         untilDestroyed(this)
       )
       .subscribe();
@@ -89,29 +140,37 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.groupForm.valid) {
-      FormUtils.markFormGroupDirty(this.groupForm);
+    if (!this.userForm.valid) {
+      FormUtils.markFormGroupDirty(this.userForm);
       return;
     }
 
     this.isLoading$.next(true);
 
-    const guardianGroup = this.groupForm.value;
+    const { wallet: { publicKey }, groupNames, permissions } = this.userForm.value as {
+      wallet: Wallet,
+      groupNames: string[],
+      permissions: GuardianResourcesTypes.Permissions[]
+    };
 
     this.cryptoService
-      .setGuardianGroupPermissions(guardianGroup)
+      .setGuardianUserPermissions({
+        publicKey,
+        groupNames,
+        permissions
+      })
       .pipe(
         tap(
           () => {
             this.nzMessageService.success(
-              'Group transaction broadcast to network!'
+              'User permissions transaction broadcast to network!'
             );
             this.nzModalRef.destroy({ refresh: true });
           },
           (err) => {
             this.nzNotificationService.create(
               'error',
-              'Creating group transaction failed!',
+              'Creating user permissions transaction failed!',
               err
             );
           }

@@ -18,6 +18,7 @@
               nz-input
               formControlName="name"
               placeholder="Insert group name"
+              [readOnly]="isEditMode$ | async"
             />
           </nz-form-control>
           <ng-template #nameErrorTpl let-control>

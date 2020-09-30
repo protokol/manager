@@ -4,7 +4,7 @@
 
 .ant-form-item-label {
   > label {
-    &.ant-form-item-required {
+    &.ant-form-item-required.ant-form-item-required.ant-form-item-required {
       &::before {
         color: $error-color;
       }

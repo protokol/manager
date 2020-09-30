@@ -20,7 +20,6 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { BaseResourcesTypes } from '@protokol/client';
 import {
   ControlValueAccessor,
   FormControl,
@@ -60,6 +59,15 @@ export class WalletSelectComponent
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
   labelProp$ = new BehaviorSubject<keyof Wallet>('address');
+  isDisabled$ = new BehaviorSubject(false);
+
+  @Input()
+  set isDisabled(isDisabled: boolean) {
+    if (isDisabled === true
+      || isDisabled === false) {
+      this.isDisabled$.next(isDisabled);
+    }
+  }
 
   @Input()
   set labelProp(labelProp: keyof Wallet) {
@@ -183,11 +191,14 @@ export class WalletSelectComponent
     });
   }
 
-  get value(): BaseResourcesTypes.Collections {
+  get value(): Wallet {
     return this.formControl.value;
   }
 
   set value(value) {
+    if (value) {
+      this.wallets$.next([...this.wallets$.getValue(), value]);
+    }
     this.formControl.setValue(value);
     this.onChange(value);
     this.onTouched();

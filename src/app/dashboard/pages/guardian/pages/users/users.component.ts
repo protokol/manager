@@ -25,17 +25,16 @@ import {
 import { Logger } from '@core/services/logger.service';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import {
-  NzModalService,
-  NzTableQueryParams,
-} from 'ng-zorro-antd';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import {
+  LoadGuardianUser,
   LoadGuardianUsers
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { GuardianUserModalComponent } from '@app/dashboard/pages/guardian/components/guardian-user-modal/guardian-user-modal.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-users',
@@ -124,7 +123,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   showAddUserPermissionsModal(event: MouseEvent) {
     event.preventDefault();
 
-    const createGroupModalRef = this.nzModalService.create<
+    const createUserModalRef = this.nzModalService.create<
       GuardianUserModalComponent,
       CreateModalResponse
     >({
@@ -132,7 +131,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       ...ModalUtils.getCreateModalDefaultConfig(),
     });
 
-    createGroupModalRef.afterClose
+    createUserModalRef.afterClose
       .pipe(
         takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianUsers))),
         delay(8000),
@@ -147,16 +146,32 @@ export class UsersComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  onPermissionsChange(event: MouseEvent, group: GuardianResourcesTypes.Group) {
+  onPermissionsChange(event: MouseEvent, user: GuardianResourcesTypes.User) {
     event.preventDefault();
 
-    this.nzModalService.create({
+    const editUserModalRef = this.nzModalService.create<GuardianUserModalComponent,
+      CreateModalResponse>({
       nzContent: GuardianUserModalComponent,
       nzComponentParams: {
-        group,
+        user
       },
-      ...ModalUtils.getCreateModalDefaultConfig(),
+      ...ModalUtils.getCreateModalDefaultConfig()
     });
+
+    editUserModalRef.afterClose
+      .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianUsers))),
+        delay(8000),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            const { publicKey } = user;
+            this.store.dispatch(new LoadGuardianUser(publicKey));
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   onEditGroup(event: MouseEvent, groupName: string) {

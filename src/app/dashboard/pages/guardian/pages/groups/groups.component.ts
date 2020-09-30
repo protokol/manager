@@ -29,13 +29,6 @@ import {
 import { Logger } from '@core/services/logger.service';
 import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import {
-  NzMessageService,
-  NzModalService,
-  NzNotificationService,
-  NzSwitchComponent,
-  NzTableQueryParams,
-} from 'ng-zorro-antd';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import {
   LoadGuardianGroup,
@@ -45,6 +38,11 @@ import { CryptoService } from '@core/services/crypto.service';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { GuardianGroupModalComponent } from '../../components/guardian-group-modal/guardian-group-modal.component';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSwitchComponent } from 'ng-zorro-antd/switch';
 
 @Component({
   selector: 'app-groups',

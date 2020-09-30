@@ -44,6 +44,9 @@ export class CryptoService {
       this.guardianCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.guardianCrypto.Transactions.GuardianGroupPermissionsTransaction
       );
+      this.guardianCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+        this.guardianCrypto.Transactions.GuardianUserPermissionsTransaction
+      );
 
       // Listen to node crypto config changes
       this.store
@@ -133,6 +136,27 @@ export class CryptoService {
         const transfer = new this.guardianCrypto.Builders.GuardianGroupPermissionsBuilder()
           .GuardianGroupPermissions({
             ...guardianGroup,
+            permissions: filterPermissions
+          })
+          .nonce(nonce)
+          .signWithWif(wif);
+
+        return this.transactionsService.createTransactions({
+          transactions: [transfer.build().toJson()]
+        });
+      })
+    );
+  }
+
+  setGuardianUserPermissions(guardianUser: GuardianInterfaces.GuardianUserPermissionsAsset): Observable<any> {
+    return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
+      switchMap(({ wif, nonce }) => {
+        const { permissions } = guardianUser;
+        const filterPermissions = permissions.filter(({kind}) => kind >= 0);
+
+        const transfer = new this.guardianCrypto.Builders.GuardianUserPermissionsBuilder()
+          .GuardianUserPermissions({
+            ...guardianUser,
             permissions: filterPermissions
           })
           .nonce(nonce)
