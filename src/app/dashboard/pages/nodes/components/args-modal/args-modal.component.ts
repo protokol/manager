@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Logger } from '@core/services/logger.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { FormUtils } from '@core/utils/form-utils';
-import { NzModalRef, NzSafeAny } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
 import { finalize, tap } from 'rxjs/operators';
+import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-args-modal',

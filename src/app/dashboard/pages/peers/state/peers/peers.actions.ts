@@ -1,5 +1,5 @@
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export const PEERS_TYPE_NAME = 'peers';
 

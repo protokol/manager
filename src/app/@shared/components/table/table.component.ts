@@ -17,9 +17,9 @@ import {
   TablePagination,
 } from '@app/@shared/interfaces/table.types';
 import { distinctUntilChanged, filter, share, skip, tap } from 'rxjs/operators';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { untilDestroyed } from '@core/until-destroyed';
 import { TableUtils } from '@shared/utils/table-utils';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-table',

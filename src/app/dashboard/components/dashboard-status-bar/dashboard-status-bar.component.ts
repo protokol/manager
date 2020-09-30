@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
-import { NzModalService } from 'ng-zorro-antd';
 import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-dashboard-status-bar',

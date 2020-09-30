@@ -26,7 +26,6 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzModalService, NzTableQueryParams } from 'ng-zorro-antd';
 import { BaseResourcesTypes } from '@protokol/client';
 import { CollectionCreateModalComponent } from '@app/dashboard/pages/collections/components/collection-create-modal/collection-create-modal.component';
 import { CollectionViewModalComponent } from '@app/dashboard/pages/collections/components/collection-view-modal/collection-view-modal.component';
@@ -36,6 +35,8 @@ import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { CreateModalResponse } from '@core/interfaces/create-modal.response';
 import { ModalUtils } from '@core/utils/modal-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-collections',

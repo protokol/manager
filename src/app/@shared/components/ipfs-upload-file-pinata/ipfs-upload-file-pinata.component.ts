@@ -1,10 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzNotificationService,
-  NzUploadFile,
-} from 'ng-zorro-antd';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PinataService } from '@core/services/pinata.service';
@@ -17,6 +11,10 @@ import {
   PinFileToIPFSResponseInterface,
 } from '@core/interfaces/pinata.interface';
 import { TextUtils } from '@app/@core/utils/text-utils';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-ipfs-upload-file-pinata',

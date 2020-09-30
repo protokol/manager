@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NzMessageService } from 'ng-zorro-antd';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { TextUtils } from '@core/utils/text-utils';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-text-clipper',

@@ -17,7 +17,6 @@ import { JsonEditorOptions } from 'ang-jsoneditor';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { finalize, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { NodeManagerSettingsModalComponent } from '@app/dashboard/pages/nodes/components/node-manager-settings-modal/node-manager-settings-modal.component';
 import { Actions, ofActionErrored, Store } from '@ngxs/store';
 import { AddMyNode } from '@core/store/nodes/nodes.actions';
@@ -26,6 +25,8 @@ import { NodesState } from '@core/store/nodes/nodes.state';
 import { MyNodesUpdateModalComponent } from '@app/dashboard/pages/nodes/components/my-nodes-update-modal/my-nodes-update-modal.component';
 import { ManagerCurrSet } from '@core/store/manager-authentication/manager-authentication.actions';
 import { NetworkUtils } from '@core/utils/network-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-node-details',

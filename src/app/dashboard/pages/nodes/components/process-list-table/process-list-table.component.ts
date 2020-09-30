@@ -18,11 +18,6 @@ import {
 import { TextUtils } from '@core/utils/text-utils';
 import { NodeManagerService } from '@core/services/node-manager.service';
 import { untilDestroyed } from '@core/until-destroyed';
-import {
-  NzBreakpointService,
-  NzMessageService,
-  NzModalService,
-} from 'ng-zorro-antd';
 import { Store } from '@ngxs/store';
 import {
   StartManagerProcess,
@@ -31,6 +26,9 @@ import {
 import { MemoryUtils } from '@core/utils/memory-utils';
 import { TerminalViewModalComponent } from '@app/dashboard/pages/nodes/components/terminal-view-modal/terminal-view-modal.component';
 import { ArgsModalComponent } from '@app/dashboard/pages/nodes/components/args-modal/args-modal.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzBreakpointService } from 'ng-zorro-antd/core/services';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-process-list-table',

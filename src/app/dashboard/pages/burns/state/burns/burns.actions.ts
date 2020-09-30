@@ -1,5 +1,5 @@
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { BaseResourcesTypes } from '@protokol/client';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export const BURNS_TYPE_NAME = 'burns';
 

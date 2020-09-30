@@ -9,16 +9,14 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {
-  NzMessageService,
-  NzModalRef,
-  NzNotificationService,
-} from 'ng-zorro-antd';
 import { CryptoService } from '@core/services/crypto.service';
 import { FormUtils } from '@core/utils/form-utils';
 import { finalize, first, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { WalletService } from '@core/services/wallet.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-transfer-modal',

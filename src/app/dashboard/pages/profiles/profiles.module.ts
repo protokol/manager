@@ -3,16 +3,14 @@ import { ProfilesRoutingModule } from '@app/dashboard/pages/profiles/profiles-ro
 import { ProfilesComponent } from '@app/dashboard/pages/profiles/profiles.component';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { CommonModule } from '@angular/common';
-import {
-  NzButtonModule,
-  NzDescriptionsModule,
-  NzGridModule,
-  NzIconModule,
-  NzInputModule,
-  NzListModule,
-  NzTypographyModule,
-} from 'ng-zorro-antd';
 import { FormsModule } from '@angular/forms';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 @NgModule({
   imports: [

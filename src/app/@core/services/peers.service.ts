@@ -9,8 +9,8 @@ import { Store } from '@ngxs/store';
 import { Peers } from '@app/dashboard/pages/peers/interfaces/peer.types';
 import { PeerDiscovery } from '@protokol/client';
 import { IPeerResponse } from '@protokol/client/dist/peer-discovery/interfaces';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { TableUtils } from '@shared/utils/table-utils';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Injectable()
 export class PeersService {

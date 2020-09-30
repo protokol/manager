@@ -15,12 +15,12 @@ import {
   PaginationMeta,
   TableColumnConfig,
 } from '@app/@shared/interfaces/table.types';
-import { NzTableQueryParams } from 'ng-zorro-antd';
 import { Logger } from '@app/@core/services/logger.service';
 import { ExchangeResourcesTypes } from '@protokol/client';
 import { TradesState } from '@app/dashboard/pages/trades/state/trades/trades.state';
 import { LoadTrades } from '@app/dashboard/pages/trades/state/trades/trades.actions';
 import { StoreUtilsService } from '@core/store/store-utils.service';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-trades',
