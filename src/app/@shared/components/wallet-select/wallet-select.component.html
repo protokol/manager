@@ -1,6 +1,6 @@
 <nz-select
   (nzScrollToBottom)="next()"
-  nzPlaceHolder="Select wallet address"
+  [nzPlaceHolder]="placeholder"
   [nzDropdownRender]="renderTemplate"
   [formControl]="formControl"
   ngDefaultControl

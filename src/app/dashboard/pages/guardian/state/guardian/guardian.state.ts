@@ -8,7 +8,7 @@ import {
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
-import { patch } from '@ngxs/store/operators';
+import { patch, insertItem } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { GuardianResourcesTypes } from '@protokol/client';
 import {
@@ -20,7 +20,11 @@ import {
   LoadGuardianConfigurations,
   SetGuardianUsersByIds,
   LoadGuardianUsers,
-  LoadGuardianUser, LoadGuardianUserGroups, GuardianUserLoadOptions
+  LoadGuardianUser,
+  LoadGuardianUserGroups,
+  GuardianUserLoadOptions,
+  LoadGuardianGroupUsers,
+  ClearGuardianGroupUsers, AddGuardianUserToGroup
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { TransactionTypes } from '@arkecosystem/client';
@@ -38,6 +42,7 @@ interface GuardianGroupsStateModel {
   users: { [pubKey: string]: GuardianResourcesTypes.User };
   userGroups: { [pubKey: string]: GuardianResourcesTypes.Group[] };
   usersMeta: PaginationMeta | null;
+  groupUsers: { [name: string]: string[] };
 }
 
 const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
@@ -50,6 +55,7 @@ const AUCTIONS_DEFAULT_STATE: GuardianGroupsStateModel = {
   users: {},
   userGroups: {},
   usersMeta: null,
+  groupUsers: {}
 };
 
 @State<GuardianGroupsStateModel>({
@@ -152,6 +158,26 @@ export class GuardianState {
           }
           return user;
         });
+      }
+    );
+  }
+
+  @Selector()
+  static getGuardianGroupUsers({ groupUsers }: GuardianGroupsStateModel) {
+    return groupUsers;
+  }
+
+  static getGuardianGroupUsersByGroupName(groupName: string) {
+    return createSelector(
+      [GuardianState.getGuardianGroupUsers],
+      (groupUsers: ReturnType<typeof GuardianState.getGuardianGroupUsers>) => {
+        const users = groupUsers[groupName];
+        console.log('users', users);
+        if (!Array.isArray(users)) {
+          return null;
+        }
+
+        return users;
       }
     );
   }
@@ -372,6 +398,57 @@ export class GuardianState {
           );
         }
       )
+    );
+  }
+
+  @Action(ClearGuardianGroupUsers)
+  clearGuardianGroupUsers(
+    { setState }: StateContext<GuardianGroupsStateModel>,
+    { groupName }: ClearGuardianGroupUsers
+  ) {
+    setState(
+      patch({
+        groupUsers: patch({ [groupName]: null })
+      })
+    );
+  }
+
+  @Action(LoadGuardianGroupUsers)
+  loadGuardianGroupUsers(
+    { setState, dispatch }: StateContext<GuardianGroupsStateModel>,
+    { groupName }: LoadGuardianGroupUsers
+  ) {
+    return this.guardianUsersService.getGroupUsers(groupName).pipe(
+      tap(
+        (data) => {
+          dispatch(new SetGuardianUsersByIds(data));
+
+          setState(
+            patch({
+              groupUsers: patch({ [groupName]: data.map(({ publicKey }) => publicKey) })
+            })
+          );
+        },
+        () => {
+          setState(
+            patch({
+              groupUsers: patch({ [groupName]: undefined })
+            })
+          );
+        }
+      )
+    );
+  }
+
+  @Action(AddGuardianUserToGroup)
+  addGuardianUserToGroup(
+    { setState }: StateContext<GuardianGroupsStateModel>,
+    { groupName, userPubKey }: AddGuardianUserToGroup
+  ) {
+    setState(
+      patch({
+        groupUsers: patch({ [groupName]: insertItem<string>(userPubKey) })
+      })
     );
   }
 }

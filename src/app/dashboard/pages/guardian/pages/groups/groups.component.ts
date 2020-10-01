@@ -31,8 +31,9 @@ import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import {
+  ClearGuardianGroupUsers,
   LoadGuardianGroup,
-  LoadGuardianGroups,
+  LoadGuardianGroups
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { CryptoService } from '@core/services/crypto.service';
 import { ModalUtils } from '@core/utils/modal-utils';
@@ -43,6 +44,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSwitchComponent } from 'ng-zorro-antd/switch';
+import { GuardianGroupUsersModalComponent } from '../../components/guardian-group-users-modal/guardian-group-users-modal.component';
 
 @Component({
   selector: 'app-groups',
@@ -118,7 +120,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
         width: '150px'
       },
       {
-        headerName: 'Permissions',
+        headerName: 'Actions',
         columnTransformTpl: this.permissionsTpl,
         width: '75px'
       },
@@ -188,12 +190,21 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
     editGroupModalRef.afterClose
       .pipe(
+        tap((response) => {
+          if (response?.refresh) {
+            const { name } = group;
+            this.onSetRowLoading(name, true);
+          }
+        }),
         delay(8000),
         tap((response) => {
-          const refresh = (response && response.refresh) || false;
-          if (refresh) {
+          if (response?.refresh) {
             const { name } = group;
-            this.store.dispatch(new LoadGuardianGroup(name));
+            this.store.dispatch(new LoadGuardianGroup(name))
+              .pipe(
+                finalize(() => this.onSetRowLoading(name, false)),
+                untilDestroyed(this)
+              ).subscribe();
           }
         }),
         untilDestroyed(this)
@@ -328,5 +339,20 @@ export class GroupsComponent implements OnInit, OnDestroy {
         untilDestroyed(this)
       )
       .subscribe();
+  }
+
+  onManageUsers(event: MouseEvent, group: GuardianResourcesTypes.Group) {
+    event.preventDefault();
+
+    const {name} = group;
+    this.store.dispatch(new ClearGuardianGroupUsers(name));
+
+    this.nzModalService.create({
+      nzContent: GuardianGroupUsersModalComponent,
+      nzComponentParams: {
+        group
+      },
+      ...ModalUtils.getCreateModalDefaultConfig()
+    });
   }
 }

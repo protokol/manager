@@ -16,6 +16,7 @@
           [ownerAddress]="selectedProfileAddress | async"
           formControlName="wallet"
           labelProp="publicKey"
+          placeholder="Select wallet public key"
           [isDisabled]="isEditMode$ | async"
         >
         </app-wallet-select>

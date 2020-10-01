@@ -23,6 +23,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { GuardianGroupUsersModalComponent } from '@app/dashboard/pages/guardian/components/guardian-group-users-modal/guardian-group-users-modal.component';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
     GuardianGroupModalComponent,
     GuardianUserModalComponent,
     GuardianGroupPermissionsFormComponent,
+    GuardianGroupUsersModalComponent
   ],
   exports: [],
 })

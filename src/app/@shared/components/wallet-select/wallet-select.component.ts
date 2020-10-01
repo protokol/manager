@@ -61,6 +61,8 @@ export class WalletSelectComponent
   labelProp$ = new BehaviorSubject<keyof Wallet>('address');
   isDisabled$ = new BehaviorSubject(false);
 
+  @Input() placeholder = 'Select wallet address';
+
   @Input()
   set isDisabled(isDisabled: boolean) {
     if (isDisabled === true

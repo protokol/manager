@@ -58,4 +58,19 @@ export class GuardianUsersService {
       NodeClientService.genericErrorHandler(this.log)
     );
   }
+
+  getGroupUsers(
+    groupName: string,
+    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    connectionOptions?: ConnectionOptions
+  ): Observable<GuardianResourcesTypes.User[]> {
+    return defer(() =>
+      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+        .guardianApi('groups')
+        .users(groupName)
+    ).pipe(
+      map((response) => response.body.data),
+      NodeClientService.genericErrorHandler(this.log)
+    );
+  }
 }
