@@ -22,6 +22,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
     NzInputNumberModule,
     NzTableModule,
     NzIconModule,
+    NzDropDownModule
   ],
   providers: [],
   declarations: [

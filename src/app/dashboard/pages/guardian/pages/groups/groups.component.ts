@@ -99,23 +99,28 @@ export class GroupsComponent implements OnInit, OnDestroy {
         propertyName: 'name',
         headerName: 'Group Name',
         sortBy: true,
+        width: '500px'
       },
       {
         propertyName: 'priority',
         headerName: 'Priority',
         sortBy: true,
+        width: '75px'
       },
       {
         headerName: 'Default',
         columnTransformTpl: this.defaultTpl,
+        width: '150px'
       },
       {
         headerName: 'Active',
         columnTransformTpl: this.activeTpl,
+        width: '150px'
       },
       {
         headerName: 'Permissions',
         columnTransformTpl: this.permissionsTpl,
+        width: '75px'
       },
     ];
 

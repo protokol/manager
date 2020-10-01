@@ -68,18 +68,20 @@
 
 <ng-template #permissionsTpl let-row="row">
   <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
-    <ng-container *ngIf="!isLoading; else permissionsDisabledTpl">
-      <a (click)="onPermissionsChange($event, row)">
-        Change
-      </a>
-    </ng-container>
+    <a [nzDisabled]="isLoading" nz-dropdown [nzDropdownMenu]="actionsMenu" nzPlacement="bottomRight">
+      <i nz-icon nzType="edit"></i>
+    </a>
+    <nz-dropdown-menu #actionsMenu="nzDropdownMenu">
+      <ul nz-menu nzSelectable>
+        <li
+          nz-menu-item
+          (click)="onPermissionsChange($event, row)"
+        >
+          Update
+        </li>
+      </ul>
+    </nz-dropdown-menu>
   </ng-container>
-</ng-template>
-
-<ng-template #permissionsDisabledTpl>
-  <a class="link-muted">
-    Change
-  </a>
 </ng-template>
 
 <ng-template #defaultTpl let-row="row">

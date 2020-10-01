@@ -1,9 +1,46 @@
-@import "../../../../../../theme/theme-variables";
+@import "src/theme/theme-variables";
 
 :host ::ng-deep {
+  .ant-table-header {
+    tr {
+      th:nth-child(2) {
+        text-align: right;
+      }
+      th:nth-child(3),
+      th:nth-child(4),
+      th:last-child {
+        text-align: center;
+        .ant-table-filter-column-title {
+          padding-right: 16px;
+        }
+      }
+    }
+  }
+
   .ant-table-body {
     min-height: 70vh;
     overflow-x: hidden;
+
+    tr {
+      td:nth-child(2) {
+        text-align: right;
+      }
+      td:nth-child(3),
+      td:nth-child(4),
+      td:last-child {
+        text-align: center;
+      }
+      td:last-child {
+        i {
+          font-size: 20px;
+
+          path {
+            fill: $mute-color;
+            stroke: $mute-color;
+          }
+        }
+      }
+    }
   }
 
   nz-switch {
