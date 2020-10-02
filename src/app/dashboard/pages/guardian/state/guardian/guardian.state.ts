@@ -8,7 +8,7 @@ import {
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
-import { patch, insertItem } from '@ngxs/store/operators';
+import { patch } from '@ngxs/store/operators';
 import { PaginationMeta } from '@shared/interfaces/table.types';
 import { GuardianResourcesTypes } from '@protokol/client';
 import {
@@ -24,7 +24,7 @@ import {
   LoadGuardianUserGroups,
   GuardianUserLoadOptions,
   LoadGuardianGroupUsers,
-  ClearGuardianGroupUsers, AddGuardianUserToGroup
+  ClearGuardianGroupUsers
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { TransactionTypes } from '@arkecosystem/client';
@@ -172,7 +172,6 @@ export class GuardianState {
       [GuardianState.getGuardianGroupUsers],
       (groupUsers: ReturnType<typeof GuardianState.getGuardianGroupUsers>) => {
         const users = groupUsers[groupName];
-        console.log('users', users);
         if (!Array.isArray(users)) {
           return null;
         }
@@ -437,18 +436,6 @@ export class GuardianState {
           );
         }
       )
-    );
-  }
-
-  @Action(AddGuardianUserToGroup)
-  addGuardianUserToGroup(
-    { setState }: StateContext<GuardianGroupsStateModel>,
-    { groupName, userPubKey }: AddGuardianUserToGroup
-  ) {
-    setState(
-      patch({
-        groupUsers: patch({ [groupName]: insertItem<string>(userPubKey) })
-      })
     );
   }
 }

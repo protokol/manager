@@ -70,7 +70,7 @@ export class LoadGuardianUserGroups {
 }
 
 export class ClearGuardianGroupUsers {
-  static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianGroupUsers`;
+  static type = `[${GUARDIAN_TYPE_NAME}] ClearGuardianGroupUsers`;
 
   constructor(public groupName: string) {
   }
@@ -80,12 +80,5 @@ export class LoadGuardianGroupUsers {
   static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianGroupUsers`;
 
   constructor(public groupName: string) {
-  }
-}
-
-export class AddGuardianUserToGroup {
-  static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianGroupUsers`;
-
-  constructor(public groupName: string, public userPubKey: string) {
   }
 }
