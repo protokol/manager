@@ -25,8 +25,14 @@
     <ng-container *ngIf="isPermissionFormGroupReady$ | async">
       <ng-container *ngLet="c('wallet').valueChanges | async">
         <ng-container *ngIf="c('wallet').value as user">
-          <app-guardian-group-permissions-form formControlName="permissions" [hidden]="!user">
-          </app-guardian-group-permissions-form>
+          <nz-form-item>
+            <app-guardian-user-groups-form formControlName="groupNames">
+            </app-guardian-user-groups-form>
+          </nz-form-item>
+          <nz-form-item>
+            <app-guardian-group-permissions-form formControlName="permissions" [hidden]="!user">
+            </app-guardian-group-permissions-form>
+          </nz-form-item>
         </ng-container>
       </ng-container>
     </ng-container>

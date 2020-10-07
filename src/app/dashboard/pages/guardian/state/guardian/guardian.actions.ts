@@ -1,4 +1,5 @@
 import { GuardianResourcesTypes } from '@protokol/client';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 export interface GuardianUserLoadOptions {
   withGroups: boolean;
@@ -21,7 +22,7 @@ export class LoadGuardianConfigurations {
 export class LoadGuardianGroups {
   static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianGroups`;
 
-  constructor() {}
+  constructor(public tableQueryParams?: NzTableQueryParams) {}
 }
 
 export class LoadGuardianGroup {

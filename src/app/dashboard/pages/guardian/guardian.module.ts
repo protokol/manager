@@ -24,6 +24,10 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { GuardianGroupUsersModalComponent } from '@app/dashboard/pages/guardian/components/guardian-group-users-modal/guardian-group-users-modal.component';
+import { GuardianUserGroupsFormComponent } from '@app/dashboard/pages/guardian/components/guardian-user-groups-form/guardian-user-groups-form.component';
+import { GuardianGroupSelectComponent } from '@app/dashboard/pages/guardian/components/guardian-group-select/guardian-group-select.component';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 @NgModule({
   imports: [
@@ -45,7 +49,9 @@ import { GuardianGroupUsersModalComponent } from '@app/dashboard/pages/guardian/
     NzInputNumberModule,
     NzTableModule,
     NzIconModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzSelectModule,
+    NzListModule
   ],
   providers: [],
   declarations: [
@@ -54,7 +60,9 @@ import { GuardianGroupUsersModalComponent } from '@app/dashboard/pages/guardian/
     GuardianGroupModalComponent,
     GuardianUserModalComponent,
     GuardianGroupPermissionsFormComponent,
-    GuardianGroupUsersModalComponent
+    GuardianGroupUsersModalComponent,
+    GuardianUserGroupsFormComponent,
+    GuardianGroupSelectComponent
   ],
   exports: [],
 })

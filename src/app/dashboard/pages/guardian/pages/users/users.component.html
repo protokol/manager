@@ -66,12 +66,6 @@
   </ng-template>
 </ng-template>
 
-<ng-template #permissionsTpl let-row="row">
-  <a (click)="onPermissionsChange($event, row)">
-    Change
-  </a>
-</ng-template>
-
 <ng-template #publicKeyTpl let-row="row">
   <app-text-clipper
     [text]="row.publicKey"
@@ -81,9 +75,32 @@
 
 <ng-template #groupsTpl let-row="row">
   <ng-container *ngFor="let groupName of row.groups; last as isLast">
-    <a (click)="onEditGroup($event, groupName)">
-      {{groupName}}
-    </a>
+    <ng-container *ngIf="onGroupLoading$ | async; else notLoadingTpl">
+      <a class="text-muted">
+        {{groupName}}
+      </a>
+    </ng-container>
+    <ng-template #notLoadingTpl>
+      <a (click)="onEditGroup($event, groupName)">
+        {{groupName}}
+      </a>
+    </ng-template>
     <br *ngIf="!isLast" />
   </ng-container>
+</ng-template>
+
+<ng-template #actionTpl let-row="row">
+  <a nz-dropdown [nzDropdownMenu]="actionsMenu" nzPlacement="bottomRight">
+    <i nz-icon nzType="edit"></i>
+  </a>
+  <nz-dropdown-menu #actionsMenu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      <li
+        nz-menu-item
+        (click)="onPermissionsChange($event, row)"
+      >
+        Update
+      </li>
+    </ul>
+  </nz-dropdown-menu>
 </ng-template>

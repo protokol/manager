@@ -1,0 +1,26 @@
+<nz-select
+  (nzScrollToBottom)="next()"
+  nzPlaceHolder="Select group"
+  [nzDropdownRender]="renderTemplate"
+  [formControl]="formControl"
+  ngDefaultControl
+  nzShowSearch
+  nzServerSearch
+  (nzOnSearch)="onSearchChanged($event)"
+>
+  <ng-container *ngFor="let group of groups$ | async">
+    <nz-option [nzValue]="group" [nzLabel]="group.name" nzCustomContent>
+      <span class="font-monospace">{{ group.name }}</span>
+    </nz-option>
+  </ng-container>
+</nz-select>
+<ng-template #renderTemplate>
+  <ng-container *ngIf="isLoading$ | async">
+    <nz-space nzDirection="horizontal" nzSize="small">
+      <nz-space-item></nz-space-item>
+      <nz-space-item>
+        <i nz-icon nzType="loading"></i> Loading Data...
+      </nz-space-item>
+    </nz-space>
+  </ng-container>
+</ng-template>

@@ -26,6 +26,7 @@ import {
 import { Wallet } from '@arkecosystem/client';
 import { WalletsState } from '@core/store/wallets/wallets.state';
 import { LoadWallet } from '@core/store/wallets/wallets.actions';
+import { UserGroupsFormItem } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
 
 @Component({
   selector: 'app-guardian-user-modal',
@@ -113,7 +114,7 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
 
     this.userForm = this.formBuilder.group({
       wallet: [wallet, [Validators.required]],
-      groupNames: [user.groups],
+      groupNames: [user.groups.map((name) => ({ name }))],
       permissions: [user.permissions]
     });
   }
@@ -126,6 +127,7 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
     this.c('wallet').valueChanges
       .pipe(
         tap(() => {
+          this.c('groupNames').setValue([]);
           this.c('permissions').setValue(null);
         }),
         untilDestroyed(this)
@@ -149,14 +151,14 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
 
     const { wallet: { publicKey }, groupNames, permissions } = this.userForm.value as {
       wallet: Wallet,
-      groupNames: string[],
+      groupNames: UserGroupsFormItem[],
       permissions: GuardianResourcesTypes.Permissions[]
     };
 
     this.cryptoService
       .setGuardianUserPermissions({
         publicKey,
-        groupNames,
+        groupNames: groupNames.map(({ name }) => name),
         permissions
       })
       .pipe(

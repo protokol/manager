@@ -6,7 +6,7 @@ import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
-import { Pagination } from '@shared/interfaces/table.types';
+import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { TransactionTypes } from '@arkecosystem/client';
 import { GuardianResourcesTypes } from '@protokol/client';
 
@@ -45,13 +45,14 @@ export class GuardianGroupsService {
   }
 
   getGroups(
+    query: TableApiQuery | {} = {},
     baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<GuardianResourcesTypes.Group>> {
     return defer(() =>
       NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
         .guardianApi('groups')
-        .index()
+        .index(query)
     ).pipe(
       map((response) => response.body),
       NodeClientService.genericListErrorHandler(this.log)

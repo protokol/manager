@@ -11,10 +11,10 @@ import { NetworksState } from '@core/store/network/networks.state';
 import {
   delay,
   distinctUntilChanged,
-  filter,
+  filter, finalize,
   switchMap,
   takeUntil,
-  tap,
+  tap
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -27,14 +27,16 @@ import { GuardianResourcesTypes } from '@protokol/client';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import {
+  LoadGuardianGroup,
   LoadGuardianUser,
   LoadGuardianUsers
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { ModalUtils } from '@core/utils/modal-utils';
-import { CreateModalResponse } from '@core/interfaces/create-modal.response';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
 import { GuardianUserModalComponent } from '@app/dashboard/pages/guardian/components/guardian-user-modal/guardian-user-modal.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { GuardianGroupModalComponent } from '@app/dashboard/pages/guardian/components/guardian-group-modal/guardian-group-modal.component';
 
 @Component({
   selector: 'app-users',
@@ -50,13 +52,14 @@ export class UsersComponent implements OnInit, OnDestroy {
   @Select(GuardianState.getGuardianUsersMeta) meta$: Observable<PaginationMeta>;
 
   isLoading$ = new BehaviorSubject(false);
+  onGroupLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
 
   getBaseUrl$: Observable<string>;
   rows$: Observable<GuardianResourcesTypes.User[]> = of([]);
   tableColumns: TableColumnConfig<GuardianResourcesTypes.User>[];
 
-  @ViewChild('permissionsTpl', { static: true }) permissionsTpl!: TemplateRef<{
+  @ViewChild('actionTpl', { static: true }) actionTpl!: TemplateRef<{
     row: GuardianResourcesTypes.User;
   }>;
   @ViewChild('publicKeyTpl', { static: true }) publicKeyTpl!: TemplateRef<{
@@ -92,7 +95,8 @@ export class UsersComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Permissions',
-        columnTransformTpl: this.permissionsTpl,
+        columnTransformTpl: this.actionTpl,
+        width: '75px'
       },
     ];
 
@@ -125,7 +129,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     const createUserModalRef = this.nzModalService.create<
       GuardianUserModalComponent,
-      CreateModalResponse
+      RefreshModalResponse
     >({
       nzContent: GuardianUserModalComponent,
       ...ModalUtils.getCreateModalDefaultConfig(),
@@ -150,7 +154,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     const editUserModalRef = this.nzModalService.create<GuardianUserModalComponent,
-      CreateModalResponse>({
+      RefreshModalResponse>({
       nzContent: GuardianUserModalComponent,
       nzComponentParams: {
         user
@@ -160,7 +164,6 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     editUserModalRef.afterClose
       .pipe(
-        takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianUsers))),
         delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
@@ -177,6 +180,48 @@ export class UsersComponent implements OnInit, OnDestroy {
   onEditGroup(event: MouseEvent, groupName: string) {
     event.preventDefault();
 
-    this.log.info('groupName', groupName);
+    this.onGroupLoading$.next(true);
+
+    this.store.dispatch(new LoadGuardianGroup(groupName))
+      .pipe(
+        tap(() => {
+          const groups = this.store.selectSnapshot(
+            GuardianState.getGuardianGroupsByIds([groupName])
+          );
+          const [group] = groups;
+
+          const editGroupModalRef = this.nzModalService.create<GuardianGroupModalComponent,
+            RefreshModalResponse>({
+            nzContent: GuardianGroupModalComponent,
+            nzComponentParams: {
+              group
+            },
+            ...ModalUtils.getCreateModalDefaultConfig()
+          });
+
+          editGroupModalRef.afterClose
+            .pipe(
+              tap((response) => {
+                if (response?.refresh) {
+                  this.onGroupLoading$.next(false);
+                }
+              }),
+              delay(8000),
+              tap((response) => {
+                if (response?.refresh) {
+                  const { name } = group;
+                  this.store.dispatch(new LoadGuardianGroup(name))
+                    .pipe(
+                      finalize(() => this.onGroupLoading$.next(false)),
+                      untilDestroyed(this)
+                    ).subscribe();
+                }
+              }),
+              untilDestroyed(this)
+            )
+            .subscribe();
+        })
+      )
+      .subscribe();
   }
 }

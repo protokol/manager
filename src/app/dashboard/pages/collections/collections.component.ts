@@ -33,7 +33,7 @@ import { Logger } from '@core/services/logger.service';
 import { Router } from '@angular/router';
 import { TableUtils } from '@shared/utils/table-utils';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import { CreateModalResponse } from '@core/interfaces/create-modal.response';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -209,7 +209,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
     const createCollectionModalRef = this.nzModalService.create<
       CollectionCreateModalComponent,
-      CreateModalResponse
+      RefreshModalResponse
     >({
       nzTitle: this.createCollectionModalTitleTpl,
       nzContent: CollectionCreateModalComponent,

@@ -38,7 +38,7 @@ import {
 import { CryptoService } from '@core/services/crypto.service';
 import { ModalUtils } from '@core/utils/modal-utils';
 import { GuardianGroupModalComponent } from '../../components/guardian-group-modal/guardian-group-modal.component';
-import { CreateModalResponse } from '@core/interfaces/create-modal.response';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -155,7 +155,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
     const createGroupModalRef = this.nzModalService.create<
       GuardianGroupModalComponent,
-      CreateModalResponse
+      RefreshModalResponse
     >({
       nzContent: GuardianGroupModalComponent,
       ...ModalUtils.getCreateModalDefaultConfig(),
@@ -180,7 +180,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     const editGroupModalRef = this.nzModalService.create<GuardianGroupModalComponent,
-      CreateModalResponse>({
+      RefreshModalResponse>({
       nzContent: GuardianGroupModalComponent,
       nzComponentParams: {
         group
