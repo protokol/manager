@@ -23,6 +23,7 @@ import { CryptoService } from '@core/services/crypto.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-utils';
 
 @Component({
   selector: 'app-guardian-group-modal',
@@ -157,7 +158,7 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
       ],
       active: [group?.active || false],
       default: [group?.default || false],
-      permissions: [this.group?.permissions || []],
+      permissions: [GuardianUtils.toPermissionFormItems(this.group)],
     });
   }
 
@@ -175,10 +176,13 @@ export class GuardianGroupModalComponent implements OnInit, OnDestroy {
 
     this.isLoading$.next(true);
 
-    const guardianGroup = this.groupForm.value;
+    const { permissions, ...restGuardianGroup } = this.groupForm.value;
 
     this.cryptoService
-      .setGuardianGroupPermissions(guardianGroup)
+      .setGuardianGroupPermissions({
+        ...restGuardianGroup,
+        ...GuardianUtils.toPermissions(permissions)
+      })
       .pipe(
         tap(
           () => {

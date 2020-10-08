@@ -127,16 +127,13 @@ export class CryptoService {
     );
   }
 
-  setGuardianGroupPermissions(guardianGroup: GuardianInterfaces.GuardianGroupPermissionsAsset): Observable<any> {
+  setGuardianGroupPermissions(guardianGroup: GuardianInterfaces.IGuardianGroupPermissionsAsset): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
-        const { permissions } = guardianGroup;
-        const filterPermissions = permissions.filter(({kind}) => kind >= 0);
 
         const transfer = new this.guardianCrypto.Builders.GuardianGroupPermissionsBuilder()
           .GuardianGroupPermissions({
             ...guardianGroup,
-            permissions: filterPermissions
           })
           .nonce(nonce)
           .signWithWif(wif);
@@ -148,16 +145,13 @@ export class CryptoService {
     );
   }
 
-  setGuardianUserPermissions(guardianUser: GuardianInterfaces.GuardianUserPermissionsAsset): Observable<any> {
+  setGuardianUserPermissions(guardianUser: GuardianInterfaces.IGuardianUserPermissionsAsset): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
-        const { permissions } = guardianUser;
-        const filterPermissions = permissions.filter(({kind}) => kind >= 0);
 
         const transfer = new this.guardianCrypto.Builders.GuardianUserPermissionsBuilder()
           .GuardianUserPermissions({
             ...guardianUser,
-            permissions: filterPermissions
           })
           .nonce(nonce)
           .signWithWif(wif);

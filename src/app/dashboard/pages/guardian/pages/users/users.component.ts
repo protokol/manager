@@ -88,13 +88,15 @@ export class UsersComponent implements OnInit, OnDestroy {
         headerName: 'Public Key',
         columnTransformTpl: this.publicKeyTpl,
         sortBy: true,
+        width: '500px'
       },
       {
         headerName: 'User groups',
         columnTransformTpl: this.groupsTpl,
+        width: '500px'
       },
       {
-        headerName: 'Permissions',
+        headerName: 'Actions',
         columnTransformTpl: this.actionTpl,
         width: '75px'
       },

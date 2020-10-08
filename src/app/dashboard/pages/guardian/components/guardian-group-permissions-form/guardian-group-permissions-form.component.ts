@@ -13,13 +13,15 @@ import {
 } from '@angular/forms';
 import { first, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
-import { NftIdsFormItem } from '@app/dashboard/pages/transfers/interfaces/transfers.types';
 import { BehaviorSubject } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-utils';
-import { GuardianResourcesTypes } from '@protokol/client';
-import { TransactionType } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
+import {
+  PermissionFormItem,
+  PermissionKind,
+  TransactionType
+} from '@app/dashboard/pages/guardian/interfaces/guardian.types';
 
 @Component({
   selector: 'app-guardian-group-permissions-form',
@@ -48,7 +50,7 @@ export class GuardianGroupPermissionsFormComponent
   isExpanded$ = new BehaviorSubject<{ [type: number]: boolean }>({});
 
   @Input('defaultValues')
-  set defaultValues(defaultValues: GuardianResourcesTypes.Permissions[]) {
+  set defaultValues(defaultValues: PermissionFormItem[]) {
     this.setDefaultValues(defaultValues);
   }
 
@@ -77,17 +79,13 @@ export class GuardianGroupPermissionsFormComponent
             .map(([transactionTypeGroup, typeGroupValue]) => {
               return Object.values(typeGroupValue).map((transactionType) => {
                 return {
-                  kind: -1,
-                  types: [
-                    {
-                      transactionTypeGroup,
-                      transactionType,
-                    },
-                  ],
+                  kind: PermissionKind.Intermediate,
+                  transactionTypeGroup,
+                  transactionType
                 };
               });
             })
-            .flat() as GuardianResourcesTypes.Permissions[];
+            .flat() as PermissionFormItem[];
 
           this.createForm(formDefaultValues);
           this.isFormReady$.next(true);
@@ -101,27 +99,24 @@ export class GuardianGroupPermissionsFormComponent
   }
 
   fromPermissionToFormItem({
-    kind,
-    types: [{ transactionType, transactionTypeGroup }],
-  }: GuardianResourcesTypes.Permissions) {
+                             kind,
+                             transactionType,
+                             transactionTypeGroup
+                           }: PermissionFormItem) {
     return this.formBuilder.group({
       kind: [kind],
-      types: this.formBuilder.array([
-        this.formBuilder.group({
-          transactionTypeGroup: [transactionTypeGroup],
-          transactionType: [transactionType],
-        }),
-      ]),
+      transactionTypeGroup: [transactionTypeGroup],
+      transactionType: [transactionType]
     });
   }
 
-  createForm(formPermissions: GuardianResourcesTypes.Permissions[]) {
+  createForm(formPermissions: PermissionFormItem[]) {
     this.form = this.formBuilder.array(
       formPermissions
         .sort(
           (
-            { types: [{ transactionTypeGroup: a }] },
-            { types: [{ transactionTypeGroup: b }] }
+            { transactionTypeGroup: a },
+            { transactionTypeGroup: b }
           ) => a - b
         )
         .map((p) => this.fromPermissionToFormItem(p))
@@ -142,7 +137,7 @@ export class GuardianGroupPermissionsFormComponent
     return this.form.controls[controlName];
   }
 
-  get value(): NftIdsFormItem[] {
+  get value(): PermissionFormItem[] {
     return this.form.value;
   }
 
@@ -173,17 +168,13 @@ export class GuardianGroupPermissionsFormComponent
         .map(([transactionTypeGroup, typeGroupValue]) => {
           return Object.values(typeGroupValue).map((transactionType) => {
             return {
-              kind: -1,
-              types: [
-                {
-                  transactionTypeGroup,
-                  transactionType
-                }
-              ]
+              kind: PermissionKind.Intermediate,
+              transactionTypeGroup,
+              transactionType
             };
           });
         })
-        .flat() as GuardianResourcesTypes.Permissions[];
+        .flat() as PermissionFormItem[];
 
       this.setDefaultValues(formDefaultValues);
     }
@@ -197,22 +188,22 @@ export class GuardianGroupPermissionsFormComponent
     return GuardianUtils.transactionTypeIndexToGroupName(transactionTypeGroup);
   }
 
-  isTypeGroupSelected(transactionTypeGroupIndex: number, kindSelected: number) {
-    const permissions = this.form.value as GuardianResourcesTypes.Permissions[];
+  isTypeGroupSelected(transactionTypeGroupIndex: number, kindSelected: PermissionKind) {
+    const permissions = this.form.value as PermissionFormItem[];
     const permissionsForTransactionKind = permissions.filter(
-      ({ types: [{ transactionTypeGroup }] }) =>
+      ({ transactionTypeGroup }) =>
         transactionTypeGroupIndex === transactionTypeGroup
     );
     return permissionsForTransactionKind.every(({ kind }) => kind === kindSelected);
   }
 
-  selectTypeGroup(isSelected: boolean, transactionTypeGroupIndex: number, kindSelected: number) {
-    const permissions = this.form.value as GuardianResourcesTypes.Permissions[];
-    const markAsKind = isSelected ? kindSelected : -1;
+  selectTypeGroup(isSelected: boolean, transactionTypeGroupIndex: number, kindSelected: PermissionKind) {
+    const permissions = this.form.value as PermissionFormItem[];
+    const markAsKind = isSelected ? kindSelected : PermissionKind.Intermediate;
     this.isLoading$.next(true);
 
     permissions.forEach(
-      ({ kind, types: [{ transactionTypeGroup }] }, index) => {
+      ({ kind, transactionTypeGroup }, index) => {
         if (
           kind !== markAsKind &&
           transactionTypeGroupIndex === transactionTypeGroup
@@ -230,12 +221,12 @@ export class GuardianGroupPermissionsFormComponent
   isTypeSelected(
     transactionTypeGroupIndex: number,
     transactionTypeIndex: number,
-    kind: number
+    kind: PermissionKind
   ) {
-    const permissions = this.form.value as GuardianResourcesTypes.Permissions[];
+    const permissions = this.form.value as PermissionFormItem[];
     return (
       permissions.find(
-        ({ types: [{ transactionTypeGroup, transactionType }] }) =>
+        ({ transactionTypeGroup, transactionType }) =>
           transactionTypeGroupIndex === transactionTypeGroup &&
           transactionTypeIndex === transactionType
       )?.kind === kind
@@ -246,13 +237,13 @@ export class GuardianGroupPermissionsFormComponent
     isSelected: boolean,
     transactionTypeGroupIndex: number,
     transactionTypeIndex: number,
-    kind: number
+    kind: PermissionKind
   ) {
-    const permissions = this.form.value as GuardianResourcesTypes.Permissions[];
-    const markAsKind = isSelected ? kind : -1;
+    const permissions = this.form.value as PermissionFormItem[];
+    const markAsKind = isSelected ? kind : PermissionKind.Intermediate;
 
     const permissionIndex = permissions.findIndex(
-      ({ types: [{ transactionTypeGroup, transactionType }] }) =>
+      ({ transactionTypeGroup, transactionType }) =>
         transactionTypeGroupIndex === transactionTypeGroup &&
         transactionTypeIndex === transactionType
     );
@@ -276,7 +267,7 @@ export class GuardianGroupPermissionsFormComponent
     });
   }
 
-  setDefaultValues(defaultValues: GuardianResourcesTypes.Permissions[]) {
+  setDefaultValues(defaultValues: PermissionFormItem[]) {
     if (defaultValues?.length) {
       this.isFormReady$.asObservable()
         .pipe(
@@ -284,18 +275,16 @@ export class GuardianGroupPermissionsFormComponent
           tap(() => {
             this.isLoading$.next(true);
 
-            defaultValues.forEach(({ kind, types }) => {
-              types.forEach(({ transactionTypeGroup, transactionType }) => {
-                const permissions = this.form.value as GuardianResourcesTypes.Permissions[];
+            defaultValues.forEach(({ kind, transactionTypeGroup, transactionType }) => {
+              const permissions = this.form.value as PermissionFormItem[];
 
-                const permissionIndex = permissions.findIndex(
-                  ({ types: [{ transactionTypeGroup: typeGroup, transactionType: type }] }) => {
-                    return transactionTypeGroup === typeGroup && type === transactionType;
-                  });
-
-                this.form.at(permissionIndex).patchValue({
-                  kind
+              const permissionIndex = permissions.findIndex(
+                ({ transactionTypeGroup: typeGroup, transactionType: type }) => {
+                  return transactionTypeGroup === typeGroup && type === transactionType;
                 });
+
+              this.form.at(permissionIndex).patchValue({
+                kind
               });
             });
 

@@ -16,3 +16,13 @@ export type LoadGuardianGroupsSelectFunc = (
 export interface UserGroupsFormItem {
   name: string;
 }
+
+export enum PermissionKind {
+  Intermediate = -1,
+  Deny = 0,
+  Allow = 1,
+}
+
+export interface PermissionFormItem extends GuardianResourcesTypes.Permission {
+  kind: PermissionKind.Intermediate | PermissionKind.Deny | PermissionKind.Allow;
+}

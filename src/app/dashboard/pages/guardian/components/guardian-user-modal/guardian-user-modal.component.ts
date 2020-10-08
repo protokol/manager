@@ -26,7 +26,8 @@ import {
 import { Wallet } from '@arkecosystem/client';
 import { WalletsState } from '@core/store/wallets/wallets.state';
 import { LoadWallet } from '@core/store/wallets/wallets.actions';
-import { UserGroupsFormItem } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
+import { PermissionFormItem, UserGroupsFormItem } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
+import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-utils';
 
 @Component({
   selector: 'app-guardian-user-modal',
@@ -107,15 +108,16 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
 
   createForm(user: GuardianResourcesTypes.User = {
                groups: [],
-               permissions: [],
-               publicKey: ''
+               publicKey: '',
+               allow: [],
+               deny: []
              },
              wallet: Wallet = null) {
 
     this.userForm = this.formBuilder.group({
       wallet: [wallet, [Validators.required]],
       groupNames: [user.groups.map((name) => ({ name }))],
-      permissions: [user.permissions]
+      permissions: [GuardianUtils.toPermissionFormItems(user)]
     });
   }
 
@@ -152,14 +154,14 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
     const { wallet: { publicKey }, groupNames, permissions } = this.userForm.value as {
       wallet: Wallet,
       groupNames: UserGroupsFormItem[],
-      permissions: GuardianResourcesTypes.Permissions[]
+      permissions: PermissionFormItem[]
     };
 
     this.cryptoService
       .setGuardianUserPermissions({
         publicKey,
         groupNames: groupNames.map(({ name }) => name),
-        permissions
+        ...GuardianUtils.toPermissions(permissions)
       })
       .pipe(
         tap(
