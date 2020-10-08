@@ -21,7 +21,7 @@ export class WalletsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Wallet> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .api('wallets')
         .get(addressOrPublicKey)
     ).pipe(
@@ -36,7 +36,7 @@ export class WalletsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<Wallet>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .api('wallets')
         .all({
           ...query,
@@ -55,7 +55,7 @@ export class WalletsService {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .api('wallets')
         .search(
           {

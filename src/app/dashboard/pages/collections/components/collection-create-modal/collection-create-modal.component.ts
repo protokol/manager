@@ -21,7 +21,7 @@ import { FormUtils } from '@core/utils/form-utils';
 import { BehaviorSubject } from 'rxjs';
 import { finalize, first, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
-import { CreateModalResponse } from '@core/interfaces/create-modal.response';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
 import { Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import { BaseResourcesTypes } from '@protokol/client';
@@ -61,7 +61,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
     private nzNotificationService: NzNotificationService,
     private modalRef: NzModalRef<
       CollectionCreateModalComponent,
-      CreateModalResponse
+      RefreshModalResponse
     >,
     private messageService: NzMessageService,
     private store: Store,

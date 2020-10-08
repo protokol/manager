@@ -22,7 +22,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Collections> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .get(collectionId)
     ).pipe(
@@ -37,7 +37,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Collections>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .all({
           ...query,
@@ -56,7 +56,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .searchByCollections(
           {
@@ -78,7 +78,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.CollectionsWallet> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('collections')
         .wallet(collectionId)
     ).pipe(

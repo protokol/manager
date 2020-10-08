@@ -1,0 +1,55 @@
+<ng-container *ngLet="rows$ | async as rows">
+  <ng-container *ngIf="isViewReady$ | async; else loadingTpl">
+    <div nz-row [nzGutter]="[24, 12]">
+      <div nz-col [nzSpan]="24">
+        <app-table
+          [rows]="rows"
+          [tableColumns]="tableColumns"
+          scrollY="70vh"
+        >
+        </app-table>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <nz-spin nzSimple class="text-center"></nz-spin>
+</ng-template>
+
+<ng-template #modalTitleTpl>
+  <app-modal-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary" class="text-capitalize">
+          <ng-container *ngIf="group$ | async as group">
+            "{{group.name}}" users
+          </ng-container>
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="modalTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #modalTitleHelperTpl>
+    View group users
+  </ng-template>
+</ng-template>
+
+<ng-template #publicKeyTpl let-row="row">
+  <app-text-clipper
+    [text]="row.publicKey"
+    [copy]="true"
+  ></app-text-clipper>
+</ng-template>
+
+<ng-template #groupsTpl let-row="row">
+  <ng-container *ngFor="let groupName of row.groups; last as isLast">
+    {{groupName}}
+    <br *ngIf="!isLast" />
+  </ng-container>
+</ng-template>

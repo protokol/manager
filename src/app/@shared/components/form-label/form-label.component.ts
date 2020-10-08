@@ -1,10 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'app-form-label',
   templateUrl: './form-label.component.html',
-  styleUrls: ['./form-label.component.scss'],
+  styleUrls: ['./form-label.component.scss']
 })
 export class FormLabelComponent {
-  constructor() {}
+  @HostBinding('class.full-width') fullWidth = true;
+
+  @Input('fullWidth')
+  set _fullWidth(fullWidth: boolean) {
+    this.fullWidth = !!fullWidth;
+  }
+
+  constructor() {
+  }
 }

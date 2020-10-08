@@ -1,0 +1,115 @@
+<nz-space class="w-100" nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <div class="header">
+      <div>
+        <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      </div>
+      <div>
+        <nz-space nzDirection="horizontal" nzSize="middle">
+          <nz-space-item>
+            <nz-form-control>
+              <nz-input-group nzSuffixIcon="search">
+                <input
+                  type="text"
+                  nz-input
+                  placeholder="Find group"
+                  [ngModel]="searchTerm$ | async"
+                  (ngModelChange)="searchTerm$.next($event)"
+                />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-space-item>
+          <nz-space-item class="m-0">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="showAddGroupModal($event)"
+            >
+              Add Group
+            </button>
+          </nz-space-item>
+        </nz-space>
+      </div>
+    </div>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$ | async"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+      scrollY="70vh"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
+
+<ng-container *ngLet="getBaseUrl$ | async"></ng-container>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Groups</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Define groups and manage group's users
+  </ng-template>
+</ng-template>
+
+<ng-template #permissionsTpl let-row="row">
+  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
+    <a [nzDisabled]="isLoading" nz-dropdown [nzDropdownMenu]="actionsMenu" nzPlacement="bottomRight">
+      <i nz-icon nzType="edit"></i>
+    </a>
+    <nz-dropdown-menu #actionsMenu="nzDropdownMenu">
+      <ul nz-menu nzSelectable>
+        <li
+          nz-menu-item
+          (click)="onPermissionsChange($event, row)"
+        >
+          Update
+        </li>
+        <li
+          nz-menu-item
+          (click)="onManageUsers($event, row)"
+        >
+          Users
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+  </ng-container>
+</ng-template>
+
+<ng-template #defaultTpl let-row="row">
+  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
+    <nz-switch
+      class="on-off"
+      [disabled]="isLoading"
+      #defaultSwitchCmp
+      [ngModel]="row.default"
+      (ngModelChange)="onGroupDefaultUpdate($event, row, defaultSwitchCmp, isLoading)"
+    ></nz-switch>
+  </ng-container>
+</ng-template>
+
+<ng-template #activeTpl let-row="row">
+  <ng-container *ngLet="onGetRowLoading(row.name) | async as isLoading">
+    <nz-switch
+      class="on-off"
+      [disabled]="isLoading"
+      #activeSwitchCmp
+      [ngModel]="row.active"
+      (ngModelChange)="onGroupActiveUpdate($event, row, activeSwitchCmp, isLoading)"
+    ></nz-switch>
+  </ng-container>
+</ng-template>

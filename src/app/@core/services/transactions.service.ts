@@ -38,7 +38,7 @@ export class TransactionsService {
     connectionOptions?: ConnectionOptions
   ): Observable<CreateTransactionApiResponse> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .api('transactions')
         .create(payload)
     ).pipe(this.transactionErrorHandler<CreateTransactionApiResponse>());

@@ -35,7 +35,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzSpaceModule,
     NzTypographyModule,
     NzListModule,
-    NzSpinModule
+    NzSpinModule,
   ],
   providers: [],
   declarations: [

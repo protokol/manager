@@ -1,0 +1,100 @@
+<ng-container *ngIf="isFormReady$ | async; else formLoadingTpl">
+  <nz-table
+    #permissionsTable
+    [nzData]="transactionTypes$ | async"
+    [nzShowPagination]="false"
+  >
+    <thead>
+    <tr>
+      <th nzWidth="200px" class="text-capitalize">Transaction group</th>
+      <th nzWidth="500px" class="text-capitalize">Permissions</th>
+      <th nzWidth="60px" class="text-capitalize text-center">Deny</th>
+      <th nzWidth="60px" class="text-capitalize text-center">Allow</th>
+      <th nzWidth="50px" class="text-capitalize text-center">Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngLet="form.valueChanges | async">
+      <ng-container *ngFor="let data of permissionsTable.data">
+        <ng-container *ngLet="data[0] as typeGroup">
+          <ng-container *ngLet="data[1] as type">
+            <tr>
+              <td>
+                {{ getGroupName(typeGroup) }}
+              </td>
+              <td>Select all</td>
+              <td class="text-center">
+                <nz-switch
+                  class="switch-deny"
+                  [disabled]="isLoading$ | async"
+                  [ngModel]="isTypeGroupSelected(typeGroup, 0)"
+                  (ngModelChange)="selectTypeGroup($event, typeGroup, 0)"
+                ></nz-switch>
+              </td>
+              <td class="text-center">
+                <nz-switch
+                  class="switch-allow"
+                  [disabled]="isLoading$ | async"
+                  [ngModel]="isTypeGroupSelected(typeGroup, 1)"
+                  (ngModelChange)="selectTypeGroup($event, typeGroup, 1)"
+                ></nz-switch>
+              </td>
+              <td class="text-center">
+                <ng-container *ngIf="isExpanded$ | async as expanded">
+                  <ng-container *ngIf="expanded[typeGroup]; else notExpandedTpl">
+                    <a (click)="onExpand($event, typeGroup, false)">
+                      <i nz-icon nzType="up" nzTheme="outline"></i>
+                    </a>
+                  </ng-container>
+                </ng-container>
+                <ng-template #notExpandedTpl>
+                  <a (click)="onExpand($event, typeGroup, true)">
+                    <i nz-icon nzType="down" nzTheme="outline"></i>
+                  </a>
+                </ng-template>
+              </td>
+            </tr>
+            <ng-container *ngIf="isExpanded$ | async as expanded">
+              <ng-container *ngIf="expanded[typeGroup]">
+                <ng-container *ngFor="let transactionType of type | keyvalue">
+                  <ng-container *ngLet="transactionType.key as typeName">
+                    <ng-container *ngLet="transactionType.value as typeValue">
+                      <tr>
+                        <td></td>
+                        <td>
+                          {{ typeName }}
+                        </td>
+                        <td class="text-center">
+                          <nz-switch
+                            class="switch-deny"
+                            [disabled]="isLoading$ | async"
+                            [ngModel]="isTypeSelected(typeGroup, typeValue, 0)"
+                            (ngModelChange)="selectType($event, typeGroup, typeValue, 0)"
+                          ></nz-switch>
+                        </td>
+                        <td class="text-center">
+                          <nz-switch
+                            class="switch-allow"
+                            [disabled]="isLoading$ | async"
+                            [ngModel]="isTypeSelected(typeGroup, typeValue, 1)"
+                            (ngModelChange)="selectType($event, typeGroup, typeValue, 1)"
+                          ></nz-switch>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    </tbody>
+  </nz-table>
+</ng-container>
+
+<ng-template #formLoadingTpl>
+  <nz-spin nzSimple class="text-center"></nz-spin>
+</ng-template>

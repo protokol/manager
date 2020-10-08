@@ -21,7 +21,7 @@ export class AuctionsService {
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.Auctions> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('auctions')
         .getAuctionById(auctionId)
     ).pipe(
@@ -36,7 +36,7 @@ export class AuctionsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('auctions')
         .getAllAuctions({
           ...query,
@@ -53,7 +53,7 @@ export class AuctionsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('auctions')
         .getAllCanceledAuctions({
           ...query,
@@ -72,7 +72,7 @@ export class AuctionsService {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('auctions')
         .searchByAsset(
           {

@@ -9,17 +9,19 @@ describe('CollectionsViewModalComponent', () => {
   let component: CollectionViewModalComponent;
   let fixture: ComponentFixture<CollectionViewModalComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        AjsfWidgetLibraryModule,
-        SharedModule,
-        NgJsonEditorModule,
-        JsonSchemaFormModule,
-      ],
-      declarations: [CollectionViewModalComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          AjsfWidgetLibraryModule,
+          SharedModule,
+          NgJsonEditorModule,
+          JsonSchemaFormModule,
+        ],
+        declarations: [CollectionViewModalComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CollectionViewModalComponent);

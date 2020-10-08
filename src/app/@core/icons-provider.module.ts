@@ -24,6 +24,7 @@ import {
   DownOutline,
   UserSwitchOutline,
   PlusOutline,
+  EditOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [
@@ -49,6 +50,7 @@ const icons = [
   DownOutline,
   UserSwitchOutline,
   PlusOutline,
+  EditOutline
 ];
 
 @NgModule({

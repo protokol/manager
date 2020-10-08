@@ -19,13 +19,12 @@ describe('untilDestroyed', () => {
 
     @Component({
       selector: 'app-test',
-      template: ''
+      template: '',
     })
     class Test implements OnDestroy {
       obs!: Subscription;
 
-      ngOnDestroy() {
-      }
+      ngOnDestroy() {}
 
       subscribe(cb: any) {
         this.obs = new Subject().pipe(untilDestroyed(this)).subscribe(cb);
@@ -54,7 +53,7 @@ describe('untilDestroyed', () => {
 
     @Component({
       selector: 'app-test',
-      template: ''
+      template: '',
     })
     class Test implements OnDestroy {
       obs = new Subject().pipe(untilDestroyed(this)).subscribe(spy);
@@ -98,7 +97,7 @@ describe('untilDestroyed', () => {
     const spy3 = createObserver();
 
     @Directive()
-class LoginComponent implements OnInit, OnDestroy {
+    class LoginComponent implements OnInit, OnDestroy {
       dummy = new Subject().pipe(untilDestroyed(this)).subscribe(spy);
 
       constructor() {
@@ -141,7 +140,7 @@ class LoginComponent implements OnInit, OnDestroy {
 
     @Component({
       selector: 'app-test',
-      template: ''
+      template: '',
     })
     class A implements OnDestroy {
       ngOnDestroy() {}
@@ -161,7 +160,7 @@ class LoginComponent implements OnInit, OnDestroy {
 
     @Component({
       selector: 'app-test',
-      template: ''
+      template: '',
     })
     class Parent implements OnDestroy {
       ngOnDestroy() {}

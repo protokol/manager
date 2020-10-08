@@ -1,0 +1,37 @@
+@import "src/theme/theme-variables";
+
+:host ::ng-deep {
+  thead {
+    tr {
+      th:first-child {
+        font-weight: bold;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        a {
+          color: black;
+        }
+      }
+    }
+  }
+
+  .switch-allow {
+    button {
+      &.ant-switch-checked {
+        background-color: $switch-checked-color;
+      }
+    }
+  }
+
+  .switch-deny {
+    button {
+      &.ant-switch-checked {
+        background-color: $switch-unchecked-color;
+      }
+    }
+  }
+}

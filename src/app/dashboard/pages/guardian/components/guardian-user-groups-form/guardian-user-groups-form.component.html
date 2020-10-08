@@ -1,0 +1,57 @@
+<div nz-row [nzGutter]="[24, 12]">
+  <div nz-col [nzSpan]="20" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="group">Choose group</nz-form-label>
+      </app-form-label>
+      <nz-form-control
+        id="group"
+        nzErrorTip="Please select an group!"
+        nzHasFeedback
+      >
+        <app-guardian-group-select
+          [formControl]="groupDropdownFormControl"
+          [filterOutIds]="filterOutGroups$ | async"
+        ></app-guardian-group-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-col [nzSpan]="4" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label>&nbsp;</nz-form-label>
+      </app-form-label>
+      <nz-form-control>
+        <ng-container *ngLet="groupDropdownFormControl.value as assetValue">
+          <button nz-button nzType="default" class="w-100" (click)="onAddGroup(groupDropdownFormControl.value, $event)">
+            Add group
+          </button>
+        </ng-container>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</div>
+
+<nz-form-item>
+  <nz-form-control>
+    <nz-list nzBordered nzSize="small">
+      <nz-list-header>Groups</nz-list-header>
+      <ng-container
+        *ngFor="let item of form.controls; let formGroupIndex = index"
+      >
+        <ng-container
+          *ngLet="form.controls[formGroupIndex].get('name').value as groupName"
+        >
+          <nz-list-item class="font-monospace">
+            {{ groupName }}
+            <ul nz-list-item-actions>
+              <nz-list-item-action>
+                <a (click)="onRemoveGroup($event, formGroupIndex, groupName)">remove</a>
+              </nz-list-item-action>
+            </ul>
+          </nz-list-item>
+        </ng-container>
+      </ng-container>
+    </nz-list>
+  </nz-form-control>
+</nz-form-item>

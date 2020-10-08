@@ -1,0 +1,25 @@
+@import "../../../../theme/theme-variables";
+
+:host ::ng-deep {
+  h4 {
+    display: inline-block;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: $headings-color;
+  }
+
+  i {
+    margin-top: 5px;
+    font-size: 16px;
+
+    svg {
+      path {
+        fill: $headings-color;
+        stroke: $headings-color;
+        stroke-width: 23;
+      }
+    }
+  }
+}

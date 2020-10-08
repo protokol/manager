@@ -9,17 +9,19 @@ describe('AssetViewModalComponent', () => {
   let component: AssetViewModalComponent;
   let fixture: ComponentFixture<AssetViewModalComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        AjsfWidgetLibraryModule,
-        SharedModule,
-        NgJsonEditorModule,
-        JsonSchemaFormModule,
-      ],
-      declarations: [AssetViewModalComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          AjsfWidgetLibraryModule,
+          SharedModule,
+          NgJsonEditorModule,
+          JsonSchemaFormModule,
+        ],
+        declarations: [AssetViewModalComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AssetViewModalComponent);

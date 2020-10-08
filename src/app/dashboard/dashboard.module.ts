@@ -32,7 +32,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
     NgLetModule,
     NzTypographyModule,
     NzSpaceModule,
-    SharedModule
+    SharedModule,
   ],
 })
 export class DashboardModule {}

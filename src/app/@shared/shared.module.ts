@@ -45,6 +45,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -64,6 +65,8 @@ const declareAndExportComponents = [
   WalletSelectComponent,
   AssetSelectComponent,
   MyNodesCreateModalComponent,
+  PageHeaderComponent,
+  NodeManagerFormComponent,
 ];
 
 @NgModule({
@@ -98,7 +101,7 @@ const declareAndExportComponents = [
     NzPopconfirmModule,
     NzRadioModule,
   ],
-  declarations: [...declareAndExportComponents, NodeManagerFormComponent],
-  exports: [...declareAndExportComponents, NodeManagerFormComponent],
+  declarations: [...declareAndExportComponents],
+  exports: [...declareAndExportComponents],
 })
 export class SharedModule {}

@@ -23,7 +23,7 @@ export class AssetsService implements AssetsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Assets> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .get(assetId)
     ).pipe(
@@ -38,7 +38,7 @@ export class AssetsService implements AssetsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Assets>> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .all({
           ...query,
@@ -57,7 +57,7 @@ export class AssetsService implements AssetsServiceInterface {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .searchByAsset(
           {
@@ -79,7 +79,7 @@ export class AssetsService implements AssetsServiceInterface {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.AssetsWallet> {
     return defer(() =>
-      NodeClientService.getConnection(baseUrl, connectionOptions)
+      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
         .NFTBaseApi('assets')
         .wallet(assetId)
     ).pipe(

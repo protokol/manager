@@ -5,10 +5,12 @@ import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { Observable, of } from 'rxjs';
 import { Bip38Service } from '@core/services/bip38.service';
-import { catchError, filter, map, share, tap } from 'rxjs/operators';
+import { catchError, first, map, share, switchMap, tap } from 'rxjs/operators';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
 import { PinsState } from '@core/store/pins/pins.state';
+import { WalletsService } from '@core/services/wallets.service';
+import { ArkCryptoService } from '@core/services/ark-crypto.service';
 
 @Injectable()
 export class StoreUtilsService {
@@ -17,7 +19,9 @@ export class StoreUtilsService {
   constructor(
     private bip38Service: Bip38Service,
     private store: Store,
-    private router: Router
+    private router: Router,
+    private walletsService: WalletsService,
+    private arkCryptoService: ArkCryptoService
   ) {}
 
   isPinForProfileValid(
@@ -50,9 +54,36 @@ export class StoreUtilsService {
       .pipe(map((wif) => ({ wif })));
   }
 
+  getSelectedProfileWifAndNextNonce(): Observable<{ wif: string; nonce: string }> {
+    return this.getSelectedProfileWif().pipe(
+      switchMap(({ wif }) => {
+        const address = this.arkCryptoService.arkCrypto.Identities.Address.fromWIF(
+          wif
+        );
+
+        return this.walletsService.getWallet(address).pipe(
+          map((senderWallet) => {
+            const nonce = senderWallet
+              ? this.arkCryptoService.arkCrypto.Utils.BigNumber.make(
+                senderWallet.nonce
+              )
+                .plus(1)
+                .toFixed()
+              : '1';
+
+            return {
+              wif,
+              nonce
+            };
+          })
+        );
+      })
+    );
+  }
+
   nftConfigurationGuard(): Observable<void> {
     return this.store.select(NetworksState.hasNftPluginsLoaded).pipe(
-      filter((conf) => !conf),
+      first((conf) => !conf),
       tap(() => this.router.navigate(['/dashboard'])),
       share()
     ) as Observable<void>;

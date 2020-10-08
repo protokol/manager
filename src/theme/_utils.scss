@@ -10,6 +10,16 @@
   text-transform: capitalize;
 }
 
+.text-center.text-center.text-center {
+  text-align: center;
+}
+
 .w-100 {
   width: 100%;
+}
+
+.m-0 {
+  /* stylelint-disable declaration-no-important */
+  margin: 0 !important;
+  /* stylelint-enable declaration-no-important */
 }

@@ -1,0 +1,17 @@
+@import "src/theme/theme-variables";
+
+:host ::ng-deep {
+  .ant-input-number.ant-input-number {
+    width: 100%;
+  }
+
+  &.on-off {
+    button {
+      background-color: $switch-unchecked-color;
+
+      &.ant-switch-checked {
+        background-color: $switch-checked-color;
+      }
+    }
+  }
+}

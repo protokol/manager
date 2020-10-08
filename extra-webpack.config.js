@@ -1,15 +1,15 @@
 const webpack = require('webpack');
 
 module.exports = {
-	plugins: [
-		// Remove all non english word list, to optimize the bundle size
-		new webpack.IgnorePlugin(/^\.\/wordlists\/(?!english)/, /bip39\/src$/),
-	],
-	module: {
-		rules: [
-			{
-				test: /\.less$/,
-				loader: 'less-loader',
+  plugins: [
+    // Remove all non english word list, to optimize the bundle size
+    new webpack.IgnorePlugin(/^\.\/wordlists\/(?!english)/, /bip39\/src$/),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.less$/,
+        loader: 'less-loader',
         options: {
           lessOptions: {
             modifyVars: {
@@ -30,12 +30,12 @@ module.exports = {
               // Extend ant design fonts, and place Open Sans as default
               'font-family': `'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
 						'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-						'Noto Color Emoji'`
+						'Noto Color Emoji'`,
             },
-            javascriptEnabled: true
-          }
-        }
-			},
-		],
-	},
+            javascriptEnabled: true,
+          },
+        },
+      },
+    ],
+  },
 };
