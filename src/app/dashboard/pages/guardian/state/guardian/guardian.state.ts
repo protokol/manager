@@ -30,7 +30,7 @@ import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { TransactionTypes } from '@arkecosystem/client';
 import { GuardianUsersService } from '@core/services/guardian-users.service';
 import { GuardianUserExtended } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { TableUtils } from '@shared/utils/table-utils';
 
 interface GuardianGroupsStateModel {
@@ -258,9 +258,17 @@ export class GuardianState {
 
   @Action(LoadGuardianGroup)
   loadGuardianGroup(
-    { setState, dispatch }: StateContext<GuardianGroupsStateModel>,
-    { groupName }: LoadGuardianGroup
+    { getState, setState, dispatch }: StateContext<GuardianGroupsStateModel>,
+    { groupName, refresh }: LoadGuardianGroup
   ) {
+    if (!refresh) {
+      const { groups } = getState();
+      const group = groups[groupName];
+      if (group) {
+        return of(group);
+      }
+    }
+
     return this.guardianGroupsService.getGroup(groupName).pipe(
       tap(
         (data) => dispatch(new SetGuardianGroupsByIds(data)),

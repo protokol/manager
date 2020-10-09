@@ -15,6 +15,23 @@
         a {
           color: black;
         }
+
+        &:nth-child(2) {
+          font-weight: bold;
+        }
+      }
+
+      &.group-details {
+        td {
+          padding-top: 5px;
+          padding-bottom: 5px;
+
+          &:nth-child(2) {
+            padding-left: 30px;
+            font-style: italic;
+            font-weight: normal;
+          }
+        }
       }
     }
   }
