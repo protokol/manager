@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  forwardRef, Input,
-  OnDestroy, OnInit
-} from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  ControlValueAccessor,
-  FormBuilder,
-  FormArray,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, FormArray, FormBuilder, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { first, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject } from 'rxjs';
@@ -20,8 +9,11 @@ import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-util
 import {
   PermissionFormItem,
   PermissionKind,
-  TransactionType
+  TransactionType,
+  UserGroupsFormItem
 } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
+import { LoadGuardianGroup } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
+import { GuardianResourcesTypes } from '@protokol/client';
 
 @Component({
   selector: 'app-guardian-group-permissions-form',
@@ -42,16 +34,20 @@ import {
   ],
 })
 export class GuardianGroupPermissionsFormComponent
-  implements ControlValueAccessor, OnInit, OnDestroy {
+  implements ControlValueAccessor, OnDestroy {
+  readonly PermissionKind = PermissionKind;
+
   form!: FormArray;
   isFormReady$ = new BehaviorSubject(false);
   isLoading$ = new BehaviorSubject(false);
   transactionTypes$ = new BehaviorSubject<TransactionType[] | null>(null);
   isExpanded$ = new BehaviorSubject<{ [type: number]: boolean }>({});
+  groupNames$ = new BehaviorSubject<UserGroupsFormItem[]>([]);
+  groups$ = new BehaviorSubject<GuardianResourcesTypes.Group[] | null>(null);
 
-  @Input('defaultValues')
-  set defaultValues(defaultValues: PermissionFormItem[]) {
-    this.setDefaultValues(defaultValues);
+  @Input('groupNames')
+  set groupNames(groupNames: UserGroupsFormItem[]) {
+    this.groupNames$.next(groupNames);
   }
 
   constructor(private formBuilder: FormBuilder, private store: Store) {
@@ -93,9 +89,35 @@ export class GuardianGroupPermissionsFormComponent
         untilDestroyed(this)
       )
       .subscribe();
-  }
 
-  ngOnInit(): void {
+    this.groupNames$
+      .pipe(
+        tap((groupNames) => {
+          this.groups$.next(null);
+
+          if (groupNames.length) {
+            this.store.select(
+              GuardianState.getGuardianGroupsByIds(groupNames.map(({ name }) => name))
+            ).pipe(
+              untilDestroyed(this),
+              first(groups => groups.every(g => !!g)),
+              tap((groups) =>
+                this.groups$.next(
+                  (groups as GuardianResourcesTypes.Group[])
+                    .sort(({ priority: aPriority, priority: bPriority }) =>
+                      aPriority - bPriority
+                    )
+                )
+              )
+            ).subscribe();
+
+            this.store.dispatch(groupNames.map(({ name }) =>
+              new LoadGuardianGroup(name)
+            ));
+          }
+        }),
+        untilDestroyed(this)
+      ).subscribe();
   }
 
   fromPermissionToFormItem({
@@ -300,4 +322,28 @@ export class GuardianGroupPermissionsFormComponent
   }
 
   ngOnDestroy(): void {}
+
+  hasGroupPermissions(group: GuardianResourcesTypes.Group, typeGroup: number, typeValue: number): PermissionKind | null {
+    const { active } = group;
+    if (!active) {
+      return null;
+    }
+
+    const { allow, deny } = group;
+    let isAllowed = null;
+    let isDenied = null;
+
+    if (allow?.length) {
+      isAllowed = allow.some(({ transactionTypeGroup, transactionType }) =>
+        transactionTypeGroup === typeGroup && typeValue === transactionType
+      ) ? PermissionKind.Allow : null;
+    }
+    if (deny?.length) {
+      isDenied = deny.some(({ transactionTypeGroup, transactionType }) =>
+        transactionTypeGroup === typeGroup && typeValue === transactionType
+      ) ? PermissionKind.Deny : null;
+    }
+
+    return isAllowed || isDenied;
+  }
 }

@@ -27,16 +27,16 @@
                 <nz-switch
                   class="switch-deny"
                   [disabled]="isLoading$ | async"
-                  [ngModel]="isTypeGroupSelected(typeGroup, 0)"
-                  (ngModelChange)="selectTypeGroup($event, typeGroup, 0)"
+                  [ngModel]="isTypeGroupSelected(typeGroup, PermissionKind.Deny)"
+                  (ngModelChange)="selectTypeGroup($event, typeGroup, PermissionKind.Deny)"
                 ></nz-switch>
               </td>
               <td class="text-center">
                 <nz-switch
                   class="switch-allow"
                   [disabled]="isLoading$ | async"
-                  [ngModel]="isTypeGroupSelected(typeGroup, 1)"
-                  (ngModelChange)="selectTypeGroup($event, typeGroup, 1)"
+                  [ngModel]="isTypeGroupSelected(typeGroup, PermissionKind.Allow)"
+                  (ngModelChange)="selectTypeGroup($event, typeGroup, PermissionKind.Allow)"
                 ></nz-switch>
               </td>
               <td class="text-center">
@@ -68,20 +68,53 @@
                           <nz-switch
                             class="switch-deny"
                             [disabled]="isLoading$ | async"
-                            [ngModel]="isTypeSelected(typeGroup, typeValue, 0)"
-                            (ngModelChange)="selectType($event, typeGroup, typeValue, 0)"
+                            [ngModel]="isTypeSelected(typeGroup, typeValue, PermissionKind.Deny)"
+                            (ngModelChange)="selectType($event, typeGroup, typeValue, PermissionKind.Deny)"
                           ></nz-switch>
                         </td>
                         <td class="text-center">
                           <nz-switch
                             class="switch-allow"
                             [disabled]="isLoading$ | async"
-                            [ngModel]="isTypeSelected(typeGroup, typeValue, 1)"
-                            (ngModelChange)="selectType($event, typeGroup, typeValue, 1)"
+                            [ngModel]="isTypeSelected(typeGroup, typeValue, PermissionKind.Allow)"
+                            (ngModelChange)="selectType($event, typeGroup, typeValue, PermissionKind.Allow)"
                           ></nz-switch>
                         </td>
                         <td></td>
                       </tr>
+                      <ng-container *ngLet="groups$ | async as groups">
+                        <ng-container *ngFor="let group of groups">
+                          <ng-container *ngLet="hasGroupPermissions(group, typeGroup, typeValue) as permission">
+                            <ng-container *ngIf="permission !== null">
+                              <tr class="group-details">
+                                <td></td>
+                                <td class="text-right">
+                                  {{group.name}}
+                                </td>
+                                <td class="text-center">
+                                  <ng-container *ngIf="permission === PermissionKind.Deny">
+                                    <nz-switch
+                                      class="switch-deny"
+                                      [disabled]="true"
+                                      ngModel="true"
+                                    ></nz-switch>
+                                  </ng-container>
+                                </td>
+                                <td class="text-center">
+                                  <ng-container *ngIf="permission === PermissionKind.Allow">
+                                    <nz-switch
+                                      class="switch-allow"
+                                      [disabled]="true"
+                                      ngModel="true"
+                                    ></nz-switch>
+                                  </ng-container>
+                                </td>
+                                <td></td>
+                              </tr>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
                     </ng-container>
                   </ng-container>
                 </ng-container>

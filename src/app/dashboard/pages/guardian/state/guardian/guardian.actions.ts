@@ -28,7 +28,7 @@ export class LoadGuardianGroups {
 export class LoadGuardianGroup {
   static type = `[${GUARDIAN_TYPE_NAME}] LoadGuardianGroup`;
 
-  constructor(public groupName: string) {}
+  constructor(public groupName: string, public refresh: boolean = true) {}
 }
 
 export class SetGuardianGroupsByIds {

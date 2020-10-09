@@ -30,8 +30,15 @@
             </app-guardian-user-groups-form>
           </nz-form-item>
           <nz-form-item>
-            <app-guardian-group-permissions-form formControlName="permissions" [hidden]="!user">
-            </app-guardian-group-permissions-form>
+            <ng-container *ngLet="c('groupNames').valueChanges | async">
+              <ng-container *ngLet="c('groupNames').value as groupNames">
+                <app-guardian-group-permissions-form
+                  [groupNames]="groupNames"
+                  formControlName="permissions"
+                  [hidden]="!user">
+                </app-guardian-group-permissions-form>
+              </ng-container>
+            </ng-container>
           </nz-form-item>
         </ng-container>
       </ng-container>
