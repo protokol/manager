@@ -12,7 +12,15 @@
         <app-guardian-group-select
           [formControl]="groupDropdownFormControl"
           [filterOutIds]="filterOutGroups$ | async"
+          [isDisabled]="form.hasError('maxlength')"
         ></app-guardian-group-select>
+
+        <ng-container *ngIf="form.hasError('maxlength')">
+            <span nz-typography nzType="danger">
+              Number of groups is limited to
+              {{ max }}
+            </span>
+        </ng-container>
       </nz-form-control>
     </nz-form-item>
   </div>
@@ -23,7 +31,8 @@
       </app-form-label>
       <nz-form-control>
         <ng-container *ngLet="groupDropdownFormControl.value as assetValue">
-          <button nz-button nzType="default" class="w-100" (click)="onAddGroup(groupDropdownFormControl.value, $event)">
+          <button nz-button nzType="default" class="w-100" (click)="onAddGroup(groupDropdownFormControl.value, $event)"
+                  [disabled]="form.hasError('maxlength')">
             Add group
           </button>
         </ng-container>

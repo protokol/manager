@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef,
-  OnDestroy,
+  forwardRef, Input,
+  OnDestroy, OnInit
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -37,17 +37,21 @@ import { UserGroupsFormItem } from '@app/dashboard/pages/guardian/interfaces/gua
     },
   ],
 })
-export class GuardianUserGroupsFormComponent implements ControlValueAccessor, OnDestroy {
+export class GuardianUserGroupsFormComponent implements ControlValueAccessor, OnInit, OnDestroy {
   form!: FormArray;
   groupDropdownFormControl = new FormControl();
-  filterOutGroups$ = new BehaviorSubject<string[]>([]);
+  filterOutGroups$ = new BehaviorSubject<UserGroupsFormItem[]>([]);
 
-  constructor(private formBuilder: FormBuilder) {
+  @Input() max = Number.MAX_SAFE_INTEGER;
+
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit(): void {
     this.createForm();
   }
 
   createForm() {
-    this.form = this.formBuilder.array([]);
+    this.form = this.formBuilder.array([], [Validators.maxLength(this.max - 1)]);
 
     this.form.valueChanges
       .pipe(
@@ -120,7 +124,8 @@ export class GuardianUserGroupsFormComponent implements ControlValueAccessor, On
       event.preventDefault();
     }
 
-    this.filterOutGroups$.next([...this.filterOutGroups$.getValue(), value.name]);
+    const { name } = value;
+    this.filterOutGroups$.next([...this.filterOutGroups$.getValue(), { name }]);
     this.groupDropdownFormControl.reset();
 
     this.form.push(
@@ -136,7 +141,7 @@ export class GuardianUserGroupsFormComponent implements ControlValueAccessor, On
     this.filterOutGroups$.next([
       ...this.filterOutGroups$
         .getValue()
-        .filter((groupId) => groupId !== groupName),
+        .filter(({ name }) => name !== groupName),
     ]);
 
     this.form.removeAt(index);

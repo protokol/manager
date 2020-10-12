@@ -63,9 +63,18 @@ export class GuardianGroupSelectComponent
   loadFunc$ = new BehaviorSubject<LoadGuardianGroupsSelectFunc>((queryParams) => {
     return this.guardianGroupsService.getGroups(queryParams);
   });
+  isDisabled$ = new BehaviorSubject(false);
 
   @Input()
-  set filterOutIds(filterOutIds: UserGroupsFormItem) {
+  set isDisabled(isDisabled: boolean) {
+    if (isDisabled === true
+      || isDisabled === false) {
+      this.isDisabled$.next(isDisabled);
+    }
+  }
+
+  @Input()
+  set filterOutIds(filterOutIds: UserGroupsFormItem[]) {
     if (Array.isArray(filterOutIds)) {
       this.filterOutGroupNames$.next(filterOutIds);
     }
@@ -114,7 +123,10 @@ export class GuardianGroupSelectComponent
               tap(({ data, meta }) => {
                 this.groups$.next(
                   [...this.groups$.getValue(), ...data].filter(
-                    ({ name }) => !this.filterOutGroupNames$.getValue().includes(name)
+                    ({ name }) => !this.filterOutGroupNames$
+                      .getValue()
+                      .map(({ name: n }) => n)
+                      .includes(name)
                   )
                 );
 

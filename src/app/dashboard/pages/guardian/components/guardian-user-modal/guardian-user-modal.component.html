@@ -26,7 +26,7 @@
       <ng-container *ngLet="c('wallet').valueChanges | async">
         <ng-container *ngIf="c('wallet').value as user">
           <nz-form-item>
-            <app-guardian-user-groups-form formControlName="groupNames">
+            <app-guardian-user-groups-form [max]="maxDefinedGroupsPerUser" formControlName="groupNames">
             </app-guardian-user-groups-form>
           </nz-form-item>
           <nz-form-item>
@@ -56,7 +56,7 @@
       <nz-space-item>
         <h4 nz-typography nzType="secondary" class="text-capitalize">
           <ng-container *ngIf="isEditMode$ | async; else createMode">
-            Edit user permissions
+            Update user permissions
           </ng-container>
           <ng-template #createMode>
             Add user permissions

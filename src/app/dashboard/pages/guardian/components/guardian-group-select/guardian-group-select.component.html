@@ -7,6 +7,7 @@
   nzShowSearch
   nzServerSearch
   (nzOnSearch)="onSearchChanged($event)"
+  [nzDisabled]="isDisabled$ | async"
 >
   <ng-container *ngFor="let group of groups$ | async">
     <nz-option [nzValue]="group" [nzLabel]="group.name" nzCustomContent>
