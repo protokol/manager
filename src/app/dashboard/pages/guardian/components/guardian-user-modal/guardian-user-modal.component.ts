@@ -21,6 +21,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import {
+  LoadGuardianConfigurations,
   LoadTransactionTypes
 } from '@app/dashboard/pages/guardian/state/guardian/guardian.actions';
 import { Wallet } from '@arkecosystem/client';
@@ -28,6 +29,7 @@ import { WalletsState } from '@core/store/wallets/wallets.state';
 import { LoadWallet } from '@core/store/wallets/wallets.actions';
 import { PermissionFormItem, UserGroupsFormItem } from '@app/dashboard/pages/guardian/interfaces/guardian.types';
 import { GuardianUtils } from '@app/dashboard/pages/guardian/utils/guardian-utils';
+import { GuardianState } from '@app/dashboard/pages/guardian/state/guardian/guardian.state';
 
 @Component({
   selector: 'app-guardian-user-modal',
@@ -41,6 +43,9 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
   isEditMode$ = new BehaviorSubject(false);
   isFormReady$ = new BehaviorSubject(false);
   isPermissionFormGroupReady$ = new BehaviorSubject(false);
+  guardianConfigurations$ = new BehaviorSubject<GuardianResourcesTypes.GuardianConfigurations | null>(
+    null
+  );
 
   @Input() user?: GuardianResourcesTypes.User;
 
@@ -74,27 +79,38 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
       this.cd.markForCheck();
     });
 
-    if (this.isEditMode$.getValue()) {
-      const { publicKey } = this.user;
+    this.store
+      .select(GuardianState.getGuardianConfigurations)
+      .pipe(
+        first((guardianConfigurations) => !!guardianConfigurations),
+        tap((guardianConfigurations) => {
+          this.guardianConfigurations$.next(guardianConfigurations);
 
-      this.store
-        .select(WalletsState.getWalletsByIds([publicKey]))
-        .pipe(
-          map(([wallet]) => wallet),
-          first((wallet) => !!(wallet && wallet.wallet)),
-          map(({ wallet }) => wallet),
-          tap((wallet) => {
-            this.createForm(this.user, wallet);
+          if (this.isEditMode$.getValue()) {
+            const { publicKey } = this.user;
+
+            this.store
+              .select(WalletsState.getWalletsByIds([publicKey]))
+              .pipe(
+                map(([wallet]) => wallet),
+                first((wallet) => !!(wallet && wallet.wallet)),
+                map(({ wallet }) => wallet),
+                tap((wallet) => {
+                  this.createForm(this.user, wallet);
+                  this.isFormReady$.next(true);
+                }),
+                untilDestroyed(this)
+              )
+              .subscribe();
+            this.store.dispatch(new LoadWallet(publicKey));
+          } else {
+            this.createForm();
             this.isFormReady$.next(true);
-          }),
-          untilDestroyed(this)
-        )
-        .subscribe();
-      this.store.dispatch(new LoadWallet(publicKey));
-    } else {
-      this.createForm();
-      this.isFormReady$.next(true);
-    }
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
 
     this.store.dispatch(new LoadTransactionTypes())
       .pipe(
@@ -104,6 +120,19 @@ export class GuardianUserModalComponent implements OnInit, OnDestroy {
         }),
         untilDestroyed(this)
       ).subscribe();
+
+    this.store.dispatch(new LoadGuardianConfigurations());
+  }
+
+  get maxDefinedGroupsPerUser() {
+    const {
+      transactions: {
+        defaults: {
+          maxDefinedGroupsPerUser
+        }
+      }
+    } = this.guardianConfigurations$.getValue();
+    return maxDefinedGroupsPerUser;
   }
 
   createForm(user: GuardianResourcesTypes.User = {
