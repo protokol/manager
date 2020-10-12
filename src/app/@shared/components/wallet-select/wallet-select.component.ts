@@ -7,7 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { TableUtils } from '@shared/utils/table-utils';
-import { BehaviorSubject, OperatorFunction } from 'rxjs';
+import { BehaviorSubject, combineLatest, OperatorFunction } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -54,14 +54,23 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 export class WalletSelectComponent
   implements ControlValueAccessor, OnInit, OnDestroy {
   formControl!: FormControl;
-  wallets$ = new BehaviorSubject<Wallet[]>([]);
+  wallets$ = new BehaviorSubject<Partial<Wallet>[]>([]);
   queryParams$ = new BehaviorSubject<NzTableQueryParams | null>(null);
   isLoading$ = new BehaviorSubject(false);
   isLastPage$ = new BehaviorSubject(false);
   labelProp$ = new BehaviorSubject<keyof Wallet>('address');
   isDisabled$ = new BehaviorSubject(false);
+  canAddColdWallet$ = new BehaviorSubject(false);
 
   @Input() placeholder = 'Select wallet address';
+
+  @Input()
+  set canAddColdWallet(canAddColdWallet: boolean) {
+    if (canAddColdWallet === true
+      || canAddColdWallet === false) {
+      this.canAddColdWallet$.next(canAddColdWallet);
+    }
+  }
 
   @Input()
   set isDisabled(isDisabled: boolean) {
@@ -149,7 +158,31 @@ export class WalletSelectComponent
             this.filter(),
             tap(({ data, meta }) => {
               this.store.dispatch(new SetWalletsByIds(data));
-              this.wallets$.next([...this.wallets$.getValue(), ...data]);
+
+              const wallets = [
+                ...this.wallets$.getValue(),
+                ...data,
+              ];
+
+              const coldWallet: () => (Partial<Wallet>)[] = () => {
+                if (this.canAddColdWallet$.getValue() && hasFilters) {
+                  const { value } = queryParams.filter.find(({ key }) => key === this.labelProp$.getValue());
+                  if (!wallets.some((w) => {
+                    const label = w[this.labelProp$.getValue()];
+                    return label === value;
+                  })) {
+                    return [{
+                      [this.labelProp$.getValue()]: value.trim()
+                    }];
+                  }
+                }
+                return [];
+              };
+
+              this.wallets$.next([
+                ...wallets,
+                ...coldWallet()
+              ]);
 
               if (!meta.next) {
                 this.isLastPage$.next(true);
@@ -165,9 +198,25 @@ export class WalletSelectComponent
   }
 
   ngOnInit() {
-    this.queryParams$.next({
-      ...TableUtils.getDefaultNzTableQueryParams(),
-    });
+    combineLatest([
+      this.canAddColdWallet$.asObservable(),
+    ])
+      .pipe(
+        debounceTime(250),
+        distinctUntilChanged(),
+        tap(() => {
+          this.wallets$.next([]);
+          this.isLastPage$.next(false);
+
+          this.queryParams$.next({
+            ...TableUtils.getDefaultNzTableQueryParams(),
+            ...this.queryParams$.getValue(),
+            pageIndex: 0,
+          });
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   next() {

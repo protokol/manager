@@ -18,6 +18,7 @@
           labelProp="publicKey"
           placeholder="Select wallet public key"
           [isDisabled]="isEditMode$ | async"
+          [canAddColdWallet]="true"
         >
         </app-wallet-select>
       </nz-form-control>
