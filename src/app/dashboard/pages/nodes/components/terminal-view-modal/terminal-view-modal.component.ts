@@ -22,6 +22,7 @@ import {
 } from '@app/dashboard/pages/nodes/state/manager-logs/manager-logs.state';
 import { SearchAddon } from 'xterm-addon-search';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { TerminalFontSize, TerminalFontSizes } from '@app/dashboard/pages/nodes/interfaces/node.types';
 
 @Component({
   selector: 'app-terminal-view-modal',
@@ -30,11 +31,14 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
+  readonly TerminalFontSize = TerminalFontSize;
+
   private termSearch = new SearchAddon();
   managerUrl$ = new BehaviorSubject('');
   logs$ = new BehaviorSubject('');
   searchTerm$ = new BehaviorSubject('');
   isSearching$ = new BehaviorSubject(false);
+  fontSize$ = new BehaviorSubject<TerminalFontSize>(TerminalFontSize.small);
   linesFrom = -1;
   linesTo = -1;
   subscribedLogName: string;
@@ -130,6 +134,12 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.getCoreTerminal.loadAddon(this.termSearch);
+    this.fontSize$.asObservable()
+      .pipe(
+        tap((fontSize) => this.getCoreTerminal.setOption('fontSize', fontSize)),
+        untilDestroyed(this)
+      )
+      .subscribe();
     this.terminal.write(TextUtils.replaceWithTerminalBr(this.logs$.getValue()));
   }
 
@@ -145,5 +155,14 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
 
     this.termSearch.findNext(this.searchTerm$.getValue());
+  }
+
+  onZoom(event: MouseEvent, index: number) {
+    event.preventDefault();
+
+    const fontIndex = TerminalFontSizes.findIndex((fontSize) =>
+      fontSize === this.fontSize$.getValue()
+    ) % TerminalFontSizes.length;
+    this.fontSize$.next(TerminalFontSizes[fontIndex - index]);
   }
 }

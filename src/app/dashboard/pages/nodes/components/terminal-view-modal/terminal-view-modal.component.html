@@ -1,40 +1,60 @@
 <nz-space nzDirection="vertical" class="modal-content">
   <nz-space-item>
-    <div class="search-bar">
-      <nz-input-group
-        nzSearch
-        class="search-input-group"
-        [nzAddOnAfter]="searchTpl"
-      >
-        <input
-          [disabled]="(this.logs$ | async) === ''"
-          [ngModel]="searchTerm$ | async"
-          (ngModelChange)="searchTerm$.next($event)"
-          type="search"
-          nz-input
-          placeholder="Insert search text..."
-        />
-      </nz-input-group>
-      <ng-template #searchTpl>
+    <div class="top-bar">
+      <div class="font-bar">
         <button
-          [disabled]="(searchTerm$ | async) === ''"
-          (click)="onSearchPrevious($event)"
+          [disabled]="(fontSize$ | async) === TerminalFontSize.xxLarge || (this.logs$ | async) === ''"
+          (click)="onZoom($event, -1)"
           nz-button
           nzType="default"
-          nzSearch
         >
-          <i nz-icon nzType="up"></i>
+          <i nz-icon nzType="zoom-in"></i>
         </button>
         <button
-          [disabled]="(searchTerm$ | async) === ''"
-          (click)="onSearchNext($event)"
+          [disabled]="(fontSize$ | async) === TerminalFontSize.xxSmall || (this.logs$ | async) === ''"
+          (click)="onZoom($event, 1)"
           nz-button
           nzType="default"
-          nzSearch
         >
-          <i nz-icon nzType="down"></i>
+          <i nz-icon nzType="zoom-out"></i>
         </button>
-      </ng-template>
+      </div>
+      <div class="search-bar">
+        <nz-input-group
+          nzSearch
+          class="search-input-group"
+          [nzAddOnAfter]="searchTpl"
+        >
+          <input
+            [disabled]="(this.logs$ | async) === ''"
+            [ngModel]="searchTerm$ | async"
+            (ngModelChange)="searchTerm$.next($event)"
+            type="search"
+            nz-input
+            placeholder="Insert search text..."
+          />
+        </nz-input-group>
+        <ng-template #searchTpl>
+          <button
+            [disabled]="(searchTerm$ | async) === ''"
+            (click)="onSearchPrevious($event)"
+            nz-button
+            nzType="default"
+            nzSearch
+          >
+            <i nz-icon nzType="up"></i>
+          </button>
+          <button
+            [disabled]="(searchTerm$ | async) === ''"
+            (click)="onSearchNext($event)"
+            nz-button
+            nzType="default"
+            nzSearch
+          >
+            <i nz-icon nzType="down"></i>
+          </button>
+        </ng-template>
+      </div>
     </div>
   </nz-space-item>
   <nz-space-item>
