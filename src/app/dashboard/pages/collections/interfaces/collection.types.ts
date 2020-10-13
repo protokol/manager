@@ -33,3 +33,8 @@ export interface AttributeModalNumber extends CreateAttributeModalResponseBase {
 export type CreateAttributeModalResponse =
   | AttributeModalString
   | AttributeModalNumber;
+
+
+export interface PublicKeyFormItem {
+  publicKey: string;
+}

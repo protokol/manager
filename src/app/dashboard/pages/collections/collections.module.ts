@@ -25,6 +25,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { PublicKeysFormComponent } from './components/public-keys-form/public-keys-form.component';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 @NgModule({
   imports: [
@@ -49,6 +51,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     NzIconModule,
     NzSelectModule,
     NzCheckboxModule,
+    NzListModule
   ],
   declarations: [
     CollectionsComponent,
@@ -57,6 +60,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     AttributeCreateModalComponent,
     AttributeStringFormComponent,
     AttributeNumberFormComponent,
+    PublicKeysFormComponent
   ],
   exports: [],
 })
