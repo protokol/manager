@@ -69,6 +69,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   createCollectionModalTitleTpl!: TemplateRef<{}>;
   @ViewChild('collectionSchemaModalTitleTpl', { static: true })
   collectionSchemaModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('allowedIssuersTpl', { static: true }) allowedIssuersTpl!: TemplateRef<{
+    row: BaseResourcesTypes.Collections;
+  }>;
 
   isLoading$ = new BehaviorSubject(false);
   searchTerm$ = new BehaviorSubject('');
@@ -106,10 +109,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         searchBy: true,
       },
       {
-        propertyName: 'description',
-        headerName: 'Description',
-      },
-      {
         propertyName: 'maximumSupply',
         headerName: 'Supply',
       },
@@ -118,6 +117,10 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         headerName: 'Owner',
         columnTransformTpl: this.ownerTpl,
         sortBy: true,
+      },
+      {
+        headerName: 'Allowed issuers',
+        columnTransformTpl: this.allowedIssuersTpl,
       },
       {
         propertyName: 'timestamp',

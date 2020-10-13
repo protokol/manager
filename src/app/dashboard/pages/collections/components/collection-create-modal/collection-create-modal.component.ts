@@ -158,6 +158,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
         CollectionsUtils.getDefaultJsonSchema(),
         [Validators.required, this.schemaSizeValidator],
       ],
+      allowedIssuers: []
     });
   }
 
@@ -178,8 +179,13 @@ export class CollectionCreateModalComponent implements OnDestroy {
 
     this.isLoading$.next(true);
 
+    const { allowedIssuers, ...rest } = this.collectionForm.value;
+
     this.cryptoService
-      .registerCollection(this.collectionForm.value)
+      .registerCollection({
+        ...rest,
+        ...(allowedIssuers.length ? { allowedIssuers: allowedIssuers.map(({ publicKey }) => publicKey) } : {})
+      })
       .pipe(
         tap(
           () => {

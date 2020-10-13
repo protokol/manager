@@ -98,3 +98,13 @@
     Collection schema represents a template structure for creating assets
   </ng-template>
 </ng-template>
+
+<ng-template #allowedIssuersTpl let-row="row">
+  <ng-container *ngFor="let allowedIssuer of row.allowedIssuers; last as isLast">
+    <app-text-clipper
+      [text]="allowedIssuer"
+      [copy]="true"
+    ></app-text-clipper>
+    <br *ngIf="!isLast" />
+  </ng-container>
+</ng-template>

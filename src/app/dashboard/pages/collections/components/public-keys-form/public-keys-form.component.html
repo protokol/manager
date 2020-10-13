@@ -1,0 +1,58 @@
+<div nz-row [nzGutter]="[24, 12]">
+  <div nz-col [nzSpan]="20" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label nzFor="wallet">Choose wallet</nz-form-label>
+      </app-form-label>
+      <nz-form-control
+        id="asset"
+        nzErrorTip="Please select an wallet!"
+        nzHasFeedback
+      >
+        <app-wallet-select
+          [formControl]="walletDropdownFormControl"
+          labelProp="publicKey"
+          placeholder="Select wallet public key"
+          [canAddColdWallet]="true"
+        >
+        </app-wallet-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-col [nzSpan]="4" [nzFlex]="1">
+    <nz-form-item>
+      <app-form-label>
+        <nz-form-label>&nbsp;</nz-form-label>
+      </app-form-label>
+      <nz-form-control>
+        <button nz-button nzType="default" class="w-100" (click)="onAddWallet($event, walletDropdownFormControl.value)">
+          Add allowed issuers
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</div>
+
+<nz-form-item>
+  <nz-form-control>
+    <nz-list nzBordered nzSize="small">
+      <nz-list-header>Allowed issuers</nz-list-header>
+      <ng-container
+        *ngFor="let item of form.controls; let formGroupIndex = index"
+      >
+        <ng-container
+          *ngLet="form.controls[formGroupIndex].get('publicKey').value as publicKey"
+        >
+          <nz-list-item class="font-monospace">
+            {{ publicKey }}
+            <ul nz-list-item-actions>
+              <nz-list-item-action>
+                <a (click)="onRemoveWallet($event, formGroupIndex, publicKey)">remove</a>
+              </nz-list-item-action>
+            </ul>
+          </nz-list-item>
+        </ng-container>
+      </ng-container>
+    </nz-list>
+  </nz-form-control>
+</nz-form-item>

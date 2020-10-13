@@ -113,6 +113,15 @@
         </ng-template>
       </nz-form-item>
     </div>
+
+    <nz-divider nzDashed></nz-divider>
+
+    <div nz-col [nzSpan]="24">
+      <nz-form-item>
+        <app-public-keys-form formControlName="allowedIssuers">
+        </app-public-keys-form>
+      </nz-form-item>
+    </div>
   </div>
 
   <nz-divider nzDashed></nz-divider>
