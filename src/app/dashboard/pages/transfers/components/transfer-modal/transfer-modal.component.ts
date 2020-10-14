@@ -33,7 +33,7 @@ export class TransferModalComponent implements OnInit, OnDestroy {
   modalTitleTpl!: TemplateRef<{}>;
 
   constructor(
-    private nzModalRef: NzModalRef,
+    public nzModalRef: NzModalRef,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
     private cryptoService: CryptoService,

@@ -57,48 +57,6 @@
 
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>
 
-<ng-template #createCollectionModalTitleTpl>
-  <app-modal-header>
-    <nz-space>
-      <nz-space-item>
-        <h4 nz-typography nzType="secondary">Register new collection</h4>
-      </nz-space-item>
-      <nz-space-item>
-        <app-popover-helper
-          placement="right"
-          [popoverContent]="createCollectionHelperTpl"
-        ></app-popover-helper>
-      </nz-space-item>
-    </nz-space>
-  </app-modal-header>
-  <ng-template #createCollectionHelperTpl>
-    Collection represents a template structure for creating assets
-  </ng-template>
-</ng-template>
-
-<ng-template #collectionSchemaModalTitleTpl>
-  <app-modal-header>
-    <nz-space>
-      <nz-space-item>
-        <ng-container *ngIf="openSchemaName$ | async as schemaName">
-          <h4 nz-typography nzType="secondary">
-            Collection schema - "{{ schemaName }}"
-          </h4>
-        </ng-container>
-      </nz-space-item>
-      <nz-space-item>
-        <app-popover-helper
-          placement="right"
-          [popoverContent]="collectionSchemaHelperTpl"
-        ></app-popover-helper>
-      </nz-space-item>
-    </nz-space>
-  </app-modal-header>
-  <ng-template #collectionSchemaHelperTpl>
-    Collection schema represents a template structure for creating assets
-  </ng-template>
-</ng-template>
-
 <ng-template #allowedIssuersTpl let-row="row">
   <ng-container *ngFor="let allowedIssuer of row.allowedIssuers; last as isLast">
     <app-text-clipper

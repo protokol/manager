@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-modal-header',
@@ -7,5 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalHeaderComponent {
+  @Input() modalRef: NzModalRef = null;
+
   constructor() {}
 }

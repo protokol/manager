@@ -65,10 +65,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @ViewChild('timestampTpl', { static: true }) timestampTpl!: TemplateRef<{
     row: BaseResourcesTypes.Collections;
   }>;
-  @ViewChild('createCollectionModalTitleTpl', { static: true })
-  createCollectionModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('collectionSchemaModalTitleTpl', { static: true })
-  collectionSchemaModalTitleTpl!: TemplateRef<{}>;
   @ViewChild('allowedIssuersTpl', { static: true }) allowedIssuersTpl!: TemplateRef<{
     row: BaseResourcesTypes.Collections;
   }>;
@@ -79,8 +75,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   getBaseUrl$: Observable<string>;
   rows$: Observable<BaseResourcesTypes.Collections[]> = of([]);
   tableColumns: TableColumnConfig<BaseResourcesTypes.Collections>[];
-
-  openSchemaName$ = new BehaviorSubject('');
 
   constructor(
     private store: Store,
@@ -190,15 +184,13 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   showJsonSchema(event: MouseEvent, row: BaseResourcesTypes.Collections) {
     event.preventDefault();
 
-    this.openSchemaName$.next(row.name);
     this.nzModalService.create({
-      nzTitle: this.collectionSchemaModalTitleTpl,
       nzContent: CollectionViewModalComponent,
       nzComponentParams: {
+        schemaName: row.name,
         jsonSchema: row.jsonSchema,
       },
       nzFooter: null,
-      nzWidth: '75vw',
     });
   }
 
@@ -214,9 +206,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       CollectionCreateModalComponent,
       RefreshModalResponse
     >({
-      nzTitle: this.createCollectionModalTitleTpl,
       nzContent: CollectionCreateModalComponent,
-      nzWidth: '75vw',
       ...ModalUtils.getCreateModalDefaultConfig(),
     });
 

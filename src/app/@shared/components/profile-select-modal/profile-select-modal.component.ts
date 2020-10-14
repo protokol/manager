@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -51,16 +51,29 @@ export class ProfileSelectModalComponent implements OnInit, OnDestroy {
 
   @Input() profileId = '';
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
     private modalRef: NzModalRef,
     private store: Store,
     private nodeClientService: NodeClientService,
     private nzMessageService: NzMessageService,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '30vw',
+      });
+      this.cd.markForCheck();
+    });
+
     this.createForm();
     this.registerFormListeners();
   }

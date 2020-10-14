@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PinataService } from '@core/services/pinata.service';
@@ -41,17 +41,30 @@ export class IpfsUploadFilePinataComponent implements OnInit, OnDestroy {
     null
   );
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private modalRef: NzModalRef,
     private formBuilder: FormBuilder,
     private pinataService: PinataService,
     private messageService: NzMessageService,
-    private notificationService: NzNotificationService
+    private notificationService: NzNotificationService,
+    private cd: ChangeDetectorRef
   ) {
     this.createForms();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '35vw',
+      });
+      this.cd.markForCheck();
+    });
+  }
 
   createForms() {
     this.authenticationForm = this.formBuilder.group({
@@ -97,7 +110,7 @@ export class IpfsUploadFilePinataComponent implements OnInit, OnDestroy {
             this.log.error(err);
             this.notificationService.create(
               'error',
-              'Register asset failed!',
+              'Authentication failed!',
               err
             );
           }
