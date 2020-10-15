@@ -1,8 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
@@ -26,21 +24,16 @@ export class DashboardStatusBarComponent {
     ProfileWithId
   >;
 
-  @ViewChild('profileSelectModalTpl', { static: true })
-  profileSelectModalTpl!: TemplateRef<{}>;
-
   constructor(private router: Router, private nzModalService: NzModalService) {}
 
   onProfileSelect(event: MouseEvent, profileId: string) {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: this.profileSelectModalTpl,
       nzContent: ProfileSelectModalComponent,
       nzComponentParams: {
         profileId,
       },
-      nzWidth: '30vw',
       nzFooter: null,
     });
   }

@@ -4,20 +4,10 @@
 <ng-template #actionsTpl let-row="row">
   <ng-container *ngLet="rowsLoading$ | async as rowsLoading">
     <ng-container *ngLet="rowsLoading[row.name] as isRowLoading">
-      <ng-template #terminalModalTitleTpl>
-        <app-modal-header>
-          <ng-container *ngIf="row.name as logName">
-            <h4 nz-typography nzType="secondary">
-              {{ logName }}
-            </h4>
-          </ng-container>
-        </app-modal-header>
-      </ng-template>
-
       <button
         nz-button
         nzType="default"
-        (click)="viewLog($event, row, terminalModalTitleTpl)"
+        (click)="viewLog($event, row)"
         [nzLoading]="isRowLoading"
       >
         View

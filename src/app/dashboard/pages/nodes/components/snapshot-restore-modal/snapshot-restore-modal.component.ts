@@ -1,8 +1,8 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   Input,
-  OnDestroy,
+  OnDestroy, OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Logger } from '@core/services/logger.service';
@@ -27,7 +27,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   styleUrls: ['./snapshot-restore-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SnapshotRestoreModalComponent implements OnDestroy {
+export class SnapshotRestoreModalComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
   isFormDirty$ = new BehaviorSubject(false);
@@ -38,12 +38,16 @@ export class SnapshotRestoreModalComponent implements OnDestroy {
   @Input() snapshotName;
   @Input() managerUrl;
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
     private store: Store,
     private modalRef: NzModalRef,
     private action$: Actions,
-    private nzMessageService: NzMessageService
+    private nzMessageService: NzMessageService,
+    private cd: ChangeDetectorRef
   ) {
     this.createForm();
 
@@ -65,6 +69,17 @@ export class SnapshotRestoreModalComponent implements OnDestroy {
         tap(() => this.modalRef.destroy())
       )
       .subscribe();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '25vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   private createForm() {

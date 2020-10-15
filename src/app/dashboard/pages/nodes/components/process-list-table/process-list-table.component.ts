@@ -44,7 +44,6 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
     [name: string]: { isLoading: boolean; type: string };
   }> = new BehaviorSubject({});
   isXxlScreen$ = new BehaviorSubject(true);
-  terminalViewName$ = new BehaviorSubject('');
 
   tableColumns: TableColumnConfig<ProcessListItem>[];
 
@@ -82,9 +81,6 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: ProcessListItem;
   }>;
-
-  @ViewChild('terminalModalTitleTpl', { static: true })
-  terminalModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -251,16 +247,15 @@ export class ProcessListTableComponent implements OnInit, OnDestroy {
   logProcess(event: MouseEvent, { name }: ProcessListItem) {
     event.preventDefault();
 
-    this.terminalViewName$.next(name);
     this.nzModalService.create({
-      nzTitle: this.terminalModalTitleTpl,
       nzContent: TerminalViewModalComponent,
       nzComponentParams: {
         logName: name,
         managerUrl: this.managerUrl,
+        header: `Log process ${name}`
       },
-      nzFooter: null,
       nzWidth: '75vw',
+      nzFooter: null,
     });
   }
 }

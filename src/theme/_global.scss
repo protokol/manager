@@ -11,3 +11,11 @@
     }
   }
 }
+
+.app-modal-expanded {
+  /* stylelint-disable declaration-no-important */
+  width: 100vw !important;
+  /* stylelint-enable declaration-no-important */
+  padding: 10px 0;
+  top: 0;
+}

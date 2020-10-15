@@ -46,6 +46,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { ModalFullscreenComponent } from '@shared/components/modal-fullscreen/modal-fullscreen.component';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -67,6 +68,7 @@ const declareAndExportComponents = [
   MyNodesCreateModalComponent,
   PageHeaderComponent,
   NodeManagerFormComponent,
+  ModalFullscreenComponent
 ];
 
 @NgModule({
@@ -99,7 +101,7 @@ const declareAndExportComponents = [
     NzAlertModule,
     NzPopoverModule,
     NzPopconfirmModule,
-    NzRadioModule,
+    NzRadioModule
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

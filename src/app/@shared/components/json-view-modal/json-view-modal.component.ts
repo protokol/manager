@@ -1,10 +1,11 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  Input,
-  TemplateRef,
+  Input, OnInit,
+  TemplateRef, ViewChild
 } from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-json-view-modal',
@@ -12,17 +13,32 @@ import { JsonEditorOptions } from 'ang-jsoneditor';
   styleUrls: ['./json-view-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JsonViewModalComponent {
+export class JsonViewModalComponent implements OnInit {
   readonly editorOptions: JsonEditorOptions;
 
   jsonData: any = null;
 
   @Input() inputData;
   @Input() footer?: TemplateRef<{ data: any }>;
+  @Input() header;
 
-  constructor() {
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
+  constructor(private modalRef: NzModalRef, private cd: ChangeDetectorRef) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '75vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   onDataChange(data: any) {

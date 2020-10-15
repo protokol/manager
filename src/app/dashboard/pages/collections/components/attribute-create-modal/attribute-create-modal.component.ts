@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CollectionsUtils } from '@app/dashboard/pages/collections/utils/collections-utils';
 import { BehaviorSubject } from 'rxjs';
@@ -19,7 +27,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   styleUrls: ['./attribute-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeCreateModalComponent implements OnDestroy {
+export class AttributeCreateModalComponent implements OnInit, OnDestroy {
   TextUtils = TextUtils;
   AttributeType = AttributeType;
   AttributeTypes = CollectionsUtils.getAttributeTypes();
@@ -28,14 +36,29 @@ export class AttributeCreateModalComponent implements OnDestroy {
   isLoading$ = new BehaviorSubject(false);
   type$ = new BehaviorSubject<AttributeType | null>(null);
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
-    private nzModalRef: NzModalRef<
+    public nzModalRef: NzModalRef<
       AttributeCreateModalComponent,
       CreateAttributeModalResponse
-    >
+    >,
+    private cd: ChangeDetectorRef
   ) {
     this.createForm();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.nzModalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '35vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   createForm() {

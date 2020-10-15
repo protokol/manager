@@ -1,10 +1,10 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   Input,
-  OnDestroy,
-  ViewChild,
+  OnDestroy, OnInit, TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { NgTerminal } from 'ng-terminal';
 import { BehaviorSubject } from 'rxjs';
@@ -30,7 +30,7 @@ import { TerminalFontSize, TerminalFontSizes } from '@app/dashboard/pages/nodes/
   styleUrls: ['./terminal-view-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
+export class TerminalViewModalComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly TerminalFontSize = TerminalFontSize;
 
   private termSearch = new SearchAddon();
@@ -42,6 +42,8 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
   linesFrom = -1;
   linesTo = -1;
   subscribedLogName: string;
+
+  @Input() header;
 
   @Input('input')
   set input(input: string) {
@@ -89,8 +91,10 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
   }
 
   @ViewChild('ngTerminal', { static: true }) terminal: NgTerminal;
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
 
-  constructor(private store: Store, private nzModalRef: NzModalRef) {
+  constructor(private store: Store, public nzModalRef: NzModalRef, private cd: ChangeDetectorRef) {
     this.nzModalRef.afterClose
       .pipe(
         tap(() => {
@@ -118,6 +122,16 @@ export class TerminalViewModalComponent implements AfterViewInit, OnDestroy {
         untilDestroyed(this)
       )
       .subscribe();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.nzModalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+      });
+      this.cd.markForCheck();
+    });
   }
 
   writeToTerminal(logEntity: LogListItem) {

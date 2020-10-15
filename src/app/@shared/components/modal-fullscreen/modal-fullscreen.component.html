@@ -1,0 +1,21 @@
+<span class="app-modal-fullscreen">
+  <ng-container *ngIf="isExpanded$ | async; else collapseTpl">
+    <i
+      nz-icon
+      nzType="shrink"
+      nzTheme="outline"
+      class="app-modal-fullscreen-icon"
+      (click)="isExpanded$.next(false)"
+    ></i>
+  </ng-container>
+</span>
+
+<ng-template #collapseTpl>
+  <i
+    nz-icon
+    nzType="arrows-alt"
+    nzTheme="outline"
+    class="app-modal-fullscreen-icon"
+    (click)="isExpanded$.next(true)"
+  ></i>
+</ng-template>

@@ -65,8 +65,6 @@ export class PeersComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: Peers;
   }>;
-  @ViewChild('nodeManagerSettingsModalTitleTpl', { static: true })
-  nodeManagerSettingsModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   isAddingToMyNodesLoading$ = new BehaviorSubject(false);
@@ -266,14 +264,12 @@ export class PeersComponent implements OnInit, OnDestroy {
             this.nzMessageService.error('Core manager not available!');
 
             this.nzModalService.create({
-              nzTitle: this.nodeManagerSettingsModalTitleTpl,
               nzContent: NodeManagerSettingsModalComponent,
               nzComponentParams: {
                 managerUrl,
                 nodeUrl,
               },
               nzFooter: null,
-              nzWidth: '35vw',
             });
           }
         ),

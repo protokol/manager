@@ -1,10 +1,8 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   Input,
-  OnDestroy,
-  TemplateRef,
-  ViewChild,
+  OnDestroy, OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Logger } from '@core/services/logger.service';
@@ -22,7 +20,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
   styleUrls: ['./my-nodes-update-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyNodesUpdateModalComponent implements OnDestroy {
+export class MyNodesUpdateModalComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
   @Input()
@@ -38,16 +36,28 @@ export class MyNodesUpdateModalComponent implements OnDestroy {
   @Select(NodesState.getNodes) myNodes$: Observable<MyNode[]>;
   selectedNodeUrl$ = new BehaviorSubject('');
 
-  @ViewChild('myNodeCreateModalTitleTpl', { static: true })
-  myNodeCreateModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private modalRef: NzModalRef,
-    private nzModalService: NzModalService
+    private nzModalService: NzModalService,
+    private cd: ChangeDetectorRef
   ) {
     this.createSelectMyNodeForm();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '35vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   private createSelectMyNodeForm() {
@@ -80,10 +90,8 @@ export class MyNodesUpdateModalComponent implements OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: this.myNodeCreateModalTitleTpl,
       nzContent: MyNodesCreateModalComponent,
       nzFooter: null,
-      nzWidth: '35vw',
     });
   }
 }

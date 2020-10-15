@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  OnDestroy,
+  OnDestroy, OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
@@ -40,7 +40,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./collection-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionCreateModalComponent implements OnDestroy {
+export class CollectionCreateModalComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
   readonly editorOptions: JsonEditorOptions;
 
@@ -52,20 +52,21 @@ export class CollectionCreateModalComponent implements OnDestroy {
 
   cryptoDefaults!: BaseResourcesTypes.BaseConfigurations['crypto']['defaults'];
 
-  @ViewChild('attributeCreateModalTitleTpl', { static: true })
-  attributeCreateModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private formBuilder: FormBuilder,
     private cryptoService: CryptoService,
     private nzNotificationService: NzNotificationService,
-    private modalRef: NzModalRef<
+    public modalRef: NzModalRef<
       CollectionCreateModalComponent,
       RefreshModalResponse
     >,
     private messageService: NzMessageService,
     private store: Store,
-    private nzModalService: NzModalService
+    private nzModalService: NzModalService,
+    private cd: ChangeDetectorRef
   ) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
@@ -74,6 +75,17 @@ export class CollectionCreateModalComponent implements OnDestroy {
       NetworksState.getCryptoDefaults()
     );
     this.createForm();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '75vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   get nameMinLength() {
@@ -222,9 +234,7 @@ export class CollectionCreateModalComponent implements OnDestroy {
       AttributeCreateModalComponent,
       CreateAttributeModalResponse
     >({
-      nzTitle: this.attributeCreateModalTitleTpl,
       nzContent: AttributeCreateModalComponent,
-      nzWidth: '35vw',
       ...ModalUtils.getCreateModalDefaultConfig(),
     });
 

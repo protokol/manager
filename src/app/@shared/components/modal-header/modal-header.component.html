@@ -1,1 +1,4 @@
 <ng-content></ng-content>
+<ng-container *ngIf="modalRef">
+  <button app-modal-fullscreen [modalRef]="modalRef"></button>
+</ng-container>

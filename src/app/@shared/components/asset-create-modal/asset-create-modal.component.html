@@ -44,6 +44,25 @@
   </ng-container>
 </form>
 
+<ng-template #modalTitleTpl>
+  <app-modal-header [modalRef]="modalRef">
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Create new asset</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="createAssetHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #createAssetHelperTpl>
+    Create an instance of selected collection
+  </ng-template>
+</ng-template>
+
 <div *nzModalFooter>
   <button
     class="upload-btn"
@@ -68,9 +87,3 @@
     Create
   </button>
 </div>
-
-<ng-template #ipfsPinataModalTitleTpl>
-  <app-modal-header>
-    <h4 nz-typography nzType="secondary">Upload file - Pinata</h4>
-  </app-modal-header>
-</ng-template>

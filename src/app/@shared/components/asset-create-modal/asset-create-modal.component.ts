@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  OnDestroy,
+  OnDestroy, OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JsonEditorOptions } from 'ang-jsoneditor';
@@ -27,7 +27,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./asset-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssetCreateModalComponent implements OnDestroy {
+export class AssetCreateModalComponent implements OnInit, OnDestroy {
   log: Logger = new Logger(this.constructor.name);
 
   readonly editorOptions: JsonEditorOptions;
@@ -43,22 +43,34 @@ export class AssetCreateModalComponent implements OnDestroy {
 
   asset = {};
 
-  @ViewChild('ipfsPinataModalTitleTpl', { static: true })
-  ipfsPinataModalTitleTpl!: TemplateRef<{}>;
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private formBuilder: FormBuilder,
-    private modalRef: NzModalRef,
+    public modalRef: NzModalRef,
     private cryptoService: CryptoService,
     private notificationService: NzNotificationService,
     private messageService: NzMessageService,
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private cd: ChangeDetectorRef
   ) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'view';
     this.editorOptions.expandAll = true;
 
     this.createForm();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.modalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '75vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   createForm() {
@@ -137,9 +149,7 @@ export class AssetCreateModalComponent implements OnDestroy {
     event.preventDefault();
 
     this.modalService.create({
-      nzTitle: this.ipfsPinataModalTitleTpl,
       nzContent: IpfsUploadFilePinataComponent,
-      nzWidth: '35vw',
       ...ModalUtils.getCreateModalDefaultConfig(),
       nzClosable: false,
     });

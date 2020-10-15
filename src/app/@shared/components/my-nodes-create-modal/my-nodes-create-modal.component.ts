@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -35,7 +43,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   styleUrls: ['./my-nodes-create-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyNodesCreateModalComponent implements OnDestroy {
+export class MyNodesCreateModalComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
   isSelectMyNodeFormDirty$ = new BehaviorSubject(false);
@@ -45,14 +53,29 @@ export class MyNodesCreateModalComponent implements OnDestroy {
 
   @Select(NodesState.getNodes) myNodes$: Observable<MyNode[]>;
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
     private nodeClientService: NodeClientService,
     private messageService: NzMessageService,
     private store: Store,
-    private nzModalRef: NzModalRef
+    private nzModalRef: NzModalRef,
+    private cd: ChangeDetectorRef
   ) {
     this.createAddMyNodeForm();
+  }
+
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.nzModalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '35vw',
+      });
+      this.cd.markForCheck();
+    });
   }
 
   nodeAsyncValidator = (
