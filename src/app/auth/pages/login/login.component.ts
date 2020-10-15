@@ -14,6 +14,7 @@ import { untilDestroyed } from '@core/until-destroyed';
 import { ClearNetwork, SetNetwork } from '@core/store/network/networks.actions';
 import { FormUtils } from '@core/utils/form-utils';
 import { SetSelectedProfile } from '@core/store/profiles/profiles.actions';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-login',
@@ -111,6 +112,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  get appVersion() {
+    return environment.version;
   }
 
   ngOnDestroy() {}

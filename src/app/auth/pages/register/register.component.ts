@@ -284,4 +284,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClearNetwork());
     this.currentStepIndex = 0;
   }
+
+  get appVersion() {
+    return environment.version;
+  }
 }
