@@ -49,3 +49,6 @@ Thumbs.db
 /release
 main.js
 main.js.map
+
+# version file
+/src/environments/.version.ts
