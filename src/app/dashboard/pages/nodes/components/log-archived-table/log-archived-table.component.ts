@@ -87,8 +87,7 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
 
   viewLog(
     event: MouseEvent,
-    row: LogArchivedItem,
-    terminalModalTitleTpl: TemplateRef<{}>
+    row: LogArchivedItem
   ) {
     event.preventDefault();
 
@@ -104,13 +103,13 @@ export class LogArchivedTableComponent implements OnInit, OnDestroy {
         tap(
           (logs) => {
             this.nzModalService.create({
-              nzTitle: terminalModalTitleTpl,
               nzContent: TerminalViewModalComponent,
               nzComponentParams: {
                 input: logs,
+                header: row.name
               },
-              nzFooter: null,
               nzWidth: '75vw',
+              nzFooter: null,
             });
           },
           (err) => {

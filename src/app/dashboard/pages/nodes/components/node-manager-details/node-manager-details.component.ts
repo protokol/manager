@@ -99,16 +99,6 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
   updatePluginsModalFooter!: TemplateRef<{
     data: any;
   }>;
-  @ViewChild('confEnvModalTitleTpl', { static: true })
-  confEnvModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('configurationPluginsModalTitleTpl', { static: true })
-  configurationPluginsModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('updateConfigurationPluginsModalTitleTpl', { static: true })
-  updateConfigurationPluginsModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('createSnapshotPluginsModalTitleTpl', { static: true })
-  createSnapshotPluginsModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('lastForgedBlockModalTitleTpl', { static: true })
-  lastForgedBlockModalTitleTpl!: TemplateRef<{}>;
 
   constructor(
     private nodeManagerService: NodeManagerService,
@@ -244,13 +234,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (block) => {
             this.nzModalService.create({
-              nzTitle: this.lastForgedBlockModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: block,
+                header: 'Last forged block'
               },
               nzFooter: null,
-              nzWidth: '55vw',
             });
           },
           (err) => {
@@ -275,13 +264,11 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.nzModalService.create({
-              nzTitle: this.confEnvModalTitleTpl,
               nzContent: TextViewModalComponent,
               nzComponentParams: {
                 text: env,
               },
               nzFooter: null,
-              nzWidth: '75vw',
             });
           },
           (err) => {
@@ -316,13 +303,12 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.nzModalService.create({
-              nzTitle: this.configurationPluginsModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: env,
+                header: 'Plugin configuration'
               },
               nzFooter: null,
-              nzWidth: '75vw',
             });
           },
           (err) => {
@@ -342,14 +328,13 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
         tap(
           (env) => {
             this.updatePluginsRef = this.nzModalService.create({
-              nzTitle: this.updateConfigurationPluginsModalTitleTpl,
               nzContent: JsonViewModalComponent,
               nzComponentParams: {
                 inputData: env,
                 footer: this.updatePluginsModalFooter,
+                header: 'Update plugin configuration'
               },
               nzFooter: null,
-              nzWidth: '75vw',
             });
           },
           (err) => {
@@ -396,13 +381,11 @@ export class NodeManagerDetailsComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: this.createSnapshotPluginsModalTitleTpl,
       nzContent: SnapshotCreateModalComponent,
       nzComponentParams: {
         managerUrl: this.managerUrl$.getValue(),
       },
       nzFooter: null,
-      nzWidth: '25vw',
     });
   }
 

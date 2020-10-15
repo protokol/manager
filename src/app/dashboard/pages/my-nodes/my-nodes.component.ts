@@ -44,10 +44,6 @@ export class MyNodesComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTpl', { static: true }) actionsTpl!: TemplateRef<{
     row: MyNode;
   }>;
-  @ViewChild('myNodeCreateModalTitleTpl', { static: true })
-  myNodeCreateModalTitleTpl!: TemplateRef<{}>;
-  @ViewChild('nodeManagerSettingsModalTitleTpl', { static: true })
-  nodeManagerSettingsModalTitleTpl!: TemplateRef<{}>;
 
   isLoading$ = new BehaviorSubject(false);
   isLoadingNodeManager$ = new BehaviorSubject(false);
@@ -121,14 +117,12 @@ export class MyNodesComponent implements OnInit, OnDestroy {
             this.nzMessageService.error('Core manager not available!');
 
             this.nzModalService.create({
-              nzTitle: this.nodeManagerSettingsModalTitleTpl,
               nzContent: NodeManagerSettingsModalComponent,
               nzComponentParams: {
                 managerUrl,
                 nodeUrl,
               },
               nzFooter: null,
-              nzWidth: '35vw',
             });
           }
         ),
@@ -145,10 +139,8 @@ export class MyNodesComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.nzModalService.create({
-      nzTitle: this.myNodeCreateModalTitleTpl,
       nzContent: MyNodesCreateModalComponent,
       nzFooter: null,
-      nzWidth: '35vw',
     });
   }
 }

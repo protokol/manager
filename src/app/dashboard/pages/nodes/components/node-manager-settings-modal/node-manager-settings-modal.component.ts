@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -37,18 +37,31 @@ export class NodeManagerSettingsModalComponent implements OnInit, OnDestroy {
 
   isLoading$ = new BehaviorSubject(false);
 
+  @ViewChild('modalTitleTpl', { static: true })
+  modalTitleTpl!: TemplateRef<{}>;
+
   constructor(
     private formBuilder: FormBuilder,
     private store: Store,
     private nodeManagerService: NodeManagerService,
     private nzModalRef: NzModalRef,
     private router: Router,
-    private nzMessageService: NzMessageService
+    private nzMessageService: NzMessageService,
+    private cd: ChangeDetectorRef
   ) {
     this.createForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // TODO: ExpressionChangedAfterItHasBeenCheckedError thrown
+    setTimeout(() => {
+      this.nzModalRef.updateConfig({
+        nzTitle: this.modalTitleTpl,
+        nzWidth: '35vw',
+      });
+      this.cd.markForCheck();
+    });
+  }
 
   private createForm() {
     this.managerSettingsForm = this.formBuilder.group({
