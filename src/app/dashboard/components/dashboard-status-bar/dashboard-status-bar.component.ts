@@ -10,6 +10,8 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
 import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { environment } from '@env/environment';
+const { shell } = window.require('electron');
 
 @Component({
   selector: 'app-dashboard-status-bar',
@@ -42,5 +44,17 @@ export class DashboardStatusBarComponent {
     event.preventDefault();
 
     this.router.navigate(['/dashboard/nodes', baseUrl]);
+  }
+
+  get appVersion() {
+    return environment.version;
+  }
+
+  onNavigateToReleases(event: MouseEvent) {
+    event.preventDefault();
+
+    const releasesUrl = environment.links
+      .find(({ key }) => key === 'PROTOKOL-MANAGER-RELEASES')?.url;
+    shell.openExternal(releasesUrl);
   }
 }

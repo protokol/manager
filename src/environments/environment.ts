@@ -3,10 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { networks } from '@env/networks';
+import { version } from '@env/.version';
+import { links } from '@env/links';
 
 export const environment = {
+  version: `${version}-dev`,
   production: false,
   networks,
+  links
 };
 
 /*

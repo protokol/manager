@@ -1,4 +1,12 @@
 <div class="status-bar">
+  <nz-space nzSize="large">
+    <nz-space-item>
+      <a (click)="onNavigateToReleases($event)">
+        {{appVersion}}
+      </a>
+    </nz-space-item>
+  </nz-space>
+
   <ng-container *ngIf="selectedProfile$ | async as selectedProfile">
     <nz-space nzSize="large">
       <nz-space-item>
