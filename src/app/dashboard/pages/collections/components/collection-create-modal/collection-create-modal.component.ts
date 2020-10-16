@@ -196,18 +196,18 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
     this.cryptoService
       .registerCollection({
         ...rest,
-        ...(allowedIssuers.length ? { allowedIssuers: allowedIssuers.map(({ publicKey }) => publicKey) } : {})
+        ...(allowedIssuers && allowedIssuers.length ? { allowedIssuers: allowedIssuers.map(({ publicKey }) => publicKey) } : {})
       })
       .pipe(
         tap(
           () => {
-            this.messageService.success('Collection registered!');
+            this.messageService.success('Collection transaction broadcast to network!');
             this.modalRef.destroy({ refresh: true });
           },
           (err) => {
             this.nzNotificationService.create(
               'error',
-              'Register collection failed!',
+              'Collection transaction broadcast to network failed!',
               err
             );
           }
