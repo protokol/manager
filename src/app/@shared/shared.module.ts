@@ -47,6 +47,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ModalFullscreenComponent } from '@shared/components/modal-fullscreen/modal-fullscreen.component';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -101,7 +103,9 @@ const declareAndExportComponents = [
     NzAlertModule,
     NzPopoverModule,
     NzPopconfirmModule,
-    NzRadioModule
+    NzRadioModule,
+    NzCheckboxModule,
+    NzInputNumberModule
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

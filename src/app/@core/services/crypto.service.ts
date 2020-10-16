@@ -82,7 +82,7 @@ export class CryptoService {
           .NFTRegisterCollectionAsset({
             ...nftCollectionAsset
           })
-          .nonce(nonce)
+          .nonce(nonce.toFixed())
           .signWithWif(wif);
 
         return this.transactionsService.createTransactions({
@@ -92,18 +92,23 @@ export class CryptoService {
     );
   }
 
-  registerAsset(nftTokenAsset: NftBaseInterfaces.NFTTokenAsset): Observable<any> {
+  registerAsset(nftTokenAsset: NftBaseInterfaces.NFTTokenAsset, numOfReplications: number = 1): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
-        const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTCreateBuilder()
-          .NFTCreateToken({
-            ...nftTokenAsset
-          })
-          .nonce(nonce)
-          .signWithWif(wif);
+        const transactions = Array.from({ length: numOfReplications },
+          (_k, i) => {
+            return new this.nftBaseCrypto.Builders.NFTCreateBuilder()
+              .NFTCreateToken({
+                ...nftTokenAsset
+              })
+              .nonce(nonce.plus(i).toFixed())
+              .signWithWif(wif)
+              .build()
+              .toJson();
+          });
 
         return this.transactionsService.createTransactions({
-          transactions: [createCollectionTrans.build().toJson()]
+          transactions
         });
       })
     );
@@ -117,7 +122,7 @@ export class CryptoService {
           .NFTTransferAsset({
             ...nftTransferAsset
           })
-          .nonce(nonce)
+          .nonce(nonce.toFixed())
           .signWithWif(wif);
 
         return this.transactionsService.createTransactions({
@@ -135,7 +140,7 @@ export class CryptoService {
           .GuardianGroupPermissions({
             ...guardianGroup,
           })
-          .nonce(nonce)
+          .nonce(nonce.toFixed())
           .signWithWif(wif);
 
         return this.transactionsService.createTransactions({
@@ -153,7 +158,7 @@ export class CryptoService {
           .GuardianUserPermissions({
             ...guardianUser,
           })
-          .nonce(nonce)
+          .nonce(nonce.toFixed())
           .signWithWif(wif);
 
         return this.transactionsService.createTransactions({

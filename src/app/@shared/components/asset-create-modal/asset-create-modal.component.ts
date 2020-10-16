@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
 import { environment } from '@env/environment';
@@ -20,6 +20,8 @@ import { ModalUtils } from '@core/utils/modal-utils';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
+
+const { api: { transactionBatchLimit } } = environment;
 
 @Component({
   selector: 'app-asset-create-modal',
@@ -40,11 +42,20 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
 
   isLoading$ = new BehaviorSubject(false);
   isAssetValid$ = new BehaviorSubject(false);
+  isMultipleAssetsEnabled$ = new BehaviorSubject(false);
 
   asset = {};
 
   @ViewChild('modalTitleTpl', { static: true })
   modalTitleTpl!: TemplateRef<{}>;
+
+  numOfAssetsFormControl = new FormControl(
+    1,
+    [
+      Validators.min(1),
+      Validators.max(transactionBatchLimit)
+    ]
+  );
 
   constructor(
     private formBuilder: FormBuilder,
@@ -58,6 +69,21 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'view';
     this.editorOptions.expandAll = true;
+
+    this.isMultipleAssetsEnabled$.asObservable()
+      .pipe(
+        tap((isMultipleAssetsEnabled) => {
+          if (isMultipleAssetsEnabled) {
+            this.numOfAssetsFormControl.setValidators(Validators.required);
+          } else {
+            this.numOfAssetsFormControl.clearValidators();
+          }
+
+          this.numOfAssetsFormControl.updateValueAndValidity();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
 
     this.createForm();
   }
@@ -105,6 +131,10 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
 
     this.isLoading$.next(true);
 
+    const numOfReplications = this.isMultipleAssetsEnabled$.getValue()
+      ? this.numOfAssetsFormControl.value
+      : 1;
+
     const {
       collection: { id: collectionId },
     } = this.collectionForm.value;
@@ -112,17 +142,17 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
       .registerAsset({
         collectionId,
         attributes: this.asset,
-      })
+      }, numOfReplications)
       .pipe(
         tap(
           () => {
-            this.messageService.success('Token registered!');
+            this.messageService.success('Asset transaction(s) broadcast to network!');
             this.modalRef.destroy({ refresh: true });
           },
           (err) => {
             this.notificationService.create(
               'error',
-              'Register asset failed!',
+              'Asset transaction(s) broadcast to network failed!',
               err
             );
           }
@@ -153,5 +183,9 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
       ...ModalUtils.getCreateModalDefaultConfig(),
       nzClosable: false,
     });
+  }
+
+  getTransactionBatchLimit() {
+    return transactionBatchLimit;
   }
 }

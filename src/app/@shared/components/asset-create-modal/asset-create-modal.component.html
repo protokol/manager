@@ -1,21 +1,75 @@
 <form nz-form [formGroup]="collectionForm" nzLayout="vertical" novalidate>
-  <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzSpan="12" nzFor="collection" nzRequired
-        >Choose collection</nz-form-label
-      >
-    </app-form-label>
-    <nz-form-control
-      class="collection-form-control"
-      nzSpan="12"
-      id="collection"
-      nzErrorTip="Please select a collection!"
-      nzHasFeedback
-    >
-      <app-collection-select formControlName="collection">
-      </app-collection-select>
-    </nz-form-control>
-  </nz-form-item>
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label nzFor="collection" nzRequired
+          >Choose collection
+          </nz-form-label
+          >
+        </app-form-label>
+        <nz-form-control
+          class="collection-form-control"
+          id="collection"
+          nzErrorTip="Please select a collection!"
+          nzHasFeedback
+        >
+          <app-collection-select formControlName="collection">
+          </app-collection-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="4">
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label></nz-form-label>
+        </app-form-label>
+        <nz-form-control>
+          <label nz-checkbox (nzCheckedChange)="isMultipleAssetsEnabled$.next($event)">
+            <app-form-label>
+              <nz-form-label>Multiple assets</nz-form-label>
+            </app-form-label>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8" [hidden]="(isMultipleAssetsEnabled$ | async) === false">
+      <nz-form-item>
+        <app-form-label>
+          <nz-form-label nzFor="numOfAssets" nzRequired
+          >Number of assets</nz-form-label>
+        </app-form-label>
+        <nz-form-control [nzErrorTip]="numOfAssetsErrorTpl">
+          <nz-input-number
+            [nzMin]="1"
+            [nzMax]="getTransactionBatchLimit()"
+            [nzStep]="1"
+            [formControl]="numOfAssetsFormControl"
+            nzPlaceHolder="Number of assets"
+            nzPrecisionMode="cut"
+          >
+          </nz-input-number>
+        </nz-form-control>
+        <ng-template #numOfAssetsErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter number of assets!
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Number of assets should be at least 1
+            </span>
+          </ng-container>
+          <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Number of assets should be at most {{ getTransactionBatchLimit }}
+            </span>
+          </ng-container>
+        </ng-template>
+      </nz-form-item>
+    </div>
+  </div>
 
   <ng-container *ngIf="collection$ | async as selectedCollection">
     <nz-divider></nz-divider>
@@ -73,17 +127,20 @@
   >
     Upload
   </button>
-  <button
-    nz-button
-    nzType="primary"
-    [nzLoading]="isLoading$ | async"
-    [disabled]="
+  <ng-container *ngLet="isMultipleAssetsEnabled$ | async as isMultipleAssetsEnabled">
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isLoading$ | async"
+      [disabled]="
       (isAssetValid$ | async) === false ||
       (isLoading$ | async) ||
-      !collectionForm.valid
+      !collectionForm.valid ||
+      (isMultipleAssetsEnabled && !numOfAssetsFormControl.valid)
     "
-    (click)="createAsset($event)"
-  >
-    Create
-  </button>
+      (click)="createAsset($event)"
+    >
+      Create
+    </button>
+  </ng-container>
 </div>

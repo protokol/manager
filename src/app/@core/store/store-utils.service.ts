@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { PinsState } from '@core/store/pins/pins.state';
 import { WalletsService } from '@core/services/wallets.service';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
+import { Utils } from '@arkecosystem/crypto';
 
 @Injectable()
 export class StoreUtilsService {
@@ -54,7 +55,7 @@ export class StoreUtilsService {
       .pipe(map((wif) => ({ wif })));
   }
 
-  getSelectedProfileWifAndNextNonce(): Observable<{ wif: string; nonce: string }> {
+  getSelectedProfileWifAndNextNonce(): Observable<{ wif: string; nonce: Utils.BigNumber }> {
     return this.getSelectedProfileWif().pipe(
       switchMap(({ wif }) => {
         const address = this.arkCryptoService.arkCrypto.Identities.Address.fromWIF(
@@ -66,10 +67,8 @@ export class StoreUtilsService {
             const nonce = senderWallet
               ? this.arkCryptoService.arkCrypto.Utils.BigNumber.make(
                 senderWallet.nonce
-              )
-                .plus(1)
-                .toFixed()
-              : '1';
+              ).plus(1)
+              : this.arkCryptoService.arkCrypto.Utils.BigNumber.ONE;
 
             return {
               wif,
