@@ -24,7 +24,7 @@ export class PeersService {
     connectionOptions?: ConnectionOptions
   ): Observable<Peers> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .api('peers')
         .get(ip)
     ).pipe(
@@ -42,7 +42,7 @@ export class PeersService {
 
     return defer(() =>
       PeerDiscovery.new(
-        NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+        NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
       )
     ).pipe(
       switchMap((peerDiscovery) =>

@@ -6,7 +6,7 @@ import {
 } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { BaseResourcesTypes, GuardianConnection, NFTConnection } from '@protokol/client';
+import { BaseResourcesTypes, ProtokolConnection } from '@protokol/client';
 import { ApiResponse, ApiResponseWithPagination } from '@arkecosystem/client';
 import { ConnectionOptions } from '@core/interfaces/node.types';
 
@@ -14,20 +14,11 @@ import { ConnectionOptions } from '@core/interfaces/node.types';
 export class NodeClientService {
   readonly log = new Logger(this.constructor.name);
 
-  static getNFTConnection(
+  static getProtokolConnection(
     baseUrl: string,
     { timeout }: ConnectionOptions = { timeout: 5000 }
   ) {
-    return new NFTConnection(`${baseUrl}/api`).withOptions({
-      timeout: timeout || 5000,
-    });
-  }
-
-  static getGuardianConnection(
-    baseUrl: string,
-    { timeout }: ConnectionOptions = { timeout: 5000 }
-  ) {
-    return new GuardianConnection(`${baseUrl}/api`).withOptions({
+    return new ProtokolConnection(`${baseUrl}/api`).withOptions({
       timeout: timeout || 5000,
     });
   }
@@ -84,7 +75,7 @@ export class NodeClientService {
     connectionOptions?: ConnectionOptions
   ): Observable<NodeCryptoConfiguration> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .api('node')
         .crypto()
     ).pipe(
@@ -98,7 +89,7 @@ export class NodeClientService {
     connectionOptions?: ConnectionOptions
   ): Observable<NodeConfiguration> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .api('node')
         .configuration()
     ).pipe(
@@ -112,7 +103,7 @@ export class NodeClientService {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.BaseConfigurations> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTBaseApi('configurations')
         .index()
     ).pipe(
