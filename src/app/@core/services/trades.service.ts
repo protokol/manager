@@ -21,7 +21,7 @@ export class TradesService {
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.TradeById> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .get(tradeId)
     ).pipe(
@@ -36,7 +36,7 @@ export class TradesService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Trades>> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .all({
           ...query,
@@ -55,7 +55,7 @@ export class TradesService {
     const { filters, ...restQuery } = query;
 
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTExchangeApi('trades')
         .search(
           {

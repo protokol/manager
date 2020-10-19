@@ -20,7 +20,7 @@ export class GuardianUsersService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<GuardianResourcesTypes.User>> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('users')
         .index()
     ).pipe(
@@ -35,7 +35,7 @@ export class GuardianUsersService {
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.User> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('users')
         .get(publicKey)
     ).pipe(
@@ -50,7 +50,7 @@ export class GuardianUsersService {
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.Group[]> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('users')
         .userGroups(publicKey)
     ).pipe(
@@ -65,7 +65,7 @@ export class GuardianUsersService {
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.User[]> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('groups')
         .users(groupName)
     ).pipe(

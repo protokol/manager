@@ -21,7 +21,7 @@ export class GuardianGroupsService {
     connectionOptions?: ConnectionOptions
   ): Observable<TransactionTypes> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .api('transactions')
         .types()
     ).pipe(
@@ -35,7 +35,7 @@ export class GuardianGroupsService {
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.GuardianConfigurations> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('configurations')
         .index()
     ).pipe(
@@ -50,7 +50,7 @@ export class GuardianGroupsService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<GuardianResourcesTypes.Group>> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('groups')
         .index(query)
     ).pipe(
@@ -65,7 +65,7 @@ export class GuardianGroupsService {
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.Group> {
     return defer(() =>
-      NodeClientService.getGuardianConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .guardianApi('groups')
         .get(encodeURIComponent(groupName))
     ).pipe(

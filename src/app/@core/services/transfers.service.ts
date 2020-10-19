@@ -21,7 +21,7 @@ export class TransfersService {
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Transfers> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTBaseApi('transfers')
         .get(transferId)
     ).pipe(
@@ -36,7 +36,7 @@ export class TransfersService {
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Transfers>> {
     return defer(() =>
-      NodeClientService.getNFTConnection(baseUrl, connectionOptions)
+      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
         .NFTBaseApi('transfers')
         .all({
           ...query,
