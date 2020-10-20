@@ -36,6 +36,7 @@ import { PinataService } from '@core/services/pinata.service';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
 import { GuardianGroupsService } from '@core/services/guardian-groups.service';
 import { GuardianUsersService } from '@core/services/guardian-users.service';
+import { BaseService } from '@core/services/base.service';
 
 @NgModule({
   declarations: [],
@@ -71,6 +72,7 @@ import { GuardianUsersService } from '@core/services/guardian-users.service';
     HttpClientModule,
   ],
   providers: [
+    BaseService,
     ArkCryptoService,
     NodeClientService,
     AssetsService,

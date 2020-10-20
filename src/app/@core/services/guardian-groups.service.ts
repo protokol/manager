@@ -1,76 +1,66 @@
 import { Injectable } from '@angular/core';
 import { defer, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
-import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
-import { NetworksState } from '@core/store/network/networks.state';
-import { Store } from '@ngxs/store';
 import { Pagination, TableApiQuery } from '@shared/interfaces/table.types';
 import { TransactionTypes } from '@arkecosystem/client';
 import { GuardianResourcesTypes } from '@protokol/client';
+import { BaseService } from '@core/services/base.service';
 
 @Injectable()
 export class GuardianGroupsService {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private store: Store) {}
+  constructor(private baseService: BaseService) {}
 
   getTransactionTypes(
-    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<TransactionTypes> {
-    return defer(() =>
-      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
-        .api('transactions')
-        .types()
-    ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
-    );
+    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.api('transactions').types())),
+        map((response) => response?.body?.data),
+        BaseService.genericErrorHandler(this.log)
+      );
   }
 
   getConfiguration(
-    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.GuardianConfigurations> {
-    return defer(() =>
-      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
-        .guardianApi('configurations')
-        .index()
-    ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
-    );
+    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.guardianApi('configurations').index())),
+        map((response) => response?.body?.data),
+        BaseService.genericErrorHandler(this.log)
+      );
   }
 
   getGroups(
     query: TableApiQuery | {} = {},
-    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<GuardianResourcesTypes.Group>> {
-    return defer(() =>
-      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
-        .guardianApi('groups')
-        .index(query)
-    ).pipe(
-      map((response) => response.body),
-      NodeClientService.genericListErrorHandler(this.log)
-    );
+    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.guardianApi('groups').index(query))),
+        map((response) => response?.body),
+        BaseService.genericListErrorHandler(this.log)
+      );
   }
 
   getGroup(
     groupName: string,
-    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.Group> {
-    return defer(() =>
-      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
-        .guardianApi('groups')
-        .get(encodeURIComponent(groupName))
-    ).pipe(
-      map((response) => response.body.data),
-      NodeClientService.genericErrorHandler(this.log)
-    );
+    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.guardianApi('groups').get(encodeURIComponent(groupName)))),
+        map((response) => response?.body?.data),
+        BaseService.genericErrorHandler(this.log)
+      );
   }
 }

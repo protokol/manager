@@ -63,6 +63,15 @@ export class ProfilesState {
     return { ...profiles[selectedProfileId], id: selectedProfileId };
   }
 
+  static useRandomizedPeer() {
+    return createSelector(
+      [ProfilesState.getSelectedProfile],
+      ({ useRandomizedPeer }: ReturnType<typeof ProfilesState.getSelectedProfile>) => {
+        return !!useRandomizedPeer;
+      }
+    );
+  }
+
   @Action(AddProfileAction)
   addProfile(
     { getState, patchState, dispatch }: StateContext<ProfilesStateModel>,
