@@ -8,6 +8,7 @@ import { NetworksState } from '@core/store/network/networks.state';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import { BaseResourcesTypes } from '@protokol/client';
 import { finalize, tap } from 'rxjs/operators';
+import { BaseService } from '@core/services/base.service';
 
 describe('Networks', () => {
   let store: Store;
@@ -17,7 +18,7 @@ describe('Networks', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxsModule.forRoot([NetworksState])],
-      providers: [WalletService, NodeClientService],
+      providers: [BaseService, WalletService, NodeClientService],
     });
 
     store = TestBed.inject(Store);
