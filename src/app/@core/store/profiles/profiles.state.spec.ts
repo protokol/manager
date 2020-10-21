@@ -24,7 +24,7 @@ describe('Profiles', () => {
     name: 'Profile 1',
     encodedWif: '1wSiHh5Ku6wy9ft949uf3Co1wGn2ip2CK23DXSVBXw26PYWfAL6GnTfhpT',
     address: '1wSiHh5Ku6wy9ft949uf3Co1wGn2',
-    nodeBaseUrl: 'http://nft.protokol.com:4003',
+    nodeBaseUrl: 'http://api.protokol.com:4003',
   };
   const nodeCryptoConfigurationNetworkFixture: NodeCryptoConfiguration['network'] = {
     aip20: 0,
