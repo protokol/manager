@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { defer, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import { Logger } from '@core/services/logger.service';
-import { NodeClientService } from '@core/services/node-client.service';
 import { ConnectionOptions } from '@core/interfaces/node.types';
-import { NetworksState } from '@core/store/network/networks.state';
-import { Store } from '@ngxs/store';
 import { switchMap } from 'rxjs/operators';
 import {
   ApiResponse,
   CreateTransactionApiResponse,
 } from '@arkecosystem/client';
+import { BaseService } from '@core/services/base.service';
 
 @Injectable()
 export class TransactionsService {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private store: Store) {}
+  constructor(private baseService: BaseService) {}
 
   transactionErrorHandler<T>(): OperatorFunction<ApiResponse<T>, T> {
     return switchMap((response: ApiResponse<any>) => {
@@ -34,13 +32,15 @@ export class TransactionsService {
     payload: {
       transactions: object[];
     } & Record<string, any>,
-    baseUrl: string = this.store.selectSnapshot(NetworksState.getBaseUrl),
+    baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<CreateTransactionApiResponse> {
-    return defer(() =>
-      NodeClientService.getProtokolConnection(baseUrl, connectionOptions)
-        .api('transactions')
-        .create(payload)
-    ).pipe(this.transactionErrorHandler<CreateTransactionApiResponse>());
+    return this.baseService.getConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.api('transactions')
+          .create(payload)
+        )),
+        this.transactionErrorHandler<CreateTransactionApiResponse>()
+      );
   }
 }

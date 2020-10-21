@@ -27,3 +27,9 @@ export class RemoveProfileAction {
 
   constructor(public profileId: string) {}
 }
+
+export class SetProfileUseRandomizedPeer {
+  static type = `[${PROFILES_TYPE_NAME}] SetProfileUseRandomizedPeer`;
+
+  constructor(public profileId: string, public useRandomizedPeer: boolean) {}
+}

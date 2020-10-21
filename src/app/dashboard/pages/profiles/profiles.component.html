@@ -64,6 +64,14 @@
             <nz-descriptions-item nzTitle="Node url">
               {{ currSelectedProfile.nodeBaseUrl }}
             </nz-descriptions-item>
+            <ng-container *ngIf="selectedProfile.id === currSelectedProfileId">
+              <nz-descriptions-item nzTitle="Randomize">
+                <nz-switch
+                  [ngModel]="isRandomizedPeer(selectedProfile.id) | async"
+                  (ngModelChange)="setRandomizedPeer($event, selectedProfile.id)"
+                ></nz-switch>
+              </nz-descriptions-item>
+            </ng-container>
           </nz-descriptions>
           <ng-container *ngIf="selectedProfile.id !== currSelectedProfileId">
             <div nz-row [nzGutter]="[24, 12]">

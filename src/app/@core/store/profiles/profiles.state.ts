@@ -2,8 +2,8 @@ import { Logger } from '@core/services/logger.service';
 import {
   AddProfileAction,
   PROFILES_TYPE_NAME,
-  RemoveProfileAction,
-  SetSelectedProfile,
+  RemoveProfileAction, SetProfileUseRandomizedPeer,
+  SetSelectedProfile
 } from './profiles.actions';
 import {
   State,
@@ -17,6 +17,7 @@ import { SetPinAction } from '@core/store/pins/pins.actions';
 import { Bip38Service } from '@core/services/bip38.service';
 import { tap } from 'rxjs/operators';
 import { Profile, ProfileWithId } from '@core/interfaces/profiles.types';
+import { patch } from '@ngxs/store/operators';
 
 export interface ProfilesStateModel {
   profiles: { [profileId: string]: Profile };
@@ -61,6 +62,15 @@ export class ProfilesState {
     selectedProfileId,
   }: ProfilesStateModel) {
     return { ...profiles[selectedProfileId], id: selectedProfileId };
+  }
+
+  static useRandomizedPeer() {
+    return createSelector(
+      [ProfilesState.getSelectedProfile],
+      ({ useRandomizedPeer }: ReturnType<typeof ProfilesState.getSelectedProfile>) => {
+        return !!useRandomizedPeer;
+      }
+    );
   }
 
   @Action(AddProfileAction)
@@ -123,5 +133,19 @@ export class ProfilesState {
     } else {
       this.log.error(`Profile with id: ${profileId} not found!`);
     }
+  }
+
+  @Action(SetProfileUseRandomizedPeer)
+  setProfileUseRandomizedPeer(
+    { setState }: StateContext<ProfilesStateModel>,
+    { profileId, useRandomizedPeer }: SetProfileUseRandomizedPeer
+  ) {
+    setState(patch({
+      profiles: patch({
+        [profileId]: patch({
+          useRandomizedPeer
+        })
+      })
+    }));
   }
 }

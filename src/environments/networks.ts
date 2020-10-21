@@ -6,6 +6,6 @@ interface Network {
 export const networks: Network[] = [
   {
     label: 'Protokol node',
-    value: 'http://nft.protokol.com:4003',
+    value: 'http://api.protokol.com:4003',
   },
 ];

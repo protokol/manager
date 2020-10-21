@@ -3,6 +3,7 @@ export interface Profile {
   address: string;
   encodedWif: string;
   nodeBaseUrl: string;
+  useRandomizedPeer?: boolean;
 }
 
 export interface ProfileWithId extends Profile {
