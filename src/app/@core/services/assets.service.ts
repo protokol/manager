@@ -20,7 +20,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Assets> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('assets')
             .get(assetId)
@@ -35,7 +35,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Assets>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('assets')
           .all({
@@ -54,7 +54,7 @@ export class AssetsService implements AssetsServiceInterface {
   ): Observable<Pagination<BaseResourcesTypes.Assets>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('assets')
           .searchByAsset(
@@ -76,7 +76,7 @@ export class AssetsService implements AssetsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.AssetsWallet> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('assets')
           .wallet(assetId)

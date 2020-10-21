@@ -18,7 +18,7 @@ export class BurnsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Burns>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('burns')
           .all({

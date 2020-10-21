@@ -18,7 +18,7 @@ export class AuctionsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.Auctions> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('auctions')
           .getAuctionById(auctionId))
@@ -33,7 +33,7 @@ export class AuctionsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('auctions')
           .getAllAuctions({
@@ -50,7 +50,7 @@ export class AuctionsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('auctions')
           .getAllCanceledAuctions({
@@ -69,7 +69,7 @@ export class AuctionsService {
   ): Observable<Pagination<ExchangeResourcesTypes.Auctions>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('auctions')
           .searchByAsset(

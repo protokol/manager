@@ -19,7 +19,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Collections> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('collections')
           .get(collectionId)
@@ -34,7 +34,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Collections>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('collections')
           .all({
@@ -53,7 +53,7 @@ export class CollectionsService implements CollectionsServiceInterface {
   ): Observable<Pagination<BaseResourcesTypes.Collections>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('collections')
           .searchByCollections(
@@ -75,7 +75,7 @@ export class CollectionsService implements CollectionsServiceInterface {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.CollectionsWallet> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('collections')
           .wallet(collectionId)

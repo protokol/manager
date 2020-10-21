@@ -18,7 +18,7 @@ export class TradesService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.TradeById> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('trades').get(tradeId))),
         map((response) => response?.body?.data),
@@ -31,7 +31,7 @@ export class TradesService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Trades>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('trades')
           .all({
@@ -49,7 +49,7 @@ export class TradesService {
   ): Observable<Pagination<ExchangeResourcesTypes.Trades>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('trades')
           .search(

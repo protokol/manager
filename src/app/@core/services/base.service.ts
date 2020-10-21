@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { defer, Observable, of, OperatorFunction } from 'rxjs';
+import { BehaviorSubject, defer, Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { ApiResponse, ApiResponseWithPagination } from '@arkecosystem/client';
@@ -11,6 +11,18 @@ import { ProfilesStateModel } from '@core/store/profiles/profiles.state';
 @Injectable()
 export class BaseService {
   readonly log = new Logger(this.constructor.name);
+
+  isLoadingConnectionManager = false;
+  connectionManagerSource = new Subject<ConnectionManager>();
+  connectionManager$ = this.connectionManagerSource.asObservable();
+
+  connectionManagerState$ = new BehaviorSubject<{
+    connectionUrl: string
+    connectionManager: ConnectionManager,
+  }>({
+    connectionUrl: null,
+    connectionManager: null
+  });
 
   constructor(private store: Store) {}
 
@@ -59,7 +71,43 @@ export class BaseService {
     );
   }
 
-  getProtokolConnection(
+  getProtokolConnection(url: string, timeout: number = 5000) {
+    return new ProtokolConnection(`${url}/api`).withOptions({
+      timeout
+    });
+  }
+
+  getRandomConnection(url: string, timeout: number = 5000): Observable<ConnectionManager> {
+    const { connectionManager, connectionUrl } = this.connectionManagerState$.getValue();
+
+    if (connectionUrl === connectionUrl && connectionManager !== null) {
+      return of(connectionManager);
+    } else if (this.isLoadingConnectionManager) {
+      return new Observable(observer => {
+        this.connectionManager$.subscribe((manager) => {
+          observer.next(manager);
+          observer.complete();
+        });
+      });
+    } else {
+      this.isLoadingConnectionManager = true;
+
+      return of(new ConnectionManager(this.getProtokolConnection(url, timeout)))
+        .pipe(
+          switchMap(c => defer(() => c.findRandomPeers())),
+          tap((manager) => {
+            this.isLoadingConnectionManager = false;
+            this.connectionManagerState$.next({
+              connectionUrl: url,
+              connectionManager: manager
+            });
+            this.connectionManagerSource.next(manager);
+          })
+        );
+    }
+  }
+
+  getConnection(
     url: string = this.store.selectSnapshot(({ networks: { baseUrl } }) => baseUrl),
     { timeout }: ConnectionOptions = { timeout: 5000 },
     useRandomizedPeer: boolean = false
@@ -72,17 +120,12 @@ export class BaseService {
       return !!profiles[selectedProfileId]?.useRandomizedPeer;
     };
 
-    const connection = new ProtokolConnection(`${url}/api`).withOptions({
-      timeout: timeout || 5000
-    });
-
     if (!getRandomizedPeer()) {
-      return of(connection);
+      return of(this.getProtokolConnection(url, timeout));
     }
 
-    return of(new ConnectionManager(connection))
+    return this.getRandomConnection(url, timeout)
       .pipe(
-        switchMap(c => defer(() => c.findRandomPeers())),
         map(c => c.getRandomConnection())
       );
   }

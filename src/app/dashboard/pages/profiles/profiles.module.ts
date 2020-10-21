@@ -11,6 +11,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzInputModule,
     FormsModule,
     NzIconModule,
+    NzSwitchModule
   ],
   providers: [],
   declarations: [ProfilesComponent],

@@ -9,14 +9,14 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { Logger } from '@app/@core/services/logger.service';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
 import { Profile, ProfileWithId } from '@core/interfaces/profiles.types';
-import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { NodeClientService } from '@core/services/node-client.service';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { SetNetwork } from '@core/store/network/networks.actions';
 import { SetPinAction } from '@core/store/pins/pins.actions';
 import { Router } from '@angular/router';
-import { SetSelectedProfile } from '@core/store/profiles/profiles.actions';
+import { SetProfileUseRandomizedPeer, SetSelectedProfile } from '@core/store/profiles/profiles.actions';
 import { NetworkUtils } from '@core/utils/network-utils';
 
 @Component({
@@ -116,4 +116,16 @@ export class ProfilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  isRandomizedPeer(profileId: string): Observable<boolean> {
+    return this.store.select(ProfilesState.getProfileById(profileId))
+      .pipe(
+        map(({ useRandomizedPeer }) => !!useRandomizedPeer)
+      );
+  }
+
+  setRandomizedPeer(randomize: boolean, profileId: string) {
+    debugger;
+    this.store.dispatch(new SetProfileUseRandomizedPeer(profileId, randomize));
+  }
 }

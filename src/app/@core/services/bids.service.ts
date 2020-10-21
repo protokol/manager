@@ -18,7 +18,7 @@ export class BidsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<ExchangeResourcesTypes.Bids> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('bids').getBidById(bidId))),
         map((response) => response?.body?.data),
@@ -31,7 +31,7 @@ export class BidsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('bids')
           .getAllBids({
@@ -49,7 +49,7 @@ export class BidsService {
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('bids')
           .searchByBid(
@@ -71,7 +71,7 @@ export class BidsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<ExchangeResourcesTypes.Bids>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTExchangeApi('bids')
           .getAllCanceledBids({

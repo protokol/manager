@@ -18,7 +18,7 @@ export class GuardianGroupsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<TransactionTypes> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.api('transactions').types())),
         map((response) => response?.body?.data),
@@ -30,7 +30,7 @@ export class GuardianGroupsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.GuardianConfigurations> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.guardianApi('configurations').index())),
         map((response) => response?.body?.data),
@@ -43,7 +43,7 @@ export class GuardianGroupsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<GuardianResourcesTypes.Group>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.guardianApi('groups').index(query))),
         map((response) => response?.body),
@@ -56,7 +56,7 @@ export class GuardianGroupsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<GuardianResourcesTypes.Group> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.guardianApi('groups').get(encodeURIComponent(groupName)))),
         map((response) => response?.body?.data),

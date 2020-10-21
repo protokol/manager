@@ -18,7 +18,7 @@ export class TransfersService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.Transfers> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('transfers')
           .get(transferId)
@@ -33,7 +33,7 @@ export class TransfersService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<BaseResourcesTypes.Transfers>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('transfers')
           .all({

@@ -21,7 +21,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<NodeCryptoConfiguration> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions, false)
+    return this.baseService.getConnection(baseUrl, connectionOptions, false)
       .pipe(
         switchMap((c) => defer(() => c.api('node').crypto())),
         map((response) => response?.body?.data),
@@ -33,7 +33,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<NodeConfiguration> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions, false)
+    return this.baseService.getConnection(baseUrl, connectionOptions, false)
       .pipe(
         switchMap((c) => defer(() => c.api('node').configuration())),
         map((response) => response?.body?.data),
@@ -45,7 +45,7 @@ export class NodeClientService {
     baseUrl: string,
     connectionOptions?: ConnectionOptions
   ): Observable<BaseResourcesTypes.BaseConfigurations> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions, false)
+    return this.baseService.getConnection(baseUrl, connectionOptions, false)
       .pipe(
         switchMap((c) => defer(() => c.NFTBaseApi('configurations').index())),
         map((response) => response?.body?.data),

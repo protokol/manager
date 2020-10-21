@@ -21,7 +21,7 @@ export class WalletsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Wallet> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.api('wallets')
           .get(addressOrPublicKey)
@@ -36,7 +36,7 @@ export class WalletsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Pagination<Wallet>> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.api('wallets')
           .all({
@@ -55,7 +55,7 @@ export class WalletsService {
   ): Observable<Pagination<Wallet>> {
     const { filters, ...restQuery } = query;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.api('wallets')
           .search(

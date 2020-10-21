@@ -21,7 +21,7 @@ export class PeersService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<Peers> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions, false)
+    return this.baseService.getConnection(baseUrl, connectionOptions, false)
       .pipe(
         switchMap((c) => defer(() => c.api('peers').get(ip))),
         map((response) => response?.body?.data),
@@ -36,7 +36,7 @@ export class PeersService {
   ): Observable<IPeerResponse[]> {
     const { sort, filter } = query as NzTableQueryParams;
 
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions, false)
+    return this.baseService.getConnection(baseUrl, connectionOptions, false)
       .pipe(
       switchMap((c) => defer(() => PeerDiscovery.new(c))),
       switchMap((peerDiscovery) =>

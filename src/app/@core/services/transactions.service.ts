@@ -35,7 +35,7 @@ export class TransactionsService {
     baseUrl?: string,
     connectionOptions?: ConnectionOptions
   ): Observable<CreateTransactionApiResponse> {
-    return this.baseService.getProtokolConnection(baseUrl, connectionOptions)
+    return this.baseService.getConnection(baseUrl, connectionOptions)
       .pipe(
         switchMap((c) => defer(() => c.api('transactions')
           .create(payload)
