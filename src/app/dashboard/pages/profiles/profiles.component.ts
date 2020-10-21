@@ -125,7 +125,6 @@ export class ProfilesComponent implements OnInit, OnDestroy {
   }
 
   setRandomizedPeer(randomize: boolean, profileId: string) {
-    debugger;
     this.store.dispatch(new SetProfileUseRandomizedPeer(profileId, randomize));
   }
 }
