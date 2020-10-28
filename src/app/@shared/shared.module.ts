@@ -49,6 +49,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
 import { ModalFullscreenComponent } from '@shared/components/modal-fullscreen/modal-fullscreen.component';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { TransactionResultModalComponent } from '@shared/components/transaction-result-modal/transaction-result-modal.component';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -70,7 +72,8 @@ const declareAndExportComponents = [
   MyNodesCreateModalComponent,
   PageHeaderComponent,
   NodeManagerFormComponent,
-  ModalFullscreenComponent
+  ModalFullscreenComponent,
+  TransactionResultModalComponent
 ];
 
 @NgModule({
@@ -105,7 +108,8 @@ const declareAndExportComponents = [
     NzPopconfirmModule,
     NzRadioModule,
     NzCheckboxModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    NzResultModule
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

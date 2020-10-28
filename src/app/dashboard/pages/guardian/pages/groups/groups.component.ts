@@ -11,7 +11,6 @@ import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
   defaultIfEmpty,
-  delay,
   distinctUntilChanged,
   filter,
   finalize,
@@ -164,7 +163,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
     createGroupModalRef.afterClose
       .pipe(
         takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianGroups))),
-        delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
           if (refresh) {
@@ -196,7 +194,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
             this.onSetRowLoading(name, true);
           }
         }),
-        delay(8000),
         tap((response) => {
           if (response?.refresh) {
             const { name } = group;
@@ -263,7 +260,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
             EMPTY.pipe(
               defaultIfEmpty(),
-              delay(8000),
               switchMap(() =>
                 this.store.dispatch(new LoadGuardianGroup(name)).pipe(
                   finalize(() => {
@@ -316,7 +312,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
             EMPTY.pipe(
               defaultIfEmpty(),
-              delay(8000),
               switchMap(() =>
                 this.store.dispatch(new LoadGuardianGroup(name)).pipe(
                   finalize(() => {
