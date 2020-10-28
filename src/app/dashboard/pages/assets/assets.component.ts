@@ -9,7 +9,6 @@ import {
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
-  delay,
   distinctUntilChanged,
   filter,
   first,
@@ -217,7 +216,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
     createAssetModalRef.afterClose
       .pipe(
         takeUntil(this.actions$.pipe(ofActionDispatched(LoadAssets))),
-        delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
           if (refresh) {

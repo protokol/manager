@@ -9,7 +9,6 @@ import {
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
-  delay,
   distinctUntilChanged,
   filter, finalize,
   switchMap,
@@ -140,7 +139,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     createUserModalRef.afterClose
       .pipe(
         takeUntil(this.actions$.pipe(ofActionDispatched(LoadGuardianUsers))),
-        delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
           if (refresh) {
@@ -166,7 +164,6 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     editUserModalRef.afterClose
       .pipe(
-        delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
           if (refresh) {
@@ -208,7 +205,6 @@ export class UsersComponent implements OnInit, OnDestroy {
                   this.onGroupLoading$.next(false);
                 }
               }),
-              delay(8000),
               tap((response) => {
                 if (response?.refresh) {
                   const { name } = group;

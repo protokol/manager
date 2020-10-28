@@ -11,7 +11,6 @@ import { LoadCollections } from '@app/@core/store/collections/collections.action
 import { NetworksState } from '@core/store/network/networks.state';
 import {
   debounceTime,
-  delay,
   distinctUntilChanged,
   filter,
   skip,
@@ -213,7 +212,6 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     createCollectionModalRef.afterClose
       .pipe(
         takeUntil(this.actions$.pipe(ofActionDispatched(LoadCollections))),
-        delay(8000),
         tap((response) => {
           const refresh = (response && response.refresh) || false;
           if (refresh) {

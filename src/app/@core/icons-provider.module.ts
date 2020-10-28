@@ -28,7 +28,7 @@ import {
   ZoomInOutline,
   ZoomOutOutline,
   ArrowsAltOutline,
-  ShrinkOutline
+  ShrinkOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons = [

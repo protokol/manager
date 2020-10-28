@@ -1,0 +1,32 @@
+<ng-container *ngLet="isCompleted$ | async as isCompleted">
+  <ng-container *ngIf="!isCompleted; else completedTpl">
+    <nz-result [nzIcon]="loadingTpl" nzTitle="Please wait...">
+    </nz-result>
+    <ng-template #loadingTpl>
+      <i nz-icon nzType="loading" nzTheme="outline"></i>
+    </ng-template>
+  </ng-container>
+</ng-container>
+
+<ng-template #completedTpl>
+  <ng-container *ngIf="allTransactionConfirmed$ | async; else unconfirmedTpl">
+    <nz-result
+      nzStatus="success"
+      nzTitle="Transaction/s confirmed!"
+    >
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="onCloseModal($event)">Close</button>
+      </div>
+    </nz-result>
+  </ng-container>
+  <ng-template #unconfirmedTpl>
+    <nz-result
+      nzStatus="warning"
+      nzTitle="Transaction/s still unconfirmed after 10 blocks, the pool might be full!"
+    >
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="onCloseModal($event)">Close</button>
+      </div>
+    </nz-result>
+  </ng-template>
+</ng-template>

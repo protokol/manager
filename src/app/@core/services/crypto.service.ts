@@ -3,15 +3,20 @@ import { Logger } from '@core/services/logger.service';
 import { ElectronUtils } from '@core/utils/electron-utils';
 import { Interfaces as NftBaseInterfaces } from '@protokol/nft-base-crypto';
 import { StoreUtilsService } from '@core/store/store-utils.service';
-import { TransactionsService } from '@core/services/transactions.service';
-import { Observable } from 'rxjs';
+import { defer, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import * as nftBaseCryptoType from '@protokol/nft-base-crypto';
 import * as guardianCryptoType from '@protokol/guardian-crypto';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Store } from '@ngxs/store';
-import { Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
+import { Interfaces, Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
 import { Interfaces as GuardianInterfaces } from '@protokol/guardian-crypto';
+import { ApiResponse, CreateTransactionApiResponse } from '@arkecosystem/client';
+import { ConnectionOptions } from '@core/interfaces/node.types';
+import { TransactionResultModalComponent } from '@shared/components/transaction-result-modal/transaction-result-modal.component';
+import { ModalUtils } from '@core/utils/modal-utils';
+import { BaseService } from '@core/services/base.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Injectable()
 export class CryptoService {
@@ -22,7 +27,8 @@ export class CryptoService {
 
   constructor(
     private storeUtilsService: StoreUtilsService,
-    private transactionsService: TransactionsService,
+    private nzModalService: NzModalService,
+    private baseService: BaseService,
     private store: Store
   ) {
     if (ElectronUtils.isElectron()) {
@@ -73,6 +79,55 @@ export class CryptoService {
     }
   }
 
+  transactionErrorHandler<T>(): OperatorFunction<ApiResponse<T>, T> {
+    return switchMap((response: ApiResponse<any>) => {
+      if (response.body && response.body.errors) {
+        this.log.error('Response contains errors:', response.body.errors);
+        const errorsValues = Object.values<{ message: string; type: string }>(
+          response.body.errors
+        );
+        return throwError(errorsValues.map((e) => e.message).join(' '));
+      }
+      return of(response.body.data);
+    });
+  }
+
+  createTransactions(
+    payload: {
+      transactions: Interfaces.ITransactionJson[];
+    } & Record<string, any>,
+    baseUrl?: string,
+    connectionOptions?: ConnectionOptions
+  ): Observable<void> {
+    return this.baseService.getConnection(baseUrl, connectionOptions)
+      .pipe(
+        switchMap((c) => defer(() => c.api('transactions')
+          .create(payload)
+        )),
+        this.transactionErrorHandler<CreateTransactionApiResponse>(),
+        switchMap(() => {
+          const { transactions } = payload;
+          const transactionIds = transactions.map(({ id }) => id);
+
+          const createCollectionModalRef = this.nzModalService.create<
+            TransactionResultModalComponent,
+            void
+            >({
+            nzTitle: null,
+            nzFooter: null,
+            nzContent: TransactionResultModalComponent,
+            nzComponentParams: {
+              transactionIds
+            },
+            ...ModalUtils.getCreateModalDefaultConfig(),
+            nzCloseIcon: null,
+          });
+
+          return createCollectionModalRef.afterClose as Observable<void>;
+        })
+      );
+  }
+
   registerCollection(
     nftCollectionAsset: NftBaseInterfaces.NFTCollectionAsset
   ): Observable<any> {
@@ -85,7 +140,7 @@ export class CryptoService {
           .nonce(nonce.toFixed())
           .signWithWif(wif);
 
-        return this.transactionsService.createTransactions({
+        return this.createTransactions({
           transactions: [createCollectionTrans.build().toJson()]
         });
       })
@@ -107,7 +162,7 @@ export class CryptoService {
               .toJson();
           });
 
-        return this.transactionsService.createTransactions({
+        return this.createTransactions({
           transactions
         });
       })
@@ -125,7 +180,7 @@ export class CryptoService {
           .nonce(nonce.toFixed())
           .signWithWif(wif);
 
-        return this.transactionsService.createTransactions({
+        return this.createTransactions({
           transactions: [transfer.build().toJson()]
         });
       })
@@ -143,7 +198,7 @@ export class CryptoService {
           .nonce(nonce.toFixed())
           .signWithWif(wif);
 
-        return this.transactionsService.createTransactions({
+        return this.createTransactions({
           transactions: [transfer.build().toJson()]
         });
       })
@@ -161,7 +216,7 @@ export class CryptoService {
           .nonce(nonce.toFixed())
           .signWithWif(wif);
 
-        return this.transactionsService.createTransactions({
+        return this.createTransactions({
           transactions: [transfer.build().toJson()]
         });
       })
