@@ -2,12 +2,10 @@
 
 :host ::ng-deep {
   .ant-table-body {
-    min-height: 75vh;
+    min-height: calc(100vh - 300px);
   }
 
   .fav-icon {
-    // color: #429ef5;
-
     color: #66cfdb;
   }
 }

@@ -3,10 +3,18 @@
 }
 
 .ant-form-item-label {
+  text-align: left;
+
   > label {
+    text-transform: capitalize;
+    overflow: visible;
+
     &.ant-form-item-required.ant-form-item-required.ant-form-item-required {
       &::before {
         color: $error-color;
+        position: absolute;
+        right: 2px;
+        margin: 0;
       }
     }
   }

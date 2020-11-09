@@ -10,6 +10,7 @@ import { NgLetModule } from '@core/directives/ngLet.module';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzDescriptionsModule,
     NzTypographyModule,
     NgLetModule,
+    NzSpaceModule
   ],
   providers: [],
   declarations: [TradesComponent, TradeDetailsComponent],

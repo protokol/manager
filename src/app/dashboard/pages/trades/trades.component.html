@@ -1,18 +1,25 @@
-<ng-container *ngIf="rows$ | async as rows">
-  <app-table
-    [isLoading]="isLoading$ | async"
-    [rows]="rows"
-    [tableColumns]="tableColumns"
-    [meta]="meta$ | async"
-    (paginationChange)="paginationChange($event)"
-    [isExpandable]="true"
-    scrollY="75vh"
-  >
-    <ng-template let-row="row">
-      <app-trade-details [tradeId]="row.id"></app-trade-details>
-    </ng-template>
-  </app-table>
-</ng-container>
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+  </nz-space-item>
+  <nz-space-item>
+    <ng-container *ngIf="rows$ | async as rows">
+      <app-table
+        [isLoading]="isLoading$ | async"
+        [rows]="rows"
+        [tableColumns]="tableColumns"
+        [meta]="meta$ | async"
+        (paginationChange)="paginationChange($event)"
+        [isExpandable]="true"
+        scrollY="calc(100vh - 365px)"
+      >
+        <ng-template let-row="row">
+          <app-trade-details [tradeId]="row.id"></app-trade-details>
+        </ng-template>
+      </app-table>
+    </ng-container>
+  </nz-space-item>
+</nz-space>
 
 <ng-template #idTpl let-row="row">
   <app-text-clipper [text]="row.id"></app-text-clipper>
@@ -39,3 +46,22 @@
 </ng-template>
 
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Trades</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Auction transfer trades
+  </ng-template>
+</ng-template>

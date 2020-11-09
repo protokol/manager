@@ -1,8 +1,15 @@
 <nz-space nzDirection="vertical" nzSize="middle">
   <nz-space-item>
-    <button nz-button nzType="primary" (click)="addMyNode($event)">
-      Add my node
-    </button>
+    <div class="header">
+      <div>
+        <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      </div>
+      <div>
+        <button nz-button nzType="primary" (click)="addMyNode($event)">
+          Add my node
+        </button>
+      </div>
+    </div>
   </nz-space-item>
   <nz-space-item>
     <app-table
@@ -11,7 +18,7 @@
       [tableColumns]="tableColumns"
       (paginationChange)="paginationChange($event)"
       [isFrontPagination]="true"
-      scrollY="75vh"
+      scrollY="calc(100vh - 300px)"
     >
     </app-table>
   </nz-space-item>
@@ -48,4 +55,23 @@
       </li>
     </ul>
   </nz-dropdown-menu>
+</ng-template>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">My Nodes</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Saved nodes
+  </ng-template>
 </ng-template>

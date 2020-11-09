@@ -1,8 +1,6 @@
-<form nz-form [formGroup]="form" nzLayout="vertical" novalidate>
+<form nz-form [formGroup]="form" nzNoColon="true" novalidate>
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="pattern">Pattern</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="pattern">Pattern</nz-form-label>
     <nz-form-control>
       <nz-input-group>
         <input
@@ -17,9 +15,7 @@
   </nz-form-item>
 
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="minLength">Min length</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="minLength">Min length</nz-form-label>
     <nz-form-control [nzErrorTip]="minLengthErrorTpl">
       <nz-input-number
         [nzMin]="minLength"
@@ -46,9 +42,7 @@
   </nz-form-item>
 
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="maxLength">Max length</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="maxLength">Max length</nz-form-label>
     <nz-form-control [nzErrorTip]="maxLengthErrorTpl">
       <nz-input-number
         [nzMin]="minLength"

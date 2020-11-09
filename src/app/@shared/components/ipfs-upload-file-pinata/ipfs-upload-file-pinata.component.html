@@ -4,13 +4,11 @@
     (ngSubmit)="authenticatePinata()"
     [formGroup]="authenticationForm"
     novalidate
-    nzLayout="vertical"
+    nzNoColon="true"
     *ngIf="step === PinataModalStepper.Authenticate"
   >
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="api-key" nzRequired>Api key </nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="api-key" nzRequired>Api key </nz-form-label>
       <nz-form-control nzErrorTip="Please enter api key!">
         <input
           id="api-key"

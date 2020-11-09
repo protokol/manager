@@ -1,8 +1,6 @@
-<form nz-form [formGroup]="form" nzLayout="vertical" novalidate>
+<form nz-form [formGroup]="form" nzNoColon="true" novalidate>
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="minimum">Minimum</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="minimum">Minimum</nz-form-label>
     <nz-form-control [nzErrorTip]="minimumErrorTpl">
       <nz-input-number
         [nzMin]="min"
@@ -29,9 +27,7 @@
   </nz-form-item>
 
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="maximum">Maximum</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="maximum">Maximum</nz-form-label>
     <nz-form-control [nzErrorTip]="maximumErrorTpl">
       <nz-input-number
         [nzMin]="min"

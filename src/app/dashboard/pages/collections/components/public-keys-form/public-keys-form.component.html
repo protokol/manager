@@ -1,10 +1,9 @@
-<div nz-row [nzGutter]="[24, 12]">
-  <div nz-col [nzSpan]="20" [nzFlex]="1">
+<div nz-row [nzGutter]="[72, 0]">
+  <div nz-col [nzSpan]="18">
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="wallet">Choose wallet</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="4" nzFor="wallet">Choose wallet</nz-form-label>
       <nz-form-control
+        [nzSpan]="20"
         id="asset"
         nzErrorTip="Please select an wallet!"
         nzHasFeedback
@@ -19,12 +18,9 @@
       </nz-form-control>
     </nz-form-item>
   </div>
-  <div nz-col [nzSpan]="4" [nzFlex]="1">
-    <nz-form-item>
-      <app-form-label>
-        <nz-form-label>&nbsp;</nz-form-label>
-      </app-form-label>
-      <nz-form-control>
+  <div nz-col [nzSpan]="6">
+    <nz-form-item [nzGutter]="0">
+      <nz-form-control [nzSpan]="24">
         <button nz-button nzType="default" class="w-100" (click)="onAddWallet($event, walletDropdownFormControl.value)">
           Add allowed issuers
         </button>

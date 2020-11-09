@@ -15,6 +15,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzDropDownModule,
     NzIconModule,
     NzTypographyModule,
+    NzSpaceModule
   ],
   providers: [],
   declarations: [PeersComponent],

@@ -1,5 +1,9 @@
 @import "src/theme/theme-variables";
 
+:host {
+  width: 100%;
+}
+
 :host ::ng-deep {
   thead {
     tr {
