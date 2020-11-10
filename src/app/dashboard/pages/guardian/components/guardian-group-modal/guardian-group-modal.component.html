@@ -1,13 +1,11 @@
 <ng-container *ngIf="isFormReady$ | async; else formLoadingTpl">
-  <form nz-form [formGroup]="groupForm" nzLayout="vertical" novalidate>
+  <form nz-form [formGroup]="groupForm" nzNoColon="true" novalidate>
     <div nz-row [nzGutter]="[24, 12]">
-      <div nz-col [nzSpan]="12">
+      <div nz-col [nzSpan]="10">
         <nz-form-item>
-          <app-form-label fullWidth="false">
-            <nz-form-label nzFor="name" nzRequired
-            >Group name
-            </nz-form-label>
-          </app-form-label>
+          <nz-form-label [nzSpan]="5" nzFor="name" nzRequired>
+            Group name
+          </nz-form-label>
           <nz-form-control
             [nzErrorTip]="nameErrorTpl"
           >
@@ -40,14 +38,11 @@
           </ng-template>
         </nz-form-item>
       </div>
-      <div nz-col [nzSpan]="4" [nzOffset]="2">
+      <div nz-col [nzSpan]="4">
         <nz-form-item>
-          <app-form-label>
-            <nz-form-label nzFor="priority" nzRequired
-            >Priority
-            </nz-form-label
-            >
-          </app-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="priority" nzRequired>
+            Priority
+          </nz-form-label>
           <nz-form-control [nzErrorTip]="priorityErrorTpl">
             <nz-input-number
               [nzMin]="priorityMin"
@@ -78,21 +73,17 @@
           </ng-template>
         </nz-form-item>
       </div>
-      <div nz-col [nzSpan]="2" [nzOffset]="2">
+      <div nz-col [nzSpan]="4" [nzOffset]="2">
         <nz-form-item>
-          <app-form-label>
-            <nz-form-label nzFor="active" nzRequired>Active</nz-form-label>
-          </app-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="active" nzRequired>Active</nz-form-label>
           <nz-form-control>
             <nz-switch class="on-off" id="active" formControlName="active"></nz-switch>
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col [nzSpan]="2">
+      <div nz-col [nzSpan]="4">
         <nz-form-item>
-          <app-form-label>
-            <nz-form-label nzFor="default" nzRequired>Default</nz-form-label>
-          </app-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="default" nzRequired>Default</nz-form-label>
           <nz-form-control>
             <nz-switch class="on-off" id="default" formControlName="default"></nz-switch>
           </nz-form-control>

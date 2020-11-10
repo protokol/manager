@@ -1,8 +1,6 @@
-<form nz-form [formGroup]="attributeForm" novalidate nzLayout="vertical">
+<form nz-form [formGroup]="attributeForm" nzNoColon="true" novalidate>
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="name" nzRequired>Attribute name</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>Attribute name</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
       <input
         id="name"
@@ -30,17 +28,13 @@
   <nz-form-item>
     <nz-form-control>
       <label nz-checkbox formControlName="isRequired">
-        <app-form-label>
-          <nz-form-label>Attribute required</nz-form-label>
-        </app-form-label>
+        <nz-form-label>Attribute required</nz-form-label>
       </label>
     </nz-form-control>
   </nz-form-item>
 
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="type" nzRequired>Attribute type</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="type" nzRequired>Attribute type</nz-form-label>
     <nz-form-control nzErrorTip="Please select an attribute type!">
       <nz-select
         nzShowSearch

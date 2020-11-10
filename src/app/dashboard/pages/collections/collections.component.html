@@ -1,24 +1,35 @@
 <nz-space nzDirection="vertical" nzSize="middle">
   <nz-space-item>
-    <div class="top-header">
-      <button
-        nz-button
-        nzType="primary"
-        (click)="showAddCollectionModal($event)"
-      >
-        Register Collection
-      </button>
-      <nz-form-control [nzSpan]="4">
-        <nz-input-group nzPrefixIcon="search">
-          <input
-            type="text"
-            nz-input
-            placeholder="Search schema..."
-            [ngModel]="searchTerm$ | async"
-            (ngModelChange)="searchTerm$.next($event)"
-          />
-        </nz-input-group>
-      </nz-form-control>
+    <div class="header">
+      <div>
+        <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      </div>
+      <div>
+        <nz-space nzDirection="horizontal" nzSize="middle">
+          <nz-space-item>
+            <nz-form-control>
+              <nz-input-group nzPrefixIcon="search">
+                <input
+                  type="text"
+                  nz-input
+                  placeholder="Search schema..."
+                  [ngModel]="searchTerm$ | async"
+                  (ngModelChange)="searchTerm$.next($event)"
+                />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-space-item>
+          <nz-space-item>
+            <button
+              nz-button
+              nzType="primary"
+              (click)="showAddCollectionModal($event)"
+            >
+              Register New Collection
+            </button>
+          </nz-space-item>
+        </nz-space>
+      </div>
     </div>
   </nz-space-item>
   <nz-space-item>
@@ -28,7 +39,7 @@
       [tableColumns]="tableColumns"
       [meta]="meta$ | async"
       (paginationChange)="paginationChange($event)"
-      scrollY="70vh"
+      scrollY="calc(100vh - 365px)"
     >
     </app-table>
   </nz-space-item>
@@ -65,4 +76,23 @@
     ></app-text-clipper>
     <br *ngIf="!isLast" />
   </ng-container>
+</ng-template>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Collections</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Add collections and view collection's schemas
+  </ng-template>
 </ng-template>

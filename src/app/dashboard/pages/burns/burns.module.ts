@@ -9,6 +9,8 @@ import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
 import { NgLetModule } from '@core/directives/ngLet.module';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   imports: [
@@ -20,6 +22,8 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NgJsonEditorModule,
     NzGridModule,
     NgLetModule,
+    NzSpaceModule,
+    NzTypographyModule
   ],
   providers: [],
   declarations: [BurnsComponent],

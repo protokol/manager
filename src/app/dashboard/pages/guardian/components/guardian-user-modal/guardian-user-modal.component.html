@@ -1,13 +1,11 @@
 <ng-container *ngIf="isFormReady$ | async; else formLoadingTpl">
-  <form nz-form [formGroup]="userForm" nzLayout="vertical" novalidate>
+  <form nz-form [formGroup]="userForm" nzNoColon="true" novalidate>
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="public-key" nzRequired>
-          User public key
-        </nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="3" nzFor="public-key" nzRequired>
+        User public key
+      </nz-form-label>
       <nz-form-control
-        nzSpan="12"
+        [nzSpan]="10"
         id="public-key"
         nzErrorTip="Please select an user!"
         nzHasFeedback

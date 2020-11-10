@@ -1,12 +1,12 @@
 :host ::ng-deep {
   .ant-table-body {
-    min-height: 70vh;
+    min-height: calc(100vh - 365px);
     overflow-x: hidden;
   }
 }
 
-.top-header {
+.header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }

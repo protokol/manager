@@ -18,6 +18,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzTypographyModule,
     NzListModule,
     NzSpinModule,
+    NzDividerModule
   ],
   providers: [],
   declarations: [

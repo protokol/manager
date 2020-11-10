@@ -1,8 +1,15 @@
 <nz-space nzDirection="vertical" nzSize="middle">
   <nz-space-item>
-    <button nz-button nzType="primary" (click)="showTransferModal($event)">
-      Transfer
-    </button>
+    <div class="header">
+      <div>
+        <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      </div>
+      <div>
+        <button nz-button nzType="primary" (click)="showTransferModal($event)">
+          Transfer
+        </button>
+      </div>
+    </div>
   </nz-space-item>
   <nz-space-item>
     <app-table
@@ -11,7 +18,7 @@
       [tableColumns]="tableColumns"
       [meta]="meta$ | async"
       (paginationChange)="paginationChange($event)"
-      scrollY="70vh"
+      scrollY="calc(100vh - 365px)"
     >
     </app-table>
   </nz-space-item>
@@ -63,3 +70,22 @@
 </ng-template>
 
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Transfers</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Transfer assets between wallets
+  </ng-template>
+</ng-template>

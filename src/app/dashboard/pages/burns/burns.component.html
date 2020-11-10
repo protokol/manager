@@ -1,12 +1,21 @@
-<app-table
-  [isLoading]="isLoading$ | async"
-  [rows]="rows$"
-  [tableColumns]="tableColumns"
-  [meta]="meta$ | async"
-  (paginationChange)="paginationChange($event)"
-  scrollY="75vh"
->
-</app-table>
+<nz-space nzDirection="vertical" nzSize="middle">
+  <nz-space-item>
+    <div class="header">
+      <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+    </div>
+  </nz-space-item>
+  <nz-space-item>
+    <app-table
+      [isLoading]="isLoading$ | async"
+      [rows]="rows$"
+      [tableColumns]="tableColumns"
+      [meta]="meta$ | async"
+      (paginationChange)="paginationChange($event)"
+      scrollY="calc(100vh - 365px)"
+    >
+    </app-table>
+  </nz-space-item>
+</nz-space>
 
 <ng-template #idTpl let-row="row">
   <app-text-clipper [text]="row.id"></app-text-clipper>
@@ -35,3 +44,22 @@
 </ng-template>
 
 <ng-container *ngLet="getBaseUrl$ | async"></ng-container>
+
+<ng-template #pageTitleTpl>
+  <app-page-header>
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">Burns</h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="pageTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-page-header>
+  <ng-template #pageTitleHelperTpl>
+    Asset burns
+  </ng-template>
+</ng-template>

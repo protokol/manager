@@ -2,15 +2,13 @@
   nz-form
   (ngSubmit)="createCollection($event)"
   [formGroup]="collectionForm"
-  nzLayout="vertical"
+  nzNoColon="true"
   novalidate
 >
   <div nz-row [nzGutter]="[24, 12]">
     <div nz-col [nzSpan]="12">
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label nzFor="name" nzRequired>Name</nz-form-label>
-        </app-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>Name</nz-form-label>
         <nz-form-control [nzErrorTip]="nameErrorTpl">
           <input
             id="name"
@@ -42,11 +40,9 @@
         </ng-template>
       </nz-form-item>
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label nzFor="maximumSupply" nzRequired
-            >Maximum Supply</nz-form-label
-          >
-        </app-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="maximumSupply" nzRequired
+          >Maximum Supply</nz-form-label
+        >
         <nz-form-control [nzErrorTip]="maximumSupplyErrorTpl">
           <nz-input-number
             [nzMin]="maximumSupplyMin"
@@ -79,17 +75,15 @@
     </div>
     <div nz-col [nzSpan]="12">
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label nzFor="description" nzRequired
-            >Description</nz-form-label
-          >
-        </app-form-label>
+        <nz-form-label [nzSpan]="4" nzFor="description" nzRequired
+          >Description</nz-form-label
+        >
         <nz-form-control [nzErrorTip]="descriptionErrorTpl">
           <textarea
+            class="description"
             formControlName="description"
             nz-input
             placeholder="Insert collection description"
-            rows="5"
           ></textarea>
         </nz-form-control>
         <ng-template #descriptionErrorTpl let-control>
@@ -117,10 +111,8 @@
     <nz-divider nzDashed></nz-divider>
 
     <div nz-col [nzSpan]="24">
-      <nz-form-item>
-        <app-public-keys-form formControlName="allowedIssuers">
-        </app-public-keys-form>
-      </nz-form-item>
+      <app-public-keys-form formControlName="allowedIssuers">
+      </app-public-keys-form>
     </div>
   </div>
 
@@ -174,7 +166,7 @@
     [disabled]="(isLoading$ | async) || !collectionForm.valid"
     (click)="createCollection($event)"
   >
-    Create
+    Register
   </button>
 </div>
 

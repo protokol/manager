@@ -2,13 +2,11 @@
   nz-form
   (ngSubmit)="addNode($event)"
   [formGroup]="form"
-  nzLayout="vertical"
+  nzNoColon="true"
   novalidate
 >
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="args" nzRequired>Args</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="4" nzFor="args" nzRequired>Args</nz-form-label>
     <nz-form-control nzErrorTip="Please enter args!">
       <nz-input-group>
         <input type="text" nz-input formControlName="args" placeholder="Args" />

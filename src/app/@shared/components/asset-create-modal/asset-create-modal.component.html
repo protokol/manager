@@ -1,13 +1,10 @@
-<form nz-form [formGroup]="collectionForm" nzLayout="vertical" novalidate>
+<form nz-form [formGroup]="collectionForm" nzNoColon="true" novalidate>
   <div nz-row [nzGutter]="[24, 12]">
     <div nz-col [nzSpan]="12">
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label nzFor="collection" nzRequired
-          >Choose collection
-          </nz-form-label
-          >
-        </app-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="collection" nzRequired>
+          Choose collection
+        </nz-form-label>
         <nz-form-control
           class="collection-form-control"
           id="collection"
@@ -21,24 +18,18 @@
     </div>
     <div nz-col [nzSpan]="4">
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label></nz-form-label>
-        </app-form-label>
         <nz-form-control>
           <label nz-checkbox (nzCheckedChange)="isMultipleAssetsEnabled$.next($event)">
-            <app-form-label>
-              <nz-form-label>Multiple assets</nz-form-label>
-            </app-form-label>
+            <nz-form-label>Multiple assets</nz-form-label>
           </label>
         </nz-form-control>
       </nz-form-item>
     </div>
     <div nz-col [nzSpan]="8" [hidden]="(isMultipleAssetsEnabled$ | async) === false">
       <nz-form-item>
-        <app-form-label>
-          <nz-form-label nzFor="numOfAssets" nzRequired
-          >Number of assets</nz-form-label>
-        </app-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="numOfAssets" nzRequired>
+          Number of assets
+        </nz-form-label>
         <nz-form-control [nzErrorTip]="numOfAssetsErrorTpl">
           <nz-input-number
             [nzMin]="1"
