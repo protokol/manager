@@ -2,13 +2,11 @@
   nz-form
   (ngSubmit)="addNode($event)"
   [formGroup]="addMyNodeForm"
-  nzLayout="vertical"
+  nzNoColon="true"
   novalidate
 >
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="node-url" nzRequired>Node url</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="node-url" nzRequired>Node url</nz-form-label>
     <nz-form-control [nzErrorTip]="nodeUrlErrorTpl">
       <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
         <input type="text" nz-input formControlName="nodeUrl" />

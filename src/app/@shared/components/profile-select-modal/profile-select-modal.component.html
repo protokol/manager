@@ -1,17 +1,15 @@
 <form
   nz-form
   [formGroup]="profileForm"
-  nzLayout="vertical"
+  nzNoColon="true"
   novalidate
   *ngIf="profileForm"
 >
   <ng-container *ngLet="profiles$ | async as profiles">
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="collection" nzRequired
-          >Choose profile</nz-form-label
-        >
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="collection" nzRequired>
+        Choose profile
+      </nz-form-label>
       <nz-form-control
         nzErrorTip="Please select a profile!"
         nzHasFeedback
@@ -34,9 +32,7 @@
     </nz-form-item>
 
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="pin" nzRequired>Profile PIN</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="pin" nzRequired>Profile PIN</nz-form-label>
       <nz-form-control nzErrorTip="Please enter your PIN!">
         <nz-input-group nzPrefixIcon="lock">
           <input

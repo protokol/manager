@@ -1,8 +1,6 @@
-<form nz-form [formGroup]="form" nzLayout="vertical" novalidate>
+<form nz-form [formGroup]="form" nzNoColon="true" novalidate>
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="login-type" nzRequired>Manager port</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="login-type" nzRequired>Manager port</nz-form-label>
     <nz-form-control [nzErrorTip]="portErrorTpl" nzSpan="10">
       <nz-input-group nzPrefixIcon="api">
         <input
@@ -33,9 +31,7 @@
   </nz-form-item>
 
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="login-type">Manager authentication</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="24" nzFor="login-type">Manager authentication</nz-form-label>
     <nz-form-control nzErrorTip="Choose authorization method!">
       <nz-radio-group id="login-type" formControlName="loginType">
         <label nz-radio [nzValue]="NodeManagerLoginSettingsEnum.None"
@@ -55,9 +51,7 @@
     *ngIf="c('loginType').value === NodeManagerLoginSettingsEnum.Token"
   >
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="token" nzRequired>Secret token</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="token" nzRequired>Secret token</nz-form-label>
       <nz-form-control nzErrorTip="Please enter your secret token!">
         <nz-input-group>
           <input
@@ -76,9 +70,7 @@
     *ngIf="c('loginType').value === NodeManagerLoginSettingsEnum.Basic"
   >
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="username" nzRequired>Username</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="username" nzRequired>Username</nz-form-label>
       <nz-form-control nzErrorTip="Please enter your username!">
         <nz-input-group>
           <input
@@ -93,9 +85,7 @@
     </nz-form-item>
 
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="password" nzRequired>Password</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="password" nzRequired>Password</nz-form-label>
       <nz-form-control nzErrorTip="Please enter your password!">
         <nz-input-group>
           <input

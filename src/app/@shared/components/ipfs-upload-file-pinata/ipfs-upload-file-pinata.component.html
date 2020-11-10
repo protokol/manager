@@ -20,11 +20,9 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="secret-api-key" nzRequired
-          >Secret api key
-        </nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="secret-api-key" nzRequired>
+        Secret api key
+      </nz-form-label>
       <nz-form-control nzErrorTip="Please enter secret api key!">
         <input
           id="secret-api-key"
@@ -42,13 +40,11 @@
     (ngSubmit)="uploadFile()"
     [formGroup]="uploadForm"
     novalidate
-    nzLayout="vertical"
+    nzNoColon="true"
     *ngIf="step === PinataModalStepper.Upload"
   >
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="name">File name</nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="4" nzFor="name">File name</nz-form-label>
       <nz-form-control>
         <input
           id="name"
@@ -60,9 +56,7 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label nzFor="file" nzRequired>File </nz-form-label>
-      </app-form-label>
+      <nz-form-label [nzSpan]="4" nzFor="file" nzRequired>File </nz-form-label>
       <nz-form-control nzErrorTip="Please enter secret api key!">
         <nz-upload
           [nzBeforeUpload]="beforeUpload"

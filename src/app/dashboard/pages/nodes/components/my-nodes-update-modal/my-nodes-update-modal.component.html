@@ -2,13 +2,11 @@
   nz-form
   (ngSubmit)="selectNode($event)"
   [formGroup]="selectMyNodeForm"
-  nzLayout="vertical"
+  nzNoColon="true"
   novalidate
 >
   <nz-form-item>
-    <app-form-label>
-      <nz-form-label nzFor="node" nzRequired>Select my node</nz-form-label>
-    </app-form-label>
+    <nz-form-label [nzSpan]="6" nzFor="node" nzRequired>Select my node</nz-form-label>
     <nz-form-control nzErrorTip="Please select node!">
       <ng-container *ngLet="selectedNodeUrl$ | async as selectedNodeUrl">
         <ng-container *ngLet="myNodes$ | async as myNodes">

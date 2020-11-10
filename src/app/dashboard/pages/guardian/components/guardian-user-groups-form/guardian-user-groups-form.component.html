@@ -24,9 +24,6 @@
   </div>
   <div nz-col [nzSpan]="6">
     <nz-form-item>
-      <app-form-label>
-        <nz-form-label>&nbsp;</nz-form-label>
-      </app-form-label>
       <nz-form-control>
         <ng-container *ngLet="groupDropdownFormControl.value as assetValue">
           <button nz-button nzType="default" class="w-100" (click)="onAddGroup(groupDropdownFormControl.value, $event)"
