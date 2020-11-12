@@ -108,7 +108,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate Checksums for EXE
-        run: shasum -a 256 release/protokol-manager 1.0.0-beta.1.exe
+        run: shasum -a 256 'release/protokol-manager 1.0.0-beta.1.exe'
 
       - name: VirusTotal Scan for EXE
         run: |
