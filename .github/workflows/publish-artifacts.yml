@@ -113,4 +113,4 @@ jobs:
       - name: VirusTotal Scan for EXE
         run: |
           UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
-          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager+1.0.0-beta.1.exe' | jq -r .permalink
+          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager%201.0.0-beta.1.exe' | jq -r .permalink
