@@ -3,7 +3,7 @@ name: Publish Artifacts
 on:
   push:
     branches:
-      - "master"
+      - "feat/release-pipeline"
 
 jobs:
   create-release:
