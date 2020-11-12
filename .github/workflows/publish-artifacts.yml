@@ -30,44 +30,44 @@ jobs:
           prerelease: false
           body: ${{ steps.derive_release_changelog.outputs.body }}
 
-publish-macos:
-  needs: ["create-release"]
+  publish-macos:
+    needs: ["create-release"]
 
-  runs-on: macos-latest
+    runs-on: macos-latest
 
-  strategy:
-    matrix:
-      node-version: [12.x]
+    strategy:
+      matrix:
+        node-version: [12.x]
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Cache node modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Node ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install Dependencies
-      run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-    - name: Build
-      run: npm run electron:mac
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        run: npm run electron:mac
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Calculate Checksums for DMG
-      run: shasum -a 256 release/protokol-manager-1.0.0-beta.1.dmg
+      - name: Calculate Checksums for DMG
+        run: shasum -a 256 release/protokol-manager-1.0.0-beta.1.dmg
 
-    - name: VirusTotal Scan for DMG
-      run: |
-        UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
-        curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager-1.0.0-beta.1.dmg' | jq -r .permalink
+      - name: VirusTotal Scan for DMG
+        run: |
+          UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
+          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager-1.0.0-beta.1.dmg' | jq -r .permalink
