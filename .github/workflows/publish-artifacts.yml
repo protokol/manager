@@ -110,7 +110,46 @@ jobs:
       - name: Calculate Checksums for EXE
         run: shasum -a 256 'release/protokol-manager_1.0.0-beta.1.exe'
 
-      - name: VirusTotal Scan for EXE
+
+
+  publish-linux:
+    needs: ["create-release"]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run electron:linux
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate Checksums for AppImage
+        run: shasum -a 256 release/release/protokol-manager_1.0.0-beta.1.AppImage
+
+      - name: VirusTotal Scan for AppImage
         run: |
           UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
-          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager_1.0.0-beta.1.exe' | jq -r .permalink
+          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager_1.0.0-beta.1.AppImage' | jq -r .permalink
