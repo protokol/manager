@@ -108,10 +108,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate Checksums for EXE
-        run: shasum -a 256 'release/protokol-manager 1.0.0-beta.1.exe'
+        run: shasum -a 256 'release/protokol-manager_1.0.0-beta.1.exe'
 
       - name: VirusTotal Scan for EXE
         run: |
           UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
-          UPLOAD_FILE='release/protokol-manager_1.0.0-beta.1.exe'
-          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form file=@"${UPLOAD_FILE}" | jq -r .permalink
+          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager_1.0.0-beta.1.exe' | jq -r .permalink
