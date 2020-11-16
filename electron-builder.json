@@ -1,5 +1,6 @@
 {
   "productName": "protokol-manager",
+  "artifactName": "${productName}_${version}.${ext}",
   "directories": {
     "output": "release/"
   },

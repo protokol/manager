@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: protokol-manager-linux-1.0.0-beta.1-${{ github.sha }}.AppImage
-          path: release/protokol-manager-1.0.0-beta.1.AppImage
+          path: release/protokol-manager_1.0.0-beta.1.AppImage
 
   build-macOS:
     runs-on: macos-latest
@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: protokol-manager-mac-1.0.0-beta.1-${{ github.sha }}.dmg
-          path: release/protokol-manager-1.0.0-beta.1.dmg
+          path: release/protokol-manager_1.0.0-beta.1.dmg
 
   build-windows:
     runs-on: windows-latest
@@ -115,4 +115,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: protokol-manager-win-1.0.0-beta.1-${{ github.sha }}.exe
-          path: release/protokol-manager 1.0.0-beta.1.exe
+          path: release/protokol-manager_1.0.0-beta.1.exe
