@@ -19,6 +19,13 @@ jobs:
           RELEASE_VERSION=$(cat package.json | jq -r '.version')
           echo "::set-output name=version::${RELEASE_VERSION}"
 
+      - name: Changelog version
+        id: changelog_version
+        run: |
+          CHANGELOG_VERSION=$( ${{ steps.derive_release_version.outputs.version }} | tr -d .)
+          echo ${CHANGELOG_VERSION}
+          echo "::set-output name=version::${CHANGELOG_VERSION}"
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -32,7 +39,7 @@ jobs:
           body: |
             Changelog
             [${{ steps.derive_release_version.outputs.version }} changelog]
-            ( https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v$( ${{ steps.derive_release_version.outputs.version }} | tr -d .) )
+            ( https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }} )
 
   publish-macos:
     needs: ["create-release"]
