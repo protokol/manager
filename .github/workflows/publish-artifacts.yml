@@ -22,8 +22,7 @@ jobs:
       - name: Changelog version
         id: changelog_version
         run: |
-          CHANGELOG_VERSION=$( '${{ steps.derive_release_version.outputs.version }}' | tr -d .)
-          echo ${CHANGELOG_VERSION}
+          CHANGELOG_VERSION=$(echo '${{ steps.derive_release_version.outputs.version }}' | tr -d .)
           echo "::set-output name=version::${CHANGELOG_VERSION}"
 
       - name: Create Release
@@ -37,9 +36,8 @@ jobs:
           draft: true
           prerelease: false
           body: |
-            Changelog
-            [${{ steps.derive_release_version.outputs.version }} changelog]
-            ( https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }} )
+            Changelog:
+            [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
 
   publish-macos:
     needs: ["create-release"]
