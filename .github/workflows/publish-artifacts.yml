@@ -22,7 +22,7 @@ jobs:
       - name: Changelog version
         id: changelog_version
         run: |
-          CHANGELOG_VERSION=$( ${{ steps.derive_release_version.outputs.version }} | tr -d .)
+          CHANGELOG_VERSION=$( '${{ steps.derive_release_version.outputs.version }}' | tr -d .)
           echo ${CHANGELOG_VERSION}
           echo "::set-output name=version::${CHANGELOG_VERSION}"
 
