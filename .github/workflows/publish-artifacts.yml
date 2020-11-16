@@ -147,7 +147,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate Checksums for AppImage
-        run: shasum -a 256 release/release/protokol-manager_1.0.0-beta.1.AppImage
+        run: shasum -a 256 release/protokol-manager_1.0.0-beta.1.AppImage
 
       - name: VirusTotal Scan for AppImage
         run: |
