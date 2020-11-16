@@ -30,7 +30,8 @@ jobs:
           draft: true
           prerelease: false
           body: |
-            https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v100-beta1
+            Changelog
+            [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.derive_release_version.outputs.version | tr -d . }})
 
   publish-macos:
     needs: ["create-release"]
