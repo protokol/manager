@@ -31,7 +31,8 @@ jobs:
           prerelease: false
           body: |
             Changelog
-            [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.derive_release_version.outputs.version | tr -d . }})
+            [${{ steps.derive_release_version.outputs.version }} changelog]
+            ( https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v$( ${{ steps.derive_release_version.outputs.version }} | tr -d .) )
 
   publish-macos:
     needs: ["create-release"]
