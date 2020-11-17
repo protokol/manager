@@ -52,7 +52,7 @@
     "@ngxs/storage-plugin": "^3.6.2",
     "@ngxs/store": "^3.6.2",
     "@protokol/client": "1.0.0-beta.34",
-    "@protokol/guardian-crypto": "1.0.0-beta.28",
+    "@protokol/guardian-crypto": "1.0.0-beta.32",
     "@protokol/nft-base-crypto": "1.0.0-beta.48",
     "ang-jsoneditor": "^1.10.0",
     "bip38": "^3.1.1",
