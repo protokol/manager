@@ -3,7 +3,7 @@ import { defer, Observable } from 'rxjs';
 import {
   NodeCryptoConfiguration,
   NodeConfiguration
-} from '@arkecosystem/client/dist/resourcesTypes/node';
+} from '@arkecosystem/client';
 import { map, switchMap } from 'rxjs/operators';
 import { Logger } from '@core/services/logger.service';
 import { BaseResourcesTypes } from '@protokol/client';

@@ -15,8 +15,10 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { BlockchainService } from '@core/services/blockchain.service';
 
 @NgModule({
+  providers: [BlockchainService],
   declarations: [DashboardStatusBarComponent, DashboardShellComponent],
   imports: [
     CommonModule,
