@@ -1,5 +1,3 @@
-import { environment } from '@env/environment';
-import { Bip38WorkerService } from '@core/services/bip38-worker.service';
 import { Bip38ServiceInterface } from '@core/interfaces/bip38-service.interface';
 import { Bip38Service } from '@core/services/bip38.service';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
@@ -11,8 +9,8 @@ import { ArkCryptoService } from '@core/services/ark-crypto.service';
 export const bip38Factory = (
   arkCryptoService: ArkCryptoService
 ): Bip38ServiceInterface => {
-  if (environment.production) {
+  /*if (environment.production) {
     return new Bip38WorkerService();
-  }
+  }*/
   return new Bip38Service(arkCryptoService);
 };
