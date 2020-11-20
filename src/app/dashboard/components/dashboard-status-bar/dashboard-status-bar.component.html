@@ -7,6 +7,12 @@
     </nz-space-item>
   </nz-space>
 
+  <nz-space>
+    <nz-space-item>
+      <app-text-animate [value]="lastBlockHeight$ | async"></app-text-animate>
+    </nz-space-item>
+  </nz-space>
+
   <ng-container *ngIf="selectedProfile$ | async as selectedProfile">
     <nz-space nzSize="large">
       <nz-space-item>
