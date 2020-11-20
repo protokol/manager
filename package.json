@@ -10,7 +10,7 @@
   ],
   "description": "Manager for Protokol plugins",
   "license": "CC BY-NC-SA 4.0",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "scripts": {
     "postinstall": "electron-builder install-app-deps && ngcc && npm run scripts:extract:version",
     "ng": "ng",
