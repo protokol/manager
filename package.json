@@ -10,7 +10,7 @@
   ],
   "description": "Manager for Protokol plugins",
   "license": "CC BY-NC-SA 4.0",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "scripts": {
     "postinstall": "electron-builder install-app-deps && ngcc && npm run scripts:extract:version",
     "ng": "ng",
@@ -34,7 +34,11 @@
     "prettier:check": "prettier --list-different \"./{src,e2e}/**/*.{ts,js,html,scss}\"",
     "format-staged": "pretty-quick --staged --pattern \"**/*.*(ts|js|html|scss)\"",
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",
-    "scripts:extract:version": "node scripts/extract-version.js"
+    "scripts:extract:version": "node scripts/extract-version.js",
+    "version:0.0.x:up": "npm --no-git-tag-version version patch",
+    "version:0.x.0:up": "npm --no-git-tag-version version minor",
+    "version:x.0.0:up": "npm --no-git-tag-version version major",
+    "version:specific": "npm --no-git-tag-version version 1.0.0-beta.2"
   },
   "main": "main.js",
   "private": true,
