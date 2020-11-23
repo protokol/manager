@@ -24,13 +24,13 @@
     (ngSubmit)="selectNetwork()"
     [formGroup]="networkForm"
     novalidate
-    nzLayout="vertical"
+    nzNoColon="true"
   >
     <ng-container *ngTemplateOutlet="brandLogoTpl"></ng-container>
 
     <div class="form-items">
       <nz-form-item>
-        <nz-form-label [nzSpan]="10" nzFor="network-type"
+        <nz-form-label [nzSpan]="24" nzFor="network-type"
           >Network Type</nz-form-label
         >
         <nz-form-control [nzSpan]="10" nzErrorTip="Choose network type!">
@@ -49,10 +49,10 @@
         *ngIf="nf('networkType').value === RegisterNetworkEnum.Predefined"
       >
         <nz-form-item>
-          <nz-form-label [nzSpan]="10" nzFor="networkUrl" nzRequired
-            >Select network</nz-form-label
-          >
-          <nz-form-control [nzSpan]="20" nzErrorTip="Choose network!">
+          <nz-form-label [nzSpan]="6" nzFor="networkUrl" nzRequired>
+            Select network
+          </nz-form-label>
+          <nz-form-control [nzSpan]="18" nzErrorTip="Choose network!">
             <nz-select
               nzPlaceHolder="Select network"
               formControlName="networkUrl"
@@ -72,10 +72,10 @@
         *ngIf="nf('networkType').value === RegisterNetworkEnum.Custom"
       >
         <nz-form-item>
-          <nz-form-label [nzSpan]="10" nzFor="customNetworkUrl" nzRequired
+          <nz-form-label [nzSpan]="6" nzFor="customNetworkUrl" nzRequired
             >Network url:</nz-form-label
           >
-          <nz-form-control nzErrorTip="Please enter network url!" nzSpan="20">
+          <nz-form-control nzErrorTip="Please enter network url!" [nzSpan]="18">
             <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
               <input type="text" nz-input formControlName="customNetworkUrl" />
             </nz-input-group>
