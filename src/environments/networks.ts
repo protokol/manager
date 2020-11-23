@@ -5,7 +5,11 @@ interface Network {
 
 export const networks: Network[] = [
   {
-    label: 'Protokol node',
-    value: 'http://api.protokol.com:4003',
+    label: 'Protokol devnet',
+    value: 'https://devnet-explorer.protokol.sh',
+  },
+  {
+    label: 'Protokol testnet',
+    value: 'https://testnet-explorer.protokol.sh',
   },
 ];
