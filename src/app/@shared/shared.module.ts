@@ -51,6 +51,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { TransactionResultModalComponent } from '@shared/components/transaction-result-modal/transaction-result-modal.component';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { NftIdsFormComponent } from '@shared/components/nft-ids-form/nft-ids-form.component';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 const declareAndExportComponents = [
   TableComponent,
@@ -73,7 +75,8 @@ const declareAndExportComponents = [
   PageHeaderComponent,
   NodeManagerFormComponent,
   ModalFullscreenComponent,
-  TransactionResultModalComponent
+  TransactionResultModalComponent,
+  NftIdsFormComponent
 ];
 
 @NgModule({
@@ -109,7 +112,8 @@ const declareAndExportComponents = [
     NzRadioModule,
     NzCheckboxModule,
     NzInputNumberModule,
-    NzResultModule
+    NzResultModule,
+    NzListModule
   ],
   declarations: [...declareAndExportComponents],
   exports: [...declareAndExportComponents],

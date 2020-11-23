@@ -10,7 +10,6 @@ import { NgLetModule } from '@core/directives/ngLet.module';
 import { TransferModalComponent } from './components/transfer-modal/transfer-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { NftIdsFormComponent } from '@app/dashboard/pages/transfers/components/nft-ids-form/nft-ids-form.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
@@ -43,7 +42,6 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
   declarations: [
     TransfersComponent,
     TransferModalComponent,
-    NftIdsFormComponent,
   ],
   exports: [],
 })

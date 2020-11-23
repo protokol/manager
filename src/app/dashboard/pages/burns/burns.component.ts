@@ -6,9 +6,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import {
@@ -22,6 +22,11 @@ import { BurnsState } from '@app/dashboard/pages/burns/state/burns/burns.state';
 import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { ModalUtils } from '@core/utils/modal-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { BurnModalComponent } from '@app/dashboard/pages/burns/components/burn-modal/burn-modal.component';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
+import { TableUtils } from '@shared/utils/table-utils';
 
 @Component({
   selector: 'app-burns',
@@ -31,6 +36,8 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 })
 export class BurnsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
+
+  private params: NzTableQueryParams = TableUtils.getDefaultNzTableQueryParams();
 
   @Select(BurnsState.getBurnsIds) burnIds$: Observable<string[]>;
   @Select(BurnsState.getMeta) meta$: Observable<PaginationMeta>;
@@ -57,7 +64,9 @@ export class BurnsComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private router: Router,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private nzModalService: NzModalService,
+    private actions$: Actions
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -79,7 +88,7 @@ export class BurnsComponent implements OnInit, OnDestroy {
         columnTransformTpl: this.senderTpl,
       },
       {
-        headerName: 'Assets',
+        headerName: 'Asset',
         columnTransformTpl: this.assetsTpl,
       },
       {
@@ -108,6 +117,7 @@ export class BurnsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   paginationChange(params: NzTableQueryParams) {
+    this.params = params;
     this.store.dispatch(new LoadBurns(params));
   }
 
@@ -121,5 +131,32 @@ export class BurnsComponent implements OnInit, OnDestroy {
         assetId,
       },
     });
+  }
+
+  showBurnAssetModal(event: MouseEvent) {
+    event.preventDefault();
+
+    const burnModalRef = this.nzModalService.create<BurnModalComponent,
+      RefreshModalResponse>({
+      nzContent: BurnModalComponent,
+      ...ModalUtils.getCreateModalDefaultConfig()
+    });
+
+    burnModalRef.afterClose
+      .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadBurns))),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            this.store.dispatch(
+              new LoadBurns({
+                ...this.params,
+              })
+            );
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }
