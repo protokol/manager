@@ -35,7 +35,6 @@ export class AssetCreateModalComponent implements OnInit, OnDestroy {
   readonly editorOptions: JsonEditorOptions;
 
   collectionForm!: FormGroup;
-  assetForm!: FormGroup;
 
   framework = WidgetConfigService.getFramework();
   isProduction = environment.production;

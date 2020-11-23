@@ -1,7 +1,14 @@
 <nz-space nzDirection="vertical" nzSize="middle">
   <nz-space-item>
     <div class="header">
-      <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      <div>
+        <ng-container *ngTemplateOutlet="pageTitleTpl"></ng-container>
+      </div>
+      <div>
+        <button nz-button nzType="primary" (click)="showBurnAssetModal($event)">
+          Burn Asset
+        </button>
+      </div>
     </div>
   </nz-space-item>
   <nz-space-item>

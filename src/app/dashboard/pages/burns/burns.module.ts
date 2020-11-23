@@ -11,6 +11,12 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { BurnModalComponent } from '@app/dashboard/pages/burns/components/burn-modal/burn-modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   imports: [
@@ -23,10 +29,15 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     NzGridModule,
     NgLetModule,
     NzSpaceModule,
-    NzTypographyModule
+    NzTypographyModule,
+    NzButtonModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzSpinModule,
+    NzPopconfirmModule
   ],
   providers: [],
-  declarations: [BurnsComponent],
+  declarations: [BurnsComponent, BurnModalComponent],
   exports: [],
 })
 export class BurnsModule {}

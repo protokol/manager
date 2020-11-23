@@ -1,0 +1,51 @@
+<ng-container
+  *ngIf="selectedProfileAddress$ | async as profileAddress; else loading"
+>
+  <form nz-form [formGroup]="burnForm" nzNoColon="true" novalidate>
+    <app-nft-ids-form
+      formControlName="nftIds"
+      [ownerAddress]="profileAddress"
+    ></app-nft-ids-form>
+  </form>
+</ng-container>
+
+<ng-template #modalTitleTpl>
+  <app-modal-header [modalRef]="nzModalRef">
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">
+          Burn assets
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="modalTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #modalTitleHelperTpl>
+    Burned assets can't be accessed anymore, this is irreversible action!
+  </ng-template>
+</ng-template>
+
+<div *nzModalFooter>
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) || !burnForm.valid"
+    nz-popconfirm
+    nzPopconfirmTitle="Are you sure?"
+    (nzOnConfirm)="burn()"
+    nzOkText="Yes"
+    nzCancelText="No"
+  >
+    Burn
+  </button>
+</div>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>

@@ -45,6 +45,9 @@ export class CryptoService {
       this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTTransferTransaction
       );
+      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+        this.nftBaseCrypto.Transactions.NFTBurnTransaction
+      );
 
       // guardian crypto register transactions
       this.guardianCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
@@ -182,6 +185,29 @@ export class CryptoService {
 
         return this.createTransactions({
           transactions: [transfer.build().toJson()]
+        });
+      })
+    );
+  }
+
+  burn(burnAssets: NftBaseInterfaces.NFTBurnAsset[]): Observable<any> {
+    return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
+      switchMap(({ wif, nonce }) => {
+
+        const transactions = Array.from({ length: burnAssets.length },
+          (_k, i) => {
+            return new this.nftBaseCrypto.Builders.NFTBurnBuilder()
+              .NFTBurnAsset({
+                ...burnAssets[i]
+              })
+              .nonce(nonce.plus(i).toFixed())
+              .signWithWif(wif)
+              .build()
+              .toJson();
+          });
+
+        return this.createTransactions({
+          transactions
         });
       })
     );

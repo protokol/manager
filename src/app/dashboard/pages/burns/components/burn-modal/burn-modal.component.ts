@@ -17,15 +17,18 @@ import { WalletService } from '@core/services/wallet.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { environment } from '@env/environment';
+
+const { api: { transactionBatchLimit } } = environment;
 
 @Component({
-  selector: 'app-transfer-modal',
-  templateUrl: './transfer-modal.component.html',
-  styleUrls: ['./transfer-modal.component.scss'],
+  selector: 'app-burn-modal',
+  templateUrl: './burn-modal.component.html',
+  styleUrls: ['./burn-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransferModalComponent implements OnInit, OnDestroy {
-  transferForm!: FormGroup;
+export class BurnModalComponent implements OnInit, OnDestroy {
+  burnForm!: FormGroup;
   isLoading$ = new BehaviorSubject(false);
   selectedProfileAddress$ = new BehaviorSubject<string | null>(null);
 
@@ -65,45 +68,43 @@ export class TransferModalComponent implements OnInit, OnDestroy {
   }
 
   createForm() {
-    this.transferForm = this.formBuilder.group({
-      wallet: [],
+    this.burnForm = this.formBuilder.group({
       nftIds: [],
     });
   }
 
-  transfer(event: MouseEvent) {
-    event.preventDefault();
-
+  burn() {
     if (this.isLoading$.getValue()) {
       return;
     }
 
-    if (!this.transferForm.valid) {
-      FormUtils.markFormGroupDirty(this.transferForm);
+    if (!this.burnForm.valid) {
+      FormUtils.markFormGroupDirty(this.burnForm);
       return;
+    }
+
+    const { nftIds } = this.burnForm.value;
+
+    if (nftIds.length <= 0) {
+      this.nzMessageService.error(`At least one NFT is required!`);
+    }
+
+    if (nftIds.length > transactionBatchLimit) {
+      this.nzMessageService.error(`Maximum number of NFTs allowed: ${transactionBatchLimit}!`);
     }
 
     this.isLoading$.next(true);
 
-    const {
-      wallet: { address: recipientId },
-      nftIds: nftIdsObjArray,
-    } = this.transferForm.value;
-    const nftIds = nftIdsObjArray.map(({ nftId }) => nftId);
-
     this.cryptoService
-      .transfer({
-        nftIds,
-        recipientId,
-      })
+      .burn(nftIds)
       .pipe(
         tap(
           () => {
-            this.nzMessageService.success('Transfer initiated!');
+            this.nzMessageService.success('Burn/s initiated!');
             this.nzModalRef.destroy({ refresh: true });
           },
           (err) => {
-            this.nzNotificationService.create('error', 'Transfer failed!', err);
+            this.nzNotificationService.create('error', 'Burn/s failed!', err);
           }
         ),
         finalize(() => {
