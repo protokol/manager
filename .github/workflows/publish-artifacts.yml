@@ -88,8 +88,8 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          path: protokol-manager.dmg
-          name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+          path: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+          name: protokol-manager.dmg
 
       - uses: ncipollo/release-action@v1
         with:
