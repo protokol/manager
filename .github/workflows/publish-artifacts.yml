@@ -59,10 +59,10 @@ jobs:
           mv release/latest-mac.yml artifact-macos/
 
       - uses: actions/upload-artifact@v2
-        name: Upload macos artifact
+        name: Upload macos dmg artifact
         with:
-          name: MacOS
-          path: artifact-macos
+          name: MacOSDmg
+          path: artifact-macos/protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
           if-no-files-found: error
 
 
@@ -88,7 +88,7 @@ jobs:
 
       - uses: actions/download-artifact@v1
         with:
-          name: MacOS
+          name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
 
       - uses: ncipollo/release-action@v1
         with:
@@ -98,6 +98,6 @@ jobs:
           body: |
             Changelog:
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
-          artifacts: "MacOS/*"
+          artifacts: "protokol-manager_*"
           draft: true
           prerelease: false
