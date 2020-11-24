@@ -90,12 +90,11 @@ jobs:
         with:
           name: MacOS
 
-      - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ steps.derive_release_version.outputs.version }}
-          release_name: Version ${{ steps.derive_release_version.outputs.version }}
+          tag: ${{ steps.derive_release_version.outputs.version }}
+          name: Version ${{ steps.derive_release_version.outputs.version }}
           body: |
             Changelog:
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
