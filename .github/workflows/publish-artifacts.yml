@@ -84,8 +84,9 @@ jobs:
           echo "::set-output name=version::${CHANGELOG_VERSION}"
 
       - uses: actions/download-artifact@v2
-        with:
-          name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Calculate Checksums for DMG
         run: shasum -a 256 protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
