@@ -55,14 +55,14 @@ jobs:
       - name: Package artifacts
         run: |
           mkdir artifact-macos
-          mv release/protokol-manager.dmg artifact-macos/protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+          mv release/protokol-manager.dmg artifact-macos/
           mv release/latest-mac.yml artifact-macos/
 
       - uses: actions/upload-artifact@v2
         name: Upload macos dmg artifact
         with:
-          name: MacOSDmg
-          path: artifact-macos/protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+          name: protokol-manager.dmg
+          path: artifact-macos/protokol-manager.dmg
           if-no-files-found: error
 
 
@@ -86,8 +86,9 @@ jobs:
           CHANGELOG_VERSION=$(echo '${{ steps.derive_release_version.outputs.version }}' | tr -d .)
           echo "::set-output name=version::${CHANGELOG_VERSION}"
 
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v2
         with:
+          path: protokol-manager.dmg
           name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
 
       - uses: ncipollo/release-action@v1
