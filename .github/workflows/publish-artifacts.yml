@@ -99,6 +99,6 @@ jobs:
           body: |
             Changelog:
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
-          artifacts: "protokol-manager_*"
+          artifacts: "protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg"
           draft: true
           prerelease: false
