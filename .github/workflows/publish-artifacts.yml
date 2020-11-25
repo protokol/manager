@@ -118,6 +118,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./README.md
-          asset_name: README.md
-          asset_content_type: text/markdown
+          asset_path: ./release-artifacts/protokol-manager.dmg
+          asset_name: protokol-manager-macos.dmg
+          asset_content_type: application/octet-stream
