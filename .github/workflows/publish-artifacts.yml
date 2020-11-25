@@ -120,4 +120,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./release-artifacts/protokol-manager.dmg
           asset_name: protokol-manager-macos.dmg
-          asset_content_type: application/octet-stream
+          asset_content_type: application/x-apple-diskimage
