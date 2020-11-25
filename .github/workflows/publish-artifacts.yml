@@ -112,6 +112,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
+          asset_path: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
           asset_name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
           asset_content_type: application/octet-stream
