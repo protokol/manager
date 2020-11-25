@@ -109,11 +109,11 @@ jobs:
 
       - name: Upload DMG Release Asset
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release-artifacts/protokol-manager
+          asset_path: ./release-artifacts/protokol-manager.dmg
           asset_name: protokol-manager_${{ steps.derive_release_version.outputs.version }}.dmg
           asset_content_type: application/x-apple-diskimage
