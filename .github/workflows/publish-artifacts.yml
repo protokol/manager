@@ -43,12 +43,6 @@ jobs:
           UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
           curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager.dmg' | jq -r .permalink
 
-      - name: Determine the release version
-        id: derive_release_version
-        run: |
-          RELEASE_VERSION=$(cat package.json | jq -r '.version')
-          echo "::set-output name=version::${RELEASE_VERSION}"
-
       - name: Package artifacts
         run: |
           mkdir artifact-macos
@@ -58,8 +52,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         name: Upload macos dmg artifact
         with:
-          name: protokol-manager.dmg
-          path: artifact-macos/protokol-manager.dmg
+          name: MacOS
+          path: artifact-macos
           if-no-files-found: error
 
 
@@ -85,10 +79,11 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          path: ./release-artifacts
+          name: MacOS
+          path: ./macos-release-artifacts
 
       - name: Calculate Checksums for DMG
-        run: shasum -a 256 ./release-artifacts/protokol-manager.dmg
+        run: shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg
 
       - name: Create Release
         id: create_release
@@ -104,9 +99,9 @@ jobs:
             Changelog:
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
 
-      - name: Sample zip file
+      - name: Zip
         run: |
-          zip --junk-paths sample-readme-zipped README.md
+          zip -9 -r protokol-manager_macos.zip macos-release-artifacts
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -118,6 +113,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release-artifacts/protokol-manager.dmg
-          asset_name: protokol-manager-macos.dmg
-          asset_content_type: application/x-apple-diskimage
+          asset_path: ./protokol-manager_macos.zip
+          asset_name: protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip
+          asset_content_type: application/zip
