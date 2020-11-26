@@ -102,8 +102,8 @@ jobs:
             ##### SHA256 Hashes
             | File                      | SHA256                                                                                          |
             |---------------------------|-------------------------------------------------------------------------------------------------|
-            | protokol-manager.dmg      | ${{ $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) }}                          |
-            | protokol-manager.AppImage | ${{ $(echo $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) | cut -d ' ' -f1) }} |
+            | protokol-manager.dmg      | ${{ shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg }}                             |
+            | protokol-manager.AppImage |                                                                                                 |
             | protokol-manager.exe      |                                                                                                 |
 
       - name: Zip
