@@ -3,7 +3,7 @@ name: Publish Artifacts
 on:
   push:
     branches:
-      - "feat/prod-pipeline-output-hashes"
+      - "master"
 
 jobs:
   build-macos:
