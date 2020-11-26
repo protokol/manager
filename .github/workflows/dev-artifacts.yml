@@ -40,8 +40,8 @@ jobs:
       - name: Upload .AppImage
         uses: actions/upload-artifact@v2
         with:
-          name: protokol-manager-linux-1.0.0-beta.2-${{ github.sha }}.AppImage
-          path: release/protokol-manager_1.0.0-beta.2.AppImage
+          name: protokol-manager-linux-${{ github.sha }}.AppImage
+          path: release/protokol-manager.AppImage
 
   build-macOS:
     runs-on: macos-latest
@@ -77,8 +77,8 @@ jobs:
       - name: Upload .dmg
         uses: actions/upload-artifact@v2
         with:
-          name: protokol-manager-mac-1.0.0-beta.2-${{ github.sha }}.dmg
-          path: release/protokol-manager_1.0.0-beta.2.dmg
+          name: protokol-manager-mac-${{ github.sha }}.dmg
+          path: release/protokol-manager.dmg
 
   build-windows:
     runs-on: windows-latest
@@ -114,5 +114,5 @@ jobs:
       - name: Upload .exe
         uses: actions/upload-artifact@v2
         with:
-          name: protokol-manager-win-1.0.0-beta.2-${{ github.sha }}.exe
-          path: release/protokol-manager_1.0.0-beta.2.exe
+          name: protokol-manager-win-${{ github.sha }}.exe
+          path: release/protokol-manager.exe
