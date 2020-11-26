@@ -56,10 +56,59 @@ jobs:
           path: artifact-macos
           if-no-files-found: error
 
+  build-linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 12.x ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run electron:linux
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: VirusTotal Scan for AppImage
+        run: |
+          UPLOAD_URL=$(curl -s --location --url 'https://www.virustotal.com/vtapi/v2/file/scan/upload_url?apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' | jq -r .upload_url)
+          curl -s --url "$UPLOAD_URL" --form 'apikey=${{ secrets.VIRUSTOTAL_API_KEY }}' --form 'file=@release/protokol-manager_1.0.0-beta.2.AppImage' | jq -r .permalink
+
+      - name: Package artifacts
+        run: |
+          mkdir artifact-linux
+          mv release/protokol-manager.AppImage artifact-linux/
+          mv release/latest-linux.yml artifact-linux/
+
+      - uses: actions/upload-artifact@v2
+        name: Upload Linux AppImage artifact
+        with:
+          name: Linux
+          path: artifact-linux
+          if-no-files-found: error
 
   create-release:
     runs-on: ubuntu-latest
-    needs: [ build-macos ]
+    needs: [ build-macos, build-linux ]
 
     steps:
       - name: Checkout code
@@ -82,11 +131,22 @@ jobs:
           name: MacOS
           path: ./macos-release-artifacts
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: Linux
+          path: ./linux-release-artifacts
+
       - name: Calculate Checksum for MacOS
         id: checksum_macos
         run: |
           CHECKSUM_MACOS=$(echo $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) | cut -d ' ' -f1)
           echo "::set-output name=checksum::${CHECKSUM_MACOS}"
+
+      - name: Calculate Checksum for Linux
+        id: checksum_linux
+        run: |
+          CHECKSUM_LINUX=$(echo $(shasum -a 256 ./linux-release-artifacts/protokol-manager.AppImage) | cut -d ' ' -f1)
+          echo "::set-output name=checksum::${CHECKSUM_LINUX}"
 
       - name: Create Release
         id: create_release
@@ -106,18 +166,19 @@ jobs:
             | File                      | SHA256                                       |
             |---------------------------|----------------------------------------------|
             | protokol-manager.dmg      | ${{ steps.checksum_macos.outputs.checksum }} |
-            | protokol-manager.AppImage |                                              |
+            | protokol-manager.AppImage | ${{ steps.checksum_linux.outputs.checksum }} |
             | protokol-manager.exe      |                                              |
 
       - name: Zip
         run: |
           zip -0 -r protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip macos-release-artifacts
+          zip -0 -r protokol-manager_linux_appImage_${{ steps.derive_release_version.outputs.version }}.zip linux-release-artifacts
 
       - name: Display structure of downloaded files
         run: ls -R
 
       - name: Upload DMG Release Asset
-        id: upload-release-asset
+        id: upload-release-asset-macos
         uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,4 +186,15 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip
           asset_name: protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload AppImage Release Asset
+        id: upload-release-asset-linux-appImage
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./protokol-manager_linux_appImage_${{ steps.derive_release_version.outputs.version }}.zip
+          asset_name: protokol-manager_linux_appImage_${{ steps.derive_release_version.outputs.version }}.zip
           asset_content_type: application/zip
