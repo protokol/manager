@@ -82,8 +82,11 @@ jobs:
           name: MacOS
           path: ./macos-release-artifacts
 
-      - name: Calculate Checksums for DMG
-        run: shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg
+      - name: Calculate Checksum for MacOS
+        id: checksum_macos
+        run: |
+          CHECKSUM_MACOS=echo $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) | cut -d ' ' -f1)
+          echo "::set-output name=checksum::${CHECKSUM_MACOS}"
 
       - name: Create Release
         id: create_release
@@ -100,11 +103,11 @@ jobs:
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
 
             ##### SHA256 Hashes
-            | File                      | SHA256                                                                                          |
-            |---------------------------|-------------------------------------------------------------------------------------------------|
-            | protokol-manager.dmg      | ${{ shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg }}                             |
-            | protokol-manager.AppImage |                                                                                                 |
-            | protokol-manager.exe      |                                                                                                 |
+            | File                      | SHA256                                       |
+            |---------------------------|----------------------------------------------|
+            | protokol-manager.dmg      | ${{ steps.checksum_macos.outputs.checksum }} |
+            | protokol-manager.AppImage |                                              |
+            | protokol-manager.exe      |                                              |
 
       - name: Zip
         run: |
