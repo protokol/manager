@@ -85,7 +85,7 @@ jobs:
       - name: Calculate Checksum for MacOS
         id: checksum_macos
         run: |
-          CHECKSUM_MACOS=echo $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) | cut -d ' ' -f1)
+          CHECKSUM_MACOS=$(echo $(shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) | cut -d ' ' -f1))
           echo "::set-output name=checksum::${CHECKSUM_MACOS}"
 
       - name: Create Release
