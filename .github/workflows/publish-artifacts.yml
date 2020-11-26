@@ -96,12 +96,19 @@ jobs:
           draft: true
           prerelease: false
           body: |
-            Changelog:
+            ##### Changelog
             [${{ steps.derive_release_version.outputs.version }} changelog](https://github.com/protokol/protokol-manager/blob/feat/release-pipeline/CHANGELOG.md#v${{ steps.changelog_version.outputs.version }})
+
+            ##### SHA256 Hashes
+            | File                      | SHA256                                                               |
+            |---------------------------|----------------------------------------------------------------------|
+            | protokol-manager.dmg      | $(echo shasum -a 256 ./macos-release-artifacts/protokol-manager.dmg) |
+            | protokol-manager.AppImage |                                                                      |
+            | protokol-manager.exe      |                                                                      |
 
       - name: Zip
         run: |
-          zip -9 -r protokol-manager_macos.zip macos-release-artifacts
+          zip -0 -r protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip macos-release-artifacts
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -113,6 +120,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./protokol-manager_macos.zip
+          asset_path: ./protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip
           asset_name: protokol-manager_macos_${{ steps.derive_release_version.outputs.version }}.zip
           asset_content_type: application/zip
