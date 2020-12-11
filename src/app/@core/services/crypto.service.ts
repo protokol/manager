@@ -6,10 +6,8 @@ import { StoreUtilsService } from '@core/store/store-utils.service';
 import { defer, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import * as nftBaseCryptoType from '@protokol/nft-base-crypto';
 import * as guardianCryptoType from '@protokol/guardian-crypto';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
-import { NetworksState } from '@core/store/network/networks.state';
-import { Store } from '@ngxs/store';
-import { Interfaces, Interfaces as ArkInterfaces } from '@arkecosystem/crypto';
+import { switchMap } from 'rxjs/operators';
+import { Interfaces } from '@arkecosystem/crypto';
 import { Interfaces as GuardianInterfaces } from '@protokol/guardian-crypto';
 import { ApiResponse, CreateTransactionApiResponse } from '@arkecosystem/client';
 import { ConnectionOptions } from '@core/interfaces/node.types';
@@ -17,6 +15,7 @@ import { TransactionResultModalComponent } from '@shared/components/transaction-
 import { ModalUtils } from '@core/utils/modal-utils';
 import { BaseService } from '@core/services/base.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { ArkCryptoService } from '@core/services/ark-crypto.service';
 
 @Injectable()
 export class CryptoService {
@@ -29,56 +28,35 @@ export class CryptoService {
     private storeUtilsService: StoreUtilsService,
     private nzModalService: NzModalService,
     private baseService: BaseService,
-    private store: Store
+    private arkCryptoService: ArkCryptoService
   ) {
     if (ElectronUtils.isElectron()) {
       this.nftBaseCrypto = window.require('@protokol/nft-base-crypto');
       this.guardianCrypto = window.require('@protokol/guardian-crypto');
 
+      const {arkCrypto} = this.arkCryptoService;
+
       // nft base crypto register transactions
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTRegisterCollectionTransaction
       );
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTCreateTransaction
       );
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTTransferTransaction
       );
-      this.nftBaseCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTBurnTransaction
       );
 
       // guardian crypto register transactions
-      this.guardianCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.guardianCrypto.Transactions.GuardianGroupPermissionsTransaction
       );
-      this.guardianCrypto.ARKCrypto.Transactions.TransactionRegistry.registerTransactionType(
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.guardianCrypto.Transactions.GuardianUserPermissionsTransaction
       );
-
-      // Listen to node crypto config changes
-      this.store
-        .select(NetworksState.getNodeCryptoConfig)
-        .pipe(
-          filter((config) => !!config),
-          distinctUntilChanged(),
-          tap(({ exceptions, genesisBlock, network, milestones }) => {
-            const networkConfig = {
-              exceptions: { ...exceptions },
-              genesisBlock: { ...genesisBlock },
-              network: { ...network },
-              milestones: [...milestones],
-            } as ArkInterfaces.NetworkConfig;
-
-            this.nftBaseCrypto.ARKCrypto.Managers.configManager.setConfig({...networkConfig});
-            this.nftBaseCrypto.ARKCrypto.Managers.configManager.setHeight(2);
-
-            this.guardianCrypto.ARKCrypto.Managers.configManager.setConfig({...networkConfig});
-            this.guardianCrypto.ARKCrypto.Managers.configManager.setHeight(2);
-          })
-        )
-        .subscribe();
     }
   }
 
