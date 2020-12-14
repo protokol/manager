@@ -2,18 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component, OnDestroy, OnInit
 } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { ProfilesState } from '@core/store/profiles/profiles.state';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ProfileWithId } from '@core/interfaces/profiles.types';
 import { NetworksState } from '@core/store/network/networks.state';
 import { Router } from '@angular/router';
 import { ProfileSelectModalComponent } from '@shared/components/profile-select-modal/profile-select-modal.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { environment } from '@env/environment';
-import { exhaustMap, tap } from 'rxjs/operators';
-import { BlockchainService } from '@core/services/blockchain.service';
-import { untilDestroyed } from '@core/until-destroyed';
+import { LastBlockStartPooling, LastBlockStopPooling } from '@core/store/network/networks.actions';
 
 const { shell } = window.require('electron');
 
@@ -25,29 +23,18 @@ const { shell } = window.require('electron');
 })
 export class DashboardStatusBarComponent implements OnInit, OnDestroy {
   @Select(ProfilesState.getProfiles) profiles$: Observable<ProfileWithId[]>;
-  @Select(NetworksState.getBaseUrl) getBaseUrl$: Observable<string>;
   @Select(ProfilesState.getSelectedProfile) selectedProfile$: Observable<ProfileWithId>;
+  @Select(NetworksState.getBaseUrl) getBaseUrl$: Observable<string>;
+  @Select(NetworksState.getLastBlockHeight) lastBlockHeight$: Observable<number | null>;
 
-  timer1$;
-  lastBlockHeight$ = new BehaviorSubject<number | null>(null);
-
-  constructor(private router: Router, private nzModalService: NzModalService, private blockchainService: BlockchainService) {
+  constructor(
+    private router: Router,
+    private nzModalService: NzModalService,
+    private store: Store) {
   }
 
   ngOnInit(): void {
-    this.timer1$ = timer(0, 8000)
-      .pipe(
-        untilDestroyed(this),
-        exhaustMap(() =>
-          this.blockchainService
-            .getLastBlock()
-            .pipe(
-              untilDestroyed(this),
-              tap(({ height }) => this.lastBlockHeight$.next(height))
-            )
-        )
-      )
-      .subscribe();
+    this.store.dispatch(new LastBlockStartPooling());
   }
 
   onProfileSelect(event: MouseEvent, profileId: string) {
@@ -81,6 +68,6 @@ export class DashboardStatusBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.timer1$.unsubscribe();
+    this.store.dispatch(new LastBlockStopPooling());
   }
 }

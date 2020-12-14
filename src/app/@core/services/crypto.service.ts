@@ -5,6 +5,7 @@ import { Interfaces as NftBaseInterfaces } from '@protokol/nft-base-crypto';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { defer, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import * as nftBaseCryptoType from '@protokol/nft-base-crypto';
+import * as nftExchangeCryptoType from '@protokol/nft-exchange-crypto';
 import * as guardianCryptoType from '@protokol/guardian-crypto';
 import { switchMap } from 'rxjs/operators';
 import { Interfaces } from '@arkecosystem/crypto';
@@ -16,6 +17,7 @@ import { ModalUtils } from '@core/utils/modal-utils';
 import { BaseService } from '@core/services/base.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ArkCryptoService } from '@core/services/ark-crypto.service';
+import { Interfaces as NftExchangeInterfaces } from '@protokol/nft-exchange-crypto';
 
 @Injectable()
 export class CryptoService {
@@ -23,6 +25,7 @@ export class CryptoService {
 
   private nftBaseCrypto: typeof nftBaseCryptoType;
   private guardianCrypto: typeof guardianCryptoType;
+  private nftExchangeCrypto: typeof nftExchangeCryptoType;
 
   constructor(
     private storeUtilsService: StoreUtilsService,
@@ -33,6 +36,7 @@ export class CryptoService {
     if (ElectronUtils.isElectron()) {
       this.nftBaseCrypto = window.require('@protokol/nft-base-crypto');
       this.guardianCrypto = window.require('@protokol/guardian-crypto');
+      this.nftExchangeCrypto = window.require('@protokol/nft-exchange-crypto');
 
       const {arkCrypto} = this.arkCryptoService;
 
@@ -48,6 +52,11 @@ export class CryptoService {
       );
       arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
         this.nftBaseCrypto.Transactions.NFTBurnTransaction
+      );
+
+      // nft exchange crypto register transactions
+      arkCrypto.Transactions.TransactionRegistry.registerTransactionType(
+        this.nftExchangeCrypto.Transactions.NFTAuctionTransaction
       );
 
       // guardian crypto register transactions
@@ -114,7 +123,7 @@ export class CryptoService {
   ): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
-        const createCollectionTrans = new this.nftBaseCrypto.Builders.NFTRegisterCollectionBuilder()
+        const tx = new this.nftBaseCrypto.Builders.NFTRegisterCollectionBuilder()
           .NFTRegisterCollectionAsset({
             ...nftCollectionAsset
           })
@@ -122,7 +131,7 @@ export class CryptoService {
           .signWithWif(wif);
 
         return this.createTransactions({
-          transactions: [createCollectionTrans.build().toJson()]
+          transactions: [tx.build().toJson()]
         });
       })
     );
@@ -154,7 +163,7 @@ export class CryptoService {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
 
-        const transfer = new this.nftBaseCrypto.Builders.NFTTransferBuilder()
+        const tx = new this.nftBaseCrypto.Builders.NFTTransferBuilder()
           .NFTTransferAsset({
             ...nftTransferAsset
           })
@@ -162,7 +171,7 @@ export class CryptoService {
           .signWithWif(wif);
 
         return this.createTransactions({
-          transactions: [transfer.build().toJson()]
+          transactions: [tx.build().toJson()]
         });
       })
     );
@@ -191,11 +200,29 @@ export class CryptoService {
     );
   }
 
+  auction(nftAuctionAsset: NftExchangeInterfaces.NFTAuctionAsset): Observable<any> {
+    return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
+      switchMap(({ wif, nonce }) => {
+
+        const tx = new this.nftExchangeCrypto.Builders.NFTAuctionBuilder()
+          .NFTAuctionAsset({
+            ...nftAuctionAsset
+          })
+          .nonce(nonce.toFixed())
+          .signWithWif(wif);
+
+        return this.createTransactions({
+          transactions: [tx.build().toJson()]
+        });
+      })
+    );
+  }
+
   setGuardianGroupPermissions(guardianGroup: GuardianInterfaces.IGuardianGroupPermissionsAsset): Observable<any> {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
 
-        const transfer = new this.guardianCrypto.Builders.GuardianGroupPermissionsBuilder()
+        const tx = new this.guardianCrypto.Builders.GuardianGroupPermissionsBuilder()
           .GuardianGroupPermissions({
             ...guardianGroup,
           })
@@ -203,7 +230,7 @@ export class CryptoService {
           .signWithWif(wif);
 
         return this.createTransactions({
-          transactions: [transfer.build().toJson()]
+          transactions: [tx.build().toJson()]
         });
       })
     );
@@ -213,7 +240,7 @@ export class CryptoService {
     return this.storeUtilsService.getSelectedProfileWifAndNextNonce().pipe(
       switchMap(({ wif, nonce }) => {
 
-        const transfer = new this.guardianCrypto.Builders.GuardianUserPermissionsBuilder()
+        const tx = new this.guardianCrypto.Builders.GuardianUserPermissionsBuilder()
           .GuardianUserPermissions({
             ...guardianUser,
           })
@@ -221,7 +248,7 @@ export class CryptoService {
           .signWithWif(wif);
 
         return this.createTransactions({
-          transactions: [transfer.build().toJson()]
+          transactions: [tx.build().toJson()]
         });
       })
     );

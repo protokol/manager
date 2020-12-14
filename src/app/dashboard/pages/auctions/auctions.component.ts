@@ -5,22 +5,22 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { NetworksState } from '@core/store/network/networks.state';
 import {
   distinctUntilChanged,
   filter,
   skip,
-  switchMap,
-  tap,
+  switchMap, takeUntil,
+  tap
 } from 'rxjs/operators';
 import { untilDestroyed } from '@core/until-destroyed';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import {
   PaginationMeta,
-  TableColumnConfig,
+  TableColumnConfig
 } from '@app/@shared/interfaces/table.types';
 import { Logger } from '@app/@core/services/logger.service';
 import { ExchangeResourcesTypes } from '@protokol/client';
@@ -29,17 +29,23 @@ import { AuctionsState } from '@app/dashboard/pages/auctions/state/auctions/auct
 import { LoadAuctions } from '@app/dashboard/pages/auctions/state/auctions/auctions.actions';
 import { StoreUtilsService } from '@core/store/store-utils.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { TableUtils } from '@shared/utils/table-utils';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
+import { AuctionModalComponent } from '@app/dashboard/pages/auctions/components/auction-modal/auction-modal.component';
+import { ModalUtils } from '@core/utils/modal-utils';
+import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions';
 
 @Component({
   selector: 'app-auctions',
   templateUrl: './auctions.component.html',
   styleUrls: ['./auctions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuctionsComponent implements OnInit, OnDestroy {
   readonly log = new Logger(this.constructor.name);
 
-  private tableQueryParams: NzTableQueryParams;
+  private params: NzTableQueryParams = TableUtils.getDefaultNzTableQueryParams();
 
   @HostBinding('class.canceled') canceledClass = false;
 
@@ -75,7 +81,9 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private router: Router,
-    private storeUtilsService: StoreUtilsService
+    private storeUtilsService: StoreUtilsService,
+    private nzModalService: NzModalService,
+    private actions$: Actions
   ) {
     this.storeUtilsService
       .nftConfigurationGuard()
@@ -92,8 +100,8 @@ export class AuctionsComponent implements OnInit, OnDestroy {
         tap((canceled) => {
           this.store.dispatch(
             new LoadAuctions({
-              tableQueryParams: this.tableQueryParams,
-              canceled,
+              tableQueryParams: this.params,
+              canceled
             })
           );
         })
@@ -105,31 +113,31 @@ export class AuctionsComponent implements OnInit, OnDestroy {
         propertyName: 'id',
         headerName: 'Id',
         columnTransformTpl: this.idTpl,
-        sortBy: true,
+        sortBy: true
       },
       {
         propertyName: 'senderPublicKey',
         headerName: 'Sender',
-        columnTransformTpl: this.senderTpl,
+        columnTransformTpl: this.senderTpl
       },
       {
         headerName: 'Start Amount',
-        columnTransformTpl: this.startAmountTpl,
+        columnTransformTpl: this.startAmountTpl
       },
       {
         headerName: 'Expiration(Block height)',
-        columnTransformTpl: this.expirationTpl,
+        columnTransformTpl: this.expirationTpl
       },
       {
         headerName: 'Assets',
-        columnTransformTpl: this.assetsTpl,
+        columnTransformTpl: this.assetsTpl
       },
       {
         propertyName: 'timestamp',
         headerName: 'Timestamp',
         columnTransformTpl: this.timestampTpl,
-        sortBy: true,
-      },
+        sortBy: true
+      }
     ];
 
     this.rows$ = this.auctionsIds$.pipe(
@@ -147,11 +155,12 @@ export class AuctionsComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 
-  paginationChange(tableQueryParams: NzTableQueryParams) {
-    this.tableQueryParams = tableQueryParams;
-    this.store.dispatch(new LoadAuctions({ tableQueryParams }));
+  paginationChange(params: NzTableQueryParams) {
+    this.params = params;
+    this.store.dispatch(new LoadAuctions({ tableQueryParams: params }));
   }
 
   onAssetClick(nftId: string) {
@@ -161,8 +170,35 @@ export class AuctionsComponent implements OnInit, OnDestroy {
   onWalletDetailsClick(addressOrPublicKey: string, assetId: string) {
     this.router.navigate(['/dashboard/wallets', addressOrPublicKey], {
       queryParams: {
-        assetId,
-      },
+        assetId
+      }
     });
+  }
+
+  showAuctionModal(event: MouseEvent) {
+    event.preventDefault();
+
+    const auctionModalRef = this.nzModalService.create<AuctionModalComponent,
+      RefreshModalResponse>({
+      nzContent: AuctionModalComponent,
+      ...ModalUtils.getCreateModalDefaultConfig()
+    });
+
+    auctionModalRef.afterClose
+      .pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(LoadAuctions))),
+        tap((response) => {
+          const refresh = (response && response.refresh) || false;
+          if (refresh) {
+            this.store.dispatch(
+              new LoadBurns({
+                ...this.params
+              })
+            );
+          }
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

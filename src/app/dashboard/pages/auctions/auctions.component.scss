@@ -10,6 +10,10 @@
   }
 }
 
+.auction-modal-btn {
+  margin-left: 1rem;
+}
+
 :host:not(.canceled) ::ng-deep {
   .ant-table-body {
     table {

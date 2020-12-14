@@ -4,20 +4,21 @@ import {
   Selector,
   Action,
   StateContext,
-  createSelector,
+  createSelector, Actions, ofActionDispatched
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { NodeCryptoConfiguration } from '@arkecosystem/client/dist/resourcesTypes/node';
 import {
-  ClearNetwork,
+  ClearNetwork, LastBlockStartPooling, LastBlockStopPooling,
   NETWORKS_TYPE_NAME,
-  SetNetwork,
+  SetNetwork
 } from '@core/store/network/networks.actions';
 import { NodeClientService } from '@core/services/node-client.service';
-import { tap } from 'rxjs/operators';
+import { exhaustMap, takeUntil, tap } from 'rxjs/operators';
 import { NetworkUtils } from '@core/utils/network-utils';
 import { BaseResourcesTypes } from '@protokol/client';
-import { forkJoin } from 'rxjs';
+import { forkJoin, timer } from 'rxjs';
+import { BlockchainService } from '@core/services/blockchain.service';
 
 interface NetworksStateModel {
   baseUrl: string | null;
@@ -25,6 +26,7 @@ interface NetworksStateModel {
   hasNftPluginsLoaded: boolean | null;
   nftBaseConfigurations: BaseResourcesTypes.BaseConfigurations | null;
   nodeCryptoConfiguration: NodeCryptoConfiguration | null;
+  lastBlockHeight: number | null;
 }
 
 const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
@@ -33,6 +35,7 @@ const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
   hasNftPluginsLoaded: null,
   nftBaseConfigurations: null,
   nodeCryptoConfiguration: null,
+  lastBlockHeight: null,
 };
 
 @State<NetworksStateModel>({
@@ -43,7 +46,11 @@ const NETWORKS_DEFAULT_STATE: NetworksStateModel = {
 export class NetworksState {
   readonly log = new Logger(this.constructor.name);
 
-  constructor(private nodeClientService: NodeClientService) {}
+  constructor(
+    private nodeClientService: NodeClientService,
+    private blockchainService: BlockchainService,
+    private actions$: Actions
+  ) {}
 
   @Selector()
   static getBaseUrl({ baseUrl }: NetworksStateModel) {
@@ -70,6 +77,11 @@ export class NetworksState {
     nftBaseConfigurations,
   }: NetworksStateModel) {
     return nftBaseConfigurations;
+  }
+
+  @Selector()
+  static getLastBlockHeight({ lastBlockHeight }: NetworksStateModel) {
+    return lastBlockHeight;
   }
 
   static getCryptoDefaults() {
@@ -146,5 +158,25 @@ export class NetworksState {
     setState({
       ...NETWORKS_DEFAULT_STATE,
     });
+  }
+
+  @Action(LastBlockStartPooling)
+  lastBlockStartPooling({ patchState }: StateContext<NetworksStateModel>) {
+    timer(0, 6000)
+      .pipe(
+        exhaustMap(() =>
+          this.blockchainService
+            .getLastBlock()
+            .pipe(
+              tap(({ height: lastBlockHeight }) =>
+                patchState({
+                  lastBlockHeight
+                }))
+            )
+        ),
+        takeUntil(this.actions$.pipe(ofActionDispatched(LastBlockStartPooling))),
+        takeUntil(this.actions$.pipe(ofActionDispatched(LastBlockStopPooling)))
+      )
+      .subscribe();
   }
 }

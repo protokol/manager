@@ -17,3 +17,15 @@ export class ClearNetwork {
 
   constructor() {}
 }
+
+export class LastBlockStartPooling {
+  static type = `[${NETWORKS_TYPE_NAME}] LastBlockStartPooling`;
+
+  constructor() {}
+}
+
+export class LastBlockStopPooling {
+  static type = `[${NETWORKS_TYPE_NAME}] LastBlockStopPooling`;
+
+  constructor() {}
+}

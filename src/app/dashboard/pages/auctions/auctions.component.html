@@ -15,6 +15,9 @@
               (ngModelChange)="isCanceled$.next($event)"
               [nzLoading]="isLoading$ | async"
             ></nz-switch>
+            <button class="auction-modal-btn" nz-button nzType="primary" (click)="showAuctionModal($event)">
+              Create Auction
+            </button>
           </nz-space-item>
         </nz-space>
       </div>
