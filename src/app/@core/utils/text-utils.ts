@@ -34,4 +34,8 @@ export abstract class TextUtils {
   static getPassphraseRegex() {
     return /^(\w+\s){11}(\w+)$/;
   }
+
+  static getOnlyNumbersRegex() {
+    return /^[0-9]+$/;
+  }
 }

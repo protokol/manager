@@ -1,0 +1,120 @@
+<ng-container
+  *ngIf="selectedProfileAddress$ | async as profileAddress; else loading"
+>
+  <form nz-form [formGroup]="auctionForm" nzNoColon="true" novalidate>
+    <div nz-row [nzGutter]="[24, 12]">
+      <div nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzFor="start-amount" nzRequired>Start amount</nz-form-label>
+          <nz-form-control [nzErrorTip]="startAmountErrorTpl">
+            <input
+              id="start-amount"
+              nzSize="default"
+              type="text"
+              nz-input
+              formControlName="startAmount"
+              placeholder="Insert start amount"
+            />
+          </nz-form-control>
+          <ng-template #startAmountErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter start amount!
+            </span>
+            </ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">
+            <span nz-typography nzType="danger">
+              Start amount should contain only numbers!
+            </span>
+            </ng-container>
+          </ng-template>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <ng-container [formGroup]="expirationForm">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="10" nzFor="blockHeight" nzRequired
+            >Block height expiration
+            </nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="blockHeightErrorTpl">
+              <nz-input-number
+                class="block-height-input"
+                [nzMin]="blockHeightMin | async"
+                [nzMax]="blockHeightMax"
+                [nzStep]="1"
+                formControlName="blockHeight"
+                nzPlaceHolder="Insert expiration block height"
+                nzPrecisionMode="cut"
+              >
+              </nz-input-number>
+            </nz-form-control>
+            <ng-template #blockHeightErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+            <span nz-typography nzType="danger">
+              Please enter expiration block height!
+            </span>
+              </ng-container>
+              <ng-container *ngIf="control.hasError('min')">
+            <span nz-typography nzType="danger">
+              Expiration block height should be at least {{ blockHeightMin | async }}
+            </span>
+              </ng-container>
+              <ng-container *ngIf="control.hasError('max')">
+            <span nz-typography nzType="danger">
+              Expiration block height should be at most {{ blockHeightMax }}
+            </span>
+              </ng-container>
+            </ng-template>
+          </nz-form-item>
+        </ng-container>
+      </div>
+    </div>
+
+    <nz-divider nzDashed></nz-divider>
+
+    <div nz-col [nzSpan]="24">
+      <app-nft-ids-form
+        formControlName="nftIds"
+        [ownerAddress]="profileAddress"
+      ></app-nft-ids-form>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #modalTitleTpl>
+  <app-modal-header [modalRef]="nzModalRef">
+    <nz-space>
+      <nz-space-item>
+        <h4 nz-typography nzType="secondary">
+          Auction assets
+        </h4>
+      </nz-space-item>
+      <nz-space-item>
+        <app-popover-helper
+          placement="right"
+          [popoverContent]="modalTitleHelperTpl"
+        ></app-popover-helper>
+      </nz-space-item>
+    </nz-space>
+  </app-modal-header>
+  <ng-template #modalTitleHelperTpl>
+    Selected assets will be put on auction, where other wallets can place bids on auction!
+  </ng-template>
+</ng-template>
+
+<div *nzModalFooter>
+  <button
+    nz-button
+    nzType="primary"
+    [nzLoading]="isLoading$ | async"
+    [disabled]="(isLoading$ | async) || !auctionForm.valid"
+    (click)="auction()"
+  >
+    Start auction
+  </button>
+</div>
+
+<ng-template #loading>
+  <nz-spin nzSimple></nz-spin>
+</ng-template>
