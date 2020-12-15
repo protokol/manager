@@ -34,7 +34,6 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { RefreshModalResponse } from '@core/interfaces/refresh-modal.response';
 import { AuctionModalComponent } from '@app/dashboard/pages/auctions/components/auction-modal/auction-modal.component';
 import { ModalUtils } from '@core/utils/modal-utils';
-import { LoadBurns } from '@app/dashboard/pages/burns/state/burns/burns.actions';
 
 @Component({
   selector: 'app-auctions',
@@ -191,8 +190,9 @@ export class AuctionsComponent implements OnInit, OnDestroy {
           const refresh = (response && response.refresh) || false;
           if (refresh) {
             this.store.dispatch(
-              new LoadBurns({
-                ...this.params
+              new LoadAuctions({
+                tableQueryParams: {...this.params},
+                canceled: this.isCanceled$.getValue()
               })
             );
           }

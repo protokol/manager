@@ -84,7 +84,7 @@ export class CryptoService {
 
   createTransactions(
     payload: {
-      transactions: Interfaces.ITransactionJson[];
+      transactions: (Interfaces.ITransactionJson | Interfaces.ITransactionData)[];
     } & Record<string, any>,
     baseUrl?: string,
     connectionOptions?: ConnectionOptions

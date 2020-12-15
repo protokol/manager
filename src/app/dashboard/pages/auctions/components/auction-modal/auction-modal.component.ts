@@ -135,7 +135,7 @@ export class AuctionModalComponent implements OnInit, OnDestroy {
 
     const { nftIds, startAmount, expiration } = this.auctionForm.value;
 
-    if (nftIds.length <= 0) {
+    if (!nftIds || nftIds.length <= 0) {
       this.nzMessageService.error(`At least one NFT is required!`);
     }
 
@@ -143,7 +143,7 @@ export class AuctionModalComponent implements OnInit, OnDestroy {
 
     this.cryptoService
       .auction({
-        nftIds,
+        nftIds: nftIds.map(({nftId}) => nftId),
         startAmount: this.arkCryptoService.arkCrypto.Utils.BigNumber.make(startAmount),
         expiration
       })
