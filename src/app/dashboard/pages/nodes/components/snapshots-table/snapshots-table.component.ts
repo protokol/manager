@@ -108,7 +108,7 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
   restoreSnapshot(event: MouseEvent, row: SnapshotsListItem) {
     event.preventDefault();
 
-    this.setRowLoading(name, true, 'create');
+    this.setRowLoading(row.name, true, 'create');
 
     const modalRef = this.nzModalService.create({
       nzContent: SnapshotRestoreModalComponent,
@@ -122,7 +122,7 @@ export class SnapshotsTableComponent implements OnInit, OnDestroy {
     modalRef.afterClose
       .pipe(
         untilDestroyed(this),
-        tap(() => this.setRowLoading(name, false))
+        tap(() => this.setRowLoading(row.name, false))
       )
       .subscribe();
   }
