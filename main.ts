@@ -19,13 +19,14 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: !!serve,
+      contextIsolation: false,  // false if you want to run 2e2 test with Spectron
+      enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
     minHeight: 800,
     minWidth: 1150,
   });
 
   if (serve) {
-    require('devtron').install();
     win.webContents.openDevTools();
 
     require('electron-reload')(__dirname, {
@@ -54,8 +55,6 @@ function createWindow(): BrowserWindow {
 }
 
 try {
-  app.allowRendererProcessReuse = true;
-
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
