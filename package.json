@@ -10,7 +10,7 @@
   ],
   "description": "Manager for Protokol plugins",
   "license": "CC BY-NC-SA 4.0",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "scripts": {
     "postinstall": "electron-builder install-app-deps && ngcc && npm run scripts:extract:version",
     "ng": "ng",
@@ -38,7 +38,7 @@
     "version:0.0.x:up": "npm --no-git-tag-version version patch",
     "version:0.x.0:up": "npm --no-git-tag-version version minor",
     "version:x.0.0:up": "npm --no-git-tag-version version major",
-    "version:specific": "npm --no-git-tag-version version 1.0.0-beta.2"
+    "version:specific": "npm --no-git-tag-version version 1.0.0-beta.3"
   },
   "main": "main.js",
   "private": true,
