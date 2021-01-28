@@ -26,6 +26,7 @@
     "electron:linux": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --linux",
     "electron:windows": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --windows",
     "electron:mac": "npm run build:prod && npm run electron:worker-tsc && electron-builder build --mac",
+    "bcrypto:rebuild": "npm --prefix ./node_modules/bcrypto install",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "changelog": "npx auto-changelog",
