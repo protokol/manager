@@ -10,4 +10,12 @@ export class SchemaContainerItemComponent {
 
   @Input() editor;
   @Input() form;
+
+  isEditor() {
+    return this.editor === true || this.editor === '';
+  }
+
+  isForm() {
+    return this.form === true || this.form === '';
+  }
 }

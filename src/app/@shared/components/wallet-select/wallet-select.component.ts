@@ -66,16 +66,14 @@ export class WalletSelectComponent
 
   @Input()
   set canAddColdWallet(canAddColdWallet: boolean) {
-    if (canAddColdWallet === true
-      || canAddColdWallet === false) {
+    if (canAddColdWallet === true || canAddColdWallet === false) {
       this.canAddColdWallet$.next(canAddColdWallet);
     }
   }
 
   @Input()
   set isDisabled(isDisabled: boolean) {
-    if (isDisabled === true
-      || isDisabled === false) {
+    if (isDisabled === true || isDisabled === false) {
       this.isDisabled$.next(isDisabled);
     }
   }
@@ -159,30 +157,30 @@ export class WalletSelectComponent
             tap(({ data, meta }) => {
               this.store.dispatch(new SetWalletsByIds(data));
 
-              const wallets = [
-                ...this.wallets$.getValue(),
-                ...data,
-              ];
+              const wallets = [...this.wallets$.getValue(), ...data];
 
-              const coldWallet: () => (Partial<Wallet>)[] = () => {
+              const coldWallet: () => Partial<Wallet>[] = () => {
                 if (this.canAddColdWallet$.getValue() && hasFilters) {
-                  const { value } = queryParams.filter.find(({ key }) => key === this.labelProp$.getValue());
-                  if (!wallets.some((w) => {
-                    const label = w[this.labelProp$.getValue()];
-                    return label === value;
-                  })) {
-                    return [{
-                      [this.labelProp$.getValue()]: value.trim()
-                    }];
+                  const { value } = queryParams.filter.find(
+                    ({ key }) => key === this.labelProp$.getValue()
+                  );
+                  if (
+                    !wallets.some((w) => {
+                      const label = w[this.labelProp$.getValue()];
+                      return label === value;
+                    })
+                  ) {
+                    return [
+                      {
+                        [this.labelProp$.getValue()]: value.trim(),
+                      },
+                    ];
                   }
                 }
                 return [];
               };
 
-              this.wallets$.next([
-                ...wallets,
-                ...coldWallet()
-              ]);
+              this.wallets$.next([...wallets, ...coldWallet()]);
 
               if (!meta.next) {
                 this.isLastPage$.next(true);
@@ -198,9 +196,7 @@ export class WalletSelectComponent
   }
 
   ngOnInit() {
-    combineLatest([
-      this.canAddColdWallet$.asObservable(),
-    ])
+    combineLatest([this.canAddColdWallet$.asObservable()])
       .pipe(
         debounceTime(250),
         distinctUntilChanged(),
@@ -211,7 +207,7 @@ export class WalletSelectComponent
           this.queryParams$.next({
             ...TableUtils.getDefaultNzTableQueryParams(),
             ...this.queryParams$.getValue(),
-            pageIndex: 0,
+            pageIndex: 1,
           });
         }),
         untilDestroyed(this)
