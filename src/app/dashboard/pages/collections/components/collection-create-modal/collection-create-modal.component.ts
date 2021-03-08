@@ -1,9 +1,11 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { JsonEditorOptions } from 'ang-jsoneditor';
 import { WidgetConfigService } from '@app/ajsf-widget-library/services/widget-config.service';
@@ -49,6 +51,10 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
   isProduction = environment.production;
 
   isLoading$ = new BehaviorSubject(false);
+  isMetadataEnabled$ = new BehaviorSubject(false);
+  isMetadataValid$ = new BehaviorSubject(false);
+
+  metadata = {};
 
   cryptoDefaults!: BaseResourcesTypes.BaseConfigurations['crypto']['defaults'];
 
@@ -170,7 +176,7 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
         CollectionsUtils.getDefaultJsonSchema(),
         [Validators.required, this.schemaSizeValidator],
       ],
-      allowedIssuers: []
+      allowedIssuers: [],
     });
   }
 
@@ -181,6 +187,14 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
   createCollection(event: any) {
     event.preventDefault();
     if (this.isLoading$.getValue()) {
+      return;
+    }
+
+    if (
+      this.isMetadataEnabled$.getValue() &&
+      !this.isMetadataValid$.getValue()
+    ) {
+      this.messageService.error('Invalid metadata! Make metadata valid');
       return;
     }
 
@@ -196,12 +210,21 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
     this.cryptoService
       .registerCollection({
         ...rest,
-        ...(allowedIssuers && allowedIssuers.length ? { allowedIssuers: allowedIssuers.map(({ publicKey }) => publicKey) } : {})
+        ...(allowedIssuers && allowedIssuers.length
+          ? { allowedIssuers: allowedIssuers.map(({ publicKey }) => publicKey) }
+          : {}),
+        ...(this.isMetadataEnabled$.getValue()
+          ? {
+              metadata: { ...this.metadata },
+            }
+          : {}),
       })
       .pipe(
         tap(
           () => {
-            this.messageService.success('Collection transaction broadcast to network!');
+            this.messageService.success(
+              'Collection transaction broadcast to network!'
+            );
             this.modalRef.destroy({ refresh: true });
           },
           (err) => {
@@ -260,5 +283,13 @@ export class CollectionCreateModalComponent implements OnInit, OnDestroy {
         untilDestroyed(this)
       )
       .subscribe();
+  }
+
+  isMetadataValid(valid: boolean) {
+    this.isMetadataValid$.next(valid);
+  }
+
+  metadataValidationErrors(event: any) {
+    this.log.warn(event);
   }
 }

@@ -41,8 +41,8 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="maximumSupply" nzRequired
-          >Maximum Supply</nz-form-label
-        >
+          >Maximum Supply
+        </nz-form-label>
         <nz-form-control [nzErrorTip]="maximumSupplyErrorTpl">
           <nz-input-number
             [nzMin]="maximumSupplyMin"
@@ -76,8 +76,8 @@
     <div nz-col [nzSpan]="12">
       <nz-form-item>
         <nz-form-label [nzSpan]="4" nzFor="description" nzRequired
-          >Description</nz-form-label
-        >
+          >Description
+        </nz-form-label>
         <nz-form-control [nzErrorTip]="descriptionErrorTpl">
           <textarea
             class="description"
@@ -156,6 +156,44 @@
   <span nz-typography nzType="danger" *ngIf="c('jsonSchema').errors?.maxSize">
     Json schema size is over the limit!
   </span>
+
+  <nz-divider class="metadata-divider" nzDashed></nz-divider>
+
+  <div nz-row [nzGutter]="[24, 12]">
+    <div nz-col [nzSpan]="4">
+      <nz-form-item>
+        <nz-form-control>
+          <label
+            nz-checkbox
+            (nzCheckedChange)="isMetadataEnabled$.next($event)"
+          >
+            <nz-form-label>Metadata</nz-form-label>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isMetadataEnabled$ | async">
+    <ng-container *ngLet="c('jsonSchema').valueChanges | async">
+      <ng-container *ngIf="c('jsonSchema').value as jsonSchema">
+        <app-schema-container>
+          <app-schema-container-item form>
+            <json-schema-form
+              loadExternalAssets="true"
+              [schema]="jsonSchema"
+              [debug]="!isProduction"
+              [framework]="framework"
+              [(data)]="metadata"
+              (isValid)="isMetadataValid($event)"
+              (validationErrors)="metadataValidationErrors($event)"
+            >
+            </json-schema-form>
+          </app-schema-container-item>
+        </app-schema-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
 </form>
 
 <div *nzModalFooter>

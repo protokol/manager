@@ -1,8 +1,8 @@
 <div nz-row [nzGutter]="[24, 12]">
-  <div nz-col [nzSpan]="colSpan">
+  <div nz-col [nzSpan]="colSpan" [hidden]="(showEditor$ | async) === false">
     <ng-content select="app-schema-container-item[editor]"></ng-content>
   </div>
-  <div nz-col [nzSpan]="colSpan">
+  <div nz-col [nzSpan]="colSpan" [hidden]="(showForm$ | async) === false">
     <ng-content select="app-schema-container-item[form]"></ng-content>
   </div>
 </div>

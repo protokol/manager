@@ -6,6 +6,7 @@ import {
   QueryList,
 } from '@angular/core';
 import { SchemaContainerItemComponent } from '@shared/components/schema-container-item/schema-container-item.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-schema-container',
@@ -13,11 +14,13 @@ import { SchemaContainerItemComponent } from '@shared/components/schema-containe
   styleUrls: ['./schema-container.component.scss'],
 })
 export class SchemaContainerComponent implements AfterContentInit {
-  @ContentChildren(SchemaContainerItemComponent) items!: QueryList<
-    SchemaContainerItemComponent
-  >;
+  @ContentChildren(SchemaContainerItemComponent)
+  items!: QueryList<SchemaContainerItemComponent>;
 
   @HostBinding('class.single-item') singleItemClass = false;
+
+  showEditor$ = new BehaviorSubject(true);
+  showForm$ = new BehaviorSubject(true);
 
   constructor() {}
 
@@ -27,5 +30,11 @@ export class SchemaContainerComponent implements AfterContentInit {
 
   ngAfterContentInit(): void {
     this.singleItemClass = this.items.length === 1;
+
+    const editor = this.items.find((i) => i.isEditor());
+    const form = this.items.find((i) => i.isForm());
+
+    this.showEditor$.next(!!editor);
+    this.showForm$.next(!!form);
   }
 }
