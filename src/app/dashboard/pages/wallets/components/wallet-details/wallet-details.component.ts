@@ -150,6 +150,7 @@ export class WalletDetailsComponent implements OnInit, OnDestroy {
         columnTransformTpl: this.collectionsDescriptionTpl,
       },
       {
+        // @ts-ignore
         propertyName: 'currentSupply',
         headerName: 'Current Supply',
       },
