@@ -137,7 +137,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
               if (!assets.length) {
                 return true;
               }
-              return assets.every((a) => a && a.collection !== null);
+              return assets.every((a) => a && a.collectionId !== null);
             })
           )
       ),
@@ -158,7 +158,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
         .select(AssetsState.getAssetsByIds([assetId], { withCollection: true }))
         .pipe(
           untilDestroyed(this),
-          first(([a]) => a && a.collection !== null),
+          first(([a]) => a && a.collectionId !== null),
           tap(([a]) => {
             this.showAssetDetail(a);
           })
