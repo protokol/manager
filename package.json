@@ -44,7 +44,7 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "@ajsf/core": "^0.1.4",
+    "@ajsf/core": "^0.8.0",
     "@angular/animations": "~11.2.0",
     "@angular/common": "~11.2.0",
     "@angular/compiler": "~11.2.0",
